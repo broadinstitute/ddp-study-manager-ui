@@ -1,12 +1,17 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # client
-/client/dist
-/client/tmp
+/dist
+/tmp
+/node_modules
+/tslint.json
 /client/dist
 /client/tmp
 /client/node_modules
 /client/tslint.json
+
+client/src/assets/js/ddp_config.js
+/src/assets/js/ddp_config.js
 
 # server
 /server/target
@@ -55,9 +60,6 @@ server/config/prod-gcloud-creds.json
 
 server/src/test/resources/output
 server/app-deploy
-
-client/src/assets/js/ddp_config.js
-
 
 logs
 *.log
