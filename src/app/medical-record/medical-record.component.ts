@@ -88,12 +88,6 @@ export class MedicalRecordComponent implements OnInit {
   ngOnInit() {
     if (this.medicalRecord != null && this.participant != null) {
       this.loadLogs();
-      // otherwise something went horrible wrong!
-      if (localStorage.getItem( ComponentService.MENU_SELECTED_REALM ).toLowerCase() === "mbc") {//TODO - needs to change when MBC gets migrated
-        this.disableDownloadConsent = true;
-        this.disableDownloadRelease = true;
-        this.hideDownloadButtons = true;
-      }
       if (this.participant.data == undefined || this.participant.data.status.indexOf( Statics.EXITED ) == -1) {
         this.participantExited = false;
       }

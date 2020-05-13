@@ -39,7 +39,7 @@
       <div>
         <table class="Width--100">
           <tr>
-            <td class="Width--50" *ngIf="realm.toLowerCase() !== 'mbc'">
+            <td class="Width--50">
               <md-input-container>
                 <input maxlength="200" style="width: 10cm" mdInput type="text"  placeholder="Participant ID"
                        [(ngModel)]="participantId">
@@ -72,17 +72,9 @@
           <li><b>If your participant is a migrated one and has a altPID please use that ID to trigger a survey, otherwise use the GUID</b></li>
           <li>Tab delimited ".txt" file</li>
           <li>Following columns are required
-            <table *ngIf="realm.toLowerCase() !== 'mbc'" class="table-bordered">
+            <table class="table-bordered">
               <tr>
                 <td style="padding: 5px; padding-right: 50px">participantId</td>
-              </tr>
-            </table>
-            <table *ngIf="realm.toLowerCase() === 'mbc'" class="table table-bordered">
-              <tr>
-                <td>shortId</td>
-                <td>firstName</td>
-                <td>lastName</td>
-                <td>email</td>
               </tr>
             </table>
           </li>
