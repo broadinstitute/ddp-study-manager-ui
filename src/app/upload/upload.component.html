@@ -60,24 +60,12 @@
       <li>Tab delimited ".txt" file</li>
       <li>Following columns are required
         <table class="table table-bordered"
-               *ngIf="getCompService().getRealm().toLowerCase() !== 'mbc' && getCompService().getRealm().toLowerCase() !== 'promise'">
+               *ngIf="getCompService().getRealm().toLowerCase() !== 'promise'">
           <tr>
             <td>participantId</td>
             <td>shortId</td>
             <td>firstName</td>
             <td>lastName</td>
-            <td>street1</td>
-            <td>street2</td>
-            <td>city</td>
-            <td>postalCode</td>
-            <td>state</td>
-            <td>country</td>
-          </tr>
-        </table>
-        <table class="table table-bordered" *ngIf="getCompService().getRealm().toLowerCase() === 'mbc'">
-          <tr>
-            <td>participantId</td>
-            <td>signature</td>
             <td>street1</td>
             <td>street2</td>
             <td>city</td>
@@ -100,7 +88,6 @@
           </tr>
         </table>
       </li>
-      <li *ngIf="getCompService().getRealm().toLowerCase() === 'mbc'">signature = first and last name</li>
       <li
         *ngIf="getCompService().getRealm().toLowerCase() !== 'promise' && getCompService().getRealm().toLowerCase() !== 'mmrf'">
         participantId = altPID for Gen2 DDPs and participantId = participant_guid for Gen3 (Pepper) DDPs <br/>
