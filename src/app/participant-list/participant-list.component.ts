@@ -1024,6 +1024,20 @@ export class ParticipantListComponent implements OnInit {
     }
     else if (this.sortParent === "t") {
     }
+    else if (this.sortParent === "k") {
+      this.participantList.sort( ( a, b ) => {
+        if (a.kits === null || a.kits == undefined || a.kits.length < 1) {
+          return 1;
+        }
+        else if (b.kits === null || b.kits == undefined || b.kits.length < 1) {
+          return -1;
+        }
+        else {
+          a.kits.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ) );
+          b.kits.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ) );
+        }
+      } );
+    }
     else {
       //activity data
       this.participantList.sort( ( a, b ) => {
@@ -1036,7 +1050,7 @@ export class ParticipantListComponent implements OnInit {
           return -1;
         }
         else {
-          if (this.sortField === "createdAt" || this.sortField === "completedAt" || this.sortField === "lastUpdatedAt") {
+          if (this.sortField === "createdAt" || this.sortField === "completedAt" || this.sortField === "lastUpdatedAt" || this.sortField === "status") {
             return this.sort( activityDataA[ this.sortField ], activityDataB[ this.sortField ], order );
           }
           else {
