@@ -26,11 +26,11 @@ export class AbstractionField {
   static parse( json ): AbstractionField {
     let fValue: AbstractionFieldValue = json.fieldValue;
     if (fValue == undefined || fValue == null) {
-      fValue = new AbstractionFieldValue( null, null, "", 0, "", "", false, false, null, "" );
+      fValue = new AbstractionFieldValue( null, null, "", 0, "", "", false, false, null, "", null );
     }
     let wrapper: QCWrapper = json.qcWrapper;
     if (wrapper == undefined || wrapper == null) {
-      let fieldValue: AbstractionFieldValue = new AbstractionFieldValue( null, null, "", 0, "", "", false, false, null, "" );
+      let fieldValue: AbstractionFieldValue = new AbstractionFieldValue( null, null, "", 0, "", "", false, false, null, "", null );
       wrapper = new QCWrapper( fieldValue, fieldValue, false, false );
     }
     return new AbstractionField( json.medicalRecordAbstractionFieldId, json.displayName, json.type, json.helpText, json.orderNumber, json.possibleValues, json.additionalType, json.hide, fValue, wrapper );
@@ -70,7 +70,7 @@ export class AbstractionField {
 export class AbstractionFieldValue {
   constructor( public medicalRecordAbstractionFieldId: number, public primaryKeyId: number, public value: string | string[], public valueCounter: number,
                public note: string, public question: string, public noData: boolean, public doubleCheck: boolean, public filePage: string,
-               public fileName: string ) {
+               public fileName: string, public matchPhrase: string ) {
     this.medicalRecordAbstractionFieldId = medicalRecordAbstractionFieldId;
     this.primaryKeyId = primaryKeyId;
     this.value = value;
@@ -81,11 +81,12 @@ export class AbstractionFieldValue {
     this.doubleCheck = doubleCheck;
     this.filePage = filePage;
     this.fileName = fileName;
+    this.matchPhrase = matchPhrase;
   }
 
   static parse( json ): AbstractionFieldValue {
     return new AbstractionFieldValue( json.medicalRecordAbstractionFieldId, json.primaryKeyId, json.value, json.valueCounter, json.note, json.question,
-      json.noData, json.doubleCheck, json.filePage, json.fileName );
+      json.noData, json.doubleCheck, json.filePage, json.fileName, json.matchPhrase );
   }
 }
 
