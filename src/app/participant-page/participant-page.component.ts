@@ -686,15 +686,21 @@ export class ParticipantPageComponent implements OnInit {
             let abstraction: Abstraction = Abstraction.parse( jsonData );
             this.participant[ abstraction.activity ] = abstraction;
             this.activeTab = abstraction.activity;
-            let activity = this.participant.abstractionActivities.find( activity => activity.activity === abstraction.activity );
-            if (activity != null) {
-              let index = this.participant.abstractionActivities.indexOf( activity );
-              if (index != -1) {
-                activity.aStatus = abstraction.aStatus;
-                this.participant.abstractionActivities[ index ] = activity;
+            if (this.participant.abstractionActivities != null) {
+              let activity = this.participant.abstractionActivities.find( activity => activity.activity === abstraction.activity );
+              if (activity != null) {
+                let index = this.participant.abstractionActivities.indexOf( activity );
+                if (index != -1) {
+                  activity.aStatus = abstraction.aStatus;
+                  this.participant.abstractionActivities[ index ] = activity;
+                }
+              }
+              else {
+                this.participant.abstractionActivities.push( abstraction );
               }
             }
             else {
+              this.participant.abstractionActivities = [];
               this.participant.abstractionActivities.push( abstraction );
             }
             this.additionalMessage = null;

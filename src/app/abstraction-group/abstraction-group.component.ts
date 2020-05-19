@@ -167,6 +167,7 @@ export class AbstractionGroupComponent implements OnInit, OnDestroy {
       field.fieldValue.noData = selectedVersion.noData;
       field.fieldValue.fileName = selectedVersion.fileName;
       field.fieldValue.filePage = selectedVersion.filePage;
+      field.fieldValue.matchPhrase = selectedVersion.matchPhrase;
       this.abstractionField.saveSelectedQc( field );
     }
   }

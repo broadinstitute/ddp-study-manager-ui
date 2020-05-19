@@ -93,7 +93,8 @@
                 <li *ngFor="let column of sourceColumns[key]">
                   <md-checkbox color="primary" disableRipple
                                (change)="addOrRemoveColumn(column, key)"
-                               [checked]="selectedColumns[key] != null && hasThisColumnSelected(selectedColumns[key],column)">{{column.participantColumn.display}}
+                               [checked]="selectedColumns[key] != null && hasThisColumnSelected(selectedColumns[key],column)">
+                    {{column.participantColumn.display}}
                   </md-checkbox>
                 </li>
               </ul>
@@ -281,8 +282,19 @@
                           </ng-container>
                           <ng-container
                             *ngIf="questionAnswer.questionType === 'DATE' && questionAnswer.dateFields != null">
-                            {{questionAnswer.dateFields.month}}/{{questionAnswer.dateFields.day}}
-                            /{{questionAnswer.dateFields.year}}
+                            <ng-container *ngIf="questionAnswer.dateFields.day != null && questionAnswer.dateFields.day !== '' &&
+questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== ''">
+                              {{questionAnswer.dateFields.month}}/{{questionAnswer.dateFields.day}}/{{questionAnswer.dateFields.year}}
+                            </ng-container>
+                            <ng-container *ngIf="(questionAnswer.dateFields.day == null || questionAnswer.dateFields.day === '') &&
+questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '' && questionAnswer.dateFields.year != null && questionAnswer.dateFields.year !== ''">{{questionAnswer.dateFields.month}}/{{questionAnswer.dateFields.year}}
+                            </ng-container>
+                            <ng-container *ngIf="(questionAnswer.dateFields.day == null || questionAnswer.dateFields.day === '') &&
+questionAnswer.dateFields.month == null || questionAnswer.dateFields.month === ''">{{questionAnswer.dateFields.year}}
+                            </ng-container>
+                            <ng-container *ngIf="(questionAnswer.dateFields.year == null || questionAnswer.dateFields.year === '') &&
+questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== ''">{{questionAnswer.dateFields.month}}/null
+                            </ng-container>
                           </ng-container>
                           <ng-container
                             *ngIf="questionAnswer.questionType === 'COMPOSITE' && questionAnswer.answer != null">

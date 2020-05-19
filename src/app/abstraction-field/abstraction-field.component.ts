@@ -147,7 +147,7 @@ export class AbstractionFieldComponent implements OnInit {
     }
 
     if (v !== null) {
-      if (field.type === "textarea" && fieldName !== "note" && fieldName !== "question" && fieldName !== "noData" && fieldName !== "filePage") {
+      if (field.type === "textarea" && fieldName !== "note" && fieldName !== "question" && fieldName !== "noData" && fieldName !== "filePage" && fieldName !== "matchPhrase") {
         field.fieldValue.value = v.toUpperCase();
       }
       if (fieldName === "value" && field.type === "date") {
@@ -209,7 +209,8 @@ export class AbstractionFieldComponent implements OnInit {
             {name: this.activityOfField + "_value", value: null},
             {name: this.activityOfField + "_valueCounter", value: field.fieldValue.valueCounter},
             {name: this.activityOfField + "_fileName", value: null},
-            {name: this.activityOfField + "_filePage", value: null} ]
+            {name: this.activityOfField + "_filePage", value: null} ,
+            {name: this.activityOfField + "_matchPhrase", value: null} ]
         };
         field.fieldValue.value = null;
         field.fieldValue.fileName = null;
@@ -224,7 +225,8 @@ export class AbstractionFieldComponent implements OnInit {
           nameValues: [ {name: this.activityOfField + "_noData", value: v},
             {name: this.activityOfField + "_value", value: null},
             {name: this.activityOfField + "_fileName", value: null},
-            {name: this.activityOfField + "_filePage", value: null} ]
+            {name: this.activityOfField + "_filePage", value: null} ,
+            {name: this.activityOfField + "_matchPhrase", value: null}]
         };
         field.fieldValue.value = null;
         field.fieldValue.fileName = null;
@@ -260,6 +262,17 @@ export class AbstractionFieldComponent implements OnInit {
           fieldId: field.medicalRecordAbstractionFieldId,
           nameValues: [ {name: this.activityOfField + "_" + fieldName, value: v},
             {name: this.activityOfField + "_valueCounter", value: field.fieldValue.valueCounter} ]
+        };
+      }
+      // value of field changed
+      else if (fieldName === "matchPhrase") {
+        patch = {
+          id: field.fieldValue.primaryKeyId,
+          parentId: this.participant.participant.participantId,
+          parent: "participantId",
+          user: this.role.userMail(),
+          fieldId: field.medicalRecordAbstractionFieldId,
+          nameValues: [ {name: this.activityOfField + "_" + fieldName, value: v} ]
         };
       }
       else if (fieldName === "filePage" && field.fieldValue.fileName != null && field.fieldValue.fileName !== "") {
@@ -329,7 +342,8 @@ export class AbstractionFieldComponent implements OnInit {
         {name: "qc_value", value: field.fieldValue.value},
         {name: "qc_valueCounter", value: field.fieldValue.valueCounter},
         {name: "qc_fileName", value: field.fieldValue.fileName},
-        {name: "qc_filePage", value: field.fieldValue.filePage} ]
+        {name: "qc_filePage", value: field.fieldValue.filePage} ,
+        {name: "qc_matchPhrase", value: field.fieldValue.matchPhrase} ]
     };
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
       data => {
