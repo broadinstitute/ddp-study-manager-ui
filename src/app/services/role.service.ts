@@ -63,7 +63,7 @@ export class RoleService {
               else if (permission === "mr:view") {
                 this._isMRView = true;
               }
-              else if (permission === "mailingList_view") {
+              else if (permission === "mailingList:view") {
                 this._isMailingList = true;
               }
               else if (permission === "kit:upload") {

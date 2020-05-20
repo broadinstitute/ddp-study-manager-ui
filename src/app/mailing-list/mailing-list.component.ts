@@ -1,4 +1,5 @@
 import {Component, OnInit} from "@angular/core";
+import {concatMap} from "rxjs/operator/concatMap";
 import {DSMService} from "../services/dsm.service";
 import {Auth} from "../services/auth.service";
 import {Result} from "../utils/result.model";
@@ -64,6 +65,7 @@ export class MailingListComponent implements OnInit {
       this.additionalMessage = null;
       this.dsmService.getMailingList( this.realm ).subscribe(
         data => {
+          console.log(data);
           let result = Result.parse( data );
           if (result.code === 500) {
             this.errorMessage = "";
