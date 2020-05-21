@@ -241,8 +241,8 @@ export class ParticipantListComponent implements OnInit {
             possibleColumns.push( new Filter( new ParticipantColumn( "Survey Completed", "completedAt", activityDefinition.activityCode, null, true ), Filter.DATE_TYPE ) );
             possibleColumns.push( new Filter( new ParticipantColumn( "Survey Last Updated", "lastUpdatedAt", activityDefinition.activityCode, null, true ), Filter.DATE_TYPE ) );
             possibleColumns.push( new Filter( new ParticipantColumn( "Survey Status", "status", activityDefinition.activityCode, null, true ), Filter.OPTION_TYPE, [
-              new NameValue( "COMPLETE", "Done" ),
-              new NameValue( "CREATED", "Not Started" ),
+              new NameValue( "COMPLETE", "Completed" ),
+              new NameValue( "CREATED", "Created" ),
               new NameValue( "IN_PROGRESS", "In Progress" ) ] ) );
             if (activityDefinition != null && activityDefinition.questions != null) {
               for (let question of activityDefinition.questions) {
