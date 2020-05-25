@@ -95,7 +95,19 @@
           <tr>
             <td>Date of Diagnosis</td>
             <td>
-              {{participant.data.dsm['diagnosisMonth']}}/{{participant.data.dsm['diagnosisYear']}}
+              <ng-container *ngIf="participant.data.dsm != null && participant.data.dsm['diagnosisMonth'] != null &&
+participant.data.dsm['diagnosisYear'] != null">
+                {{participant.data.dsm['diagnosisMonth']}}/{{participant.data.dsm['diagnosisYear']}}
+              </ng-container>
+              <ng-container *ngIf="participant.data.dsm != null && participant.data.dsm['diagnosisMonth'] != null &&
+participant.data.dsm['diagnosisYear'] == null">
+                {{participant.data.dsm['diagnosisMonth']}}/null
+              </ng-container>
+              <ng-container *ngIf="participant.data.dsm != null && participant.data.dsm['diagnosisMonth'] == null &&
+participant.data.dsm['diagnosisYear'] != null">
+                {{participant.data.dsm['diagnosisYear']}}
+              </ng-container>
+            </td>
           </tr>
           <tr *ngIf="participant.medicalRecords != null && participant.medicalRecords.length > 0">
             <td>Consent Tissue</td>
