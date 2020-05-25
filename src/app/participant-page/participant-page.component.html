@@ -125,7 +125,24 @@ participant.data.dsm['diagnosisYear'] != null">
         </table>
         <h5 class="Line--Break">{{participant.getSampleStatus()}}</h5>
       </div>
-      <div class="Float--left TD--Padding">
+      <div class="Float--left TD--Padding-Left-BIG">
+        <!--PDF download-->
+        <ng-container *ngIf="participant.participant == null">
+          <ng-container *ngIf="pdfs != null && pdfs.length != 0 && hasRole().allowedToDownloadPDF()">
+            <md-select placeholder="Select PDF" class="Input--Abstraction" [(ngModel)]="selectedPDF">
+              <md-option *ngFor="let e of pdfs" [value]="e.configName">
+                {{e.displayName}}
+              </md-option>
+            </md-select>
+            <br/>
+            <br/>
+            <button md-raised-button color="primary"
+                    [disabled]="selectedPDF == null || selectedPDF === '' || disableDownload"
+                    (click)="downloadPDFs(selectedPDF)">Download selected PDF
+            </button>
+          </ng-container>
+        </ng-container>
+        <!--Abstraction start buttons-->
         <div *ngIf="counterReceived > 0 && parentList === 'participantList'">
           <div class="Float--left TD--Padding">
             <div class="Float--left Width--100">

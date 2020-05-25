@@ -3,6 +3,7 @@ import {TabDirective} from "ngx-bootstrap";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
 import {Participant} from "../participant-list/participant-list.model";
+import {PDFModel} from "../pdf-download/pdf-download.model";
 
 import {ComponentService} from "../services/component.service";
 import {Auth} from "../services/auth.service";
@@ -83,6 +84,9 @@ export class ParticipantPageComponent implements OnInit {
 
   gender: string;
   counterReceived: number = 0;
+  pdfs: Array<PDFModel> = [];
+  selectedPDF: string;
+  disableDownload: boolean = false;
 
   constructor( private auth: Auth, private compService: ComponentService, private dsmService: DSMService, private router: Router,
                private role: RoleService, private util: Utils, private route: ActivatedRoute ) {
@@ -122,6 +126,9 @@ export class ParticipantPageComponent implements OnInit {
       }
       if (this.participant.data.status === undefined || this.participant.data.status.indexOf(Statics.CONSENT_SUSPENDED) == -1) {
         this.participantNotConsented = false;
+      }
+      if (this.participant.data.dsm != null && this.participant.data.dsm[ "pdfs" ] != null) {
+        this.pdfs = this.participant.data.dsm[ "pdfs" ];
       }
       //if surveys is null then it is a gen2 participant > go and get institution information
       if (this.participant.data.activities == null) {
@@ -924,5 +931,22 @@ export class ParticipantPageComponent implements OnInit {
       }
     }
     return null;
+  }
+
+  downloadPDFs( configName: string ) {
+    this.disableDownload = true;
+    this.dsmService.downloadPDF( this.participant.data.profile['guid'], this.compService.getRealm(), configName ).subscribe(
+      data => {
+        this.downloadFile( data, "_" + configName );
+        this.disableDownload = false;
+      },
+      err => {
+        if (err._body === Auth.AUTHENTICATION_ERROR) {
+          this.router.navigate( [ Statics.HOME_URL ] );
+        }
+        this.additionalMessage = "Error - Downloading consent pdf file\nPlease contact your DSM developer";
+        this.disableDownload = false;
+      },
+    );
   }
 }
