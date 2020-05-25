@@ -33,6 +33,7 @@ export class ShippingComponent implements OnInit {
   DEACTIVATED: string = "deactivated";
   ACTIVATED: string = "activated";
   TRIGGERED: string = "triggered";
+  WAITING: string = "waiting";
 
   EXPRESS: string = "express";
   NAME_LABELS: string = "nameLabels";
@@ -195,6 +196,9 @@ export class ShippingComponent implements OnInit {
     }
     else if (url.indexOf( Statics.SHIPPING_TRIGGERED ) > -1) {
       this.shippingPage = this.TRIGGERED;
+    }
+    else if (url.indexOf( Statics.SHIPPING_WAITING ) > -1) {
+      this.shippingPage = this.WAITING;
     }
     else {
       this.errorMessage = "Error - Router has unknown url\nPlease contact your DSM developer";
