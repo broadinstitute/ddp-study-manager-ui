@@ -162,6 +162,10 @@
           </th>
           <th *ngIf="getRole().allowedToCreateExpressLabels() && shippingPage === QUEUE">
           </th>
+          <th *ngIf="getRole().allowedToAuthorize() && shippingPage === WAITING">
+          </th>
+          <th *ngIf="getRole().allowedToAuthorize() && shippingPage === WAITING">
+          </th>
           <th *ngIf="kitsWithNoReturn">
             <input class="form-control" [(ngModel)]="noReturn"/>
           </th>
@@ -233,6 +237,14 @@
           <td *ngIf="getRole().allowedToCreateExpressLabels() && shippingPage === QUEUE">
             <button *ngIf="!kitRequest.express" type="button" (click)="setKitRequest(kitRequest, EXPRESS)" class="btn btn-xs Button--Background--Color">Generate
               Express Label
+            </button>
+          </td>
+          <td *ngIf="getRole().allowedToAuthorize() && shippingPage === WAITING">
+            <button type="button" (click)="authorize(kitRequest, true)" class="btn btn-xs Button--Background--Color">Approve
+            </button>
+          </td>
+          <td *ngIf="getRole().allowedToAuthorize() && shippingPage === WAITING">
+            <button type="button" (click)="setKitRequest(kitRequest, WAITING); modal.show()" class="btn btn-xs Button--Background--Color">Deny
             </button>
           </td>
           <td *ngIf="kitsWithNoReturn">{{getUtil().getYesNo(!kitRequest.noReturn)}}
@@ -307,6 +319,9 @@
       <ng-container *ngIf="modalType === EXPRESS">
         Express Label
       </ng-container>
+      <ng-container *ngIf="modalType === WAITING">
+        Please enter reason for denial
+      </ng-container>
     </div>
     <div class="app-modal-body">
       <ng-container *ngIf="modalType === DEACTIVATED">
@@ -315,7 +330,19 @@
             <td>Reason:</td>
             <td>
               <md-input-container>
-                <input mdInput type="text" [(ngModel)]="deactivationReason" class="Width--100 Input--Bigger-WIDTH" maxlength="500">
+                <input mdInput type="text" [(ngModel)]="deactivationReason" class="Width--100 Input--Bigger-WIDTH" maxlength="500" autocomplete="off">
+              </md-input-container>
+            </td>
+          </tr>
+        </table>
+      </ng-container>
+      <ng-container *ngIf="modalType === WAITING">
+        <table class="Width--100">
+          <tr>
+            <td>Reason:</td>
+            <td>
+              <md-input-container>
+                <input mdInput type="text" [(ngModel)]="denialReason" class="Width--100 Input--Bigger-WIDTH" maxlength="500" autocomplete="off">
               </md-input-container>
             </td>
           </tr>
@@ -354,6 +381,7 @@
     <div class="app-modal-footer">
       <button type="button" class="btn btn-default" (click)="closedNameModal(); modal.hide()">Close</button>
       <button *ngIf="modalType === DEACTIVATED" type="button" class="btn btn-primary" (click)="deactivateKitRequest()">Deactivate</button>
+      <button *ngIf="modalType === WAITING" type="button" class="btn btn-primary" (click)="authorize(this.kitRequest, false)">Deny</button>
       <button *ngIf="modalType === ACTIVATED" type="button" class="btn btn-primary" (click)="activateKitRequest(null, true)">Activate</button>
       <button *ngIf="modalType === EXPRESS" type="button" class="btn btn-primary" (click)="generateExpressLabel()">Generate FedEx Overnight Label</button>
     </div>
