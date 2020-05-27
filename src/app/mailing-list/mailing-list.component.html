@@ -24,32 +24,49 @@
          #mf="mfDataTable" [mfRowsOnPage]="hasRole().getUserSetting().getRowsPerPage()">
     <thead>
     <tr>
-      <th>
+      <th *ngIf="showColumn('firstName')" (click)="clearKeySort()">
         <mfDefaultSorter by="firstName">First Name</mfDefaultSorter>
       </th>
-      <th>
+      <th *ngIf="showColumn('lastName')" (click)="clearKeySort()">
         <mfDefaultSorter by="lastName">Last Name</mfDefaultSorter>
       </th>
-      <th>
+      <th (click)="clearKeySort()">
         <mfDefaultSorter by="email">Email</mfDefaultSorter>
       </th>
-      <th>
+      <th *ngIf="showColumn('info')" (click)="clearKeySort()">
+        <mfDefaultSorter by="info">Additional Information</mfDefaultSorter>
+      </th>
+      <ng-container *ngIf="showColumn('info')">
+        <th *ngFor="let key of keys" (click)="sortByJson(key)" class="Sort-Header">
+          {{key}}
+          <span *ngIf="sortDir === 'asc' && sortKey === key" class="glyphicon glyphicon-triangle-top"></span>
+          <span *ngIf="sortDir === 'desc' && sortKey === key" class="glyphicon glyphicon-triangle-bottom"></span>
+        </th>
+      </ng-container>
+      <th (click)="clearKeySort()">
         <mfDefaultSorter by="dateCreated">Date signed up</mfDefaultSorter>
       </th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let item of mf.data">
-      <td>{{item.firstName}}</td>
-      <td>{{item.lastName}}</td>
+      <td *ngIf="showColumn('firstName')">{{item.firstName}}</td>
+      <td *ngIf="showColumn('lastName')">{{item.lastName}}</td>
       <td>{{item.email}}</td>
+      <td *ngIf="showColumn('info')">{{item.info}}</td>
+      <ng-container *ngIf="showColumn('info')">
+        <td *ngFor="let key of keys">
+          {{getJsonValue( item.info, key )}}
+        </td>
+      </ng-container>
       <td>{{item.getDate() | date:'medium'}}</td>
     </tr>
     </tbody>
     <tfoot>
     <tr>
       <td colspan="10">
-        <mfBootstrapPaginator [rowsOnPageSet]="[hasRole().getUserSetting().getRowSet0(), hasRole().getUserSetting().getRowSet1(), hasRole().getUserSetting().getRowSet2()]"></mfBootstrapPaginator>
+        <mfBootstrapPaginator
+          [rowsOnPageSet]="[hasRole().getUserSetting().getRowSet0(), hasRole().getUserSetting().getRowSet1(), hasRole().getUserSetting().getRowSet2()]"></mfBootstrapPaginator>
       </td>
     </tr>
     </tfoot>
