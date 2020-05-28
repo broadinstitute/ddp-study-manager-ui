@@ -11,7 +11,7 @@ import {Statics} from "../utils/statics";
 @Component( {
   selector: "app-mailing-list",
   templateUrl: "./mailing-list.component.html",
-  styleUrls: [ "./mailing-list.component.css" ]
+  styleUrls: ["./mailing-list.component.css"]
 } )
 export class MailingListComponent implements OnInit {
 
@@ -71,8 +71,7 @@ export class MailingListComponent implements OnInit {
     if (localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) != null) {
       this.realm = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
       this.checkRight();
-    }
-    else {
+    } else {
       this.additionalMessage = "Please select a realm";
     }
     window.scrollTo( 0, 0 );
@@ -108,7 +107,7 @@ export class MailingListComponent implements OnInit {
   }
 
   public downloadMailingList(): void {
-    let map: { firstName: string, lastName: string, email: string, dateCreated: string }[] = [];
+    let map: { firstName: string, lastName: string, email: string, info: string, dateCreated: string }[] = [];
     for (var i = 0; i < this.contactList.length; i++) {
       let dateCreated: string = "-";
       if (this.contactList[ i ].dateCreated != null && this.contactList[ i ].dateCreated !== 0) {
@@ -118,10 +117,22 @@ export class MailingListComponent implements OnInit {
         firstName: this.contactList[ i ].firstName,
         lastName: this.contactList[ i ].lastName,
         email: this.contactList[ i ].email,
+        info: this.contactList[ i ].info,
         dateCreated: dateCreated
       } );
     }
-    var fields = [ "firstName", "lastName", "email", "dateCreated" ];
+    var fields = [];
+    if (this.showColumn( "firstName" )) {
+      fields.push( "firstName" );
+    }
+    if (this.showColumn( "lastName" )) {
+      fields.push( "lastName" );
+    }
+    fields.push( "email" );
+    if (this.showColumn( "info" )) {
+      fields.push( "info" );
+    }
+    fields.push( "dateCreated" );
     var date = new Date();
     Utils.createCSV( fields, map, "MailingList " + this.realm + " " + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
   }
@@ -168,41 +179,32 @@ export class MailingListComponent implements OnInit {
     this.sortKey = key;
     if (this.sortDir === "") {
       this.sortDir = "asc";
-    }
-    else if (this.sortDir === "asc") {
+    } else if (this.sortDir === "asc") {
       this.sortDir = "desc";
-    }
-    else if (this.sortDir === "desc") {
+    } else if (this.sortDir === "desc") {
       this.sortDir = "asc";
     }
     let order = this.sortDir === "asc" ? 1 : -1;
     this.contactList.sort( ( a, b ) => {
       if (JSON.parse( a.info )[ key ] == null) {
         return 1;
-      }
-      else if (JSON.parse( b.info )[ key ] == null) {
+      } else if (JSON.parse( b.info )[ key ] == null) {
         return -1;
-      }
-      else {
+      } else {
         if (typeof JSON.parse( a.info )[ key ] === "string") {
           if (JSON.parse( a.info )[ key ].toLowerCase() < JSON.parse( b.info )[ key ].toLowerCase()) {
             return -1 * order;
-          }
-          else if (JSON.parse( a.info )[ key ].toLowerCase() > JSON.parse( b.info )[ key ].toLowerCase()) {
+          } else if (JSON.parse( a.info )[ key ].toLowerCase() > JSON.parse( b.info )[ key ].toLowerCase()) {
             return 1 * order;
-          }
-          else {
+          } else {
             return 0;
           }
-        }
-        else {
+        } else {
           if (JSON.parse( a.info )[ key ] < JSON.parse( b.info )[ key ]) {
             return -1 * order;
-          }
-          else if (JSON.parse( a.info )[ key ] > JSON.parse( b.info )[ key ]) {
+          } else if (JSON.parse( a.info )[ key ] > JSON.parse( b.info )[ key ]) {
             return 1 * order;
-          }
-          else {
+          } else {
             return 0;
           }
         }

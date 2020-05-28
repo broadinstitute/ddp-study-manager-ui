@@ -33,9 +33,6 @@
       <th (click)="clearKeySort()">
         <mfDefaultSorter by="email">Email</mfDefaultSorter>
       </th>
-      <th *ngIf="showColumn('info')" (click)="clearKeySort()">
-        <mfDefaultSorter by="info">Additional Information</mfDefaultSorter>
-      </th>
       <ng-container *ngIf="showColumn('info')">
         <th *ngFor="let key of keys" (click)="sortByJson(key)" class="Sort-Header">
           {{key}}
@@ -53,7 +50,6 @@
       <td *ngIf="showColumn('firstName')">{{item.firstName}}</td>
       <td *ngIf="showColumn('lastName')">{{item.lastName}}</td>
       <td>{{item.email}}</td>
-      <td *ngIf="showColumn('info')">{{item.info}}</td>
       <ng-container *ngIf="showColumn('info')">
         <td *ngFor="let key of keys">
           {{getJsonValue( item.info, key )}}
