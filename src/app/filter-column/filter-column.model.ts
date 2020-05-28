@@ -160,9 +160,11 @@ export class Filter {
   public static TISSUE_FIRST_SM_ID = new Filter( ParticipantColumn.TISSUE_FIRST_SM_ID, Filter.TEXT_TYPE );
   public static TISSUE_TUMOR_PERCENT = new Filter( ParticipantColumn.TISSUE_TUMOR_PERCENT, Filter.TEXT_TYPE );
   public static TISSUE_SEQUENCE = new Filter( ParticipantColumn.TISSUE_SEQUENCE, Filter.OPTION_TYPE, [
-    new NameValue( "success", "Success" ),
     new NameValue( "failureSHL", "Failure at SHL" ),
     new NameValue( "abandonedGP", "Abandoned at GP" ),
+    new NameValue( "failedPurity", "Failed Purity" ),
+    new NameValue( "externalPathFailed", "External Path Review Failed" ),
+    new NameValue( "success", "Success" ),
   ] );
   public static SCROLLS_COUNT = new Filter( ParticipantColumn.SCROLLS_COUNT, Filter.NUMBER_TYPE );
   public static BLOCKS_COUNT = new Filter( ParticipantColumn.BLOCKS_COUNT, Filter.NUMBER_TYPE );
