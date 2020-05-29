@@ -46,10 +46,25 @@
       <thead>
         <tr>
           <th>
+            <mfDefaultSorter by="realm">DDP-Realm</mfDefaultSorter>
+          </th>
+          <th>
             <mfDefaultSorter by="collaboratorParticipantId">Short ID</mfDefaultSorter>
           </th>
           <th>
+            <mfDefaultSorter by="collaboratorParticipantId">Collaborator Participant ID</mfDefaultSorter>
+          </th>
+          <th>
+            <mfDefaultSorter by="collaboratorParticipantId">Collaborator Sample ID</mfDefaultSorter>
+          </th>
+          <th>
             <mfDefaultSorter by="shippingId">Shipping ID</mfDefaultSorter>
+          </th>
+          <th>
+            <mfDefaultSorter by="kitLabel">MF barcode</mfDefaultSorter>
+          </th>
+          <th>
+            <mfDefaultSorter by="kitType">Type</mfDefaultSorter>
           </th>
           <th>
             <mfDefaultSorter by="message">Error</mfDefaultSorter>
@@ -72,21 +87,19 @@
           <th>
             <mfDefaultSorter by="deactivationReason">Reason</mfDefaultSorter>
           </th>
-          <th>
-            <mfDefaultSorter by="kitLabel">MF barcode</mfDefaultSorter>
-          </th>
-          <th>
-            <mfDefaultSorter by="realm">DDP-Realm</mfDefaultSorter>
-          </th>
-          <th>
-            <mfDefaultSorter by="kitType">Type</mfDefaultSorter>
-          </th>
       </tr>
       </thead>
       <tbody>
       <tr *ngFor="let kitRequest of mf.data">
+        <td>{{kitRequest.realm}}</td>
         <td>{{kitRequest.getID()}}</td>
+        <td>{{kitRequest.collaboratorParticipantId}}</td>
+        <td>{{kitRequest.bspCollaboratorSampleId}}</td>
         <td>{{kitRequest.shippingId}}</td>
+        <td>
+          {{kitRequest.kitLabel}}
+        </td>
+        <td>{{kitRequest.kitType}}</td>
         <td>{{kitRequest.getError()}}</td>
         <td>
           <ng-container *ngIf="kitRequest.trackingUrlTo != null"><a href="{{kitRequest.trackingUrlTo}}" target="_blank">{{kitRequest.trackingNumberTo}}</a></ng-container>
@@ -110,11 +123,6 @@
           <ng-container *ngIf="kitRequest.deactivatedDate !== 0">{{kitRequest.deactivatedDate | date:'medium'}}</ng-container>
         </td>
         <td>{{kitRequest.deactivationReason}}</td>
-        <td>
-          {{kitRequest.kitLabel}}
-        </td>
-        <td>{{kitRequest.realm}}</td>
-        <td>{{kitRequest.kitType}}</td>
       </tr>
       <tbody>
       <tfoot>
