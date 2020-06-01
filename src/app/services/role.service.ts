@@ -87,7 +87,7 @@ export class RoleService {
               else if (permission === "participant:event") {
                 this._isSkipParticipant = true;
               }
-              else if (permission === "discard_sample") {
+              else if (permission === "kit:discard") {
                 this._isDiscardingSamples = true;
               }
               else if (permission === "kit:view") {
@@ -96,10 +96,10 @@ export class RoleService {
               else if (permission === "participant:pdf") {
                 this._isDownloadPDF = true;
               }
-              else if (permission === "ndi_download") {
+              else if (permission === "ndi:download") {
                 this._isDownloadNDI = true;
               }
-              else if (permission === "mr_no_request_tissue") {
+              else if (permission === "mr:noTissue") {
                 this._noTissueRequest = true;
               }
               else if (permission === "study:fields") {
@@ -114,7 +114,7 @@ export class RoleService {
               else if (permission === "study:abstraction") {
                 this._isAbstractionAdmin = true;
               }
-              else if (permission === "drug_list_edit") {
+              else if (permission === "drugList:edit") {
                 this._canEditDrugList = true;
               }
             } );
