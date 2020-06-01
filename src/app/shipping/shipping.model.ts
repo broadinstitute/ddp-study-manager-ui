@@ -1,4 +1,4 @@
-import { Address } from "../address/address.model";
+import {Address} from "../address/address.model";
 
 export class KitRequest {
 
@@ -7,16 +7,17 @@ export class KitRequest {
   public isSelected: boolean = false;
   public setSent: boolean = false;
 
-  constructor(public participantId: string, public collaboratorParticipantId: string, public realm: string,
-              public kitType: string, public dsmKitRequestId: string, public dsmKitId: string,
-              public shippingId: string, public labelUrlTo: string, public labelUrlReturn: string,
-              public trackingNumberTo: string, public trackingNumberReturn: string, public scannedTrackingNumber: string, public trackingUrlTo: string,
-              public trackingUrlReturn: string, public scanDate: number, public error: boolean, public message: string,
-              public receiveDate: number, public deactivatedDate: number, public deactivationReason: string, public participant: Address,
-              public easypostAddressId: string, public nameLabel: string, public kitLabel: string, public express: boolean, public labelTriggeredDate: number, public noReturn: boolean,
-              public externalOrderNumber: string, public externalOrderStatus: string) {
+  constructor( public participantId: string, public collaboratorParticipantId: string, public bspCollaboratorSampleId: string, public realm: string,
+               public kitType: string, public dsmKitRequestId: string, public dsmKitId: string,
+               public shippingId: string, public labelUrlTo: string, public labelUrlReturn: string,
+               public trackingNumberTo: string, public trackingNumberReturn: string, public scannedTrackingNumber: string, public trackingUrlTo: string,
+               public trackingUrlReturn: string, public scanDate: number, public error: boolean, public message: string,
+               public receiveDate: number, public deactivatedDate: number, public deactivationReason: string, public participant: Address,
+               public easypostAddressId: string, public nameLabel: string, public kitLabel: string, public express: boolean, public labelTriggeredDate: number, public noReturn: boolean,
+               public externalOrderNumber: string, public externalOrderStatus: string ) {
     this.participantId = participantId;
     this.collaboratorParticipantId = collaboratorParticipantId;
+    this.bspCollaboratorSampleId = bspCollaboratorSampleId;
     this.realm = realm;
     this.kitType = kitType;
     this.dsmKitRequestId = dsmKitRequestId;
@@ -48,12 +49,12 @@ export class KitRequest {
 
   public getID(): any {
     if (this.collaboratorParticipantId != null && this.collaboratorParticipantId !== "") {
-      let idSplit: string[] = this.collaboratorParticipantId.split("_");
+      let idSplit: string[] = this.collaboratorParticipantId.split( "_" );
       if (idSplit.length === 2) {
-        return idSplit[1];
+        return idSplit[ 1 ];
       }
       if (idSplit.length > 2) { //RGP
-        return this.collaboratorParticipantId.slice(this.collaboratorParticipantId.indexOf("_")+1);
+        return this.collaboratorParticipantId.slice( this.collaboratorParticipantId.indexOf( "_" ) + 1 );
       }
     }
     if (this.participant != null && this.participant.shortId !== "") {
@@ -68,13 +69,12 @@ export class KitRequest {
         if (this.participant.country != null && this.participant.country === "CA") {
           return "Canadian Participant";
         }
-        if (this.participant.street1 != null && this.participant.street1.toLowerCase().startsWith("po box")) {
+        if (this.participant.street1 != null && this.participant.street1.toLowerCase().startsWith( "po box" )) {
           return "Participant w/ PO Box";
         }
       }
       return this.message;
-    }
-    else {
+    } else {
       return this.shippingId;
     }
   }
@@ -85,7 +85,7 @@ export class KitRequest {
         if (this.participant.country != null && this.participant.country === "CA") {
           return "Canadian Participant";
         }
-        if (this.participant.street1 != null && this.participant.street1.toLowerCase().startsWith("po box")) {
+        if (this.participant.street1 != null && this.participant.street1.toLowerCase().startsWith( "po box" )) {
           return "Participant w/ PO Box";
         }
       }
@@ -94,24 +94,24 @@ export class KitRequest {
     return "";
   }
 
-  static parse(json): KitRequest {
-    return new KitRequest(json.participantId, json.collaboratorParticipantId, json.realm, json.kitType, json.dsmKitRequestId, json.dsmKitId,
+  static parse( json ): KitRequest {
+    return new KitRequest( json.participantId, json.collaboratorParticipantId, json.bspCollaboratorSampleId, json.realm, json.kitType, json.dsmKitRequestId, json.dsmKitId,
       json.shippingId, json.labelUrlTo, json.labelUrlReturn,
       json.trackingNumberTo, json.trackingNumberReturn, json.scannedTrackingNumber, json.trackingUrlTo,
       json.trackingUrlReturn, json.scanDate, json.error, json.message,
       json.receiveDate, json.deactivatedDate, json.deactivationReason, json.participant, json.easypostAddressId, json.nameLabel,
-      json.kitLabel, json.express, json.labelTriggeredDate, json.noReturn, json.externalOrderNumber, json.externalOrderStatus);
+      json.kitLabel, json.express, json.labelTriggeredDate, json.noReturn, json.externalOrderNumber, json.externalOrderStatus );
   }
 
   getScannedTrackingUrl() {
     return this.TRACKING_LINK + this.scannedTrackingNumber;
   }
 
-  static removeUnselectedKitRequests(array: Array<KitRequest>): Array<KitRequest> {
+  static removeUnselectedKitRequests( array: Array<KitRequest> ): Array<KitRequest> {
     let cleanedKitRequests: Array<KitRequest> = [];
     for (let kit of array) {
       if (kit.isSelected) {
-        cleanedKitRequests.push(kit);
+        cleanedKitRequests.push( kit );
       }
     }
     return cleanedKitRequests;
@@ -119,7 +119,7 @@ export class KitRequest {
 }
 
 export class TriggerLabel {
-  constructor(public dsmKitRequestId: string, public dsmKitId: string) {
+  constructor( public dsmKitRequestId: string, public dsmKitId: string ) {
     this.dsmKitRequestId = dsmKitRequestId;
     this.dsmKitId = dsmKitId;
   }

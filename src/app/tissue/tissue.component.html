@@ -327,9 +327,11 @@
                    (change)="valueChanged($event, 'sequenceResults')"
                    [ngClass]="{'Color--Field--Patched': isPatchedCurrently('sequenceResults', i)}"
                    placeholder="Sequence Results">
-          <md-option value="success">Success</md-option>
           <md-option value="failureSHL">Failure at SHL</md-option>
           <md-option value="abandonedGP">Abandoned at GP</md-option>
+          <md-option value="failedPurity">Failed Purity</md-option>
+          <md-option value="externalPathFailed">External Path Review Failed</md-option>
+          <md-option value="success">Success</md-option>
         </md-select>
       </td>
 

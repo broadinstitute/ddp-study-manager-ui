@@ -13,7 +13,7 @@ import {Statics} from "../utils/statics";
 @Component( {
   selector: "app-mailing-list",
   templateUrl: "./mailing-list.component.html",
-  styleUrls: [ "./mailing-list.component.css" ]
+  styleUrls: ["./mailing-list.component.css"]
 } )
 export class MailingListComponent implements OnInit {
 
@@ -24,6 +24,10 @@ export class MailingListComponent implements OnInit {
 
   errorMessage: string;
   additionalMessage: string;
+
+  keys: string[] = [];
+  sortDir: string = "";
+  sortKey: string = "";
 
   constructor( private dsmService: DSMService, private auth: Auth, private role: RoleService, private compService: ComponentService,
                private route: ActivatedRoute ) {
@@ -63,22 +67,16 @@ export class MailingListComponent implements OnInit {
       this.loadingContacts = true;
       let jsonData: any[];
       this.additionalMessage = null;
+      this.keys = [];
       this.dsmService.getMailingList( this.realm ).subscribe(
         data => {
-          console.log(data);
-          let result = Result.parse( data );
-          if (result.code === 500) {
-            this.errorMessage = "";
-            this.additionalMessage = "You are not allowed to see information of the selected realm at that category";
-          }
-          else {
-            this.contactList = [];
-            jsonData = data;
-            jsonData.forEach( ( val ) => {
-              let contact = MailingListContact.parse( val );
-              this.contactList.push( contact );
-            } );
-          }
+          this.contactList = [];
+          jsonData = data;
+          jsonData.forEach((val) => {
+            let contact = MailingListContact.parse(val);
+            this.getPossibleInfoColumns( contact );
+            this.contactList.push(contact);
+          });
           // console.info(`${this.contactList.length} contacts received: ${JSON.stringify(data, null, 2)}`);
           this.loadingContacts = false;
         },
@@ -94,7 +92,7 @@ export class MailingListComponent implements OnInit {
   }
 
   public downloadMailingList(): void {
-    let map: { firstName: string, lastName: string, email: string, dateCreated: string }[] = [];
+    let map: { firstName: string, lastName: string, email: string, info: string, dateCreated: string }[] = [];
     for (var i = 0; i < this.contactList.length; i++) {
       let dateCreated: string = "-";
       if (this.contactList[ i ].dateCreated != null && this.contactList[ i ].dateCreated !== 0) {
@@ -104,10 +102,22 @@ export class MailingListComponent implements OnInit {
         firstName: this.contactList[ i ].firstName,
         lastName: this.contactList[ i ].lastName,
         email: this.contactList[ i ].email,
+        info: this.contactList[ i ].info,
         dateCreated: dateCreated
       } );
     }
-    var fields = [ "firstName", "lastName", "email", "dateCreated" ];
+    var fields = [];
+    if (this.showColumn( "firstName" )) {
+      fields.push( "firstName" );
+    }
+    if (this.showColumn( "lastName" )) {
+      fields.push( "lastName" );
+    }
+    fields.push( "email" );
+    if (this.showColumn( "info" )) {
+      fields.push( "info" );
+    }
+    fields.push( "dateCreated" );
     var date = new Date();
     Utils.createCSV( fields, map, "MailingList " + this.realm + " " + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
   }
@@ -115,4 +125,81 @@ export class MailingListComponent implements OnInit {
   hasRole(): RoleService {
     return this.role;
   }
+
+  showColumn( name: string ): boolean {
+    if (this.contactList != null) {
+      let foundContact = this.contactList.find( contact => {
+        return contact[ name ] != null && contact[ name ] !== "";
+      } );
+      if (foundContact != null) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  getPossibleInfoColumns( contact: MailingListContact ) {
+    if (contact != null && contact.info != null) {
+      let o: any = JSON.parse( contact.info );
+      if (o != null) {
+        let k: string[] = Object.keys( o );
+        k.forEach( key => {
+          if (!this.keys.includes( key )) {
+            this.keys.push( key );
+          }
+        } );
+      }
+    }
+  }
+
+  getJsonValue( info: string, key: string ): string {
+    return JSON.parse( info )[ key ];
+  }
+
+  sortByJson( key: string ) {
+    if (this.sortKey !== key) {
+      this.sortKey = "";
+      this.sortDir = "";
+    }
+    this.sortKey = key;
+    if (this.sortDir === "") {
+      this.sortDir = "asc";
+    } else if (this.sortDir === "asc") {
+      this.sortDir = "desc";
+    } else if (this.sortDir === "desc") {
+      this.sortDir = "asc";
+    }
+    let order = this.sortDir === "asc" ? 1 : -1;
+    this.contactList.sort( ( a, b ) => {
+      if (JSON.parse( a.info )[ key ] == null) {
+        return 1;
+      } else if (JSON.parse( b.info )[ key ] == null) {
+        return -1;
+      } else {
+        if (typeof JSON.parse( a.info )[ key ] === "string") {
+          if (JSON.parse( a.info )[ key ].toLowerCase() < JSON.parse( b.info )[ key ].toLowerCase()) {
+            return -1 * order;
+          } else if (JSON.parse( a.info )[ key ].toLowerCase() > JSON.parse( b.info )[ key ].toLowerCase()) {
+            return 1 * order;
+          } else {
+            return 0;
+          }
+        } else {
+          if (JSON.parse( a.info )[ key ] < JSON.parse( b.info )[ key ]) {
+            return -1 * order;
+          } else if (JSON.parse( a.info )[ key ] > JSON.parse( b.info )[ key ]) {
+            return 1 * order;
+          } else {
+            return 0;
+          }
+        }
+      }
+    } );
+  }
+
+  clearKeySort() {
+    this.sortKey = "";
+    this.sortDir = "";
+  }
+
 }

@@ -24,12 +24,23 @@
                   {{questionAnswer.answer}}
                 </b>
                 <ng-container *ngIf="qDef.questionType === 'DATE'">
-                  <b *ngIf="questionAnswer.date != null && questionAnswer.date !== ''" class="TD--Padding-Left-Bigger">
-                    <ng-container *ngIf="questionAnswer.date.length == 10">
-                      {{questionAnswer.date | date:'shortDate'}}
-                    </ng-container>
-                    <ng-container *ngIf="questionAnswer.date.length != 10">
-                      {{questionAnswer.date}}
+                  <b class="TD--Padding-Left-Bigger">
+                    <ng-container
+                      *ngIf="questionAnswer.dateFields != null">
+                      <ng-container *ngIf="questionAnswer.dateFields.day != null && questionAnswer.dateFields.day !== '' &&
+questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== ''">
+                        {{questionAnswer.dateFields.month}}/{{questionAnswer.dateFields.day}}/{{questionAnswer.dateFields.year}}
+                      </ng-container>
+                      <ng-container *ngIf="(questionAnswer.dateFields.day == null || questionAnswer.dateFields.day === '') &&
+questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '' && questionAnswer.dateFields.year != null && questionAnswer.dateFields.year !== ''">
+                        {{questionAnswer.dateFields.month}}/{{questionAnswer.dateFields.year}}
+                      </ng-container>
+                      <ng-container *ngIf="(questionAnswer.dateFields.day == null || questionAnswer.dateFields.day === '') &&
+questionAnswer.dateFields.month == null || questionAnswer.dateFields.month === ''">{{questionAnswer.dateFields.year}}
+                      </ng-container>
+                      <ng-container *ngIf="(questionAnswer.dateFields.year == null || questionAnswer.dateFields.year === '') &&
+questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== ''">{{questionAnswer.dateFields.month}}/null
+                      </ng-container>
                     </ng-container>
                   </b>
                 </ng-container>
