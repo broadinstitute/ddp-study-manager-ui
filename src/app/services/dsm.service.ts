@@ -380,6 +380,13 @@ export class DSMService {
     return this.http.get( url, this.buildQueryHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError );
   }
 
+  public getStudies( ): Observable<any> {
+    let url = this.baseUrl + DSMService.UI + "studies";
+    let map: { name: string, value: any }[] = [];
+    map.push( { name: "userId", value: this.role.userID() } );
+    return this.http.get( url, this.buildQueryHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError );
+  }
+
   public getKitTypes( realm: string ): Observable<any> {
     let url = this.baseUrl + DSMService.UI + "kitTypes/" + realm;
     let map: { name: string, value: any }[] = [];
