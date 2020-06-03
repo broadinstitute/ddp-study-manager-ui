@@ -9,7 +9,7 @@
             <select [ngModel]="getAuth().selectedRealm" class="SelectText"
                     (click)="getAuth().getRealmList()" (ngModelChange)="getAuth().selectRealm($event)">
               <option value="" selected>Please Select</option>
-              <option *ngFor="let realmName of getAuth().realmList" [value]="realmName">{{realmName}}</option>
+              <option *ngFor="let realms of getAuth().realmList" [value]="realms.name">{{realms.value}}</option>
             </select>
           </p>
         </div>
