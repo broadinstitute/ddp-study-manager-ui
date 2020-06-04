@@ -13,6 +13,7 @@ export class ParticipantColumn {
   public static REGISTRATION_DATE = new ParticipantColumn( "Registration Date", "createdAt", "data", "profile" );
   public static ENROLLMENT_STATUS = new ParticipantColumn("Status", "status", "data");
   public static DO_NOT_CONTACT = new ParticipantColumn("Do Not Contact", "doNotContact", "data", "profile");
+  public static PREFERRED_LANGUAGE = new ParticipantColumn("Preferred Language", "preferredLanguage", "data", "profile");
   public static DATE_OF_MAJORITY = new ParticipantColumn( "Date of Majority", "dateOfMajority", "data", "dsm" );
   public static HAS_CONSENTED_TO_BLOOD = new ParticipantColumn( "Consent Blood", "hasConsentedToBloodDraw", "data", "dsm" );
   public static HAS_CONSENTED_TO_TISSUE = new ParticipantColumn( "Consent Tissue", "hasConsentedToTissueSample", "data", "dsm" );

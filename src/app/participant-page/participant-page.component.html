@@ -121,8 +121,18 @@ participant.data.dsm['diagnosisYear'] != null">
             <td>Gender</td>
             <td>{{gender | titlecase}}</td>
           </tr>
+          <tr *ngIf="participant.data.profile['preferredLanguage'] != null && participant.data.profile['preferredLanguage'] !== ''">
+            <td>Preferred Language</td>
+            <td>{{getLanguage().getLanguageName(participant.data.profile['preferredLanguage'])}}</td>
+          </tr>
           </tbody>
         </table>
+        <ng-container *ngIf="participant.data.invitations != null && participant.data.invitations.length > 0">
+          <ng-container *ngFor="let invitation of participant.data.invitations">
+            <app-invitation-data *ngIf="invitation != null" [invitation]="invitation"></app-invitation-data>
+          </ng-container>
+        </ng-container>
+
         <h5 class="Line--Break">{{participant.getSampleStatus()}}</h5>
       </div>
       <div class="Float--left TD--Padding-Left-BIG">

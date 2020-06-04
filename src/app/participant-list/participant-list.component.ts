@@ -14,6 +14,7 @@ import {Auth} from "../services/auth.service";
 import {ComponentService} from "../services/component.service";
 import {DSMService} from "../services/dsm.service";
 import {RoleService} from "../services/role.service";
+import {Language} from "../utils/language";
 import {NameValue} from "../utils/name-value.model";
 import {PatchUtil} from "../utils/patch.model";
 import {Result} from "../utils/result.model";
@@ -99,7 +100,7 @@ export class ParticipantListComponent implements OnInit {
   filtered: boolean = false;
 
   constructor( private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
-               private router: Router, private auth: Auth, private route: ActivatedRoute, private util: Utils ) {
+               private router: Router, private auth: Auth, private route: ActivatedRoute, private util: Utils, private language: Language ) {
     if (!auth.authenticated()) {
       auth.logout();
     }
@@ -419,6 +420,7 @@ export class ParticipantListComponent implements OnInit {
                 let participant = Participant.parse( val );
                 this.participantList.push( participant );
               } );
+              this.showInvitation();
               this.originalParticipantList = this.participantList;
               let date = new Date();
               this.loadedTimeStamp = Utils.getDateFormatted( date, Utils.DATE_STRING_IN_EVENT_CVS );
@@ -489,6 +491,7 @@ export class ParticipantListComponent implements OnInit {
             let participant = Participant.parse( val );
             this.participantList.push( participant );
           } );
+          this.showInvitation();
           this.originalParticipantList = this.participantList;
           if (viewFilter != null) {
             this.filterQuery = viewFilter.queryItems;
@@ -775,6 +778,7 @@ export class ParticipantListComponent implements OnInit {
               let participant = Participant.parse( val );
               this.participantList.push( participant );
             } );
+            this.showInvitation();
             this.originalParticipantList = this.participantList;
 
             if (!this.hasESData) {
@@ -1130,6 +1134,10 @@ export class ParticipantListComponent implements OnInit {
     return this.util;
   }
 
+  getlanguage(): Language {
+    return this.language;
+  }
+
   getKeys() {
     return Array.from( this.dataSources.keys() );
   }
@@ -1321,6 +1329,7 @@ export class ParticipantListComponent implements OnInit {
           let participant = Participant.parse( val );
           this.participantList.push( participant );
         } );
+        this.showInvitation();
         this.originalParticipantList = this.participantList;
         let date = new Date();
         this.loadedTimeStamp = Utils.getDateFormatted( date, Utils.DATE_STRING_IN_EVENT_CVS );
@@ -1476,5 +1485,39 @@ export class ParticipantListComponent implements OnInit {
     return f !== undefined;
   }
 
+  showInvitation( ): boolean {
+    if (this.participantList != null) {
+      let foundInvitation = this.participantList.find( participant => {
+        return participant.data.invitations != null && participant.data.invitations.length > 0;
+      } );
+      if (foundInvitation != null) {
+        if (this.getKeys().find( key => {
+          return key === "invitations";
+        } ) == null) {
+          this.dataSources.set( "invitations", "Invitation" );
+
+          let possibleColumns: Array<Filter> = [];
+          possibleColumns.push( new Filter( new ParticipantColumn( "Created", "createdAt",  "invitations", null,true ), Filter.DATE_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Accepted", "acceptedAt",  "invitations", null,true ), Filter.DATE_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Verified", "verifiedAt",  "invitations", null,true ), Filter.DATE_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Voided", "voidedAt",  "invitations", null,true ), Filter.DATE_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Contact Email", "contactEmail",  "invitations", null,true ), Filter.TEXT_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Invitation Code", "guid",  "invitations", null,true ), Filter.TEXT_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Notes", "notes",  "invitations", null,true ), Filter.TEXT_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Type", "type",  "invitations", null,true ), Filter.TEXT_TYPE ) );
+
+          this.sourceColumns[ "invitations" ] = possibleColumns;
+          this.selectedColumns[ "invitations" ] = [];
+          possibleColumns.forEach( filter => {
+            let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
+            this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
+          } );
+          this.orderColumns();
+        }
+        return true;
+      }
+    }
+    return false;
+  }
 
 }

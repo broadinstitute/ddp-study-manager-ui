@@ -10,6 +10,7 @@ import {Auth} from "../services/auth.service";
 import {DSMService} from "../services/dsm.service";
 import {MedicalRecord} from "../medical-record/medical-record.model";
 import {RoleService} from "../services/role.service";
+import {Language} from "../utils/language";
 import {Utils} from "../utils/utils";
 import {Statics} from "../utils/statics";
 import {OncHistoryDetail} from "../onc-history-detail/onc-history-detail.model";
@@ -89,7 +90,7 @@ export class ParticipantPageComponent implements OnInit {
   disableDownload: boolean = false;
 
   constructor( private auth: Auth, private compService: ComponentService, private dsmService: DSMService, private router: Router,
-               private role: RoleService, private util: Utils, private route: ActivatedRoute ) {
+               private role: RoleService, private util: Utils, private route: ActivatedRoute, private language: Language ) {
     if (!auth.authenticated()) {
       auth.logout();
     }
@@ -115,16 +116,20 @@ export class ParticipantPageComponent implements OnInit {
     return this.util;
   }
 
+  getLanguage(): Language {
+    return this.language;
+  }
+
   getGroupHref( group: string ): string {
     return "#" + group;
   }
 
   private loadInstitutions() {
     if (this.participant.data != null) {
-      if (this.participant.data.status === undefined || this.participant.data.status.indexOf(Statics.EXITED) == -1) {
+      if (this.participant.data.status === undefined || this.participant.data.status.indexOf( Statics.EXITED ) == -1) {
         this.participantExited = false;
       }
-      if (this.participant.data.status === undefined || this.participant.data.status.indexOf(Statics.CONSENT_SUSPENDED) == -1) {
+      if (this.participant.data.status === undefined || this.participant.data.status.indexOf( Statics.CONSENT_SUSPENDED ) == -1) {
         this.participantNotConsented = false;
       }
       if (this.participant.data.dsm != null && this.participant.data.dsm[ "pdfs" ] != null) {
@@ -192,8 +197,7 @@ export class ParticipantPageComponent implements OnInit {
                 }
               }
               this.addEmptyOncHistoryRow();
-            }
-            else {
+            } else {
               this.additionalMessage = "No additional information from the DDP was received";
             }
             this.loadingParticipantPage = false;
@@ -206,8 +210,7 @@ export class ParticipantPageComponent implements OnInit {
             this.additionalMessage = "Error - Loading participant institution information\nPlease contact your DSM developer";
           }
         );
-      }
-      else {// don't need to load institution data
+      } else {// don't need to load institution data
         this.counterReceived = 0;
         let medicalRecords = this.participant.medicalRecords;
         for (let mr of medicalRecords) {
@@ -245,13 +248,11 @@ export class ParticipantPageComponent implements OnInit {
       for (let oncHis of this.participant.oncHistoryDetails) {
         if (oncHis.oncHistoryDetailId === null) {
           hasEmptyOncHis = true;
-        }
-        else {
+        } else {
           //get gender information
           if (this.gender === null || this.gender == undefined) {
             this.gender = oncHis.gender;
-          }
-          else {
+          } else {
             if (this.gender != oncHis.gender && oncHis.gender != undefined && oncHis.gender != null) {
               // console.log( this.gender );
               // console.log( oncHis.gender );
@@ -266,8 +267,7 @@ export class ParticipantPageComponent implements OnInit {
             , null, null, null, null, null, null, null, null, null,
             null, null, null, null ) );
           oncHis.tissues = tissues;
-        }
-        else if (oncHis.tissues.length < 1) {
+        } else if (oncHis.tissues.length < 1) {
           oncHis.tissues.push( new Tissue( null, oncHis.oncHistoryDetailId, null, null, null, null,
             null, null, null, null, null, null, null, null, null, null
             , null, null, null, null, null, null, null,
@@ -302,16 +302,13 @@ export class ParticipantPageComponent implements OnInit {
     let v;
     if (parameterName === "additionalValues") {
       v = JSON.stringify( value );
-    }
-    else if (typeof value === "string") {
+    } else if (typeof value === "string") {
       this.participant.participant[ parameterName ] = value;
       v = value;
-    }
-    else {
+    } else {
       if (value.srcElement != null && typeof value.srcElement.value === "string") {
         v = value.srcElement.value;
-      }
-      else if (value.checked != null) {
+      } else if (value.checked != null) {
         v = value.checked;
       }
     }
@@ -339,7 +336,7 @@ export class ParticipantPageComponent implements OnInit {
         },
         err => {
           if (err._body === Auth.AUTHENTICATION_ERROR) {
-            this.router.navigate( [ Statics.HOME_URL ] );
+            this.router.navigate( [Statics.HOME_URL] );
           }
           this.additionalMessage = "Error - Saving changed field \n" + err;
         }
@@ -352,15 +349,12 @@ export class ParticipantPageComponent implements OnInit {
     if (typeof value === "string") {
       oncHis[ parameterName ] = value;
       v = value;
-    }
-    else if (value != null) {
+    } else if (value != null) {
       if (value.srcElement != null && typeof value.srcElement.value === "string") {
         v = value.srcElement.value;
-      }
-      else if (value.value != null) {
+      } else if (value.value != null) {
         v = value.value;
-      }
-      else if (value.checked != null) {
+      } else if (value.checked != null) {
         v = value.checked;
       }
     }
@@ -388,7 +382,7 @@ export class ParticipantPageComponent implements OnInit {
         },
         err => {
           if (err._body === Auth.AUTHENTICATION_ERROR) {
-            this.router.navigate( [ Statics.HOME_URL ] );
+            this.router.navigate( [Statics.HOME_URL] );
           }
         }
       );
@@ -441,8 +435,7 @@ export class ParticipantPageComponent implements OnInit {
         if (typeof firstOncHis.facility === "undefined" || firstOncHis.facility == null) {
           this.warning = "Facility is empty";
           doIt = false;
-        }
-        else if (this.participant.kits != null) {
+        } else if (this.participant.kits != null) {
           //no samples for pt
           let kitReturned: boolean = false;
           for (let kit of this.participant.kits) {
@@ -455,8 +448,7 @@ export class ParticipantPageComponent implements OnInit {
             doIt = false;
             this.warning = "No samples returned for participant yet";
           }
-        }
-        else {
+        } else {
           if (firstOncHis.facility !== oncHis.facility ||
             firstOncHis.fPhone !== oncHis.fPhone ||
             firstOncHis.fFax !== oncHis.fFax) {
@@ -468,8 +460,7 @@ export class ParticipantPageComponent implements OnInit {
     }
     if (doIt && this.facilityName != null) {
       this.doRequest();
-    }
-    else {
+    } else {
       this.universalModal.show();
     }
   }
@@ -504,7 +495,7 @@ export class ParticipantPageComponent implements OnInit {
       },
       err => {
         if (err._body === Auth.AUTHENTICATION_ERROR) {
-          this.router.navigate( [ Statics.HOME_URL ] );
+          this.router.navigate( [Statics.HOME_URL] );
         }
         this.additionalMessage = "Error - Saving paper C/R changes \n" + err;
       }
@@ -534,13 +525,11 @@ export class ParticipantPageComponent implements OnInit {
                 oncHis.tFaxSent = Utils.getFormattedDate( date );
                 oncHis.tFaxSentBy = this.role.userID();
                 this.oncHistoryValueChanged( oncHis.tFaxSent, "tFaxSent", oncHis );
-              }
-              else if (oncHis.tFaxSent2 == null) {
+              } else if (oncHis.tFaxSent2 == null) {
                 oncHis.tFaxSent2 = Utils.getFormattedDate( date );
                 oncHis.tFaxSent2By = this.role.userID();
                 this.oncHistoryValueChanged( oncHis.tFaxSent2, "tFaxSent2", oncHis );
-              }
-              else {
+              } else {
                 oncHis.tFaxSent3 = Utils.getFormattedDate( date );
                 oncHis.tFaxSent3By = this.role.userID();
                 this.oncHistoryValueChanged( oncHis.tFaxSent3, "tFaxSent3", oncHis );
@@ -556,7 +545,7 @@ export class ParticipantPageComponent implements OnInit {
       },
       err => {
         if (err._body === Auth.AUTHENTICATION_ERROR) {
-          this.router.navigate( [ Statics.HOME_URL ] );
+          this.router.navigate( [Statics.HOME_URL] );
         }
         this.disableTissueRequestButton = false;
         this.additionalMessage = "Error - Downloading pdf file\nPlease contact your DSM developer";
@@ -566,7 +555,7 @@ export class ParticipantPageComponent implements OnInit {
   }
 
   downloadFile( data: Response, type: string ) {
-    var blob = new Blob( [ data ], {type: "application/pdf"} );
+    var blob = new Blob( [data], {type: "application/pdf"} );
 
     let shortId = this.participant.data.profile[ "hruid" ];
 
@@ -642,8 +631,7 @@ export class ParticipantPageComponent implements OnInit {
                 let abstractionFieldValue = AbstractionGroup.parse( val );
                 this.finalFields.push( abstractionFieldValue );
               } );
-            }
-            else {
+            } else {
               if (jsonData.abstraction != null) {
                 this.abstractionFields = [];
                 jsonData.abstraction.forEach( ( val ) => {
@@ -686,8 +674,7 @@ export class ParticipantPageComponent implements OnInit {
         let result = Result.parse( data );
         if (result.code != 200) {
           this.additionalMessage = "Couldn't lock participant";
-        }
-        else {
+        } else {
           if (result.code === 200 && result.body != null) {
             let jsonData: any | any[] = JSON.parse( result.body );
             let abstraction: Abstraction = Abstraction.parse( jsonData );
@@ -701,18 +688,15 @@ export class ParticipantPageComponent implements OnInit {
                   activity.aStatus = abstraction.aStatus;
                   this.participant.abstractionActivities[ index ] = activity;
                 }
-              }
-              else {
+              } else {
                 this.participant.abstractionActivities.push( abstraction );
               }
-            }
-            else {
+            } else {
               this.participant.abstractionActivities = [];
               this.participant.abstractionActivities.push( abstraction );
             }
             this.additionalMessage = null;
-          }
-          else {
+          } else {
             this.additionalMessage = "Error";
           }
         }
@@ -720,7 +704,7 @@ export class ParticipantPageComponent implements OnInit {
       },
       err => {
         if (err._body === Auth.AUTHENTICATION_ERROR) {
-          this.router.navigate( [ Statics.HOME_URL ] );
+          this.router.navigate( [Statics.HOME_URL] );
         }
       }
     );
@@ -733,8 +717,7 @@ export class ParticipantPageComponent implements OnInit {
         let result = Result.parse( data );
         if (result.code != 200) {
           this.additionalMessage = "Couldn't break lock of participant";
-        }
-        else {
+        } else {
           if (result.code === 200 && result.body != null) {
             let jsonData: any | any[] = JSON.parse( result.body );
             let abstraction: Abstraction = Abstraction.parse( jsonData );
@@ -748,15 +731,14 @@ export class ParticipantPageComponent implements OnInit {
               }
             }
             this.additionalMessage = null;
-          }
-          else {
+          } else {
             this.additionalMessage = "Error";
           }
         }
       },
       err => {
         if (err._body === Auth.AUTHENTICATION_ERROR) {
-          this.router.navigate( [ Statics.HOME_URL ] );
+          this.router.navigate( [Statics.HOME_URL] );
         }
       }
     );
@@ -770,8 +752,7 @@ export class ParticipantPageComponent implements OnInit {
         if (result.code != 200 && result.body != null) {
           this.additionalMessage = result.body;
           abstraction.colorNotFinished = true;
-        }
-        else if (result.code === 200 && result.body != null) {
+        } else if (result.code === 200 && result.body != null) {
           let jsonData: any | any[] = JSON.parse( result.body );
           let abstraction: Abstraction = Abstraction.parse( jsonData );
           this.participant[ abstraction.activity ] = abstraction;
@@ -785,8 +766,7 @@ export class ParticipantPageComponent implements OnInit {
           }
           this.additionalMessage = null;
           abstraction.colorNotFinished = false;
-        }
-        else {
+        } else {
           this.errorMessage = "Something went wrong! Please contact your DSM developer";
         }
 
@@ -794,7 +774,7 @@ export class ParticipantPageComponent implements OnInit {
       },
       err => {
         if (err._body === Auth.AUTHENTICATION_ERROR) {
-          this.router.navigate( [ Statics.HOME_URL ] );
+          this.router.navigate( [Statics.HOME_URL] );
         }
       }
     );
@@ -809,8 +789,7 @@ export class ParticipantPageComponent implements OnInit {
         let result = Result.parse( data );
         if (result.code != 200 && result.body != null) {
           this.additionalMessage = result.body;
-        }
-        else if (result.code === 200 && result.body != null) {
+        } else if (result.code === 200 && result.body != null) {
           let jsonData: any | any[] = JSON.parse( result.body );
           let abstraction: Abstraction = Abstraction.parse( jsonData );
           this.participant[ abstraction.activity ] = abstraction;
@@ -818,14 +797,13 @@ export class ParticipantPageComponent implements OnInit {
           this.additionalMessage = null;
           this.currentPatchField = null;
           this.patchFinished = true;
-        }
-        else {
+        } else {
           this.errorMessage = "Something went wrong! Please contact your DSM developer";
         }
       },
       err => {
         if (err._body === Auth.AUTHENTICATION_ERROR) {
-          this.router.navigate( [ Statics.HOME_URL ] );
+          this.router.navigate( [Statics.HOME_URL] );
         }
       }
     );
@@ -845,8 +823,7 @@ export class ParticipantPageComponent implements OnInit {
         abstraction.filesUsed = abstraction.filesUsed.concat( ", " + fileName );
         this.abstractionFilesUsedChanged( abstraction );
       }
-    }
-    else {
+    } else {
       abstraction.filesUsed = fileName;
       this.abstractionFilesUsedChanged( abstraction );
     }
@@ -873,13 +850,11 @@ export class ParticipantPageComponent implements OnInit {
       } );
       if (name != undefined && name != null && name !== "") {
         return name;
-      }
-      else {
+      } else {
         if (medicalProvider != null) {
           if ("PHYSICIAN" === medicalProvider.type) {
             return medicalProvider.physicianName;
-          }
-          else {
+          } else {
             return medicalProvider.institutionName;
           }
         }
@@ -898,23 +873,19 @@ export class ParticipantPageComponent implements OnInit {
     let v;
     if (typeof evt === "string") {
       v = evt;
-    }
-    else {
+    } else {
       if (evt.srcElement != null && typeof evt.srcElement.value === "string") {
         v = evt.srcElement.value;
-      }
-      else if (evt.value != null) {
+      } else if (evt.value != null) {
         v = evt.value;
-      }
-      else if (evt.checked != null) {
+      } else if (evt.checked != null) {
         v = evt.checked;
       }
     }
     if (v !== null) {
       if (this.participant.participant.additionalValues != null) {
         this.participant.participant.additionalValues[ colName ] = v;
-      }
-      else {
+      } else {
         let addArray = {};
         addArray[ colName ] = v;
         this.participant.participant.additionalValues = addArray;
@@ -935,14 +906,14 @@ export class ParticipantPageComponent implements OnInit {
 
   downloadPDFs( configName: string ) {
     this.disableDownload = true;
-    this.dsmService.downloadPDF( this.participant.data.profile['guid'], this.compService.getRealm(), configName ).subscribe(
+    this.dsmService.downloadPDF( this.participant.data.profile[ 'guid' ], this.compService.getRealm(), configName ).subscribe(
       data => {
         this.downloadFile( data, "_" + configName );
         this.disableDownload = false;
       },
       err => {
         if (err._body === Auth.AUTHENTICATION_ERROR) {
-          this.router.navigate( [ Statics.HOME_URL ] );
+          this.router.navigate( [Statics.HOME_URL] );
         }
         this.additionalMessage = "Error - Downloading consent pdf file\nPlease contact your DSM developer";
         this.disableDownload = false;

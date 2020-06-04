@@ -250,6 +250,22 @@
             <ng-container *ngFor="let alias of getKeys()">
               <td *ngFor="let col of selectedColumns[alias]"
                   (click)="openParticipant(pt, alias)">
+                <ng-container *ngIf="col.participantColumn.esData && pt.data.invitations != null">
+                  <ng-container *ngIf="col.participantColumn.tableAlias === 'invitations'">
+                    <ul class="NO-PADDING-START">
+                      <li class="LIST-SEPARATOR" *ngFor="let invite of pt.data.invitations">
+                        <p class="BIT-OF-MARGIN" *ngIf="invite != null">
+                          <ng-container *ngIf="col.type === 'DATE'">
+                            {{invite[col.participantColumn.name] | date:'medium'}}
+                          </ng-container>
+                          <ng-container *ngIf="col.type === 'TEXT'">
+                            {{invite[col.participantColumn.name]}}
+                          </ng-container>
+                        </p>
+                      </li>
+                    </ul>
+                  </ng-container>
+                </ng-container>
                 <ng-container *ngIf="col.participantColumn.esData && pt.data.activities != null">
 
                   <ng-container *ngIf="pt.data.getActivityDataByCode(alias) as activityData">
@@ -366,8 +382,12 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                         {{pt.data[col.participantColumn.name]}}
                       </ng-container>
                       <ng-container
-                        *ngIf="col.participantColumn.object != null && pt.data[col.participantColumn.object] != null && pt.data[col.participantColumn.object][col.participantColumn.name]!= null">
+                        *ngIf="col.participantColumn.object != null && pt.data[col.participantColumn.object] != null && pt.data[col.participantColumn.object][col.participantColumn.name]!= null && col.participantColumn.name !== 'preferredLanguage'">
                         {{pt.data[col.participantColumn.object][col.participantColumn.name]}}
+                      </ng-container>
+                      <ng-container
+                        *ngIf="col.participantColumn.name === 'preferredLanguage' && pt.data[col.participantColumn.object] != null && pt.data[col.participantColumn.object][col.participantColumn.name]!= null">
+                        {{getlanguage().getLanguageName(pt.data[col.participantColumn.object][col.participantColumn.name])}}
                       </ng-container>
                     </ng-container>
                   </div>
