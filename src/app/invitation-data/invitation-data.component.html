@@ -8,7 +8,7 @@
       <div *ngIf="invitation.voidedAt != null">Voided: {{invitation.voidedAt | date:'medium'}}</div>
       <div *ngIf="invitation.contactEmail != null">Contact Email: {{invitation.contactEmail}}</div>
       <div *ngIf="invitation.guid != null">Invitation Code: {{invitation.guid}}</div>
-      <div *ngIf="invitation.notes != null">Notes: {{invitation.notes}}</div>
+      <div>Notes: {{invitation.notes}}</div>
     </div>
   </fieldset>
 </div>
