@@ -47,6 +47,7 @@ export const AppRoutes = [
   {path: Statics.SHIPPING_DEACTIVATED, component: ShippingComponent, canActivate: [ AuthGuard ]},
   {path: Statics.SHIPPING_UPLOADED, component: ShippingComponent, canActivate: [ AuthGuard ]},
   {path: Statics.SHIPPING_TRIGGERED, component: ShippingComponent, canActivate: [ AuthGuard ]},
+  {path: Statics.SHIPPING_WAITING, component: ShippingComponent, canActivate: [ AuthGuard ]},
 
   {path: "scan", component: ScanComponent, canActivate: [ AuthGuard ]},
   {path: "shippingSearch", component: ShippingSearchComponent, canActivate: [ AuthGuard ]},

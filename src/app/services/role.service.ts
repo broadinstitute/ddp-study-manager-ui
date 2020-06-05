@@ -27,26 +27,28 @@ export class RoleService {
   private _isQC: boolean = false;
   private _isAbstractionAdmin: boolean = false;
   private _canEditDrugList: boolean = false;
+  private _viewAuthorization: boolean = false;
+  private _authorize: boolean = false;
 
   private _userId: string;
   private _user: string;
   private _userEmail: string;
   private _userSetting: UserSetting;
 
-  constructor(private sessionService: SessionService) {
+  constructor( private sessionService: SessionService ) {
     let token: string = this.sessionService.getDSMToken();
-    this.setRoles(token);
+    this.setRoles( token );
   }
 
-  public setRoles(token: string) {
+  public setRoles( token: string ) {
     if (token != null) {
-      var obj: any = this.sessionService.getDSMClaims(token);
+      var obj: any = this.sessionService.getDSMClaims( token );
       let accessRoles: string = obj.USER_ACCESS_ROLE;
       if (accessRoles != null) {
-        let roles: string[] = JSON.parse(accessRoles);
+        let roles: string[] = JSON.parse( accessRoles );
         for (let entry of roles) {
           // only special kit_shipping_xxx rights should get added here, not the overall only kit_shipping_view
-          if (entry.startsWith("kit_shipping") && entry !== "kit_shipping_view") {
+          if (entry.startsWith( "kit_shipping" ) && entry !== "kit_shipping_view") {
             this._isShipping = true;
           }
           else if (entry === "mr_request") {
@@ -109,14 +111,20 @@ export class RoleService {
           else if (entry === "mr_abstraction_admin") {
             this._isAbstractionAdmin = true;
           }
-          else if (entry === 'drug_list_edit') {
+          else if (entry === "drug_list_edit") {
             this._canEditDrugList = true;
+          }
+          else if (entry === "kit_authorization_view") {
+            this._viewAuthorization = true;
+          }
+          else if (entry === "kit_authorization") {
+            this._authorize = true;
           }
         }
       }
       let userSettings: any = obj.USER_SETTINGS;
       if (userSettings != null && userSettings !== "null") {
-        this._userSetting = UserSetting.parse(JSON.parse(userSettings));
+        this._userSetting = UserSetting.parse( JSON.parse( userSettings ) );
       }
       this._userId = obj.USER_ID;
       this._user = obj.USER_NAME;
@@ -222,11 +230,19 @@ export class RoleService {
     return this._userSetting;
   }
 
-  public setUserSetting(userSettings: UserSetting) {
+  public setUserSetting( userSettings: UserSetting ) {
     this._userSetting = userSettings;
   }
 
   public allowedToEditDrugList() {
     return this._canEditDrugList;
+  }
+
+  public allowedToViewAuthorization() {
+    return this._viewAuthorization;
+  }
+
+  public allowedToAuthorize() {
+    return this._authorize;
   }
 }

@@ -20,11 +20,16 @@
           <span class="caret"></span></a>
         <ul class="dropdown-menu">
           <!-- Summary and report pages, only if you have right to handle samples or view sample lists -->
-          <li *ngIf="hasRole().allowToViewSampleLists() || hasRole().allowedToHandleSamples()"><a href="#" [routerLink]="['/unsentOverview']"> Unsent Kits Overview </a></li>
+          <li *ngIf="hasRole().allowToViewSampleLists() || hasRole().allowedToHandleSamples()"><a href="#" [routerLink]="['/unsentOverview']"> Unsent Kits
+            Overview </a></li>
           <li *ngIf="hasRole().allowToViewSampleLists() || hasRole().allowedToHandleSamples()"><a href="#" [routerLink]="['/shippingReport']"> Report </a></li>
-          <li *ngIf="hasRole().allowToViewSampleLists() || hasRole().allowedToHandleSamples()"><a href="#" [routerLink]="['/shippingDashboard']"> Summary </a></li>
+          <li *ngIf="hasRole().allowToViewSampleLists() || hasRole().allowedToHandleSamples()"><a href="#" [routerLink]="['/shippingDashboard']"> Summary </a>
+          </li>
           <hr *ngIf="hasRole().allowToViewSampleLists() || hasRole().allowedToHandleSamples()">
-          <li *ngIf="hasRole().allowToViewSampleLists() || hasRole().allowedToHandleSamples()"><a [routerLink]="['/shippingUploaded']"> Kits without Labels </a></li>
+          <li *ngIf="( hasRole().allowToViewSampleLists() || hasRole().allowedToHandleSamples() ) && (hasRole().allowedToViewAuthorization() ||hasRole().allowedToAuthorize()) "><a [routerLink]="['/shippingWaiting']"> Kits waiting for
+            approval </a></li>
+          <li *ngIf="hasRole().allowToViewSampleLists() || hasRole().allowedToHandleSamples()"><a [routerLink]="['/shippingUploaded']"> Kits without Labels </a>
+          </li>
           <li *ngIf="hasRole().allowToViewSampleLists() || hasRole().allowedToHandleSamples()"><a [routerLink]="['/shippingQueue']"> Queue </a></li>
           <li *ngIf="hasRole().allowToViewSampleLists() || hasRole().allowedToHandleSamples()"><a [routerLink]="['/shippingError']"> Error </a></li>
           <!-- Scan pages, only if you have right to handle samples or to receive samples -->
@@ -38,7 +43,8 @@
           <!--<li *ngIf="hasRole().allowToViewSampleLists() || hasRole().allowedToHandleSamples()"><a [routerLink]="['/shippingTriggered']"> Kits Label triggered </a></li>-->
           <li *ngIf="hasRole().allowToViewSampleLists() || hasRole().allowedToHandleSamples()"><a [routerLink]="['/shippingSent']"> Sent </a></li>
           <li *ngIf="hasRole().allowToViewSampleLists() || hasRole().allowedToHandleSamples()"><a [routerLink]="['/shippingReceived']"> Received </a></li>
-          <li *ngIf="hasRole().allowToViewSampleLists() || hasRole().allowedToHandleSamples()"><a [routerLink]="['/shippingOverview']"> Sent/Received Overview </a></li>
+          <li *ngIf="hasRole().allowToViewSampleLists() || hasRole().allowedToHandleSamples()"><a [routerLink]="['/shippingOverview']"> Sent/Received
+            Overview </a></li>
           <li *ngIf="hasRole().allowedToDeactivateKits()"><a [routerLink]="['/shippingDeactivated']"> Deactivated </a></li>
           <!-- Search for a kit, only if you have right to handle samples -->
           <hr *ngIf="hasRole().allowedToHandleSamples()">
@@ -63,7 +69,8 @@
           <li><a *ngIf="hasRole().isAbstractionAdmin()" href="#" [routerLink]="['/medicalRecordAbstractionSettings']"> MR Abstraction Settings </a></li>
         </ul>
       </li>
-      <li class="dropdown" *ngIf="getAuth().authenticated() && (hasRole().allowedToViewMailingList() || hasRole().allowedToExitParticipant() || hasRole().allowedToCreateSurveys() || hasRole().allowedToDownloadPDF() || hasRole().allowedToSkipParticipantEvents())">
+      <li class="dropdown"
+          *ngIf="getAuth().authenticated() && (hasRole().allowedToViewMailingList() || hasRole().allowedToExitParticipant() || hasRole().allowedToCreateSurveys() || hasRole().allowedToDownloadPDF() || hasRole().allowedToSkipParticipantEvents())">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#" (click)="doNothing()"><b> Miscellaneous </b>
           <span class="caret"></span></a>
         <ul class="dropdown-menu">
@@ -73,12 +80,13 @@
           <li *ngIf="hasRole().allowedToCreateSurveys()"><a href="#" [routerLink]="['/survey']"> Follow-Up Survey </a></li>
           <li *ngIf="hasRole().allowedToDownloadPDF()"><a href="#" [routerLink]="['/downloadPDF']"> Download PDF </a></li>
           <li *ngIf="hasRole().allowedToDownloadNDI()"><a href="#" [routerLink]="['/ndi']"> NDI Download </a></li>
-          <li ><a href="#" [routerLink]="['/drugList']"> Drug List </a></li>
+          <li><a href="#" [routerLink]="['/drugList']"> Drug List </a></li>
         </ul>
       </li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
-      <li class="Float--left" *ngIf="getAuth().authenticated() && (hasRole().allowToViewSampleLists() || hasRole().allowedToHandleSamples() || hasRole().allowedToViewMedicalRecords())">
+      <li class="Float--left"
+          *ngIf="getAuth().authenticated() && (hasRole().allowToViewSampleLists() || hasRole().allowedToHandleSamples() || hasRole().allowedToViewMedicalRecords())">
         <a href="#" [routerLink]="['/userSettings']"><b> User Settings </b></a>
       </li>
       <li class="Float--right"><a href="#" (click)="doLogin()" *ngIf="!getAuth().authenticated()"><b>Log In</b></a></li>

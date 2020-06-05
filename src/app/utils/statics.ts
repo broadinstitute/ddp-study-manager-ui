@@ -19,6 +19,7 @@ export class Statics {
   public static SHIPPING_DEACTIVATED: string = "shippingDeactivated";
   public static SHIPPING_UPLOADED: string = "shippingUploaded";
   public static SHIPPING_TRIGGERED: string = "shippingTriggered";
+  public static SHIPPING_WAITING: string = "shippingWaiting";
 
   public static UNSENT_OVERVIEW: string = "unsentOverview";
   public static SHIPPING_DASHBOARD: string = "shippingDashboard";

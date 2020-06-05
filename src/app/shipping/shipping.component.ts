@@ -33,6 +33,7 @@ export class ShippingComponent implements OnInit {
   DEACTIVATED: string = "deactivated";
   ACTIVATED: string = "activated";
   TRIGGERED: string = "triggered";
+  WAITING: string = "waiting";
 
   EXPRESS: string = "express";
   NAME_LABELS: string = "nameLabels";
@@ -60,6 +61,7 @@ export class ShippingComponent implements OnInit {
 
   kitRequest: KitRequest = null;
   deactivationReason: string = null;
+  denialReason: string = null;
 
   modalType: string;
 
@@ -195,6 +197,9 @@ export class ShippingComponent implements OnInit {
     }
     else if (url.indexOf( Statics.SHIPPING_TRIGGERED ) > -1) {
       this.shippingPage = this.TRIGGERED;
+    }
+    else if (url.indexOf( Statics.SHIPPING_WAITING ) > -1) {
+      this.shippingPage = this.WAITING;
     }
     else {
       this.errorMessage = "Error - Router has unknown url\nPlease contact your DSM developer";
@@ -481,7 +486,7 @@ export class ShippingComponent implements OnInit {
   setKitRequest( kitRequest: KitRequest, modalType: string ) {
     this.kitRequest = kitRequest;
     this.modalType = modalType;
-    if (modalType !== this.DEACTIVATED) {
+    if (modalType !== this.DEACTIVATED && modalType != this.WAITING) {
       this.dsmService.rateOfExpressLabel( this.kitRequest.dsmKitRequestId ).subscribe(
         data => {
           // console.log(`Deactivating kit request received: ${JSON.stringify(data, null, 2)}`);
@@ -577,7 +582,7 @@ export class ShippingComponent implements OnInit {
           // console.log(`Deactivating kit request received: ${JSON.stringify(data, null, 2)}`);
           let result = Result.parse( data );
           if (result.code == 200) {
-            if (result.body != "") {
+            if (result.body !== "") {
               this.tmpKitRequest = kitRequest;
               this.alertText = result.body;
               this.modalType = this.ACTIVATED;
@@ -730,5 +735,38 @@ export class ShippingComponent implements OnInit {
 
   getUtil(): Utils {
     return this.util;
+  }
+
+  authorize( kitRequest: KitRequest, authorize: boolean ) {
+    if (kitRequest != null) {
+      this.loading = true;
+      let payload = null;
+      if (!authorize) {
+        let tmp = {
+          "reason": this.denialReason
+        };
+        payload = JSON.stringify( tmp );
+      }
+      ;
+      this.dsmService.authorize( kitRequest.dsmKitRequestId, authorize, payload ).subscribe(
+        data => {
+          if (this.kitType != null) {
+            this.loadKitRequestData( this.kitType );
+          }
+          this.loading = false;
+        },
+        err => {
+          if (err._body === Auth.AUTHENTICATION_ERROR) {
+            this.auth.logout();
+          }
+          this.loading = false;
+          this.errorMessage = "Error - Deactivating kit request\n" + err;
+        }
+      );
+      this.kitRequest = null;
+      this.denialReason = null;
+      this.modal.hide();
+      window.scrollTo( 0, 0 );
+    }
   }
 }

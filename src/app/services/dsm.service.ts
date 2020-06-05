@@ -607,6 +607,15 @@ export class DSMService {
     return this.http.patch( url, null, this.buildQueryHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError );
   }
 
+  public authorize( kitRequestId: string, authorize: boolean, json: string ): Observable<any> {
+    let url = this.baseUrl + DSMService.UI + "authorizeKit";
+    let map: { name: string, value: any }[] = [];
+    map.push( { name: "kitRequestId", value: kitRequestId } );
+    map.push( { name: "userId", value: this.role.userID() } );
+    map.push( { name: "activate", value: authorize } );
+    return this.http.patch( url, json, this.buildQueryHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError );
+  }
+
   public saveUserSettings( json: string ) {
     let url = this.baseUrl + DSMService.UI + "userSettings";
     let map: { name: string, value: any }[] = [];
