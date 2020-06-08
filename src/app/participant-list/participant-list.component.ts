@@ -29,7 +29,7 @@ import {FieldSettings} from "../field-settings/field-settings.model";
 @Component( {
   selector: "app-participant-list",
   templateUrl: "./participant-list.component.html",
-  styleUrls: [ "./participant-list.component.css" ]
+  styleUrls: ["./participant-list.component.css"]
 } )
 export class ParticipantListComponent implements OnInit {
 
@@ -81,7 +81,7 @@ export class ParticipantListComponent implements OnInit {
   activityDefinitions = new Map();
 
   selectedColumns = {};
-  defaultColumns = [ Filter.REALM, Filter.SHORT_ID, Filter.FIRST_NAME, Filter.LAST_NAME, Filter.ENROLLMENT_STATUS ];
+  defaultColumns = [Filter.REALM, Filter.SHORT_ID, Filter.FIRST_NAME, Filter.LAST_NAME, Filter.ENROLLMENT_STATUS];
 
   selectedFilter: Filter = null;
   savedFilters: ViewFilter[] = [];
@@ -98,6 +98,7 @@ export class ParticipantListComponent implements OnInit {
   currentView: string = null;
   showHelp: boolean = false;
   filtered: boolean = false;
+  hasInvitation: boolean = false;
 
   constructor( private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
                private router: Router, private auth: Auth, private route: ActivatedRoute, private util: Utils, private language: Language ) {
@@ -118,8 +119,7 @@ export class ParticipantListComponent implements OnInit {
     this.additionalMessage = null;
     if (localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) == null || localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) === undefined) {
       this.additionalMessage = "Please select a realm";
-    }
-    else {
+    } else {
       this.checkRight();
     }
     window.scrollTo( 0, 0 );
@@ -171,13 +171,13 @@ export class ParticipantListComponent implements OnInit {
         this.assignees.push( new Assignee( "-1", "Remove Assignee", "" ) );
         jsonData = data;
         this.dataSources = new Map( [
-          [ "data", "Participant" ],
-          [ "p", "Participant - DSM" ],
-          [ "m", "Medical Record" ],
-          [ "oD", "Onc History" ],
-          [ "t", "Tissue" ],
-          [ "k", "Sample" ],
-          [ "a", "Abstraction" ] ] );
+          ["data", "Participant"],
+          ["p", "Participant - DSM"],
+          ["m", "Medical Record"],
+          ["oD", "Onc History"],
+          ["t", "Tissue"],
+          ["k", "Sample"],
+          ["a", "Abstraction"]] );
         this.sourceColumns = {};
         this.selectedColumns = {};
         this.settings = {};
@@ -220,8 +220,7 @@ export class ParticipantListComponent implements OnInit {
                   this.sourceColumns[ "p" ] = [];
                 }
                 this.sourceColumns[ "p" ].push( filter );
-              }
-              else {
+              } else {
                 if (this.sourceColumns[ key ] == null || this.sourceColumns[ key ] == undefined) {
                   this.sourceColumns[ key ] = [];
                 }
@@ -244,7 +243,7 @@ export class ParticipantListComponent implements OnInit {
             possibleColumns.push( new Filter( new ParticipantColumn( "Survey Status", "status", activityDefinition.activityCode, null, true ), Filter.OPTION_TYPE, [
               new NameValue( "COMPLETE", "Completed" ),
               new NameValue( "CREATED", "Created" ),
-              new NameValue( "IN_PROGRESS", "In Progress" ) ] ) );
+              new NameValue( "IN_PROGRESS", "In Progress" )] ) );
             if (activityDefinition != null && activityDefinition.questions != null) {
               for (let question of activityDefinition.questions) {
                 if (question.stableId != null) {
@@ -256,8 +255,7 @@ export class ParticipantListComponent implements OnInit {
                     question.options.forEach( ( value: Option ) => {
                       options.push( new NameValue( value.optionStableId, value.optionText ) );
                     } );
-                  }
-                  else if (question.questionType === "NUMERIC") {
+                  } else if (question.questionType === "NUMERIC") {
                     type = Filter.NUMBER_TYPE;
                   }
                   let displayName = this.getQuestionOrStableId( question );
@@ -267,7 +265,7 @@ export class ParticipantListComponent implements OnInit {
               }
               let name = activityDefinition.activityName == undefined || activityDefinition.activityName === "" ? activityDefinition.activityCode : activityDefinition.activityName;
               this.dataSources.set( activityDefinition.activityCode, name );
-;             this.sourceColumns[ activityDefinition.activityCode ] = possibleColumns;
+              ;this.sourceColumns[ activityDefinition.activityCode ] = possibleColumns;
               this.selectedColumns[ activityDefinition.activityCode ] = [];
               //add now all these columns to allFieldsName for the search-bar
               possibleColumns.forEach( filter => {
@@ -293,8 +291,7 @@ export class ParticipantListComponent implements OnInit {
                 field.possibleValues.forEach( ( value ) => {
                   tmpValues.push( new NameValue( value.value, value.value ) );
                 } );
-              }
-              else if (field.type === "multi_type" || field.type === "multi_type_array") {
+              } else if (field.type === "multi_type" || field.type === "multi_type_array") {
                 tmpType = field.type;
               }
               this.sourceColumns[ "a" ].push( new Filter( new ParticipantColumn( field.displayName, tmp, abstractionGroup.abstractionGroupId.toString(), "final" ), tmpType, tmpValues, new NameValue( tmp, null ) ) );
@@ -306,8 +303,7 @@ export class ParticipantListComponent implements OnInit {
             //add when abstraction is searchable
             // this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
           } );
-        }
-        else {
+        } else {
           this.dataSources.delete( "a" );
         }
         if (jsonData.filters != null) {
@@ -315,8 +311,7 @@ export class ParticipantListComponent implements OnInit {
             let view: ViewFilter = ViewFilter.parseFilter( val, this.sourceColumns );
             if (val.userId.includes( "System" )) {
               this.quickFilters.push( view );
-            }
-            else {
+            } else {
               this.savedFilters.push( view );
             }
           } );
@@ -355,18 +350,15 @@ export class ParticipantListComponent implements OnInit {
     for (let filter of Filter.ALL_COLUMNS) {
       if (filter.participantColumn.tableAlias === "o" || filter.participantColumn.tableAlias === "ex" || filter.participantColumn.tableAlias === "r") {
         this.sourceColumns[ "p" ].push( filter );
-      }
-      else if (filter.participantColumn.tableAlias === "inst") {
+      } else if (filter.participantColumn.tableAlias === "inst") {
         this.sourceColumns[ "m" ].push( filter );
-      }
-      else if (this.sourceColumns[ filter.participantColumn.tableAlias ] != null && this.sourceColumns[ filter.participantColumn.tableAlias ] != undefined) {
+      } else if (this.sourceColumns[ filter.participantColumn.tableAlias ] != null && this.sourceColumns[ filter.participantColumn.tableAlias ] != undefined) {
         //TODO - can be changed to add all after all DDPs are migrated
         if (this.hasESData) {
           this.sourceColumns[ filter.participantColumn.tableAlias ].push( filter );
           let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
           this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
-        }
-        else {
+        } else {
           if (filter.participantColumn.tableAlias === "data" && ( filter.participantColumn.object === "profile" || filter.participantColumn.object === "address" )) {
             if (filter.participantColumn.name !== "doNotContact" && filter.participantColumn.name !== "email" && filter.participantColumn.name !== "legacyShortId"
               && filter.participantColumn.name !== "legacyAltPid" && filter.participantColumn.name !== "createdAt") {
@@ -374,13 +366,11 @@ export class ParticipantListComponent implements OnInit {
               let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
               this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
             }
-          }
-          else if (filter.participantColumn.tableAlias === "data" && filter.participantColumn.object == null) {
+          } else if (filter.participantColumn.tableAlias === "data" && filter.participantColumn.object == null) {
             this.sourceColumns[ filter.participantColumn.tableAlias ].push( filter );
             let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
             this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
-          }
-          else if (filter.participantColumn.tableAlias !== "data") {
+          } else if (filter.participantColumn.tableAlias !== "data") {
             this.sourceColumns[ filter.participantColumn.tableAlias ].push( filter );
             let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
             this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
@@ -392,7 +382,7 @@ export class ParticipantListComponent implements OnInit {
 
   private getData() {
     //find viewFilter by filterName
-    let defaultFilter : ViewFilter = null;
+    let defaultFilter: ViewFilter = null;
     if (this.role.getUserSetting().defaultParticipantFilter != null) {
       defaultFilter = this.savedFilters.find( filter => {
         return filter.filterName === this.role.getUserSetting().defaultParticipantFilter;
@@ -404,8 +394,7 @@ export class ParticipantListComponent implements OnInit {
       }
       if (defaultFilter != null && defaultFilter != undefined) {
         this.selectFilter( defaultFilter );
-      }
-      else if (this.role.getUserSetting().defaultParticipantFilter !== "" && this.role.getUserSetting().defaultParticipantFilter !== null && this.role.getUserSetting().defaultParticipantFilter !== undefined) {
+      } else if (this.role.getUserSetting().defaultParticipantFilter !== "" && this.role.getUserSetting().defaultParticipantFilter !== null && this.role.getUserSetting().defaultParticipantFilter !== undefined) {
         this.additionalMessage = "The default filter seems to be deleted, however it is still the default filter as long as not changed in the user settings.";
         this.loadingParticipants = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
         this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null, this.parent, true ).subscribe(
@@ -418,9 +407,11 @@ export class ParticipantListComponent implements OnInit {
               jsonData = data;
               jsonData.forEach( ( val ) => {
                 let participant = Participant.parse( val );
+                if (participant.data.invitations != null && participant.data.invitations.length > 0 && !this.hasInvitation) {
+                  this.showInvitation();
+                }
                 this.participantList.push( participant );
               } );
-              this.showInvitation();
               this.originalParticipantList = this.participantList;
               let date = new Date();
               this.loadedTimeStamp = Utils.getDateFormatted( date, Utils.DATE_STRING_IN_EVENT_CVS );
@@ -441,8 +432,7 @@ export class ParticipantListComponent implements OnInit {
           }
         );
       }
-    }
-    else {
+    } else {
       this.selectFilter( null );
     }
   }
@@ -453,8 +443,7 @@ export class ParticipantListComponent implements OnInit {
     if (viewFilter != null) {
       this.filtered = true;
       // console.log(viewFilter.filters);
-    }
-    else {
+    } else {
       this.filtered = false;
     }
     // console.log(viewFilter);
@@ -466,8 +455,7 @@ export class ParticipantListComponent implements OnInit {
               let t = filter.participantColumn.tableAlias;
               if (t === "r" || t === "o" || t === "ex") {
                 t = "p";
-              }
-              else if (t === "inst") {
+              } else if (t === "inst") {
                 t = "m";
               }
               for (let f of this.sourceColumns[ t ]) {
@@ -489,9 +477,11 @@ export class ParticipantListComponent implements OnInit {
           jsonData = data;
           jsonData.forEach( ( val ) => {
             let participant = Participant.parse( val );
+            if (participant.data.invitations != null && participant.data.invitations.length > 0 && !this.hasInvitation) {
+              this.showInvitation();
+            }
             this.participantList.push( participant );
           } );
-          this.showInvitation();
           this.originalParticipantList = this.participantList;
           if (viewFilter != null) {
             this.filterQuery = viewFilter.queryItems;
@@ -522,8 +512,7 @@ export class ParticipantListComponent implements OnInit {
             if (!this.hasESData) {
               this.filterClientSide( viewFilter );
             }
-          }
-          else {
+          } else {
             //if selected columns are not set, set to default columns
             if (this.selectedColumns[ "data" ].length == 0) {
               this.dataSources.forEach( ( value: string, key: string ) => {
@@ -661,8 +650,7 @@ export class ParticipantListComponent implements OnInit {
       let index = this.selectedColumns[ parent ].indexOf( f );
       // console.log( index );
       this.selectedColumns[ parent ].splice( index, 1 );
-    }
-    else {
+    } else {
       this.selectedColumns[ parent ].push( column );
     }
   }
@@ -674,8 +662,7 @@ export class ParticipantListComponent implements OnInit {
         tabAnchor = "Medical Records";
         this.selectedMR = "";
         this.selectedOncOrTissue = "";
-      }
-      else if (colSource === "oD" || colSource === "t") {
+      } else if (colSource === "oD" || colSource === "t") {
         tabAnchor = "Onc History";
         this.selectedMR = "";
         this.selectedOncOrTissue = "";
@@ -688,8 +675,7 @@ export class ParticipantListComponent implements OnInit {
               let pt: Participant = Participant.parse( data[ 0 ] );
               if (pt == null || pt == undefined) {
                 this.errorMessage = "Participant  not found";
-              }
-              else {
+              } else {
                 if (pt.participant != null && pt.participant.ddpParticipantId != null
                   && pt.participant.ddpParticipantId === participant.participant.ddpParticipantId) {
                   this.selectedTab = tabAnchor;
@@ -698,8 +684,7 @@ export class ParticipantListComponent implements OnInit {
                   this.showTissue = false;
                 }
               }
-            }
-            else {
+            } else {
               this.errorMessage = "Error - Loading Participant Information, Please contact your DSM developer";
             }
             this.loadingParticipants = null;
@@ -708,8 +693,7 @@ export class ParticipantListComponent implements OnInit {
             this.errorMessage = "Error - Loading Participant Information, Please contact your DSM developer";
           }
         );
-      }
-      else {
+      } else {
         this.selectedTab = tabAnchor;
         this.participant = participant;
         this.showParticipantInformation = true;
@@ -776,9 +760,11 @@ export class ParticipantListComponent implements OnInit {
             jsonData = data;
             jsonData.forEach( ( val ) => {
               let participant = Participant.parse( val );
+              if (participant.data.invitations != null && participant.data.invitations.length > 0 && !this.hasInvitation) {
+                this.showInvitation();
+              }
               this.participantList.push( participant );
             } );
-            this.showInvitation();
             this.originalParticipantList = this.participantList;
 
             if (!this.hasESData) {
@@ -790,8 +776,7 @@ export class ParticipantListComponent implements OnInit {
             let date = new Date();
             this.loadedTimeStamp = Utils.getDateFormatted( date, Utils.DATE_STRING_IN_EVENT_CVS );
             this.additionalMessage = null;
-          }
-          else {
+          } else {
             this.additionalMessage = "Something went wrong while filtering - List was not filtered!";
           }
           // console.log(this.savedFilters);
@@ -801,8 +786,7 @@ export class ParticipantListComponent implements OnInit {
           this.errorMessage = "Error - Loading Participant List, Please contact your DSM developer\n " + err;
         }
       );
-    }
-    else {
+    } else {
       this.filtered = false;
       this.filterQuery = "";
       this.deselectQuickFilters();
@@ -828,7 +812,7 @@ export class ParticipantListComponent implements OnInit {
     if (filter.participantColumn.name === "sampleQueue") {
       if (filter.type === Filter.OPTION_TYPE) {
         let status = null;
-        for (let [ key, value ] of Object.entries( filter.selectedOptions )) {
+        for (let [key, value] of Object.entries( filter.selectedOptions )) {
           if (value) {
             status = filter.options[ key ].name;
             break;
@@ -870,8 +854,7 @@ export class ParticipantListComponent implements OnInit {
           }
         }
       }
-    }
-    else {
+    } else {
       filterText = Filter.getFilterText( filter, tmp );
     }
     if (filterText != null) {
@@ -952,8 +935,7 @@ export class ParticipantListComponent implements OnInit {
         if (result.code === 500 && result.body != null) {
           this.dup = true;
           return;
-        }
-        else if (result.code !== 500) {
+        } else if (result.code !== 500) {
           this.dup = false;
           this.plus = false;
           this.filterName = null;
@@ -982,104 +964,81 @@ export class ParticipantListComponent implements OnInit {
       this.participantList.sort( ( a, b ) => {
         if (a.data[ object ] == null) {
           return 1;
-        }
-        else if (b.data[ object ] == null) {
+        } else if (b.data[ object ] == null) {
           return -1;
-        }
-        else {
+        } else {
           return this.sort( a.data[ object ][ this.sortField ], b.data[ object ][ this.sortField ], order );
         }
       } );
-    }
-    else if (this.sortParent === "data" && object == null) {
+    } else if (this.sortParent === "data" && object == null) {
       this.participantList.sort( ( a, b ) => ( a.data == null || b.data == null ) ? 1 : this.sort( a.data, b.data, order, this.sortField ) );
-    }
-    else if (this.sortParent === "p") {
+    } else if (this.sortParent === "p") {
       this.participantList.sort( ( a, b ) => {
         if (a.participant == null || a.participant[ this.sortField ] == null) {
           return 1;
-        }
-        else if (b.participant == null || b.participant[ this.sortField ] == null) {
+        } else if (b.participant == null || b.participant[ this.sortField ] == null) {
           return -1;
-        }
-        else {
+        } else {
           return this.sort( a.participant[ this.sortField ], b.participant[ this.sortField ], order );
         }
       } );
-    }
-    else if (this.sortParent === "m") {
+    } else if (this.sortParent === "m") {
       this.participantList.sort( ( a, b ) => {
         if (a.medicalRecords === null || a.medicalRecords == undefined || a.medicalRecords.length < 1) {
           return 1;
-        }
-        else if (b.medicalRecords === null || b.medicalRecords == undefined || b.medicalRecords.length < 1) {
+        } else if (b.medicalRecords === null || b.medicalRecords == undefined || b.medicalRecords.length < 1) {
           return -1;
-        }
-        else {
+        } else {
           a.medicalRecords.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ) );
           b.medicalRecords.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ) );
         }
       } );
-    }
-    else if (this.sortParent === "oD") {
+    } else if (this.sortParent === "oD") {
       this.participantList.sort( ( a, b ) => {
         if (a.oncHistoryDetails === null || a.oncHistoryDetails == undefined || a.oncHistoryDetails.length < 1) {
           return 1;
-        }
-        else if (b.oncHistoryDetails === null || b.oncHistoryDetails == undefined || b.oncHistoryDetails.length < 1) {
+        } else if (b.oncHistoryDetails === null || b.oncHistoryDetails == undefined || b.oncHistoryDetails.length < 1) {
           return -1;
-        }
-        else {
+        } else {
           a.oncHistoryDetails.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ) );
           b.oncHistoryDetails.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ) );
         }
       } );
-    }
-    else if (this.sortParent === "t") {
-    }
-    else if (this.sortParent === "k") {
+    } else if (this.sortParent === "t") {
+    } else if (this.sortParent === "k") {
       this.participantList.sort( ( a, b ) => {
         if (a.kits === null || a.kits == undefined || a.kits.length < 1) {
           return 1;
-        }
-        else if (b.kits === null || b.kits == undefined || b.kits.length < 1) {
+        } else if (b.kits === null || b.kits == undefined || b.kits.length < 1) {
           return -1;
-        }
-        else {
+        } else {
           a.kits.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ) );
           b.kits.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ) );
         }
       } );
-    }
-    else {
+    } else {
       //activity data
       this.participantList.sort( ( a, b ) => {
         let activityDataA = a.data.getActivityDataByCode( this.sortParent );
         let activityDataB = b.data.getActivityDataByCode( this.sortParent );
         if (activityDataA == null) {
           return 1;
-        }
-        else if (activityDataB == null) {
+        } else if (activityDataB == null) {
           return -1;
-        }
-        else {
+        } else {
           if (this.sortField === "createdAt" || this.sortField === "completedAt" || this.sortField === "lastUpdatedAt" || this.sortField === "status") {
             return this.sort( activityDataA[ this.sortField ], activityDataB[ this.sortField ], order );
-          }
-          else {
+          } else {
             let questionAnswerA = this.getQuestionAnswerByName( activityDataA.questionsAnswers, this.sortField );
             let questionAnswerB = this.getQuestionAnswerByName( activityDataB.questionsAnswers, this.sortField );
             if (questionAnswerA == null) {
               return 1;
-            }
-            else if (questionAnswerB == null) {
+            } else if (questionAnswerB == null) {
               return -1;
-            }
-            else {
+            } else {
               if (questionAnswerA.questionType === "DATE") {
                 return this.sort( questionAnswerA.date, questionAnswerB.date, order );
-              }
-              else {
+              } else {
                 return this.sort( questionAnswerA.answer, questionAnswerB.answer, order );
               }
             }
@@ -1096,30 +1055,23 @@ export class ParticipantListComponent implements OnInit {
     }
     if (x === null || x == undefined || x === "") {
       return 1;
-    }
-    else if (y === null || y == undefined || y === "") {
+    } else if (y === null || y == undefined || y === "") {
       return -1;
-    }
-    else {
+    } else {
       if (typeof x === "string") {
         if (x.toLowerCase() < y.toLowerCase()) {
           return -1 * order;
-        }
-        else if (x.toLowerCase() > y.toLowerCase()) {
+        } else if (x.toLowerCase() > y.toLowerCase()) {
           return 1 * order;
-        }
-        else {
+        } else {
           return 0;
         }
-      }
-      else {
+      } else {
         if (x < y) {
           return -1 * order;
-        }
-        else if (x > y) {
+        } else if (x > y) {
           return 1 * order;
-        }
-        else {
+        } else {
           return 0;
         }
       }
@@ -1163,24 +1115,20 @@ export class ParticipantListComponent implements OnInit {
       }
 
       if (source === "m") {
-        Utils.downloadCurrentData( this.participantList, [ [ "data", "data" ], [ "participant", "p" ], [ "medicalRecords", "m" ] ], columns, "Participants-MR-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
+        Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"], ["medicalRecords", "m"]], columns, "Participants-MR-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
         fileCount = fileCount + 1;
-      }
-      else if (source === "oD") {
-        Utils.downloadCurrentData( this.participantList, [ [ "data", "data" ], [ "participant", "p" ], [ "oncHistoryDetails", "oD", "tissues", "t" ] ], columns, "Participants-OncHistory-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
+      } else if (source === "oD") {
+        Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"], ["oncHistoryDetails", "oD", "tissues", "t"]], columns, "Participants-OncHistory-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
         fileCount = fileCount + 1;
-      }
-      else if (source === "k") {
-        Utils.downloadCurrentData( this.participantList, [ [ "data", "data" ], [ "participant", "p" ], [ "kits", "k" ] ], columns, "Participants-Sample-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
+      } else if (source === "k") {
+        Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"], ["kits", "k"]], columns, "Participants-Sample-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
         fileCount = fileCount + 1;
-      }
-      else if (source === "a") {
-        Utils.downloadCurrentData( this.participantList, [ [ "data", "data" ], [ "participant", "p" ], [ "abstractionActivities", "a" ] ], columns, "Participants-AbstractionActivity-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
-        Utils.downloadCurrentData( this.participantList, [ [ "data", "data" ], [ "participant", "p" ], [ "abstractionSummary", "a" ] ], columns, "Participants-Abstraction-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
+      } else if (source === "a") {
+        Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"], ["abstractionActivities", "a"]], columns, "Participants-AbstractionActivity-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
+        Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"], ["abstractionSummary", "a"]], columns, "Participants-Abstraction-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
         fileCount = fileCount + 1;
-      }
-      else {
-        Utils.downloadCurrentData( this.participantList, [ [ "data", "data" ], [ source, source ] ], columns, "Participants-" + source + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION, true );
+      } else {
+        Utils.downloadCurrentData( this.participantList, [["data", "data"], [source, source]], columns, "Participants-" + source + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION, true );
         fileCount = fileCount + 1;
       }
     }
@@ -1188,14 +1136,13 @@ export class ParticipantListComponent implements OnInit {
     if (fileCount == 0) {
       if (this.selectedColumns[ "data" ] != null && this.selectedColumns[ "data" ].length > 0) {
         fileCount = fileCount + 1;
-        Utils.downloadCurrentData( this.participantList, [ [ "data", "data" ], [ "participant", "p" ] ], columns, "Participants-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
+        Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"]], columns, "Participants-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
       }
     }
 
     if (fileCount > 1) {
       this.additionalMessage = "Table was downloaded in multiple documents, because of unrelated information";
-    }
-    else {
+    } else {
       this.additionalMessage = null;
     }
   }
@@ -1231,16 +1178,14 @@ export class ParticipantListComponent implements OnInit {
           if (this.assignMR) {
             if (this.assignee.assigneeId === "-1") {
               pt.participant.assigneeMr = null;
-            }
-            else {
+            } else {
               pt.participant.assigneeMr = this.assignee.name;
             }
           }
           if (this.assignTissue) {
             if (this.assignee.assigneeId === "-1") {
               pt.participant.assigneeMr = null;
-            }
-            else {
+            } else {
               pt.participant.assigneeTissue = this.assignee.name;
             }
           }
@@ -1261,7 +1206,7 @@ export class ParticipantListComponent implements OnInit {
         },
         err => {
           if (err._body === Auth.AUTHENTICATION_ERROR) {
-            this.router.navigate( [ Statics.HOME_URL ] );
+            this.router.navigate( [Statics.HOME_URL] );
           }
           this.additionalMessage = "Error - Assigning Participants, Please contact your DSM developer";
         }
@@ -1313,8 +1258,7 @@ export class ParticipantListComponent implements OnInit {
     let jsonPatch = JSON.stringify( data );
     if (queryText != null) {
       this.filtered = true;
-    }
-    else {
+    } else {
       this.filtered = false;
     }
     this.loadingParticipants = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
@@ -1327,9 +1271,11 @@ export class ParticipantListComponent implements OnInit {
         jsonData = data;
         jsonData.forEach( ( val ) => {
           let participant = Participant.parse( val );
+          if (participant.data.invitations != null && participant.data.invitations.length > 0 && !this.hasInvitation) {
+            this.showInvitation();
+          }
           this.participantList.push( participant );
         } );
-        this.showInvitation();
         this.originalParticipantList = this.participantList;
         let date = new Date();
         this.loadedTimeStamp = Utils.getDateFormatted( date, Utils.DATE_STRING_IN_EVENT_CVS );
@@ -1401,8 +1347,7 @@ export class ParticipantListComponent implements OnInit {
     let participantFilters: Filter[];
     if (viewFilter != null && viewFilter.filters != null && viewFilter.filters.length != 0) {
       participantFilters = viewFilter.filters;
-    }
-    else if (viewFilter == null) {
+    } else if (viewFilter == null) {
       participantFilters = this.selectedColumns[ "data" ];
     }
     this.copyParticipantList = this.originalParticipantList;
@@ -1420,8 +1365,7 @@ export class ParticipantListComponent implements OnInit {
                   let first = value.indexOf( "'" );
                   let last = value.lastIndexOf( "'" );
                   value = value.substring( first + 1, last );
-                }
-                else if (value.includes( "\"" )) {
+                } else if (value.includes( "\"" )) {
                   let first = value.indexOf( "\"" );
                   let last = value.lastIndexOf( "\"" );
                   value = value.substring( first + 1, last );
@@ -1434,16 +1378,14 @@ export class ParticipantListComponent implements OnInit {
                   );
                 }
                 this.participantList = this.copyParticipantList;
-              }
-              else {
+              } else {
                 let empt = filterText[ "empty" ];
                 if (empt === "true") {
                   this.copyParticipantList = this.copyParticipantList.filter( participant =>
                     participant.data !== null &&
                     participant.data[ filterText[ "parentName" ] ][ filterText[ "filter1" ][ "name" ] ] === null
                   );
-                }
-                else {
+                } else {
                   let notempt = filterText[ "notEmpty" ];
                   if (notempt === "true") {
                     this.copyParticipantList = this.copyParticipantList.filter( participant =>
@@ -1455,8 +1397,7 @@ export class ParticipantListComponent implements OnInit {
                 this.participantList = this.copyParticipantList;
               }
 
-            }
-            else if (filterText[ "type" ] === "OPTIONS") {
+            } else if (filterText[ "type" ] === "OPTIONS") {
               let results: Participant[] = new Array();
               let temp: Participant[] = new Array();
               for (let option of filterText[ "selectedOptions" ]) {// status
@@ -1485,39 +1426,32 @@ export class ParticipantListComponent implements OnInit {
     return f !== undefined;
   }
 
-  showInvitation( ): boolean {
-    if (this.participantList != null) {
-      let foundInvitation = this.participantList.find( participant => {
-        return participant.data.invitations != null && participant.data.invitations.length > 0;
+  showInvitation(): boolean {
+    if (this.getKeys().find( key => {
+      return key === "invitations";
+    } ) == null) {
+      this.dataSources.set( "invitations", "Invitation" );
+      this.hasInvitation = true;
+
+      let possibleColumns: Array<Filter> = [];
+      possibleColumns.push( new Filter( new ParticipantColumn( "Created", "createdAt", "invitations", null, true ), Filter.DATE_TYPE ) );
+      possibleColumns.push( new Filter( new ParticipantColumn( "Accepted", "acceptedAt", "invitations", null, true ), Filter.DATE_TYPE ) );
+      possibleColumns.push( new Filter( new ParticipantColumn( "Verified", "verifiedAt", "invitations", null, true ), Filter.DATE_TYPE ) );
+      possibleColumns.push( new Filter( new ParticipantColumn( "Voided", "voidedAt", "invitations", null, true ), Filter.DATE_TYPE ) );
+      possibleColumns.push( new Filter( new ParticipantColumn( "Contact Email", "contactEmail", "invitations", null, true ), Filter.TEXT_TYPE ) );
+      possibleColumns.push( new Filter( new ParticipantColumn( "Invitation Code", "guid", "invitations", null, true ), Filter.TEXT_TYPE ) );
+      possibleColumns.push( new Filter( new ParticipantColumn( "Notes", "notes", "invitations", null, true ), Filter.TEXT_TYPE ) );
+      possibleColumns.push( new Filter( new ParticipantColumn( "Type", "type", "invitations", null, true ), Filter.TEXT_TYPE ) );
+
+      this.sourceColumns[ "invitations" ] = possibleColumns;
+      this.selectedColumns[ "invitations" ] = [];
+      possibleColumns.forEach( filter => {
+        let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
+        this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
       } );
-      if (foundInvitation != null) {
-        if (this.getKeys().find( key => {
-          return key === "invitations";
-        } ) == null) {
-          this.dataSources.set( "invitations", "Invitation" );
-
-          let possibleColumns: Array<Filter> = [];
-          possibleColumns.push( new Filter( new ParticipantColumn( "Created", "createdAt",  "invitations", null,true ), Filter.DATE_TYPE ) );
-          possibleColumns.push( new Filter( new ParticipantColumn( "Accepted", "acceptedAt",  "invitations", null,true ), Filter.DATE_TYPE ) );
-          possibleColumns.push( new Filter( new ParticipantColumn( "Verified", "verifiedAt",  "invitations", null,true ), Filter.DATE_TYPE ) );
-          possibleColumns.push( new Filter( new ParticipantColumn( "Voided", "voidedAt",  "invitations", null,true ), Filter.DATE_TYPE ) );
-          possibleColumns.push( new Filter( new ParticipantColumn( "Contact Email", "contactEmail",  "invitations", null,true ), Filter.TEXT_TYPE ) );
-          possibleColumns.push( new Filter( new ParticipantColumn( "Invitation Code", "guid",  "invitations", null,true ), Filter.TEXT_TYPE ) );
-          possibleColumns.push( new Filter( new ParticipantColumn( "Notes", "notes",  "invitations", null,true ), Filter.TEXT_TYPE ) );
-          possibleColumns.push( new Filter( new ParticipantColumn( "Type", "type",  "invitations", null,true ), Filter.TEXT_TYPE ) );
-
-          this.sourceColumns[ "invitations" ] = possibleColumns;
-          this.selectedColumns[ "invitations" ] = [];
-          possibleColumns.forEach( filter => {
-            let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
-            this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
-          } );
-          this.orderColumns();
-        }
-        return true;
-      }
+      this.orderColumns();
     }
-    return false;
+    return true;
   }
 
 }

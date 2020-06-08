@@ -1,3 +1,4 @@
+import {Language} from "../utils/language";
 import {ParticipantColumn} from "./models/column.model";
 import {NameValue} from "../utils/name-value.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
@@ -36,7 +37,7 @@ export class Filter {
   public static EMAIL = new Filter( ParticipantColumn.EMAIL, Filter.TEXT_TYPE );
   public static REGISTRATION_DATE = new Filter( ParticipantColumn.REGISTRATION_DATE, Filter.DATE_TYPE );
   public static DO_NOT_CONTACT = new Filter( ParticipantColumn.DO_NOT_CONTACT, Filter.BOOLEAN_TYPE );
-  public static PREFERRED_LANGUAGE = new Filter( ParticipantColumn.PREFERRED_LANGUAGE, Filter.TEXT_TYPE );
+  public static PREFERRED_LANGUAGE = new Filter( ParticipantColumn.PREFERRED_LANGUAGE, Filter.OPTION_TYPE, Language.getLanguageOptions());
   public static DATE_OF_MAJORITY = new Filter( ParticipantColumn.DATE_OF_MAJORITY, Filter.SHORT_DATE_TYPE );
   public static HAS_CONSENTED_TO_BLOOD = new Filter( ParticipantColumn.HAS_CONSENTED_TO_BLOOD, Filter.BOOLEAN_TYPE );
   public static HAS_CONSENTED_TO_TISSUE = new Filter( ParticipantColumn.HAS_CONSENTED_TO_TISSUE, Filter.BOOLEAN_TYPE );

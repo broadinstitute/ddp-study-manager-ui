@@ -370,7 +370,7 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                         {{pt.data[col.participantColumn.name] | date:'shortDate'}}
                       </ng-container>
                     </ng-container>
-                    <ng-container *ngIf="col.type === 'OPTIONS' && col.participantColumn.object == null && pt.data[col.participantColumn.name] != null">
+                    <ng-container *ngIf="col.type === 'OPTIONS' && col.participantColumn.object == null && pt.data[col.participantColumn.name] != null && col.participantColumn.name !== 'preferredLanguage'">
                       {{getUtil().getNameValue(col.options, pt.data[col.participantColumn.name])}}
                     </ng-container>
                     <ng-container *ngIf="col.type === 'BOOLEAN' && col.participantColumn.object != null && pt.data[col.participantColumn.object] != null
@@ -382,13 +382,13 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                         {{pt.data[col.participantColumn.name]}}
                       </ng-container>
                       <ng-container
-                        *ngIf="col.participantColumn.object != null && pt.data[col.participantColumn.object] != null && pt.data[col.participantColumn.object][col.participantColumn.name]!= null && col.participantColumn.name !== 'preferredLanguage'">
+                        *ngIf="col.participantColumn.object != null && pt.data[col.participantColumn.object] != null && pt.data[col.participantColumn.object][col.participantColumn.name]!= null">
                         {{pt.data[col.participantColumn.object][col.participantColumn.name]}}
                       </ng-container>
-                      <ng-container
-                        *ngIf="col.participantColumn.name === 'preferredLanguage' && pt.data[col.participantColumn.object] != null && pt.data[col.participantColumn.object][col.participantColumn.name]!= null">
-                        {{getlanguage().getLanguageName(pt.data[col.participantColumn.object][col.participantColumn.name])}}
-                      </ng-container>
+                    </ng-container>
+                    <ng-container
+                      *ngIf="col.participantColumn.name === 'preferredLanguage' && pt.data[col.participantColumn.object] != null && pt.data[col.participantColumn.object][col.participantColumn.name]!= null">
+                      {{getlanguage().getLanguageName(pt.data[col.participantColumn.object][col.participantColumn.name])}}
                     </ng-container>
                   </div>
                   <div *ngIf="alias === 'p' && pt.participant != null">
