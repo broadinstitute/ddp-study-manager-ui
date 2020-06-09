@@ -403,6 +403,7 @@ export class ParticipantListComponent implements OnInit {
               this.participantList = [];
               this.originalParticipantList = [];
               this.copyParticipantList = [];
+              this.hasInvitation = false;
               let jsonData: any[];
               jsonData = data;
               jsonData.forEach( ( val ) => {
@@ -473,6 +474,7 @@ export class ParticipantListComponent implements OnInit {
           this.participantList = [];
           this.originalParticipantList = [];
           this.copyParticipantList = [];
+          this.hasInvitation = false;
           let jsonData: any[];
           jsonData = data;
           jsonData.forEach( ( val ) => {
@@ -757,6 +759,7 @@ export class ParticipantListComponent implements OnInit {
             this.originalParticipantList = [];
             this.copyParticipantList = [];
             this.filterQuery = "";
+            this.hasInvitation = false;
             jsonData = data;
             jsonData.forEach( ( val ) => {
               let participant = Participant.parse( val );
@@ -1266,6 +1269,7 @@ export class ParticipantListComponent implements OnInit {
       this.participantList = [];
       this.originalParticipantList = [];
       this.copyParticipantList = [];
+      this.hasInvitation = false;
       if (data != null) {
         let jsonData: any[];
         jsonData = data;
