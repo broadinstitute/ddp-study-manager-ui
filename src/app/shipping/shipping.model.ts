@@ -14,7 +14,7 @@ export class KitRequest {
                public trackingUrlReturn: string, public scanDate: number, public error: boolean, public message: string,
                public receiveDate: number, public deactivatedDate: number, public deactivationReason: string, public participant: Address,
                public easypostAddressId: string, public nameLabel: string, public kitLabel: string, public express: boolean, public labelTriggeredDate: number, public noReturn: boolean,
-               public externalOrderNumber: string, public externalOrderStatus: string ) {
+               public externalOrderNumber: string, public externalOrderStatus: string, public preferredLanguage: string ) {
     this.participantId = participantId;
     this.collaboratorParticipantId = collaboratorParticipantId;
     this.bspCollaboratorSampleId = bspCollaboratorSampleId;
@@ -45,6 +45,7 @@ export class KitRequest {
     this.noReturn = noReturn;
     this.externalOrderNumber = externalOrderNumber;
     this.externalOrderStatus = externalOrderStatus;
+    this.preferredLanguage = preferredLanguage;
   }
 
   public getID(): any {
@@ -100,7 +101,7 @@ export class KitRequest {
       json.trackingNumberTo, json.trackingNumberReturn, json.scannedTrackingNumber, json.trackingUrlTo,
       json.trackingUrlReturn, json.scanDate, json.error, json.message,
       json.receiveDate, json.deactivatedDate, json.deactivationReason, json.participant, json.easypostAddressId, json.nameLabel,
-      json.kitLabel, json.express, json.labelTriggeredDate, json.noReturn, json.externalOrderNumber, json.externalOrderStatus );
+      json.kitLabel, json.express, json.labelTriggeredDate, json.noReturn, json.externalOrderNumber, json.externalOrderStatus, json.preferredLanguage );
   }
 
   getScannedTrackingUrl() {

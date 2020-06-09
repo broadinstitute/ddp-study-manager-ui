@@ -68,6 +68,9 @@
           <th>
             <mfDefaultSorter by="collaboratorParticipantId">Short ID</mfDefaultSorter>
           </th>
+          <th *ngIf="(shippingPage === UPLOADED || shippingPage === QUEUE || shippingPage === ERROR) && showPreferredLanguage()">
+            <mfDefaultSorter by="preferredLanguage">Preferred Language</mfDefaultSorter>
+          </th>
           <th *ngIf="shippingPage !== DEACTIVATED && !kitType.externalShipper">
             <mfDefaultSorter by="shippingId">Shipping ID</mfDefaultSorter>
           </th>
@@ -122,6 +125,8 @@
           </th>
           <th>
             <input class="form-control" [(ngModel)]="shortId"/>
+          </th>
+          <th>
           </th>
           <th *ngIf="shippingPage !== DEACTIVATED && !kitType.externalShipper">
             <input class="form-control" [(ngModel)]="shippingId"/>
@@ -185,6 +190,9 @@
                 <i class="fa-inverse fas fa-shipping-fast fa-lg" title="Kit with express label" data-fa-transform="down-8 right-4"></i>
               </div>
             </div>
+          </td>
+          <td *ngIf="(shippingPage === UPLOADED || shippingPage === QUEUE || shippingPage === ERROR) && showPreferredLanguage()">
+            <ng-container *ngIf="kitRequest.preferredLanguage != null && kitRequest.preferredLanguage !== ''">{{getLanguage().getLanguageName(kitRequest.preferredLanguage)}}</ng-container>
           </td>
           <td *ngIf="shippingPage !== DEACTIVATED && !kitType.externalShipper" class="Line--Break">{{kitRequest.shippingId}}</td>
           <td *ngIf="shippingPage !== DEACTIVATED && kitType.externalShipper" class="Line--Break">{{kitRequest.externalOrderNumber}}</td>
