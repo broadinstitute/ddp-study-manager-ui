@@ -1,11 +1,12 @@
 import {ActivityData} from "../../activity-data/activity-data.model";
 import {Address} from "../../address/address.model";
+import {InvitationData} from "../../invitation-data/invitation-data.model";
 import {MedicalProvider} from "./medical-providers.model";
 
 export class Data {
 
   constructor( public profile: Object, public status: string, public statusTimestamp: number, public dsm: Object, public ddp: string, public medicalProviders: Array<MedicalProvider>,
-               public activities: Array<ActivityData>, public address: Address ) {
+               public activities: Array<ActivityData>, public address: Address, public invitations: Array<InvitationData> ) {
     this.profile = profile;
     this.status = status;
     this.statusTimestamp = statusTimestamp;
@@ -13,6 +14,8 @@ export class Data {
     this.ddp = ddp;
     this.medicalProviders = medicalProviders;
     this.activities = activities;
+    this.address = address;
+    this.invitations = invitations;
   }
 
   getActivityDataByCode( code: string ) {
@@ -33,6 +36,6 @@ export class Data {
         } );
       }
     }
-    return new Data( json.profile, json.status, json.statusTimestamp, json.dsm, json.ddp, medicalProviders, json.activities, json.address );
+    return new Data( json.profile, json.status, json.statusTimestamp, json.dsm, json.ddp, medicalProviders, json.activities, json.address, json.invitations );
   }
 }

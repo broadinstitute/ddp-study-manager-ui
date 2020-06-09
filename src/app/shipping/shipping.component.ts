@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Auth} from "../services/auth.service";
 import {DSMService} from "../services/dsm.service";
 import {IntervalObservable} from "rxjs/observable/IntervalObservable";
+import {Language} from "../utils/language";
 import {KitRequest} from "./shipping.model";
 import {KitType} from "../utils/kit-type.model";
 import {Utils} from "../utils/utils";
@@ -93,7 +94,7 @@ export class ShippingComponent implements OnInit {
 
   constructor( private route: ActivatedRoute, private router: Router, private dsmService: DSMService, private auth: Auth,
                private role: RoleService, private compService: ComponentService, private _changeDetectionRef: ChangeDetectorRef,
-               private util: Utils ) {
+               private util: Utils, private language: Language ) {
     if (!auth.authenticated()) {
       auth.logout();
     }
@@ -730,5 +731,21 @@ export class ShippingComponent implements OnInit {
 
   getUtil(): Utils {
     return this.util;
+  }
+
+  getLanguage(): Language {
+    return this.language;
+  }
+
+  showPreferredLanguage(): boolean {
+    if (this.kitRequests != null) {
+      let foundPreferredLanguage = this.kitRequests.find( kitRequest => {
+        return kitRequest.preferredLanguage != null && kitRequest.preferredLanguage !== "";
+      } );
+      if (foundPreferredLanguage != null) {
+        return true;
+      }
+    }
+    return false;
   }
 }
