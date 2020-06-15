@@ -108,6 +108,7 @@ import {ParticipantListComponent} from "./participant-list/participant-list.comp
 import {ActivityDataComponent} from "./activity-data/activity-data.component";
 import {SearchBarComponent} from "./search-bar/search-bar.component";
 import {FieldSettingsComponent} from "./field-settings/field-settings.component";
+import { ParticipantInfoComponent } from './participant-info/participant-info.component';
 
 @NgModule( {
   declarations: [
@@ -182,7 +183,8 @@ import {FieldSettingsComponent} from "./field-settings/field-settings.component"
     FilterColumnComponent,
     ParticipantListComponent,
     ActivityDataComponent,
-    SearchBarComponent
+    SearchBarComponent,
+    ParticipantInfoComponent
 
   ],
   imports: [
