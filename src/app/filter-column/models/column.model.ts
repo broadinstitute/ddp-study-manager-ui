@@ -20,6 +20,9 @@ export class ParticipantColumn {
   public static DIAGNOSIS_MONTH = new ParticipantColumn( "Diagnosis Month", "diagnosisMonth", "data", "dsm" );
   public static DIAGNOSIS_YEAR = new ParticipantColumn( "Diagnosis Year", "diagnosisYear", "data", "dsm" );
 
+  //participant info columns ( for AT )
+  //todo add new columns for the nre
+
   public static ONC_HISTORY_CREATED = new ParticipantColumn("Onc History Created", "createdOncHistory", "o");
   public static ONC_HISTORY_REVIEWED = new ParticipantColumn("Onc History Reviewed", "reviewedOncHistory", "o");
   public static PAPER_CR_SENT = new ParticipantColumn("Paper C/R Sent", "paperCRSent", "r");

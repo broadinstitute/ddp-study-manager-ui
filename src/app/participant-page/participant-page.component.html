@@ -443,6 +443,10 @@
                 </div>
               </div>
             </tab>
+            <tab heading="Participant Info">
+<!--              only for AT, can see based on the role-->
+              <app-participant-info></app-participant-info>
+            </tab>
 
             <tab heading="Medical Records"
                  *ngIf="participant.medicalRecords != null && participant.medicalRecords.length > 0"

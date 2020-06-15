@@ -160,6 +160,7 @@ export class ParticipantListComponent implements OnInit {
     let jsonData: any;
     this.dsmService.getSettings( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.parent ).subscribe(
       data => {
+        console.log(data);
         this.assignees = [];
         this.drugs = [];
         this.cancers = [];
