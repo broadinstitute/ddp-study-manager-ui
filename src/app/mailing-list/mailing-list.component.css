@@ -1,0 +1,9 @@
+.Sort-Header {
+  color: #337ab7;
+}
+
+.Sort-Header:hover {
+  cursor: pointer;
+  color: #23527c;
+  text-decoration: underline;
+}

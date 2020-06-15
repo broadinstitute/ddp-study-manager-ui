@@ -95,7 +95,19 @@
           <tr>
             <td>Date of Diagnosis</td>
             <td>
-              {{participant.data.dsm['diagnosisMonth']}}/{{participant.data.dsm['diagnosisYear']}}
+              <ng-container *ngIf="participant.data.dsm != null && participant.data.dsm['diagnosisMonth'] != null &&
+participant.data.dsm['diagnosisYear'] != null">
+                {{participant.data.dsm['diagnosisMonth']}}/{{participant.data.dsm['diagnosisYear']}}
+              </ng-container>
+              <ng-container *ngIf="participant.data.dsm != null && participant.data.dsm['diagnosisMonth'] != null &&
+participant.data.dsm['diagnosisYear'] == null">
+                {{participant.data.dsm['diagnosisMonth']}}/null
+              </ng-container>
+              <ng-container *ngIf="participant.data.dsm != null && participant.data.dsm['diagnosisMonth'] == null &&
+participant.data.dsm['diagnosisYear'] != null">
+                {{participant.data.dsm['diagnosisYear']}}
+              </ng-container>
+            </td>
           </tr>
           <tr *ngIf="participant.medicalRecords != null && participant.medicalRecords.length > 0">
             <td>Consent Tissue</td>
@@ -109,11 +121,38 @@
             <td>Gender</td>
             <td>{{gender | titlecase}}</td>
           </tr>
+          <tr *ngIf="participant.data.profile['preferredLanguage'] != null && participant.data.profile['preferredLanguage'] !== ''">
+            <td>Preferred Language</td>
+            <td>{{getLanguage().getLanguageName(participant.data.profile['preferredLanguage'])}}</td>
+          </tr>
           </tbody>
         </table>
+        <ng-container *ngIf="participant.data.invitations != null && participant.data.invitations.length > 0">
+          <ng-container *ngFor="let invitation of participant.data.invitations">
+            <app-invitation-data *ngIf="invitation != null" [invitation]="invitation"></app-invitation-data>
+          </ng-container>
+        </ng-container>
+
         <h5 class="Line--Break">{{participant.getSampleStatus()}}</h5>
       </div>
-      <div class="Float--left TD--Padding">
+      <div class="Float--left TD--Padding-Left-BIG">
+        <!--PDF download-->
+        <ng-container *ngIf="participant.participant == null">
+          <ng-container *ngIf="pdfs != null && pdfs.length != 0 && hasRole().allowedToDownloadPDF()">
+            <md-select placeholder="Select PDF" class="Input--Abstraction" [(ngModel)]="selectedPDF">
+              <md-option *ngFor="let e of pdfs" [value]="e.configName">
+                {{e.displayName}}
+              </md-option>
+            </md-select>
+            <br/>
+            <br/>
+            <button md-raised-button color="primary"
+                    [disabled]="selectedPDF == null || selectedPDF === '' || disableDownload"
+                    (click)="downloadPDFs(selectedPDF)">Download selected PDF
+            </button>
+          </ng-container>
+        </ng-container>
+        <!--Abstraction start buttons-->
         <div *ngIf="counterReceived > 0 && parentList === 'participantList'">
           <div class="Float--left TD--Padding">
             <div class="Float--left Width--100">

@@ -51,6 +51,7 @@ import {ParticipantPageComponent} from "./participant-page/participant-page.comp
 import {ComponentService} from "./services/component.service";
 import {PermalinkComponent} from "./permalink/permalink.component";
 import {MedicalRecordLogSortPipe} from "./pipe/medical-record-log-sort.pipe";
+import {Language} from "./utils/language";
 import {Utils} from "./utils/utils";
 import {DashboardComponent} from "./dashboard/dashboard.component";
 import {DashboardDateSortPipe} from "./pipe/dashboard-date-sort.pipe";
@@ -108,6 +109,7 @@ import {ParticipantListComponent} from "./participant-list/participant-list.comp
 import {ActivityDataComponent} from "./activity-data/activity-data.component";
 import {SearchBarComponent} from "./search-bar/search-bar.component";
 import {FieldSettingsComponent} from "./field-settings/field-settings.component";
+import { InvitationDataComponent } from './invitation-data/invitation-data.component';
 import { ParticipantInfoComponent } from './participant-info/participant-info.component';
 
 @NgModule( {
@@ -184,6 +186,7 @@ import { ParticipantInfoComponent } from './participant-info/participant-info.co
     ParticipantListComponent,
     ActivityDataComponent,
     SearchBarComponent,
+    InvitationDataComponent,
     ParticipantInfoComponent
 
   ],
@@ -226,7 +229,8 @@ import { ParticipantInfoComponent } from './participant-info/participant-info.co
     RoleService,
     SessionService,
     Utils,
-    Statics
+    Statics,
+    Language
   ],
   bootstrap: [ AppComponent ]
 } )

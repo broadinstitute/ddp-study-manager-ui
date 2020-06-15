@@ -107,35 +107,30 @@
       <div *ngIf="isCoverDownloadDisabled()"><b>* Institution name is needed for download</b></div>
       <br/>
       <br/>
-      <div *ngIf="!hideDownloadButtons">
-        <ng-container *ngIf="pdfs != null && pdfs.length != 0">
-          <md-select placeholder="Select PDF" class="Input--Abstraction" [(ngModel)]="selectedPDF">
-            <md-option *ngFor="let e of pdfs" [value]="e.configName">
-              {{e.displayName}}
-            </md-option>
-          </md-select>
-          <br/>
-          <br/>
-          <button md-raised-button color="primary"
-                  [disabled]="selectedPDF == null || selectedPDF === '' || disableDownloadConsent"
-                  (click)="downloadPDFs(selectedPDF)">Download selected PDF
-          </button>
-        </ng-container>
-        <ng-container *ngIf="participant.data.dsm['pdfs'] == null">
-          <button md-raised-button color="primary"
-                  [disabled]="disableDownloadConsent"
-                  (click)="downloadConsentPDFs()">Download consent pdf
-          </button>
-          <br/>
-          <br/>
-          <button md-raised-button color="primary"
-                  [disabled]="disableDownloadRelease"
-                  (click)="downloadReleasePDFs()">Download release pdf
-          </button>
-        </ng-container>
+      <div *ngIf="pdfs != null && pdfs.length != 0 && getRole().allowedToDownloadPDF()">
+        <md-select placeholder="Select PDF" class="Input--Abstraction" [(ngModel)]="selectedPDF">
+          <md-option *ngFor="let e of pdfs" [value]="e.configName">
+            {{e.displayName}}
+          </md-option>
+        </md-select>
+        <br/>
+        <br/>
+        <button md-raised-button color="primary"
+                [disabled]="selectedPDF == null || selectedPDF === '' || disableDownloadConsent"
+                (click)="downloadPDFs(selectedPDF)">Download selected PDF
+        </button>
       </div>
-      <div *ngIf="hideDownloadButtons">
-        <b>DSM can’t provide the consent/release pdf download for {{getCompService().getRealm()}}.</b>
+      <div *ngIf="participant.data.dsm['pdfs'] == null">
+        <button md-raised-button color="primary"
+                [disabled]="disableDownloadConsent"
+                (click)="downloadConsentPDFs()">Download consent pdf
+        </button>
+        <br/>
+        <br/>
+        <button md-raised-button color="primary"
+                [disabled]="disableDownloadRelease"
+                (click)="downloadReleasePDFs()">Download release pdf
+        </button>
       </div>
     </div>
   </div>

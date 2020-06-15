@@ -1,0 +1,14 @@
+<div class="Display--block Width--100">
+  <fieldset style="border: 1px black solid">
+    <legend class="Group--Title" id="{{invitation.type}}">{{invitation.type | titlecase}} Invitation</legend>
+    <div class="Router--Outlet">
+      <div *ngIf="invitation.createdAt != null">Created: {{invitation.createdAt | date:'medium'}}</div>
+      <div *ngIf="invitation.acceptedAt != null">Accepted: {{invitation.acceptedAt | date:'medium'}}</div>
+      <div *ngIf="invitation.verifiedAt != null">Verified: {{invitation.verifiedAt | date:'medium'}}</div>
+      <div *ngIf="invitation.voidedAt != null">Voided: {{invitation.voidedAt | date:'medium'}}</div>
+      <div *ngIf="invitation.contactEmail != null">Contact Email: {{invitation.contactEmail}}</div>
+      <div *ngIf="invitation.guid != null">Invitation Code: {{invitation.guid}}</div>
+      <div>Notes: {{invitation.notes}}</div>
+    </div>
+  </fieldset>
+</div>

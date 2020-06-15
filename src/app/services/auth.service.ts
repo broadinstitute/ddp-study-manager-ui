@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {Router} from "@angular/router";
 import {Http, Headers, Response, RequestOptions} from "@angular/http";
 import {Observable, Subject} from "rxjs";
+import {NameValue} from "../utils/name-value.model";
 
 import {SessionService} from "./session.service";
 import {RoleService} from "./role.service";
@@ -31,7 +32,7 @@ export class Auth {
   kitDiscard = new Subject<string>();
   confirmKitDiscard = this.kitDiscard.asObservable();
 
-  realmList: Array<string>;
+  realmList: Array<NameValue>;
   selectedRealm: string;
 
   loadRealmsSubscription: Subscription;
@@ -210,11 +211,11 @@ export class Auth {
       if (this.loadRealmsSubscription != null) {
         this.loadRealmsSubscription.unsubscribe();
       }
-      this.loadRealmsSubscription = this.dsmService.getRealmsAllowed( null ).subscribe(
+      this.loadRealmsSubscription = this.dsmService.getStudies().subscribe(
         data => {
           jsonData = data;
           jsonData.forEach( ( val ) => {
-            this.realmList.push( val );
+            this.realmList.push( NameValue.parse( val ) );
           } );
           // console.info(`received: ${JSON.stringify(data, null, 2)}`);
         }

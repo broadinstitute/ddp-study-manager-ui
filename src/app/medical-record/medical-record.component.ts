@@ -57,8 +57,6 @@ export class MedicalRecordComponent implements OnInit {
   disableDownloadConsent: boolean = false;
   disableDownloadRelease: boolean = false;
 
-  hideDownloadButtons: boolean = false;
-
   private readonly: boolean = false;
 
   currentPatchField: string;
@@ -336,26 +334,11 @@ export class MedicalRecordComponent implements OnInit {
   }
 
   public leavePage(): boolean {
-    // if ((this.medicalRecord.name == null || this.medicalRecord.name === "") &&
-    //   this.additionalMessage !== "Please add 'Confirmed Institution Name'") {
-    //   this.additionalMessage = "Please add 'Confirmed Institution Name'";
-    // }
-    // else {
-    //   this.router.navigate([Statics.PARTICIPANT_PAGE_URL]);
-    // }
-    // return false;
     this.leaveMedicalRecord.emit( true );
     return false;
   }
 
   public backToParticipants(): boolean {
-    // if ((this.medicalRecord.name == null || this.medicalRecord.name === "") &&
-    //   this.additionalMessage !== "Please add 'Confirmed Institution Name'") {
-    //   this.additionalMessage = "Please add 'Confirmed Institution Name'";
-    // }
-    // else {
-    //   this.router.navigate( [ "/participantList" ] );
-    // }
     this.leaveParticipant.emit( true );
     return false;
   }
