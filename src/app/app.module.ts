@@ -111,6 +111,9 @@ import {SearchBarComponent} from "./search-bar/search-bar.component";
 import {FieldSettingsComponent} from "./field-settings/field-settings.component";
 import { InvitationDataComponent } from './invitation-data/invitation-data.component';
 import { ParticipantInfoComponent } from './participant-info/participant-info.component';
+import { CustomParticipantInfoComponent } from './custom-participant-info/custom-participant-info.component';
+import { CountryStatePickerComponent } from './country-state-picker/country-state-picker.component';
+import { FieldCountryStatePickerComponent } from './field-country-state-picker/field-country-state-picker.component';
 
 @NgModule( {
   declarations: [
@@ -187,7 +190,10 @@ import { ParticipantInfoComponent } from './participant-info/participant-info.co
     ActivityDataComponent,
     SearchBarComponent,
     InvitationDataComponent,
-    ParticipantInfoComponent
+    ParticipantInfoComponent,
+    CustomParticipantInfoComponent,
+    CountryStatePickerComponent,
+    FieldCountryStatePickerComponent
 
   ],
   imports: [

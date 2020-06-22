@@ -486,6 +486,9 @@ participant.data.dsm['diagnosisYear'] != null">
 <!--              only for AT, can see based on the role-->
               <app-participant-info></app-participant-info>
             </tab>
+            <tab heading="Custom Participant Info">
+              <app-custom-participant-info></app-custom-participant-info>
+            </tab>
 
             <tab heading="Medical Records"
                  *ngIf="participant.medicalRecords != null && participant.medicalRecords.length > 0"

@@ -1,418 +1,743 @@
 <ng-container>
   <div class="Display--block">
     <p>Eligibility</p>
-    <div id="Eligibility">
-      <div class="Float--left Width--100">
-        <div class="Float--left Width--60 bordered">
-          <table class="table table-condensed Width--100 table-bordered">
-            <tbody>
-            <tr>
-              <td>
-                Eligibility
-              </td>
-              <td>
-                <md-radio-group>
-                  <md-radio-button value="eligibility">Eligible</md-radio-button>
-                  <br>
-                  <md-radio-button value="not">Not Eligible</md-radio-button>
-                  <br>
-                  <md-radio-button value="pending">Pending</md-radio-button>
-                  <br>
-                </md-radio-group>
-              </td>
+    <div id="Eligibility" class="Float--left Width--100">
+      <div class="Float--left Width--60 bordered">
+        <table class="table table-condensed Width--100">
+          <tbody>
+          <tr>
+            <td>
+              Eligibility
+            </td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="eligibility">Eligible</md-radio-button>
+                <br>
+                <md-radio-button value="not">Not Eligible</md-radio-button>
+                <br>
+                <md-radio-button value="pending">Pending</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
 
-            </tr>
-            <tr>
-              <td>Contacting Physician's First Name</td>
-              <td>
-                <md-input-container>
-                  <input mdInput maxlength="500" placeholder="Contacting Physician's First Name" type="text"
-                         autocomplete="off" [disabled]="false">
-                </md-input-container>
-              </td>
+          </tr>
+          <tr>
+            <td>Contacting Physician's First Name</td>
+            <td class="formInput">
+              <md-input-container>
+                <input mdInput maxlength="500" placeholder="Contacting Physician's First Name" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
 
-            </tr>
-            <tr>
-              <td>Contacting Physician's Last Name</td>
-              <td>
-                <md-input-container>
-                  <input mdInput maxlength="500" placeholder="Contacting Physician's Last Name" type="text"
-                         autocomplete="off" [disabled]="false">
-                </md-input-container>
-              </td>
+          </tr>
+          <tr>
+            <td>Contacting Physician's Last Name</td>
+            <td class="formInput">
+              <md-input-container>
+                <input mdInput maxlength="500" placeholder="Contacting Physician's Last Name" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
 
-            </tr>
-            <tr>
-              <td>Contacting Physician's Suffix</td>
-              <td>
-                <md-input-container>
-                  <input mdInput maxlength="500" placeholder="Contacting Physician's Suffix" type="text"
-                         autocomplete="off" [disabled]="false">
-                </md-input-container>
+          </tr>
+          <tr>
+            <td>Contacting Physician's Suffix</td>
+            <td class="formInput">
+              <md-input-container>
+                <input mdInput maxlength="500" placeholder="Contacting Physician's Suffix" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
 
-              </td>
+            </td>
 
-            </tr>
-            <tr>
-              <td>Contacting Physician's Address</td>
-              <td>
-                <md-input-container>
-                  <input mdInput maxlength="500" placeholder="Contacting Physician's Address" type="text"
-                         autocomplete="off" [disabled]="false">
-                </md-input-container>
+          </tr>
+          <tr>
+            <td>Contacting Physician's Address</td>
+            <td class="formInput">
+              <md-input-container>
+                <input mdInput maxlength="500" placeholder="Contacting Physician's Address" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
 
-              </td>
+            </td>
 
-            </tr>
-            <tr>
-              <td>Contacting Physician's Phone Number</td>
-              <td>
-                <md-input-container>
-                  <input mdInput maxlength="500" placeholder="Contacting Physician's Phone Number" type="text"
-                         autocomplete="off" [disabled]="false">
-                </md-input-container>
-              </td>
+          </tr>
+          <tr>
+            <td>Contacting Physician's Phone Number</td>
+            <td class="formInput">
+              <md-input-container>
+                <input mdInput maxlength="500" placeholder="Contacting Physician's Phone Number" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
 
-            </tr>
-            <tr>
-              <td>Contacting Physician's Email</td>
-              <td>
-                <md-input-container>
-                  <input mdInput maxlength="500" placeholder="Contacting Physician's Email" type="text"
-                         autocomplete="off" [disabled]="false">
-                </md-input-container>
-              </td>
+          </tr>
+          <tr>
+            <td>Contacting Physician's Email</td>
+            <td class="formInput">
+              <md-input-container>
+                <input mdInput maxlength="500" placeholder="Contacting Physician's Email" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
 
-            </tr>
-            <tr>
-              <td>Received care at National A-T Clinic, Brisbane, Queensland, Australia?</td>
-              <td>
-                <md-radio-group>
-                  <md-radio-button value="yes">Yes</md-radio-button>
-                  <br>
-                  <md-radio-button value="no">No</md-radio-button>
-                  <br>
-                </md-radio-group>
-              </td>
+          </tr>
+          <tr>
+            <td>Received care at National A-T Clinic, Brisbane, Queensland, Australia?</td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="yes">Yes</md-radio-button>
+                <br>
+                <md-radio-button value="no">No</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
 
-            </tr>
-            <tr>
-              <td>Received care at National A-T Clinic, Sheba Medical Center, Tel Hashomer, Ramat Gan,
-                Israel?
-              </td>
-              <td>
-                <md-radio-group>
-                  <md-radio-button value="yes">Yes</md-radio-button>
-                  <br>
-                  <md-radio-button value="no">No</md-radio-button>
-                  <br>
-                </md-radio-group>
-              </td>
+          </tr>
+          <tr>
+            <td>Received care at National A-T Clinic, Sheba Medical Center, Tel Hashomer, Ramat Gan,
+              Israel?
+            </td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="yes">Yes</md-radio-button>
+                <br>
+                <md-radio-button value="no">No</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
 
-            </tr>
-            <tr>
-              <td>Received care at John's Hopkins A-T Clinic?</td>
-              <td>
-                <md-radio-group>
-                  <md-radio-button value="yes">Yes</md-radio-button>
-                  <br>
-                  <md-radio-button value="no">No</md-radio-button>
-                  <br>
-                </md-radio-group>
-              </td>
+          </tr>
+          <tr>
+            <td>Received care at John's Hopkins A-T Clinic?</td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="yes">Yes</md-radio-button>
+                <br>
+                <md-radio-button value="no">No</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
 
-            </tr>
-            <tr>
-              <td>Received care at Specialized A-T Center, Johann Wolfgang Goethe University, Frankfurt,
-                Germany?
-              </td>
-              <td>
-                <md-radio-group>
-                  <md-radio-button value="yes">Yes</md-radio-button>
-                  <br>
-                  <md-radio-button value="no">No</md-radio-button>
-                  <br>
-                </md-radio-group>
-              </td>
+          </tr>
+          <tr>
+            <td>Received care at Specialized A-T Center, Johann Wolfgang Goethe University, Frankfurt,
+              Germany?
+            </td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="yes">Yes</md-radio-button>
+                <br>
+                <md-radio-button value="no">No</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
 
-            </tr>
-            <tr>
-              <td>Received care at The Clinic at the A-T Specialist Centre, Nottingham City Hospital,
-                Nottingham, UK?
-              </td>
-              <td>
-                <md-radio-group>
-                  <md-radio-button value="yes">Yes</md-radio-button>
-                  <br>
-                  <md-radio-button value="no">No</md-radio-button>
-                  <br>
-                </md-radio-group>
-              </td>
+          </tr>
+          <tr>
+            <td>Received care at The Clinic at the A-T Specialist Centre, Nottingham City Hospital,
+              Nottingham, UK?
+            </td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="yes">Yes</md-radio-button>
+                <br>
+                <md-radio-button value="no">No</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
 
-            </tr>
-            <tr>
-              <td>Age of participant at time of death</td>
-              <td>
-                <md-input-container>
-                  <input mdInput maxlength="500" placeholder="Age at time of death" type="text"
-                         autocomplete="off" [disabled]="false">
-                </md-input-container>
-              </td>
+          </tr>
+          <tr>
+            <td>Age of participant at time of death</td>
+            <td class="formInput">
+              <md-input-container>
+                <input mdInput maxlength="500" placeholder="Age at time of death" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
 
-            </tr>
-            <tr>
-              <td>Date of death for participant</td>
-              <td>
-                <md-input-container>
-                  <input mdInput maxlength="500" placeholder="Date of Death" type="text"
-                         autocomplete="off" [disabled]="false">
-                </md-input-container>
-              </td>
+          </tr>
+          <tr>
+            <td>Date of death for participant</td>
+            <td class="formInput">
+              <md-input-container>
+                <input mdInput maxlength="500" placeholder="Date of Death" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
 
-            </tr>
-            <tr>
-              <td>Cause of death for participant</td>
-              <td>
-                <md-input-container>
-                  <input mdInput maxlength="500" placeholder="Cause of death" type="text"
-                         autocomplete="off" [disabled]="false">
-                </md-input-container>
-              </td>
+          </tr>
+          <tr>
+            <td>Cause of death for participant</td>
+            <td class="formInput">
+              <md-input-container>
+                <input mdInput maxlength="500" placeholder="Cause of death" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
 
-            </tr>
-            <tr>
-              <td>Notes about participant cause of death</td>
-              <td>
-                <md-input-container>
-                  <input mdInput maxlength="500" placeholder="Notes" type="text"
-                         autocomplete="off" [disabled]="false">
-                </md-input-container>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
+          </tr>
+          <tr>
+            <td>Notes about participant cause of death</td>
+            <td class="formInput">
+              <md-input-container>
+                <input mdInput maxlength="500" placeholder="Notes" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     <p>Genome Study</p>
-    <div id="genomeStudy">
-      <div class="Float--left Width--100">
-        <div class="Float--left Width--60 bordered">
-          <table class="table table-condensed Width--100">
-            <tbody>
-            <tr>
-              <td>
-                Genome study Collaborator Participant ID
-              </td>
-              <td>
-                <md-input-container>
-                  <input mdInput maxlength="500" placeholder="Genome study Collaborator Participant ID" type="text"
-                         autocomplete="off" [disabled]="false">
-                </md-input-container>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                Consented for genome study
-              </td>
-              <td>
-                <md-radio-group>
-                  <md-radio-button value="yes">Yes</md-radio-button>
-                  <br>
-                  <md-radio-button value="no">No</md-radio-button>
-                  <br>
-                </md-radio-group>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                Genome study date of participant consent
-              </td>
-              <td><app-field-datepicker [dateString]=""></app-field-datepicker></td>
-            </tr>
-            <tr>
-              <td>Ethnicity</td>
-              <td>Dropdown</td>
-            </tr>
-            <tr>
-              <td>Does participant have a sibling in the study?</td>
-              <td>
-                <md-radio-group>
-                  <md-radio-button value="yes">Yes</md-radio-button>
-                  <br>
-                  <md-radio-button value="no">No</md-radio-button>
-                  <br>
-                </md-radio-group>
-              </td>
-            </tr>
-            <tr>
-              <td>Genome study shipping address</td>
-              <td>
-                <md-input-container>
-                  <input mdInput maxlength="500" placeholder="" type="text"
-                         autocomplete="off" [disabled]="false">
-                </md-input-container>
-              </td>
-            </tr>
-            <tr>
-              <td>Status of genome study saliva sample</td>
-              <td>
-                <md-radio-group>
-                  <md-radio-button value="">Completed, de-identified data available</md-radio-button>
-                  <br>
-                  <md-radio-button value="">Consented, sample kit not shipped</md-radio-button>
-                  <br>
+    <div id="genomeStudy" class="Float--left Width--100">
+      <div class="Float--left Width--60 bordered">
+        <table class="table table-condensed Width--100">
+          <tbody>
+          <tr>
+            <td>
+              Genome study Collaborator Participant ID
+            </td>
+            <td class="formInput">
+              <md-input-container>
+                <input mdInput maxlength="500" placeholder="Genome study Collaborator Participant ID" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Consented for genome study
+            </td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="yes">Yes</md-radio-button>
+                <br>
+                <md-radio-button value="no">No</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Genome study date of participant consent
+            </td>
+            <td class="formInput">
+              <app-field-datepicker [dateString]=""></app-field-datepicker>
+            </td>
+          </tr>
+          <tr>
+            <td>Ethnicity</td>
+            <td class="formInput">Dropdown</td>
+          </tr>
+          <tr>
+            <td>Does participant have a sibling in the study?</td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="yes">Yes</md-radio-button>
+                <br>
+                <md-radio-button value="no">No</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td>Genome study shipping address</td>
+            <td class="formInput">
+              <md-input-container>
+                <input mdInput maxlength="500" placeholder="Genome study shipping address" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
+          </tr>
+          <tr>
+            <td>Status of genome study sample kit</td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="">Completed, de-identified data available</md-radio-button>
+                <br>
+                <md-radio-button value="">Consented, sample kit not shipped</md-radio-button>
+                <br>
                 <md-radio-button value="">Repeat sample collection pending</md-radio-button>
-                  <br>
+                <br>
                 <md-radio-button value="">Sample kit received from participant</md-radio-button>
-                  <br>
+                <br>
                 <md-radio-button value="">Sample kit sent to participant</md-radio-button>
-                  <br>
+                <br>
                 <md-radio-button value="">Sample sequenced, pending release</md-radio-button>
-                  <br>
-                </md-radio-group>
-              </td>
-            </tr>
-            <tr>
-              <td>Salive kit barcode for genome study</td>
-              <td>
-                <md-input-container>
-                  <input mdInput maxlength="500" placeholder="" type="text"
-                         autocomplete="off" [disabled]="false">
-                </md-input-container>
-              </td>
-            </tr>
-            <tr>
-              <td>Tracking number for genome study saliva kit</td>
-              <td>
-                <md-input-container>
-                  <input mdInput maxlength="500" placeholder="" type="text"
-                         autocomplete="off" [disabled]="false">
-                </md-input-container>
-              </td>
-            </tr>
-            <tr>
-              <td>Genome study spit kit shipped on</td>
-              <td><app-field-datepicker [dateString]=""></app-field-datepicker></td>
-            </tr>
-            <tr>
-              <td>Date genome study saliva kit is received by participant</td>
-              <td><app-field-datepicker [dateString]=""></app-field-datepicker></td>
-            </tr>
-            <tr>
-              <td>Genome study date of receipt of spit kit from participant</td>
-              <td><app-field-datepicker [dateString]=""></app-field-datepicker></td>
-            </tr>
-            <tr>
-              <td>
-                Genome study date of completion of sequencing
-              </td>
-              <td><app-field-datepicker [dateString]=""></app-field-datepicker></td>
-            </tr>
-            <tr>
-              <td>Genome study date of completion (data released in repository)</td>
-              <td><app-field-datepicker [dateString]=""></app-field-datepicker></td>
-            </tr>
-            <tr>
-              <td>Notes about previous saliva kits</td>
-              <td>
+                <br>
+              </md-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td>Salive kit barcode for genome study</td>
+            <td class="formInput">
+              <md-input-container>
+                <input mdInput maxlength="500" placeholder="Kit barcode" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
+          </tr>
+          <tr>
+            <td>Tracking number for genome study saliva kit</td>
+            <td class="formInput">
+              <md-input-container>
+                <input mdInput maxlength="500" placeholder="Tracking number" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
+          </tr>
+          <tr>
+            <td>Genome study sample kit shipped on</td>
+            <td class="formInput">
+              <app-field-datepicker [dateString]=""></app-field-datepicker>
+            </td>
+          </tr>
+          <tr>
+            <td>Date genome study sample kit is received by participant</td>
+            <td class="formInput">
+              <app-field-datepicker [dateString]=""></app-field-datepicker>
+            </td>
+          </tr>
+          <tr>
+            <td>Genome study date of receipt of sample kit from participant</td>
+            <td class="formInput">
+              <app-field-datepicker [dateString]=""></app-field-datepicker>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Genome study date of completion of sequencing
+            </td>
+            <td class="formInput">
+              <app-field-datepicker [dateString]=""></app-field-datepicker>
+            </td>
+          </tr>
+          <tr>
+            <td>Genome study date of completion (data released in repository)</td>
+            <td class="formInput">
+              <app-field-datepicker [dateString]=""></app-field-datepicker>
+            </td>
+          </tr>
+          <tr>
+            <td>Notes about previous sample kits</td>
+            <td class="formInput">
                 <textarea maxlength="1000"
                           [ngClass]="{'Width--100': true}"></textarea>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     <p>Miscellaneous</p>
-    <div id="misc">
-      <div class="Float--left Width--100">
-        <div class="Float--left Width--60 bordered">
-          <table class="table table-condensed Width--100">
-            <tbody>
-            <tr>
-              <td>AT Portal User ID</td>
-              <td>
-                <md-input-container>
-                  <input mdInput maxlength="500" placeholder="AT Portal User ID" type="text"
-                         autocomplete="off" [disabled]="false">
-                </md-input-container>
-              </td>
-            </tr>
-            <tr>
-              <td>Name of portal user</td>
-              <td>
-                <md-input-container>
-                  <input mdInput maxlength="500" placeholder="Name of portal user" type="text"
-                         autocomplete="off" [disabled]="false">
-                </md-input-container>
-              </td>
-            </tr>
-            <tr>
-              <td>Portal user e-mail account</td>
-              <td>
-                <md-input-container>
-                  <input mdInput maxlength="500" placeholder="" type="text"
-                         autocomplete="off" [disabled]="false">
-                </md-input-container>
-              </td>
-            </tr>
-            <tr>
-              <td>Type of participant registration</td>
-              <td>
-                <md-radio-group>
-                  <md-radio-button value="">Dependent</md-radio-button>
-                  <br>
-                  <md-radio-button value="">Portal User</md-radio-button>
-                  <br>
-                  <md-radio-button value="">Self</md-radio-button>
-                  <br>
-                </md-radio-group>
-              </td>
-            </tr>
-            <tr>
-              <td>Status of participant registration</td>
-              <td>
-                <md-radio-group>
-                  <md-radio-button value="">Not registered</md-radio-button>
-                  <br>
-                  <md-radio-button value="">Registered</md-radio-button>
-                  <br>
+    <div id="misc" class="Float--left Width--100">
+      <div class="Float--left Width--60 bordered">
+        <table class="table table-condensed Width--100">
+          <tbody>
+          <tr>
+            <td>AT Portal User ID</td>
+            <td class="formInput">
+              <md-input-container>
+                <input mdInput maxlength="500" placeholder="AT Portal User ID" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
+          </tr>
+          <tr>
+            <td>Name of portal user</td>
+            <td class="formInput">
+              <md-input-container>
+                <input mdInput maxlength="500" placeholder="Name of portal user" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
+          </tr>
+          <tr>
+            <td>Portal user e-mail account</td>
+            <td class="formInput">
+              <md-input-container>
+                <input mdInput maxlength="500" placeholder="email account" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
+          </tr>
+          <tr>
+            <td>Type of participant registration</td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="">Dependent</md-radio-button>
+                <br>
+                <md-radio-button value="">Portal User</md-radio-button>
+                <br>
+                <md-radio-button value="">Self</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td>Status of participant registration</td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="">Not registered</md-radio-button>
+                <br>
+                <md-radio-button value="">Registered</md-radio-button>
+                <br>
                 <md-radio-button value="">Consented, needs assent</md-radio-button>
-                  <br>
+                <br>
                 <md-radio-button value="">Consented</md-radio-button>
-                  <br>
+                <br>
                 <md-radio-button value="">Submitted physician info</md-radio-button>
-                  <br>
+                <br>
                 <md-radio-button value="">Submitted medical history</md-radio-button>
-                  <br>
+                <br>
                 <md-radio-button value="">Submitted genome study shipping info</md-radio-button>
-                  <br>
+                <br>
                 <md-radio-button value="">Submitted enrollment/pending confirmation</md-radio-button>
-                  <br>
+                <br>
                 <md-radio-button value="">Eligibility not confirmed</md-radio-button>
-                  <br>
+                <br>
                 <md-radio-button value="">Enrolled</md-radio-button>
-                  <br>
-                </md-radio-group>
-              </td>
-            </tr>
-            <tr>
-              <td>Has updated medical history?</td>
-              <td>
-                <md-radio-group>
-                  <md-radio-button value="yes">Yes</md-radio-button>
-                  <br>
-                  <md-radio-button value="no">No</md-radio-button>
-                  <br>
-                </md-radio-group>
-              </td>
-            </tr>
-
-            </tbody>
-          </table>
-        </div>
+                <br>
+              </md-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td>Has updated medical history?</td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="yes">Yes</md-radio-button>
+                <br>
+                <md-radio-button value="no">No</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p>Platform Assent</p>
+    <div id="platformAssent" class="Float--left Width--100">
+      <div class="Float--left Width--60 bordered">
+        <table class="table table-condensed Width--100">
+          <tbody>
+          <tr>
+            <td>Platform assent (if needed)</td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="yes">Yes</md-radio-button>
+                <br>
+                <md-radio-button value="no">No</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td>You can do tests on the genes in my spit.</td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="yes">Yes</md-radio-button>
+                <br>
+                <md-radio-button value="no">No</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td>You can contact me later with more questions or information about future research. I do not have to
+              answer these questions or take part in future research.
+            </td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="yes">Yes</md-radio-button>
+                <br>
+                <md-radio-button value="no">No</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td>Later, it might be possible to get the results of the tests on my genes. Please let me know if this
+              becomes possible.
+            </td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="yes">Yes</md-radio-button>
+                <br>
+                <md-radio-button value="no">No</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td>You may ask my doctor or hospital to share information about my health.</td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="yes">Yes</md-radio-button>
+                <br>
+                <md-radio-button value="no">No</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td>If the researchers learn something about my health issues by testing my genes, please tell my doctor
+              about this.
+            </td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="yes">Yes</md-radio-button>
+                <br>
+                <md-radio-button value="no">No</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td>Platform assent signature</td>
+            <td class="formInput">
+              <md-input-container>
+                <input mdInput maxlength="500" placeholder="Platform assent signature" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
+          </tr>
+          <tr>
+            <td>Platform assent date of birth</td>
+            <td class="formInput"><app-field-datepicker></app-field-datepicker></td>
+          </tr>
+          <tr>
+            <td>Platform assent signature of person explaining assent form</td>
+            <td class="formInput">
+              <md-input-container>
+                <input mdInput maxlength="500" placeholder="Signature" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
+          </tr>
+          <tr>
+            <td>Date of assent signature</td>
+            <td class="formInput"><app-field-datepicker></app-field-datepicker></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p>Platform Consent</p>
+    <div id="platformConsent" class="Float--left Width--100">
+      <div class="Float--left Width--60 bordered">
+        <table class="table table-condensed Width--100">
+          <tbody>
+          <tr>
+            <td>Overall platform consent</td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="yes">Consented</md-radio-button>
+                <br>
+                <md-radio-button value="no">Not Consented</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td>You may perform (or collaborate with others to perform) DNA sequencing on the saliva sample that I will
+              send you and store the sample until genomic sequencing was successfully completed.
+            </td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="yes">Yes</md-radio-button>
+                <br>
+                <md-radio-button value="no">No</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td>You may request my medical records from my physicians and hospitals.</td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="yes">Yes</md-radio-button>
+                <br>
+                <md-radio-button value="no">No</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td>You may re-contact me in the event that it becomes possible to return genetic results to my physician or
+              me.I allow the A-T Children’s Project to contact my physician if a researcher reports genetic analysis
+              results that may impact my diagnosis of A-T.
+            </td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="yes">Yes</md-radio-button>
+                <br>
+                <md-radio-button value="no">No</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td>I allow the A-T Children’s Project to contact my physician if a researcher reports genetic analysis
+              results that may impact my diagnosis of A-T.
+            </td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="yes">Yes</md-radio-button>
+                <br>
+                <md-radio-button value="no">No</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td>You may use and share with qualified researchers my de-identified health information, medical
+              information, the results of the DNA sequencing (as indicated in the checkboxes below) and any other data I
+              shared via this platform for future research studies.
+            </td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="yes">Yes</md-radio-button>
+                <br>
+                <md-radio-button value="no">No</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td>You may share a de-identified version of the information I provided in this survey with qualified
+              researchers as described in the consent form.
+            </td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="yes">Yes</md-radio-button>
+                <br>
+                <md-radio-button value="no">No</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td>You may share a de-identified version of the genetic data I provided in this study with qualified
+              researchers as described in the consent form.
+            </td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="yes">Yes</md-radio-button>
+                <br>
+                <md-radio-button value="no">No</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td>I agree to be re-contacted with follow-up research questionnaires and invitations to participate in
+              additional studies. I may choose to ignore these questionnaires/invitations.
+            </td>
+            <td class="formInput">
+              <md-radio-group>
+                <md-radio-button value="yes">Yes</md-radio-button>
+                <br>
+                <md-radio-button value="no">No</md-radio-button>
+                <br>
+              </md-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td>I am a legal guardian of:</td>
+            <td class="formInput">
+              <md-input-container>
+                <input mdInput maxlength="500" placeholder="Enter here" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
+          </tr>
+          <tr>
+            <td>My relationship to the participant is:</td>
+            <td class="formInput">
+              <md-input-container>
+                <input mdInput maxlength="500" placeholder="Relationship" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
+          </tr>
+          <tr>
+            <td>Platform consent signature</td>
+            <td class="formInput">
+              <md-input-container>
+                <input mdInput maxlength="500" placeholder="Signature" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
+          </tr>
+          <tr>
+            <td>Platform consent date of birth</td>
+            <td class="formInput">
+              <app-field-datepicker></app-field-datepicker>
+            </td>
+          </tr>
+          <tr>
+            <td>Date of consent signature</td>
+            <td class="formInput">
+              <app-field-datepicker></app-field-datepicker>
+            </td>
+          </tr>
+          <tr>
+            <td>Reason for latest change in consent</td>
+            <td class="formInput">
+              <textarea maxlength="1000"
+                        [ngClass]="{'Width--100': true}"></textarea>
+            </td>
+          </tr>
+          <tr>
+            <td>Best phone number to contact</td>
+            <td class="formInput">
+              <md-input-container>
+                <input mdInput maxlength="500" placeholder="Phone number" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p><b>Platform Re-consent</b></p>
+    <div id="platformReConsent" class="Float--left Width--100">
+      <div class="Float--left Width--60 bordered">
+        <table class="table table-condensed Width--100">
+          <tr>
+            <td>Re-consent needed by</td>
+            <td class="formInput">
+              <app-field-datepicker [dateString]=""></app-field-datepicker></td>
+          </tr>
+          <tr>
+            <td>Re-consent entered on</td>
+            <td class="formInput">
+              <app-field-datepicker [dateString]=""></app-field-datepicker>
+            </td>
+          </tr>
+          <tr>
+            <td>Name of person giving re-consent</td>
+            <td class="formInput">
+              <md-input-container>
+              <input mdInput maxlength="500" placeholder="Name" type="text"
+                     autocomplete="off" [disabled]="false">
+            </md-input-container></td>
+          </tr>
+          <tr>
+            <td>Relationship to participant for re-consent</td>
+            <td class="formInput">
+              <md-input-container>
+              <input mdInput maxlength="500" placeholder="Relationship" type="text"
+                     autocomplete="off" [disabled]="false">
+            </md-input-container></td>
+          </tr>
+        </table>
       </div>
     </div>
   </div>
