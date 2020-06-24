@@ -14,15 +14,14 @@ so there is no need to make different `baseUrl` configurations between local dev
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive/pipe/service/class`.
 
-## Building with Vault
+## Building with Secret Manager
 
 To generate the `ddp_config.js` file, first do:
 ```shell
-ENVIRONMENT=dev
-docker run --rm -v $PWD:/working -e VAULT_TOKEN=$(cat ~/.vault-token) -e ENVIRONMENT=$ENVIRONMENT -e OUT_PATH=./src/assets/js -e INPUT_PATH=./src/assets/js broadinstitute/dsde-toolbox:dev render-templates.sh
+gcloud --project=${PROJECT_ID} secrets versions access latest --secret="study-manager-ui-config" > ./src/assets/js/ddp_config.js
 ```
 
-from the top-level directory.  This will parse the ddp_config.js.ctmpl file and render the secrets from vault.
+from the top-level directory.  This will read config values from GCP secret manager.
 
 Run `ng build --target=production --environment=source` to build the project. The build artifacts will be stored in the `dist/` directory.
 

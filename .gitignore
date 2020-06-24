@@ -3,7 +3,6 @@ build
 !build/build-and-deploy.sh
 !build/StudyManager.yaml
 !build/*.sh
-
 # client
 /dist
 /tmp

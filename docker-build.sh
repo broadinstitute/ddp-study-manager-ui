@@ -7,5 +7,3 @@ ng build --no-progress --environment=source --base-href=/ --output-path=/build/d
 gzip -k -q /build/dist/html/*.js || true
 gzip -k -q /build/dist/html/assets/images/*.svg || true
 gzip -k -q /build/dist/nginx/html/*.css || true
-
-# todo arz multistage builds, pull out node, cli, etc.
