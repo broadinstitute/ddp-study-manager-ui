@@ -20,7 +20,7 @@ import {PatchUtil} from "../utils/patch.model";
 import {MedicalRecord} from "./medical-record.model";
 import {PDFModel} from "../pdf-download/pdf-download.model";
 
-var fileSaver = require( "file-saver/filesaver.js" );
+var fileSaver = require( "file-saver/FileSaver.js" );
 
 @Component( {
   selector: "app-medical-record",

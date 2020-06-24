@@ -8,7 +8,7 @@ import {Statics} from "../utils/statics";
 import {Response} from "@angular/http";
 import {PDFModel} from "./pdf-download.model";
 
-var fileSaver = require( "file-saver/filesaver.js" );
+var fileSaver = require( "file-saver/FileSaver.js" );
 
 @Component( {
   selector: "app-pdf-download",

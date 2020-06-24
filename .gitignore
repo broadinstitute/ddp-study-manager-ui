@@ -1,4 +1,8 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
+build
+!build/build-and-deploy.sh
+!build/StudyManager.yaml
+!build/*.sh
 
 # client
 /dist
