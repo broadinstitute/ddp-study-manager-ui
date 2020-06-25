@@ -1,0 +1,12 @@
+FROM study-manager-base:latest
+
+WORKDIR /app
+COPY .angular-cli.json ./
+COPY karma.conf.js ./
+COPY package.json ./
+COPY protractor.conf.js ./
+COPY tsconfig.json ./
+COPY docker-build.sh ./
+COPY src ./src/
+
+CMD ["/app/docker-build.sh"]

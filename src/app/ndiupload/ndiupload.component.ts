@@ -6,7 +6,9 @@ import {ComponentService} from "../services/component.service";
 import {ActivatedRoute} from "@angular/router";
 import {Response} from "@angular/http";
 
-var fileSaver = require("file-saver/filesaver.js");
+var fileSaver = require("file-saver/FileSaver.js");
+
+//declare var fileSaver: any;
 
 @Component({
   selector: "app-ndiupload",
