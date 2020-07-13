@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from "@angular/core";
+import {CustomParticipantInfo} from "./custom-participant-info.model";
 
 @Component({
   selector: 'app-custom-participant-info',
@@ -6,10 +7,22 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./custom-participant-info.component.css']
 })
 export class CustomParticipantInfoComponent implements OnInit {
-
-  constructor() { }
+  @Input() customParticipantInfo : CustomParticipantInfo;
+  country : string = "Canada";
+  state : string = "Alberta";
+  constructor() {
+    this.customParticipantInfo = new CustomParticipantInfo(null, null, null, null, null, null,
+      null, null, null, null, null, null, null, null,
+      null, null, null, null, null,null, null, null, null, null, null,
+      null, null, null, null, null, null, null);
+  }
 
   ngOnInit() {
+    this.country = "Canada";
+    this.customParticipantInfo = new CustomParticipantInfo(null, null, null, null, null, null,
+      null, null, null, null, null, null, null, null,
+      null, null, null, null, null,null, null, null, null, null, null,
+      null, null, null, null, null, null, null);
   }
 
 }
