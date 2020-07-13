@@ -14,7 +14,7 @@ import {OncHistoryDetail} from "../onc-history-detail/onc-history-detail.model";
 import {NameValue} from "./name-value.model";
 import {DateFormatPipe} from '../pipe/custom-date.pipe';
 
-var fileSaver = require( "file-saver/filesaver.js" );
+var fileSaver = require( "file-saver/FileSaver.js" );
 const Json2csvParser = require( "json2csv" ).Parser;
 
 @Injectable()

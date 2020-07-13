@@ -24,7 +24,7 @@ import {Abstraction} from "../medical-record-abstraction/medical-record-abstract
 import {AbstractionGroup, AbstractionWrapper} from "../abstraction-group/abstraction-group.model";
 import {PatchUtil} from "../utils/patch.model";
 
-var fileSaver = require( "file-saver/filesaver.js" );
+var fileSaver = require( "file-saver/FileSaver.js" );
 
 @Component( {
   selector: "app-participant-page",
