@@ -1,189 +1,374 @@
+
 <ng-container>
   <div class="Display--block">
-    <p>Eligibility</p>
-    <div id="Eligibility" class="Float--left Width--100">
-      <div class="Float--left Width--60 bordered">
+    <p>Participant Information</p>
+    <div id="ptInfo" class="Float--left Width--100">
+      <div class="Float--left Width--50 bordered">
         <table class="table table-condensed Width--100">
           <tbody>
           <tr>
+            <td>First name</td>
+            <td class="formInput">
+              <md-input-container>
+                <input class="form-control" name="fname" mdInput maxlength="500" placeholder="First Name" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
+          </tr>
+          <tr>
+            <td>Middle name</td>
+            <td class="formInput">
+              <md-input-container>
+                <input class="form-control" name="mName" mdInput maxlength="500" placeholder="Middle Name" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
+          </tr>
+          <tr>
+            <td>Last name</td>
+            <td class="formInput">
+              <md-input-container>
+                <input class="form-control" name="lname" mdInput maxlength="500" placeholder="Last Name" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
+          </tr>
+          <tr>
+            <td>Suffix</td>
+            <td class="formInput">
+              <md-input-container>
+                <input class="form-control" name="suffix" mdInput maxlength="500" placeholder="Suffix" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
+          </tr>
+          <tr>
+            <td>Title</td>
+            <td class="formInput">
+              <md-input-container>
+                <input class="form-control" name="title" mdInput maxlength="500" placeholder="Title" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
+          </tr>
+          <tr>
+            <td>Gender</td>
             <td>
-              Eligibility
+              <md-select>
+                <md-option value="">Female</md-option>
+                <md-option value="">Male</md-option>
+                <md-option value="">Intersex</md-option>
+                <md-option value="">Unknown</md-option>
+              </md-select>
             </td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="eligibility">Eligible</md-radio-button>
-                <br>
-                <md-radio-button value="not">Not Eligible</md-radio-button>
-                <br>
-                <md-radio-button value="pending">Pending</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-
           </tr>
           <tr>
-            <td>Contacting Physician's First Name</td>
+            <td>Date of birth</td>
+            <td>
+              <app-field-datepicker></app-field-datepicker>
+            </td>
+          </tr>
+          <tr>
+            <td>Language</td>
+            <td>
+              <md-select data-placeholder="Choose a Language...">
+                <md-option value="Afrikaans">Afrikaans</md-option>
+                <md-option value="Albanian">Albanian</md-option>
+                <md-option value="Arabic">Arabic</md-option>
+                <md-option value="Armenian">Armenian</md-option>
+                <md-option value="Basque">Basque</md-option>
+                <md-option value="Bengali">Bengali</md-option>
+                <md-option value="Bulgarian">Bulgarian</md-option>
+                <md-option value="Catalan">Catalan</md-option>
+                <md-option value="Cambodian">Cambodian</md-option>
+                <md-option value="Chinese (Mandarin)">Chinese (Mandarin)</md-option>
+                <md-option value="Croatian">Croatian</md-option>
+                <md-option value="Czech">Czech</md-option>
+                <md-option value="Danish">Danish</md-option>
+                <md-option value="Dutch">Dutch</md-option>
+                <md-option value="English">English</md-option>
+                <md-option value="Estonian">Estonian</md-option>
+                <md-option value="Fiji">Fiji</md-option>
+                <md-option value="Finnish">Finnish</md-option>
+                <md-option value="French">French</md-option>
+                <md-option value="Georgian">Georgian</md-option>
+                <md-option value="German">German</md-option>
+                <md-option value="Greek">Greek</md-option>
+                <md-option value="Gujarati">Gujarati</md-option>
+                <md-option value="Hebrew">Hebrew</md-option>
+                <md-option value="Hindi">Hindi</md-option>
+                <md-option value="Hungarian">Hungarian</md-option>
+                <md-option value="Icelandic">Icelandic</md-option>
+                <md-option value="Indonesian">Indonesian</md-option>
+                <md-option value="Irish">Irish</md-option>
+                <md-option value="Italian">Italian</md-option>
+                <md-option value="Japanese">Japanese</md-option>
+                <md-option value="Javanese">Javanese</md-option>
+                <md-option value="Korean">Korean</md-option>
+                <md-option value="Latin">Latin</md-option>
+                <md-option value="Latvian">Latvian</md-option>
+                <md-option value="Lithuanian">Lithuanian</md-option>
+                <md-option value="Macedonian">Macedonian</md-option>
+                <md-option value="Malay">Malay</md-option>
+                <md-option value="Malayalam">Malayalam</md-option>
+                <md-option value="Maltese">Maltese</md-option>
+                <md-option value="Maori">Maori</md-option>
+                <md-option value="Marathi">Marathi</md-option>
+                <md-option value="Mongolian">Mongolian</md-option>
+                <md-option value="Nepali">Nepali</md-option>
+                <md-option value="Norwegian">Norwegian</md-option>
+                <md-option value="Persian">Persian</md-option>
+                <md-option value="Polish">Polish</md-option>
+                <md-option value="Portuguese">Portuguese</md-option>
+                <md-option value="Punjabi">Punjabi</md-option>
+                <md-option value="Quechua">Quechua</md-option>
+                <md-option value="Romanian">Romanian</md-option>
+                <md-option value="Russian">Russian</md-option>
+                <md-option value="Samoan">Samoan</md-option>
+                <md-option value="Serbian">Serbian</md-option>
+                <md-option value="Slovak">Slovak</md-option>
+                <md-option value="Slovenian">Slovenian</md-option>
+                <md-option value="Spanish">Spanish</md-option>
+                <md-option value="Swahili">Swahili</md-option>
+                <md-option value="Swedish ">Swedish </md-option>
+                <md-option value="Tamil">Tamil</md-option>
+                <md-option value="Tatar">Tatar</md-option>
+                <md-option value="Telugu">Telugu</md-option>
+                <md-option value="Thai">Thai</md-option>
+                <md-option value="Tibetan">Tibetan</md-option>
+                <md-option value="Tonga">Tonga</md-option>
+                <md-option value="Turkish">Turkish</md-option>
+                <md-option value="Ukrainian">Ukrainian</md-option>
+                <md-option value="Urdu">Urdu</md-option>
+                <md-option value="Uzbek">Uzbek</md-option>
+                <md-option value="Vietnamese">Vietnamese</md-option>
+                <md-option value="Welsh">Welsh</md-option>
+                <md-option value="Xhosa">Xhosa</md-option>
+              </md-select></td>
+          </tr>
+          <tr>
+            <td>Time zone</td>
+            <td>
+              <md-select>
+                <md-option timeZoneId="1" gmtAdjustment="GMT-12:00" useDaylightTime="0" value="-12">(GMT-12:00) International Date Line West</md-option>
+                <md-option timeZoneId="2" gmtAdjustment="GMT-11:00" useDaylightTime="0" value="-11">(GMT-11:00) Midway Island, Samoa</md-option>
+                <md-option timeZoneId="3" gmtAdjustment="GMT-10:00" useDaylightTime="0" value="-10">(GMT-10:00) Hawaii</md-option>
+                <md-option timeZoneId="4" gmtAdjustment="GMT-09:00" useDaylightTime="1" value="-9">(GMT-09:00) Alaska</md-option>
+                <md-option timeZoneId="5" gmtAdjustment="GMT-08:00" useDaylightTime="1" value="-8">(GMT-08:00) Pacific Time (US & Canada)</md-option>
+                <md-option timeZoneId="6" gmtAdjustment="GMT-08:00" useDaylightTime="1" value="-8">(GMT-08:00) Tijuana, Baja California</md-option>
+                <md-option timeZoneId="7" gmtAdjustment="GMT-07:00" useDaylightTime="0" value="-7">(GMT-07:00) Arizona</md-option>
+                <md-option timeZoneId="8" gmtAdjustment="GMT-07:00" useDaylightTime="1" value="-7">(GMT-07:00) Chihuahua, La Paz, Mazatlan</md-option>
+                <md-option timeZoneId="9" gmtAdjustment="GMT-07:00" useDaylightTime="1" value="-7">(GMT-07:00) Mountain Time (US & Canada)</md-option>
+                <md-option timeZoneId="10" gmtAdjustment="GMT-06:00" useDaylightTime="0" value="-6">(GMT-06:00) Central America</md-option>
+                <md-option timeZoneId="11" gmtAdjustment="GMT-06:00" useDaylightTime="1" value="-6">(GMT-06:00) Central Time (US & Canada)</md-option>
+                <md-option timeZoneId="12" gmtAdjustment="GMT-06:00" useDaylightTime="1" value="-6">(GMT-06:00) Guadalajara, Mexico City, Monterrey</md-option>
+                <md-option timeZoneId="13" gmtAdjustment="GMT-06:00" useDaylightTime="0" value="-6">(GMT-06:00) Saskatchewan</md-option>
+                <md-option timeZoneId="14" gmtAdjustment="GMT-05:00" useDaylightTime="0" value="-5">(GMT-05:00) Bogota, Lima, Quito, Rio Branco</md-option>
+                <md-option timeZoneId="15" gmtAdjustment="GMT-05:00" useDaylightTime="1" value="-5">(GMT-05:00) Eastern Time (US & Canada)</md-option>
+                <md-option timeZoneId="16" gmtAdjustment="GMT-05:00" useDaylightTime="1" value="-5">(GMT-05:00) Indiana (East)</md-option>
+                <md-option timeZoneId="17" gmtAdjustment="GMT-04:00" useDaylightTime="1" value="-4">(GMT-04:00) Atlantic Time (Canada)</md-option>
+                <md-option timeZoneId="18" gmtAdjustment="GMT-04:00" useDaylightTime="0" value="-4">(GMT-04:00) Caracas, La Paz</md-option>
+                <md-option timeZoneId="19" gmtAdjustment="GMT-04:00" useDaylightTime="0" value="-4">(GMT-04:00) Manaus</md-option>
+                <md-option timeZoneId="20" gmtAdjustment="GMT-04:00" useDaylightTime="1" value="-4">(GMT-04:00) Santiago</md-option>
+                <md-option timeZoneId="21" gmtAdjustment="GMT-03:30" useDaylightTime="1" value="-3.5">(GMT-03:30) Newfoundland</md-option>
+                <md-option timeZoneId="22" gmtAdjustment="GMT-03:00" useDaylightTime="1" value="-3">(GMT-03:00) Brasilia</md-option>
+                <md-option timeZoneId="23" gmtAdjustment="GMT-03:00" useDaylightTime="0" value="-3">(GMT-03:00) Buenos Aires, Georgetown</md-option>
+                <md-option timeZoneId="24" gmtAdjustment="GMT-03:00" useDaylightTime="1" value="-3">(GMT-03:00) Greenland</md-option>
+                <md-option timeZoneId="25" gmtAdjustment="GMT-03:00" useDaylightTime="1" value="-3">(GMT-03:00) Montevideo</md-option>
+                <md-option timeZoneId="26" gmtAdjustment="GMT-02:00" useDaylightTime="1" value="-2">(GMT-02:00) Mid-Atlantic</md-option>
+                <md-option timeZoneId="27" gmtAdjustment="GMT-01:00" useDaylightTime="0" value="-1">(GMT-01:00) Cape Verde Is.</md-option>
+                <md-option timeZoneId="28" gmtAdjustment="GMT-01:00" useDaylightTime="1" value="-1">(GMT-01:00) Azores</md-option>
+                <md-option timeZoneId="29" gmtAdjustment="GMT+00:00" useDaylightTime="0" value="0">(GMT+00:00) Casablanca, Monrovia, Reykjavik</md-option>
+                <md-option timeZoneId="30" gmtAdjustment="GMT+00:00" useDaylightTime="1" value="0">(GMT+00:00) Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London</md-option>
+                <md-option timeZoneId="31" gmtAdjustment="GMT+01:00" useDaylightTime="1" value="1">(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna</md-option>
+                <md-option timeZoneId="32" gmtAdjustment="GMT+01:00" useDaylightTime="1" value="1">(GMT+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague</md-option>
+                <md-option timeZoneId="33" gmtAdjustment="GMT+01:00" useDaylightTime="1" value="1">(GMT+01:00) Brussels, Copenhagen, Madrid, Paris</md-option>
+                <md-option timeZoneId="34" gmtAdjustment="GMT+01:00" useDaylightTime="1" value="1">(GMT+01:00) Sarajevo, Skopje, Warsaw, Zagreb</md-option>
+                <md-option timeZoneId="35" gmtAdjustment="GMT+01:00" useDaylightTime="1" value="1">(GMT+01:00) West Central Africa</md-option>
+                <md-option timeZoneId="36" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="2">(GMT+02:00) Amman</md-option>
+                <md-option timeZoneId="37" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="2">(GMT+02:00) Athens, Bucharest, Istanbul</md-option>
+                <md-option timeZoneId="38" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="2">(GMT+02:00) Beirut</md-option>
+                <md-option timeZoneId="39" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="2">(GMT+02:00) Cairo</md-option>
+                <md-option timeZoneId="40" gmtAdjustment="GMT+02:00" useDaylightTime="0" value="2">(GMT+02:00) Harare, Pretoria</md-option>
+                <md-option timeZoneId="41" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="2">(GMT+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius</md-option>
+                <md-option timeZoneId="42" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="2">(GMT+02:00) Jerusalem</md-option>
+                <md-option timeZoneId="43" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="2">(GMT+02:00) Minsk</md-option>
+                <md-option timeZoneId="44" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="2">(GMT+02:00) Windhoek</md-option>
+                <md-option timeZoneId="45" gmtAdjustment="GMT+03:00" useDaylightTime="0" value="3">(GMT+03:00) Kuwait, Riyadh, Baghdad</md-option>
+                <md-option timeZoneId="46" gmtAdjustment="GMT+03:00" useDaylightTime="1" value="3">(GMT+03:00) Moscow, St. Petersburg, Volgograd</md-option>
+                <md-option timeZoneId="47" gmtAdjustment="GMT+03:00" useDaylightTime="0" value="3">(GMT+03:00) Nairobi</md-option>
+                <md-option timeZoneId="48" gmtAdjustment="GMT+03:00" useDaylightTime="0" value="3">(GMT+03:00) Tbilisi</md-option>
+                <md-option timeZoneId="49" gmtAdjustment="GMT+03:30" useDaylightTime="1" value="3.5">(GMT+03:30) Tehran</md-option>
+                <md-option timeZoneId="50" gmtAdjustment="GMT+04:00" useDaylightTime="0" value="4">(GMT+04:00) Abu Dhabi, Muscat</md-option>
+                <md-option timeZoneId="51" gmtAdjustment="GMT+04:00" useDaylightTime="1" value="4">(GMT+04:00) Baku</md-option>
+                <md-option timeZoneId="52" gmtAdjustment="GMT+04:00" useDaylightTime="1" value="4">(GMT+04:00) Yerevan</md-option>
+                <md-option timeZoneId="53" gmtAdjustment="GMT+04:30" useDaylightTime="0" value="4.5">(GMT+04:30) Kabul</md-option>
+                <md-option timeZoneId="54" gmtAdjustment="GMT+05:00" useDaylightTime="1" value="5">(GMT+05:00) Yekaterinburg</md-option>
+                <md-option timeZoneId="55" gmtAdjustment="GMT+05:00" useDaylightTime="0" value="5">(GMT+05:00) Islamabad, Karachi, Tashkent</md-option>
+                <md-option timeZoneId="56" gmtAdjustment="GMT+05:30" useDaylightTime="0" value="5.5">(GMT+05:30) Sri Jayawardenapura</md-option>
+                <md-option timeZoneId="57" gmtAdjustment="GMT+05:30" useDaylightTime="0" value="5.5">(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi</md-option>
+                <md-option timeZoneId="58" gmtAdjustment="GMT+05:45" useDaylightTime="0" value="5.75">(GMT+05:45) Kathmandu</md-option>
+                <md-option timeZoneId="59" gmtAdjustment="GMT+06:00" useDaylightTime="1" value="6">(GMT+06:00) Almaty, Novosibirsk</md-option>
+                <md-option timeZoneId="60" gmtAdjustment="GMT+06:00" useDaylightTime="0" value="6">(GMT+06:00) Astana, Dhaka</md-option>
+                <md-option timeZoneId="61" gmtAdjustment="GMT+06:30" useDaylightTime="0" value="6.5">(GMT+06:30) Yangon (Rangoon)</md-option>
+                <md-option timeZoneId="62" gmtAdjustment="GMT+07:00" useDaylightTime="0" value="7">(GMT+07:00) Bangkok, Hanoi, Jakarta</md-option>
+                <md-option timeZoneId="63" gmtAdjustment="GMT+07:00" useDaylightTime="1" value="7">(GMT+07:00) Krasnoyarsk</md-option>
+                <md-option timeZoneId="64" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="8">(GMT+08:00) Beijing, Chongqing, Hong Kong, Urumqi</md-option>
+                <md-option timeZoneId="65" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="8">(GMT+08:00) Kuala Lumpur, Singapore</md-option>
+                <md-option timeZoneId="66" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="8">(GMT+08:00) Irkutsk, Ulaan Bataar</md-option>
+                <md-option timeZoneId="67" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="8">(GMT+08:00) Perth</md-option>
+                <md-option timeZoneId="68" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="8">(GMT+08:00) Taipei</md-option>
+                <md-option timeZoneId="69" gmtAdjustment="GMT+09:00" useDaylightTime="0" value="9">(GMT+09:00) Osaka, Sapporo, Tokyo</md-option>
+                <md-option timeZoneId="70" gmtAdjustment="GMT+09:00" useDaylightTime="0" value="9">(GMT+09:00) Seoul</md-option>
+                <md-option timeZoneId="71" gmtAdjustment="GMT+09:00" useDaylightTime="1" value="9">(GMT+09:00) Yakutsk</md-option>
+                <md-option timeZoneId="72" gmtAdjustment="GMT+09:30" useDaylightTime="0" value="9.5">(GMT+09:30) Adelaide</md-option>
+                <md-option timeZoneId="73" gmtAdjustment="GMT+09:30" useDaylightTime="0" value="9.5">(GMT+09:30) Darwin</md-option>
+                <md-option timeZoneId="74" gmtAdjustment="GMT+10:00" useDaylightTime="0" value="10">(GMT+10:00) Brisbane</md-option>
+                <md-option timeZoneId="75" gmtAdjustment="GMT+10:00" useDaylightTime="1" value="10">(GMT+10:00) Canberra, Melbourne, Sydney</md-option>
+                <md-option timeZoneId="76" gmtAdjustment="GMT+10:00" useDaylightTime="1" value="10">(GMT+10:00) Hobart</md-option>
+                <md-option timeZoneId="77" gmtAdjustment="GMT+10:00" useDaylightTime="0" value="10">(GMT+10:00) Guam, Port Moresby</md-option>
+                <md-option timeZoneId="78" gmtAdjustment="GMT+10:00" useDaylightTime="1" value="10">(GMT+10:00) Vladivostok</md-option>
+                <md-option timeZoneId="79" gmtAdjustment="GMT+11:00" useDaylightTime="1" value="11">(GMT+11:00) Magadan, Solomon Is., New Caledonia</md-option>
+                <md-option timeZoneId="80" gmtAdjustment="GMT+12:00" useDaylightTime="1" value="12">(GMT+12:00) Auckland, Wellington</md-option>
+                <md-option timeZoneId="81" gmtAdjustment="GMT+12:00" useDaylightTime="0" value="12">(GMT+12:00) Fiji, Kamchatka, Marshall Is.</md-option>
+                <md-option timeZoneId="82" gmtAdjustment="GMT+13:00" useDaylightTime="0" value="13">(GMT+13:00) Nuku'alofa</md-option>
+              </md-select>
+            </td>
+          </tr>
+          <tr>
+            <td>Phone (H)</td>
             <td class="formInput">
               <md-input-container>
-                <input mdInput maxlength="500" placeholder="Contacting Physician's First Name" type="text"
+                <input class="form-control" name="phoneH" mdInput maxlength="500" placeholder="Phone (H)" type="text"
                        autocomplete="off" [disabled]="false">
               </md-input-container>
             </td>
-
           </tr>
           <tr>
-            <td>Contacting Physician's Last Name</td>
+            <td>Phone (W)</td>
             <td class="formInput">
               <md-input-container>
-                <input mdInput maxlength="500" placeholder="Contacting Physician's Last Name" type="text"
+                <input class="form-control" name="phoneW" mdInput maxlength="500" placeholder="Phone (W)" type="text"
                        autocomplete="off" [disabled]="false">
               </md-input-container>
             </td>
-
           </tr>
           <tr>
-            <td>Contacting Physician's Suffix</td>
+            <td>Phone (M)</td>
             <td class="formInput">
               <md-input-container>
-                <input mdInput maxlength="500" placeholder="Contacting Physician's Suffix" type="text"
-                       autocomplete="off" [disabled]="false">
-              </md-input-container>
-
-            </td>
-
-          </tr>
-          <tr>
-            <td>Contacting Physician's Address</td>
-            <td class="formInput">
-              <md-input-container>
-                <input mdInput maxlength="500" placeholder="Contacting Physician's Address" type="text"
-                       autocomplete="off" [disabled]="false">
-              </md-input-container>
-
-            </td>
-
-          </tr>
-          <tr>
-            <td>Contacting Physician's Phone Number</td>
-            <td class="formInput">
-              <md-input-container>
-                <input mdInput maxlength="500" placeholder="Contacting Physician's Phone Number" type="text"
+                <input class="form-control" name="phoneM" mdInput maxlength="500" placeholder="Phone (M)" type="text"
                        autocomplete="off" [disabled]="false">
               </md-input-container>
             </td>
-
           </tr>
           <tr>
-            <td>Contacting Physician's Email</td>
+            <td>E-mail</td>
             <td class="formInput">
               <md-input-container>
-                <input mdInput maxlength="500" placeholder="Contacting Physician's Email" type="text"
+                <input class="form-control" name="email" mdInput maxlength="500" placeholder="E-mail" type="text"
                        autocomplete="off" [disabled]="false">
               </md-input-container>
             </td>
-
           </tr>
           <tr>
-            <td>Received care at National A-T Clinic, Brisbane, Queensland, Australia?</td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="yes">Yes</md-radio-button>
-                <br>
-                <md-radio-button value="no">No</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-
-          </tr>
-          <tr>
-            <td>Received care at National A-T Clinic, Sheba Medical Center, Tel Hashomer, Ramat Gan,
-              Israel?
-            </td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="yes">Yes</md-radio-button>
-                <br>
-                <md-radio-button value="no">No</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-
-          </tr>
-          <tr>
-            <td>Received care at John's Hopkins A-T Clinic?</td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="yes">Yes</md-radio-button>
-                <br>
-                <md-radio-button value="no">No</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-
-          </tr>
-          <tr>
-            <td>Received care at Specialized A-T Center, Johann Wolfgang Goethe University, Frankfurt,
-              Germany?
-            </td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="yes">Yes</md-radio-button>
-                <br>
-                <md-radio-button value="no">No</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-
-          </tr>
-          <tr>
-            <td>Received care at The Clinic at the A-T Specialist Centre, Nottingham City Hospital,
-              Nottingham, UK?
-            </td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="yes">Yes</md-radio-button>
-                <br>
-                <md-radio-button value="no">No</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-
-          </tr>
-          <tr>
-            <td>Age of participant at time of death</td>
+            <td>Alt e-mail</td>
             <td class="formInput">
               <md-input-container>
-                <input mdInput maxlength="500" placeholder="Age at time of death" type="text"
+                <input class="form-control" name="altEmail" mdInput maxlength="500" placeholder="Alt e-mail" type="text"
                        autocomplete="off" [disabled]="false">
               </md-input-container>
             </td>
-
           </tr>
           <tr>
-            <td>Date of death for participant</td>
+            <td>Address (P)</td>
             <td class="formInput">
               <md-input-container>
-                <input mdInput maxlength="500" placeholder="Date of Death" type="text"
+                <input class="form-control" name="addressP" mdInput maxlength="500" placeholder="Address (P)" type="text"
                        autocomplete="off" [disabled]="false">
               </md-input-container>
             </td>
-
           </tr>
           <tr>
-            <td>Cause of death for participant</td>
+            <td>City (P)</td>
             <td class="formInput">
               <md-input-container>
-                <input mdInput maxlength="500" placeholder="Cause of death" type="text"
+                <input class="form-control" name="cityP" mdInput maxlength="500" placeholder="City (P)" type="text"
                        autocomplete="off" [disabled]="false">
               </md-input-container>
             </td>
-
           </tr>
           <tr>
-            <td>Notes about participant cause of death</td>
+            <td>Country (P)</td>
+            <td><app-field-country-state-picker [country]="participantInfo?.countryP"></app-field-country-state-picker></td>
+          </tr>
+          <tr>
+            <td>State (P)</td>
+            <td><app-field-state-picker [selectedCountry]="participantInfo?.countryP" [selectedState]="participantInfo?.stateP"></app-field-state-picker>
+            </td>
+          </tr>
+          <tr>
+            <td>Zip (P)</td>
             <td class="formInput">
               <md-input-container>
-                <input mdInput maxlength="500" placeholder="Notes" type="text"
+                <input class="form-control" name="zipP" mdInput maxlength="500" placeholder="Zip (P)" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
+          </tr>
+          <tr>
+            <td>Address (M)</td>
+            <td class="formInput">
+              <md-input-container>
+                <input class="form-control" name="addressM" mdInput maxlength="500" placeholder="Address (M)" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
+          </tr>
+          <tr>
+            <td>City (M)</td>
+            <td class="formInput">
+              <md-input-container>
+                <input class="form-control" name="cityM" mdInput maxlength="500" placeholder="City (M)" type="text"
+                       autocomplete="off" [disabled]="false"/>
+              </md-input-container>
+            </td>
+          </tr>
+          <tr>
+            <td>Country (M)</td>
+            <td >
+              <app-field-country-state-picker  [country]="participantInfo?.countryM"></app-field-country-state-picker>
+            </td>
+          </tr>
+          <tr>
+            <td>State (M)</td>
+            <td>
+              <app-field-state-picker  [selectedCountry]="participantInfo?.countryM" [selectedState]="participantInfo?.stateM"></app-field-state-picker>
+            </td>
+          </tr>
+          <tr>
+            <td>Zip (M)</td>
+            <td class="formInput">
+              <md-input-container>
+                <input class="form-control" name="ZipM" mdInput maxlength="500" placeholder="Zip (M)" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
+          </tr>
+          <tr>
+            <td>DNC</td>
+            <td class="formInput">
+              <md-input-container>
+                <input class="form-control" name="DNC" mdInput maxlength="500" placeholder="DNC" type="text"
+                       autocomplete="off" [disabled]="false">
+              </md-input-container>
+            </td>
+          </tr>
+          <tr>
+            <td>DNC comment</td>
+            <td class="formInput">
+              <md-input-container>
+                <input class="form-control" name="dncComment" mdInput maxlength="500" placeholder="DNC comment" type="text"
                        autocomplete="off" [disabled]="false">
               </md-input-container>
             </td>
@@ -192,551 +377,48 @@
         </table>
       </div>
     </div>
-    <p>Genome Study</p>
-    <div id="genomeStudy" class="Float--left Width--100">
-      <div class="Float--left Width--60 bordered">
+    <p>Exit Information</p>
+    <div id="exit" class="Float--left Width--100">
+      <div class="Float--left Width--50 bordered">
         <table class="table table-condensed Width--100">
           <tbody>
           <tr>
+            <td>Exit status:</td>
+            <td><md-radio-group>
+              <md-radio-button value="notExited">Not exited</md-radio-button>
+              <br>
+              <md-radio-button value="exited">Exited</md-radio-button>
+              <br>
+              <br>
+            </md-radio-group></td>
+          </tr>
+          <tr>
+            <td>Exit reason:</td>
             <td>
-              Genome study Collaborator Participant ID
-            </td>
-            <td class="formInput">
-              <md-input-container>
-                <input mdInput maxlength="500" placeholder="Genome study Collaborator Participant ID" type="text"
-                       autocomplete="off" [disabled]="false">
-              </md-input-container>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              Consented for genome study
-            </td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="yes">Yes</md-radio-button>
-                <br>
-                <md-radio-button value="no">No</md-radio-button>
-                <br>
-              </md-radio-group>
+              <md-select>
+                <md-option value="">Completed</md-option>
+                <md-option value="">Deceased</md-option>
+                <md-option value="">Incarcerated</md-option>
+                <md-option value="">Unable to continue</md-option>
+                <md-option value="">Unable to locate</md-option>
+                <md-option value="">Unwilling to continue</md-option>
+                <md-option value="">Withdrawn by study staff</md-option>
+                <md-option value="">Other</md-option>
+              </md-select>
             </td>
           </tr>
           <tr>
-            <td>
-              Genome study date of participant consent
-            </td>
-            <td class="formInput">
-              <app-field-datepicker [dateString]=""></app-field-datepicker>
-            </td>
-          </tr>
-          <tr>
-            <td>Ethnicity</td>
-            <td class="formInput">Dropdown</td>
-          </tr>
-          <tr>
-            <td>Does participant have a sibling in the study?</td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="yes">Yes</md-radio-button>
-                <br>
-                <md-radio-button value="no">No</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-          </tr>
-          <tr>
-            <td>Genome study shipping address</td>
-            <td class="formInput">
-              <md-input-container>
-                <input mdInput maxlength="500" placeholder="Genome study shipping address" type="text"
-                       autocomplete="off" [disabled]="false">
-              </md-input-container>
-            </td>
-          </tr>
-          <tr>
-            <td>Status of genome study sample kit</td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="">Completed, de-identified data available</md-radio-button>
-                <br>
-                <md-radio-button value="">Consented, sample kit not shipped</md-radio-button>
-                <br>
-                <md-radio-button value="">Repeat sample collection pending</md-radio-button>
-                <br>
-                <md-radio-button value="">Sample kit received from participant</md-radio-button>
-                <br>
-                <md-radio-button value="">Sample kit sent to participant</md-radio-button>
-                <br>
-                <md-radio-button value="">Sample sequenced, pending release</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-          </tr>
-          <tr>
-            <td>Salive kit barcode for genome study</td>
-            <td class="formInput">
-              <md-input-container>
-                <input mdInput maxlength="500" placeholder="Kit barcode" type="text"
-                       autocomplete="off" [disabled]="false">
-              </md-input-container>
-            </td>
-          </tr>
-          <tr>
-            <td>Tracking number for genome study saliva kit</td>
-            <td class="formInput">
-              <md-input-container>
-                <input mdInput maxlength="500" placeholder="Tracking number" type="text"
-                       autocomplete="off" [disabled]="false">
-              </md-input-container>
-            </td>
-          </tr>
-          <tr>
-            <td>Genome study sample kit shipped on</td>
-            <td class="formInput">
-              <app-field-datepicker [dateString]=""></app-field-datepicker>
-            </td>
-          </tr>
-          <tr>
-            <td>Date genome study sample kit is received by participant</td>
-            <td class="formInput">
-              <app-field-datepicker [dateString]=""></app-field-datepicker>
-            </td>
-          </tr>
-          <tr>
-            <td>Genome study date of receipt of sample kit from participant</td>
-            <td class="formInput">
-              <app-field-datepicker [dateString]=""></app-field-datepicker>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              Genome study date of completion of sequencing
-            </td>
-            <td class="formInput">
-              <app-field-datepicker [dateString]=""></app-field-datepicker>
-            </td>
-          </tr>
-          <tr>
-            <td>Genome study date of completion (data released in repository)</td>
-            <td class="formInput">
-              <app-field-datepicker [dateString]=""></app-field-datepicker>
-            </td>
-          </tr>
-          <tr>
-            <td>Notes about previous sample kits</td>
-            <td class="formInput">
-                <textarea maxlength="1000"
-                          [ngClass]="{'Width--100': true}"></textarea>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <p>Miscellaneous</p>
-    <div id="misc" class="Float--left Width--100">
-      <div class="Float--left Width--60 bordered">
-        <table class="table table-condensed Width--100">
-          <tbody>
-          <tr>
-            <td>AT Portal User ID</td>
-            <td class="formInput">
-              <md-input-container>
-                <input mdInput maxlength="500" placeholder="AT Portal User ID" type="text"
-                       autocomplete="off" [disabled]="false">
-              </md-input-container>
-            </td>
-          </tr>
-          <tr>
-            <td>Name of portal user</td>
-            <td class="formInput">
-              <md-input-container>
-                <input mdInput maxlength="500" placeholder="Name of portal user" type="text"
-                       autocomplete="off" [disabled]="false">
-              </md-input-container>
-            </td>
-          </tr>
-          <tr>
-            <td>Portal user e-mail account</td>
-            <td class="formInput">
-              <md-input-container>
-                <input mdInput maxlength="500" placeholder="email account" type="text"
-                       autocomplete="off" [disabled]="false">
-              </md-input-container>
-            </td>
-          </tr>
-          <tr>
-            <td>Type of participant registration</td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="">Dependent</md-radio-button>
-                <br>
-                <md-radio-button value="">Portal User</md-radio-button>
-                <br>
-                <md-radio-button value="">Self</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-          </tr>
-          <tr>
-            <td>Status of participant registration</td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="">Not registered</md-radio-button>
-                <br>
-                <md-radio-button value="">Registered</md-radio-button>
-                <br>
-                <md-radio-button value="">Consented, needs assent</md-radio-button>
-                <br>
-                <md-radio-button value="">Consented</md-radio-button>
-                <br>
-                <md-radio-button value="">Submitted physician info</md-radio-button>
-                <br>
-                <md-radio-button value="">Submitted medical history</md-radio-button>
-                <br>
-                <md-radio-button value="">Submitted genome study shipping info</md-radio-button>
-                <br>
-                <md-radio-button value="">Submitted enrollment/pending confirmation</md-radio-button>
-                <br>
-                <md-radio-button value="">Eligibility not confirmed</md-radio-button>
-                <br>
-                <md-radio-button value="">Enrolled</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-          </tr>
-          <tr>
-            <td>Has updated medical history?</td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="yes">Yes</md-radio-button>
-                <br>
-                <md-radio-button value="no">No</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <p>Platform Assent</p>
-    <div id="platformAssent" class="Float--left Width--100">
-      <div class="Float--left Width--60 bordered">
-        <table class="table table-condensed Width--100">
-          <tbody>
-          <tr>
-            <td>Platform assent (if needed)</td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="yes">Yes</md-radio-button>
-                <br>
-                <md-radio-button value="no">No</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-          </tr>
-          <tr>
-            <td>You can do tests on the genes in my spit.</td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="yes">Yes</md-radio-button>
-                <br>
-                <md-radio-button value="no">No</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-          </tr>
-          <tr>
-            <td>You can contact me later with more questions or information about future research. I do not have to
-              answer these questions or take part in future research.
-            </td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="yes">Yes</md-radio-button>
-                <br>
-                <md-radio-button value="no">No</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-          </tr>
-          <tr>
-            <td>Later, it might be possible to get the results of the tests on my genes. Please let me know if this
-              becomes possible.
-            </td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="yes">Yes</md-radio-button>
-                <br>
-                <md-radio-button value="no">No</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-          </tr>
-          <tr>
-            <td>You may ask my doctor or hospital to share information about my health.</td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="yes">Yes</md-radio-button>
-                <br>
-                <md-radio-button value="no">No</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-          </tr>
-          <tr>
-            <td>If the researchers learn something about my health issues by testing my genes, please tell my doctor
-              about this.
-            </td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="yes">Yes</md-radio-button>
-                <br>
-                <md-radio-button value="no">No</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-          </tr>
-          <tr>
-            <td>Platform assent signature</td>
-            <td class="formInput">
-              <md-input-container>
-                <input mdInput maxlength="500" placeholder="Platform assent signature" type="text"
-                       autocomplete="off" [disabled]="false">
-              </md-input-container>
-            </td>
-          </tr>
-          <tr>
-            <td>Platform assent date of birth</td>
-            <td class="formInput"><app-field-datepicker></app-field-datepicker></td>
-          </tr>
-          <tr>
-            <td>Platform assent signature of person explaining assent form</td>
-            <td class="formInput">
-              <md-input-container>
-                <input mdInput maxlength="500" placeholder="Signature" type="text"
-                       autocomplete="off" [disabled]="false">
-              </md-input-container>
-            </td>
-          </tr>
-          <tr>
-            <td>Date of assent signature</td>
-            <td class="formInput"><app-field-datepicker></app-field-datepicker></td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <p>Platform Consent</p>
-    <div id="platformConsent" class="Float--left Width--100">
-      <div class="Float--left Width--60 bordered">
-        <table class="table table-condensed Width--100">
-          <tbody>
-          <tr>
-            <td>Overall platform consent</td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="yes">Consented</md-radio-button>
-                <br>
-                <md-radio-button value="no">Not Consented</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-          </tr>
-          <tr>
-            <td>You may perform (or collaborate with others to perform) DNA sequencing on the saliva sample that I will
-              send you and store the sample until genomic sequencing was successfully completed.
-            </td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="yes">Yes</md-radio-button>
-                <br>
-                <md-radio-button value="no">No</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-          </tr>
-          <tr>
-            <td>You may request my medical records from my physicians and hospitals.</td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="yes">Yes</md-radio-button>
-                <br>
-                <md-radio-button value="no">No</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-          </tr>
-          <tr>
-            <td>You may re-contact me in the event that it becomes possible to return genetic results to my physician or
-              me.I allow the A-T Children’s Project to contact my physician if a researcher reports genetic analysis
-              results that may impact my diagnosis of A-T.
-            </td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="yes">Yes</md-radio-button>
-                <br>
-                <md-radio-button value="no">No</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-          </tr>
-          <tr>
-            <td>I allow the A-T Children’s Project to contact my physician if a researcher reports genetic analysis
-              results that may impact my diagnosis of A-T.
-            </td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="yes">Yes</md-radio-button>
-                <br>
-                <md-radio-button value="no">No</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-          </tr>
-          <tr>
-            <td>You may use and share with qualified researchers my de-identified health information, medical
-              information, the results of the DNA sequencing (as indicated in the checkboxes below) and any other data I
-              shared via this platform for future research studies.
-            </td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="yes">Yes</md-radio-button>
-                <br>
-                <md-radio-button value="no">No</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-          </tr>
-          <tr>
-            <td>You may share a de-identified version of the information I provided in this survey with qualified
-              researchers as described in the consent form.
-            </td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="yes">Yes</md-radio-button>
-                <br>
-                <md-radio-button value="no">No</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-          </tr>
-          <tr>
-            <td>You may share a de-identified version of the genetic data I provided in this study with qualified
-              researchers as described in the consent form.
-            </td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="yes">Yes</md-radio-button>
-                <br>
-                <md-radio-button value="no">No</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-          </tr>
-          <tr>
-            <td>I agree to be re-contacted with follow-up research questionnaires and invitations to participate in
-              additional studies. I may choose to ignore these questionnaires/invitations.
-            </td>
-            <td class="formInput">
-              <md-radio-group>
-                <md-radio-button value="yes">Yes</md-radio-button>
-                <br>
-                <md-radio-button value="no">No</md-radio-button>
-                <br>
-              </md-radio-group>
-            </td>
-          </tr>
-          <tr>
-            <td>I am a legal guardian of:</td>
-            <td class="formInput">
-              <md-input-container>
-                <input mdInput maxlength="500" placeholder="Enter here" type="text"
-                       autocomplete="off" [disabled]="false">
-              </md-input-container>
-            </td>
-          </tr>
-          <tr>
-            <td>My relationship to the participant is:</td>
-            <td class="formInput">
-              <md-input-container>
-                <input mdInput maxlength="500" placeholder="Relationship" type="text"
-                       autocomplete="off" [disabled]="false">
-              </md-input-container>
-            </td>
-          </tr>
-          <tr>
-            <td>Platform consent signature</td>
-            <td class="formInput">
-              <md-input-container>
-                <input mdInput maxlength="500" placeholder="Signature" type="text"
-                       autocomplete="off" [disabled]="false">
-              </md-input-container>
-            </td>
-          </tr>
-          <tr>
-            <td>Platform consent date of birth</td>
+            <td>Exit date:</td>
             <td class="formInput">
               <app-field-datepicker></app-field-datepicker>
             </td>
           </tr>
           <tr>
-            <td>Date of consent signature</td>
-            <td class="formInput">
-              <app-field-datepicker></app-field-datepicker>
-            </td>
-          </tr>
-          <tr>
-            <td>Reason for latest change in consent</td>
-            <td class="formInput">
-              <textarea maxlength="1000"
-                        [ngClass]="{'Width--100': true}"></textarea>
-            </td>
-          </tr>
-          <tr>
-            <td>Best phone number to contact</td>
-            <td class="formInput">
-              <md-input-container>
-                <input mdInput maxlength="500" placeholder="Phone number" type="text"
-                       autocomplete="off" [disabled]="false">
-              </md-input-container>
-            </td>
+            <td>Exit comments</td>
+            <td><textarea maxlength="1000"
+                          [ngClass]="{'Width--100': true}"></textarea></td>
           </tr>
           </tbody>
-        </table>
-      </div>
-    </div>
-    <p><b>Platform Re-consent</b></p>
-    <div id="platformReConsent" class="Float--left Width--100">
-      <div class="Float--left Width--60 bordered">
-        <table class="table table-condensed Width--100">
-          <tr>
-            <td>Re-consent needed by</td>
-            <td class="formInput">
-              <app-field-datepicker [dateString]=""></app-field-datepicker></td>
-          </tr>
-          <tr>
-            <td>Re-consent entered on</td>
-            <td class="formInput">
-              <app-field-datepicker [dateString]=""></app-field-datepicker>
-            </td>
-          </tr>
-          <tr>
-            <td>Name of person giving re-consent</td>
-            <td class="formInput">
-              <md-input-container>
-              <input mdInput maxlength="500" placeholder="Name" type="text"
-                     autocomplete="off" [disabled]="false">
-            </md-input-container></td>
-          </tr>
-          <tr>
-            <td>Relationship to participant for re-consent</td>
-            <td class="formInput">
-              <md-input-container>
-              <input mdInput maxlength="500" placeholder="Relationship" type="text"
-                     autocomplete="off" [disabled]="false">
-            </md-input-container></td>
-          </tr>
         </table>
       </div>
     </div>

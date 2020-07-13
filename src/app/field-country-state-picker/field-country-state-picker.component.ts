@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from "@angular/core";
+import {StatePicker} from "../field-state-picker/StatePicker.model";
 
 @Component( {
   selector: "app-field-country-state-picker",
@@ -6,16 +7,22 @@ import {Component, Input, OnInit} from "@angular/core";
   styleUrls: [ "./field-country-state-picker.component.css" ]
 } )
 export class FieldCountryStatePickerComponent implements OnInit {
-  @Input() coutnryLabel: string;
-  @Input() stateLabel: string;
-  @Input() selectedCountry: string;
+
+
+  @Input() country;
+
+
   constructor() {
+
   }
 
   ngOnInit() {
-    console.log(this.coutnryLabel);
-    console.log(this.selectedCountry);
-    console.log(this.stateLabel);
+    console.log(this.country);
+
+  }
+
+  public valueChanged(event, c){
+    this.country = c;
   }
 
 }

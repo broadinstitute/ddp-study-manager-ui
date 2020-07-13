@@ -1,25 +1,37 @@
-export class ParticipantInfo{
-  constructor(public eligibility: string, public drFirstName: string, public drLastName: string, public drSuffix: string,
-              public drAdrress: string, public drPhoneNumber: string, public drEmail: string, public ageOfDeath: string,
-              public dateOfDeath: string, public causeOfDeath: string, public deathNotes: string,
-              public careAtBrisbaneAustralia: boolean, public careAtShebaMedicalCenterIsrael: boolean,
-              public careAtJohnsHopkins: boolean, public careAtJohannWolfgangGoetheUniversityGermany: boolean,
-              public careAtNottinghamCityHospitalUK:boolean) {
-    this.eligibility = eligibility;
-    this.drFirstName = drFirstName;
-    this.drLastName = drLastName;
-    this.drSuffix = drSuffix;
-    this.drAdrress = drAdrress;
-    this.drPhoneNumber = drPhoneNumber;
-    this.drEmail = drEmail;
-    this.ageOfDeath = ageOfDeath;
-    this.dateOfDeath = dateOfDeath;
-    this.causeOfDeath = causeOfDeath;
-    this.deathNotes = deathNotes;
-    this.careAtBrisbaneAustralia = careAtBrisbaneAustralia;
-    this.careAtShebaMedicalCenterIsrael = careAtShebaMedicalCenterIsrael;
-    this.careAtJohnsHopkins = careAtJohnsHopkins;
-    this.careAtJohannWolfgangGoetheUniversityGermany = careAtJohannWolfgangGoetheUniversityGermany;
-    this.careAtNottinghamCityHospitalUK = careAtNottinghamCityHospitalUK;
+export class ParticipantInfo {
+
+  constructor( public ddpParticipantId: string, public firstName: string, public lastName: string, public middleName: string, public suffix: string, public title: string, public gender: string,
+               public dateOfBirth: string, public language: string, public timeZone: string, public phoneH: string, public phoneM: string, public phoneW: string, public email: string,
+               public altEmail: string, public addressP: string, public cityP: string, public stateP: string, public countryP: string, public zipP: string,
+               public addressM: string, public cityM: string, public stateM: string, public countryM: string, public zipM: string, public dnc: string, public dncComment ) {
+
+    this.ddpParticipantId = ddpParticipantId;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.middleName = middleName;
+    this.suffix = suffix;
+    this.title = title;
+    this.gender = gender;
+    this.dateOfBirth = dateOfBirth;
+    this.language = language;
+    this.timeZone = timeZone;
+    this.phoneH = phoneH;
+    this.phoneM = phoneM;
+    this.phoneW = phoneW;
+    this.email = email;
+    this.altEmail = altEmail;
+    this.addressP = addressP;
+    this.cityP = cityP;
+    this.stateP = stateP;
+    this.countryP = countryP;
+    this.zipP = zipP;
+    this.addressM = addressM;
+    this.cityM = cityM;
+    this.stateM = stateM;
+    this.countryM = countryM;
+    this.zipM = zipM;
+    this.dnc = dnc;
+    this.dncComment = dncComment;
   }
+
 }

@@ -414,6 +414,7 @@ export class ParticipantListComponent implements OnInit {
                 }
                 this.participantList.push( participant );
               } );
+              console.log(this.participantList);
               this.originalParticipantList = this.participantList;
               let date = new Date();
               this.loadedTimeStamp = Utils.getDateFormatted( date, Utils.DATE_STRING_IN_EVENT_CVS );
@@ -485,6 +486,7 @@ export class ParticipantListComponent implements OnInit {
             }
             this.participantList.push( participant );
           } );
+          console.log(this.participantList);
           this.originalParticipantList = this.participantList;
           if (viewFilter != null) {
             this.filterQuery = viewFilter.queryItems;
@@ -660,6 +662,7 @@ export class ParticipantListComponent implements OnInit {
 
   openParticipant( participant: Participant, colSource: string ) {
     if (participant != null) {
+      console.log(participant);
       let tabAnchor = "Survey Data";
       if (colSource === "m" || participant.data.activities == null) {
         tabAnchor = "Medical Records";

@@ -114,6 +114,7 @@ import { ParticipantInfoComponent } from './participant-info/participant-info.co
 import { CustomParticipantInfoComponent } from './custom-participant-info/custom-participant-info.component';
 import { CountryStatePickerComponent } from './country-state-picker/country-state-picker.component';
 import { FieldCountryStatePickerComponent } from './field-country-state-picker/field-country-state-picker.component';
+import { FieldStatePickerComponent } from './field-state-picker/field-state-picker.component';
 
 @NgModule( {
   declarations: [
@@ -193,7 +194,8 @@ import { FieldCountryStatePickerComponent } from './field-country-state-picker/f
     ParticipantInfoComponent,
     CustomParticipantInfoComponent,
     CountryStatePickerComponent,
-    FieldCountryStatePickerComponent
+    FieldCountryStatePickerComponent,
+    FieldStatePickerComponent
 
   ],
   imports: [

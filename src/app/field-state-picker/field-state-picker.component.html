@@ -1,0 +1,6 @@
+<ng-container class="Width--100">
+  <md-select [(ngModel)]="selectedState">
+    <md-option *ngFor="let s of statePicker.states" value="{{s}}">{{s}}</md-option>
+  </md-select>
+</ng-container>
+

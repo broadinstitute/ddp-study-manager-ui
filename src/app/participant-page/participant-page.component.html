@@ -484,7 +484,7 @@ participant.data.dsm['diagnosisYear'] != null">
             </tab>
             <tab heading="Participant Info">
 <!--              only for AT, can see based on the role-->
-              <app-participant-info></app-participant-info>
+              <app-participant-info [participantInfo]="participant.participantInfo"></app-participant-info>
             </tab>
             <tab heading="Custom Participant Info">
               <app-custom-participant-info></app-custom-participant-info>
