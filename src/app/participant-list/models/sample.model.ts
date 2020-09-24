@@ -7,7 +7,7 @@ export class Sample {
   static IN_ERROR: string = "error";
 
   constructor(public bspCollaboratorSampleId: string, public kitType: string, public scanDate: number, public error: boolean, public receiveDate: number, public deactivatedDate: number,
-              public trackingNumberTo: string, public scannedTrackingNumber: string, public kitLabel: string) {
+              public trackingNumberTo: string, public trackingNumberReturn: string, public kitLabel: string) {
     this.bspCollaboratorSampleId = bspCollaboratorSampleId;
     this.kitType = kitType;
     this.scanDate = scanDate;
@@ -15,7 +15,7 @@ export class Sample {
     this.receiveDate = receiveDate;
     this.deactivatedDate = deactivatedDate;
     this.trackingNumberTo = trackingNumberTo;
-    this.scannedTrackingNumber = scannedTrackingNumber;
+    this.trackingNumberReturn = trackingNumberReturn;
     this.kitLabel = kitLabel;
   }
 
@@ -37,6 +37,6 @@ export class Sample {
 
   static parse( json ): Sample {
     return new Sample(json.bspCollaboratorSampleId, json.kitType, json.scanDate, json.error, json.receiveDate, json.deactivatedDate, json.trackingNumberTo,
-      json.scannedTrackingNumber, json.kitLabel );
+      json.trackingNumberReturn, json.kitLabel );
   }
 }

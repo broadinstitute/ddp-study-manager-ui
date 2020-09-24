@@ -120,7 +120,7 @@ export class ParticipantColumn {
   public static SAMPLE_DEACTIVATION = new ParticipantColumn("Sample Deactivation", "deactivatedDate", "k");
   public static SAMPLE_QUEUE = new ParticipantColumn("Status", "sampleQueue", "k");
   public static TRACKING_TO_PARTICIPANT = new ParticipantColumn("Tracking Number", "trackingNumberTo", "k");
-  public static TRACKING_RETURN = new ParticipantColumn("Tracking Return", "scannedTrackingNumber", "k");
+  public static TRACKING_RETURN = new ParticipantColumn("Tracking Return", "trackingNumberReturn", "k");
   public static MF_BARCODE = new ParticipantColumn("MF code", "kitLabel", "k");
 
   constructor (public display: string, public name: string, public tableAlias?: string, public object?: string, public esData?: boolean) {

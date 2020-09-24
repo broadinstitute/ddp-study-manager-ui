@@ -126,16 +126,14 @@
           <th>
             <input class="form-control" [(ngModel)]="shortId"/>
           </th>
-          <th>
+          <th *ngIf="(shippingPage === UPLOADED || shippingPage === QUEUE || shippingPage === ERROR) && showPreferredLanguage()">
           </th>
           <th *ngIf="shippingPage !== DEACTIVATED && !kitType.externalShipper">
             <input class="form-control" [(ngModel)]="shippingId"/>
           </th>
           <th *ngIf="shippingPage !== DEACTIVATED && kitType.externalShipper">
-            <input class="form-control" [(ngModel)]="externalOrderNumber"/>
           </th>
           <th *ngIf="shippingPage !== DEACTIVATED && kitType.externalShipper">
-            <input class="form-control" [(ngModel)]="externalOrderStatus"/>
           </th>
           <th *ngIf="shippingPage === ERROR">
           </th>
@@ -167,7 +165,7 @@
           <th *ngIf="getRole().allowedToCreateExpressLabels() && shippingPage === QUEUE">
           </th>
           <th *ngIf="kitsWithNoReturn">
-            <input class="form-control" [(ngModel)]="noReturn"/>
+            <input class="form-control" [(ngModel)]="noReturn"/>noReturn
           </th>
           <th *ngIf="getRole().allowedToHandleSamples() && queueToPrint() && kitType.manualSentTrack" class="Line--Break"></th>
         </tr>
@@ -209,11 +207,9 @@
             <ng-container *ngIf="kitRequest.trackingUrlTo == null">{{kitRequest.trackingNumberTo}}</ng-container>
           </td>
           <td *ngIf="shippingPage === SENT">
-            <ng-container *ngIf="kitRequest.trackingUrlReturn != null"><a href="{{kitRequest.trackingUrlReturn}}" target="_blank">{{kitRequest.trackingNumberReturn}}</a>
+            <ng-container *ngIf="kitRequest.trackingUrlReturn != null">{{kitRequest.trackingNumberReturn}}
             </ng-container>
             <ng-container *ngIf="kitRequest.trackingUrlReturn == null">{{kitRequest.trackingNumberReturn}}</ng-container>
-            <ng-container *ngIf="kitRequest.scannedTrackingNumber != null"><a href="{{kitRequest.getScannedTrackingUrl()}}" target="_blank">{{kitRequest.scannedTrackingNumber}}</a>
-            </ng-container>
           </td>
           <td *ngIf="shippingPage === SENT || shippingPage === OVERVIEW">
             <ng-container *ngIf="kitRequest.scanDate === 0"> -</ng-container>
