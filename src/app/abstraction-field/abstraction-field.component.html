@@ -406,7 +406,7 @@
           'Abstraction-Background-Check': field.qcWrapper.check && (type === 'abstraction' || type === 'review')}">
       <ng-container *ngIf="viewValue != null">
         <md-checkbox color="primary" [checked]="viewValue.noData" [disabled]="readonly"
-                     disableRipple>Not mentioned
+                     disableRipple>Not found in record
         </md-checkbox>
         <md-checkbox *ngIf="!hideDoubleCheck"
                      color="primary" [checked]="viewValue.doubleCheck" [disabled]="readonly"
@@ -416,7 +416,7 @@
       <ng-container *ngIf="viewValue == null">
         <md-checkbox color="primary" [checked]="field.fieldValue.noData"
                      (change)="field.fieldValue.noData = $event.checked; abstractionValueChanged($event, field, 'noData')" [disabled]="readonly"
-                     disableRipple>Not mentioned
+                     disableRipple>Not found in record
         </md-checkbox>
         <md-checkbox color="primary" [checked]="field.fieldValue.doubleCheck"
                      (change)="field.fieldValue.doubleCheck = $event.checked; abstractionValueChanged($event, field, 'doubleCheck')" [disabled]="readonly"

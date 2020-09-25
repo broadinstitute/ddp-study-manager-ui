@@ -3,7 +3,6 @@ import { Utils } from "../utils/utils";
 import { Auth } from "../services/auth.service";
 import { DSMService } from "../services/dsm.service";
 import { ShippingReport } from "./shipping-report.model";
-import {KitType} from "../utils/kit-type.model";
 import {Result} from "../utils/result.model";
 import {Statics} from "../utils/statics";
 
