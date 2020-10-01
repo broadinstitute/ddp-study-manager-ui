@@ -132,8 +132,8 @@ participant.data.dsm['diagnosisYear'] != null">
             <app-invitation-data *ngIf="invitation != null" [invitation]="invitation"></app-invitation-data>
           </ng-container>
         </ng-container>
-
-        <h5 class="Line--Break">{{participant.getSampleStatus()}}</h5>
+        <br/>
+        <br/>
       </div>
       <div class="Float--left TD--Padding-Left-BIG">
         <!--PDF download-->
@@ -411,7 +411,7 @@ participant.data.dsm['diagnosisYear'] != null">
       </div>
 
       <div class="Float--left Width--100">
-        <ng-container *ngIf="participant.participant == null">
+        <ng-container *ngIf="participant.participant == null && participant.kits == null">
           <div class="Float--left Width--100">
             <div class="Float--left Width--100"
                  *ngIf="participant.data != null && participant.data.activities != null && participant.data.activities.length > 0">
@@ -443,7 +443,7 @@ participant.data.dsm['diagnosisYear'] != null">
             </div>
           </div>
         </ng-container>
-        <ng-container *ngIf="participant.participant != null">
+        <ng-container *ngIf="participant.participant != null || participant.kits != null">
           <!--tab order is not working when tabs have ngIf, will just put them at the end of static tabs. therefore ngIf=true is added to static tabs-->
           <tabset>
             <tab
@@ -481,6 +481,81 @@ participant.data.dsm['diagnosisYear'] != null">
                   </ng-container>
                 </div>
               </div>
+            </tab>
+
+            <!--sample information-->
+            <tab *ngIf="participant.kits != null && participant.kits.length > 0" heading="Sample Information">
+              <ng-container *ngFor="let sample of participant.kits; let i = index">
+                <fieldset style="border: 1px black solid">
+                  <legend class="Group--Title" id="{{sample.kitType}}_{{i}}">Sample Type: {{sample.kitType}}</legend>
+                  <div class="Router--Outlet">
+                    <table class="Width--100 Table--box">
+                      <tr>
+                        <td class="TD--Padding Width--50 Data-Display-Question">Status:</td>
+                      </tr>
+                      <tr>
+                        <td class="TD--Padding-Left Width--50">{{sample[ "sampleQueue" ]}}</td>
+                      </tr>
+                      <hr style="border-color: lightgray">
+                      <tr>
+                        <td class="TD--Padding Width--50 Data-Display-Question">MF Barcode:</td>
+                      </tr>
+                      <tr>
+                        <td class="TD--Padding-Left Width--50">{{sample.kitLabel}}</td>
+                      </tr>
+                      <hr style="border-color: lightgray">
+                      <tr>
+                        <td class="TD--Padding Width--50 Data-Display-Question">Sent:</td>
+                      </tr>
+                      <tr>
+                        <td class="TD--Padding-Left Width--50">{{sample.scanDate | date:'medium'}}</td>
+                      </tr>
+                      <hr style="border-color: lightgray">
+                      <tr>
+                        <td class="TD--Padding Width--50 Data-Display-Question">Received:</td>
+                      </tr>
+                      <tr>
+                        <td class="TD--Padding-Left Width--50">{{sample.receiveDate | date:'medium'}}</td>
+                      </tr>
+                      <hr style="border-color: lightgray">
+                      <tr>
+                        <td class="TD--Padding Width--50 Data-Display-Question">Tracking Number:</td>
+                      </tr>
+                      <tr>
+                        <td class="TD--Padding-Left Width--50">{{sample.trackingNumberTo}}</td>
+                      </tr>
+                      <hr *ngIf="sample.trackingNumberReturn != null"style="border-color: lightgray">
+                      <tr *ngIf="sample.trackingNumberReturn != null">
+                        <td class="TD--Padding Width--50 Data-Display-Question">Tracking Return:</td>
+                      </tr>
+                      <tr *ngIf="sample.trackingNumberReturn != null">
+                        <td class="TD--Padding-Left Width--50">{{sample.trackingNumberReturn}}</td>
+                      </tr>
+                      <hr>
+                      <tr>
+                        <td class="TD--Padding Width--50 Data-Display-Question">Results:</td>
+                      </tr>
+                      <tr>
+                        <td class="TD--Padding-Left Width--50">
+                          <div *ngFor="let r of sample.testResult; let j = index">
+                            <b *ngIf="r.isCorrected">
+                              <p>Result: {{r.result}}</p>
+                              <p>Is Corrected: {{r.isCorrected}}</p>
+                              <p>Time Completed: {{r.timeCompleted | date:'medium'}}</p>
+                            </b>
+                            <ng-container *ngIf="!r.isCorrected">
+                              <p>Result: {{r.result}}</p>
+                              <p>Is Corrected: {{r.isCorrected}}</p>
+                              <p>Time Completed: {{r.timeCompleted | date:'medium'}}</p>
+                            </ng-container>
+                            <hr *ngIf="j !== sample.testResult.length-1" style="border-color: lightgray">
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </fieldset>
+              </ng-container>
             </tab>
 
             <tab heading="Medical Records"

@@ -16,6 +16,7 @@ export class Filter {
   public static BOOLEAN_TYPE = "BOOLEAN"; //ES boolean value true/false
   public static CHECKBOX_TYPE = "CHECKBOX"; //DSM UI checkbox (unable to obtain/problem)
   public static ADDITIONAL_VALUE_TYPE = "ADDITIONALVALUE";
+  public static JSON_ARRAY_TYPE = "JSONARRAY";
   public static COMPOSITE_TYPE = "COMPOSITE";// ES dynamic filters
 
   //ES data
@@ -174,6 +175,7 @@ export class Filter {
   public static H_E_COUNT = new Filter( ParticipantColumn.H_E_COUNT, Filter.NUMBER_TYPE );
 
   //sample columns
+  //TODO remove hardcoding kit type
   public static SAMPLE_TYPE = new Filter( ParticipantColumn.SAMPLE_TYPE, Filter.OPTION_TYPE, [
     new NameValue( "SALIVA", "Saliva" ),
     new NameValue( "BLOOD", "Blood" ) ] );
@@ -190,6 +192,12 @@ export class Filter {
   public static TRACKING_TO_PARTICIPANT = new Filter( ParticipantColumn.TRACKING_TO_PARTICIPANT, Filter.TEXT_TYPE );
   public static TRACKING_RETURN = new Filter( ParticipantColumn.TRACKING_RETURN, Filter.TEXT_TYPE );
   public static MF_BARCODE = new Filter( ParticipantColumn.MF_BARCODE, Filter.TEXT_TYPE );
+  public static RESULT_TEST = new Filter(ParticipantColumn.RESULT_TEST, Filter.JSON_ARRAY_TYPE, null, new NameValue( ParticipantColumn.RESULT_TEST.name, null ),
+  false, true, null, null, null, null, false, false, false, false, Filter.TEXT_TYPE );
+  public static CORRECTED_TEST = new Filter(ParticipantColumn.CORRECTED_TEST, Filter.JSON_ARRAY_TYPE, null, new NameValue( ParticipantColumn.CORRECTED_TEST.name, null ),
+  false, true, null, null, null, null, false, false, false, false, Filter.CHECKBOX_TYPE );
+  public static TIME_TEST = new Filter(ParticipantColumn.TIME_TEST, Filter.JSON_ARRAY_TYPE, null, new NameValue( ParticipantColumn.TIME_TEST.name, null ),
+  false, true, null, null, null, null, false, false, false, false, Filter.DATE_TYPE );
 
   //abstraction
   public static ABSTRACTION_STATUS = new Filter( ParticipantColumn.ABSTRACTION_STATUS, Filter.OPTION_TYPE, [
@@ -228,7 +236,7 @@ export class Filter {
     Filter.TISSUE_FIRST_SM_ID, Filter.TISSUE_SHL_NUMBER, Filter.TISSUE_TUMOR_PERCENT, Filter.TISSUE_SEQUENCE, Filter.SCROLLS_COUNT,
     Filter.USS_COUNT, Filter.H_E_COUNT, Filter.BLOCKS_COUNT,
     Filter.COLLABORATOR_SAMPLE, Filter.SAMPLE_TYPE, Filter.SAMPLE_SENT, Filter.SAMPLE_RECEIVED, Filter.SAMPLE_DEACTIVATION, Filter.SAMPLE_QUEUE,
-    Filter.TRACKING_TO_PARTICIPANT, Filter.TRACKING_RETURN, Filter.MF_BARCODE,
+    Filter.TRACKING_TO_PARTICIPANT, Filter.TRACKING_RETURN, Filter.MF_BARCODE, Filter.RESULT_TEST, Filter.CORRECTED_TEST, Filter.TIME_TEST,
     Filter.ABSTRACTION_ACTIVITY, Filter.ABSTRACTION_STATUS, Filter.ABSTRACTION_USER ];
 
   constructor( public participantColumn: ParticipantColumn, public type: string, public options?: NameValue[], public filter2?: NameValue,

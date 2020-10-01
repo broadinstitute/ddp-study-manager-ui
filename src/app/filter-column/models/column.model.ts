@@ -122,6 +122,9 @@ export class ParticipantColumn {
   public static TRACKING_TO_PARTICIPANT = new ParticipantColumn("Tracking Number", "trackingNumberTo", "k");
   public static TRACKING_RETURN = new ParticipantColumn("Tracking Return", "trackingNumberReturn", "k");
   public static MF_BARCODE = new ParticipantColumn("MF code", "kitLabel", "k");
+  public static RESULT_TEST = new ParticipantColumn("Test Result", "result", "k", "testResult");
+  public static CORRECTED_TEST = new ParticipantColumn("Test Corrected", "isCorrected", "k", "testResult");
+  public static TIME_TEST = new ParticipantColumn("Test Time Completed", "timeCompleted", "k", "testResult");
 
   constructor (public display: string, public name: string, public tableAlias?: string, public object?: string, public esData?: boolean) {
     this.display = display;

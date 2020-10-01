@@ -64,7 +64,7 @@
   </ng-container>
 </ng-container>
 <ng-container
-  *ngIf="dataFilter.type !== 'BOOLEAN' && dataFilter.type !== 'CHECKBOX' && !(dataFilter.type === 'ADDITIONALVALUE' && dataFilter.additionalType === 'CHECKBOX')">
+  *ngIf="dataFilter.type !== 'JSONARRAY' && dataFilter.type !== 'BOOLEAN' && dataFilter.type !== 'CHECKBOX' && !(dataFilter.type === 'ADDITIONALVALUE' && dataFilter.additionalType === 'CHECKBOX')">
   <ng-container *ngIf="!showOptions">
     <button class="btn btn-sq-xs" color="primary"
             (click)="showOptions = !showOptions">

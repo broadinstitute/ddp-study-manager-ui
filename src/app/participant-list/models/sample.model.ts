@@ -1,3 +1,5 @@
+import {TestResult} from "./test-result.model";
+
 export class Sample {
 
   static DEACTIVATED: string = "deactivated";
@@ -7,7 +9,7 @@ export class Sample {
   static IN_ERROR: string = "error";
 
   constructor(public bspCollaboratorSampleId: string, public kitType: string, public scanDate: number, public error: boolean, public receiveDate: number, public deactivatedDate: number,
-              public trackingNumberTo: string, public trackingNumberReturn: string, public kitLabel: string) {
+              public trackingNumberTo: string, public trackingNumberReturn: string, public kitLabel: string, public testResult: Array<TestResult>) {
     this.bspCollaboratorSampleId = bspCollaboratorSampleId;
     this.kitType = kitType;
     this.scanDate = scanDate;
@@ -17,6 +19,7 @@ export class Sample {
     this.trackingNumberTo = trackingNumberTo;
     this.trackingNumberReturn = trackingNumberReturn;
     this.kitLabel = kitLabel;
+    this.testResult = testResult;
   }
 
   get sampleQueue() {
@@ -36,7 +39,19 @@ export class Sample {
   }
 
   static parse( json ): Sample {
+    let jsonData: any[];
+    let testResults: Array<TestResult> = null;
+    if (json.testResult != null) {
+      let tmp: any = JSON.parse( String( json.testResult) );
+      if (tmp != null) {
+        testResults = [];
+        tmp.forEach( ( val ) => {
+          let testResult = TestResult.parse( val );
+          testResults.push( testResult );
+        } );
+      }
+    }
     return new Sample(json.bspCollaboratorSampleId, json.kitType, json.scanDate, json.error, json.receiveDate, json.deactivatedDate, json.trackingNumberTo,
-      json.trackingNumberReturn, json.kitLabel );
+      json.trackingNumberReturn, json.kitLabel, testResults );
   }
 }
