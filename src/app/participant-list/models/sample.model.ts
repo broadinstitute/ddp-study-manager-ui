@@ -3,13 +3,14 @@ import {TestResult} from "./test-result.model";
 export class Sample {
 
   static DEACTIVATED: string = "deactivated";
-  static SENT: string = "sent";
+  static SENT: string = "shipped";
   static RECEIVED: string = "received";
   static IN_QUEUE: string = "queue";
   static IN_ERROR: string = "error";
 
   constructor(public bspCollaboratorSampleId: string, public kitType: string, public scanDate: number, public error: boolean, public receiveDate: number, public deactivatedDate: number,
-              public trackingNumberTo: string, public trackingNumberReturn: string, public kitLabel: string, public testResult: Array<TestResult>) {
+              public trackingNumberTo: string, public trackingNumberReturn: string, public kitLabel: string, public testResult: Array<TestResult>,
+              public upsTrackingStatus: string, public upsReturnStatus: string, public externalOrderStatus: string) {
     this.bspCollaboratorSampleId = bspCollaboratorSampleId;
     this.kitType = kitType;
     this.scanDate = scanDate;
@@ -20,9 +21,15 @@ export class Sample {
     this.trackingNumberReturn = trackingNumberReturn;
     this.kitLabel = kitLabel;
     this.testResult = testResult;
+    this.upsTrackingStatus = upsTrackingStatus;
+    this.upsReturnStatus = upsReturnStatus;
+    this.externalOrderStatus = externalOrderStatus;
   }
 
   get sampleQueue() {
+    if (this.externalOrderStatus !== null) {
+      return this.externalOrderStatus + " (GBF)";
+    }
     if (this.deactivatedDate !== 0) {
       return Sample.DEACTIVATED;
     }
@@ -52,6 +59,6 @@ export class Sample {
       }
     }
     return new Sample(json.bspCollaboratorSampleId, json.kitType, json.scanDate, json.error, json.receiveDate, json.deactivatedDate, json.trackingNumberTo,
-      json.trackingNumberReturn, json.kitLabel, testResults );
+      json.trackingNumberReturn, json.kitLabel, testResults, json.upsTrackingStatus, json.upsReturnStatus, json.externalOrderStatus );
   }
 }

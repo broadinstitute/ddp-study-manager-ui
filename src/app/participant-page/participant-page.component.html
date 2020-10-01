@@ -517,25 +517,39 @@ participant.data.dsm['diagnosisYear'] != null">
                       <tr>
                         <td class="TD--Padding-Left Width--50">{{sample.receiveDate | date:'medium'}}</td>
                       </tr>
-                      <hr style="border-color: lightgray">
-                      <tr>
-                        <td class="TD--Padding Width--50 Data-Display-Question">Tracking Number:</td>
+                      <hr *ngIf="sample.trackingNumberTo != null"style="border-color: lightgray">
+                      <tr *ngIf="sample.trackingNumberTo != null">
+                        <td class="TD--Padding Width--50 Data-Display-Question">Tracking-out:</td>
                       </tr>
-                      <tr>
+                      <tr *ngIf="sample.trackingNumberTo != null">
                         <td class="TD--Padding-Left Width--50">{{sample.trackingNumberTo}}</td>
+                      </tr>
+                      <hr *ngIf="sample.upsTrackingStatus != null"style="border-color: lightgray">
+                      <tr *ngIf="sample.upsTrackingStatus != null">
+                        <td class="TD--Padding Width--50 Data-Display-Question">Status-out:</td>
+                      </tr>
+                      <tr *ngIf="sample.upsTrackingStatus != null">
+                        <td class="TD--Padding-Left Width--50">{{sample.upsTrackingStatus}}</td>
                       </tr>
                       <hr *ngIf="sample.trackingNumberReturn != null"style="border-color: lightgray">
                       <tr *ngIf="sample.trackingNumberReturn != null">
-                        <td class="TD--Padding Width--50 Data-Display-Question">Tracking Return:</td>
+                        <td class="TD--Padding Width--50 Data-Display-Question">Tracking-in:</td>
                       </tr>
                       <tr *ngIf="sample.trackingNumberReturn != null">
                         <td class="TD--Padding-Left Width--50">{{sample.trackingNumberReturn}}</td>
                       </tr>
-                      <hr>
-                      <tr>
+                      <hr *ngIf="sample.upsReturnStatus != null"style="border-color: lightgray">
+                      <tr *ngIf="sample.upsReturnStatus != null">
+                        <td class="TD--Padding Width--50 Data-Display-Question">Status-in:</td>
+                      </tr>
+                      <tr *ngIf="sample.upsReturnStatus != null">
+                        <td class="TD--Padding-Left Width--50">{{sample.upsReturnStatus}}</td>
+                      </tr>
+                      <hr *ngIf="sample.testResult != null">
+                      <tr *ngIf="sample.testResult != null">
                         <td class="TD--Padding Width--50 Data-Display-Question">Results:</td>
                       </tr>
-                      <tr>
+                      <tr *ngIf="sample.testResult != null">
                         <td class="TD--Padding-Left Width--50">
                           <div *ngFor="let r of sample.testResult; let j = index">
                             <b *ngIf="r.isCorrected">
