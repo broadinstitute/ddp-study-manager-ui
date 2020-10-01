@@ -524,6 +524,17 @@ export class Filter {
         return null;
       }
     }
+    else if (filter.type === Filter.JSON_ARRAY_TYPE) {
+      if ((filter.value1 !== null && filter.value1 !== "" && filter.value1 !== undefined) || (filter.empty || filter.notEmpty)) {
+        filterText = this.getFilterJson( filter.participantColumn.tableAlias, //changing parent to tableAlias for type json because object is json name
+          new NameValue( filter.participantColumn.object, filter.value1 ),
+          filter.filter2, null,
+          filter.exactMatch, filter.type, filter.range, filter.empty, filter.notEmpty, filter.participantColumn );
+      }
+      else {
+        return null;
+      }
+    }
     else if (filter.type === Filter.BOOLEAN_TYPE || filter.type === Filter.CHECKBOX_TYPE) {
       if ((filter.value1 !== null && filter.value1 == true)) {
         filterText = this.getFilterJson( parent,
