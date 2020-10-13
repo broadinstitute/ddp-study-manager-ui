@@ -80,19 +80,6 @@
               </ng-container>
             </tr>
           </table>
-          <table class="table table-bordered" *ngIf="getCompService().getRealm().toLowerCase() === 'promise'">
-            <tr>
-              <td>orderNumber</td>
-              <td>participantId</td>
-              <td>name</td>
-              <td>street1</td>
-              <td>street2</td>
-              <td>city</td>
-              <td>postalCode</td>
-              <td>state</td>
-              <td>country</td>
-            </tr>
-          </table>
         </li>
         <li
           *ngIf="getCompService().getRealm().toLowerCase() !== 'promise' && getCompService().getRealm().toLowerCase() !== 'mmrf'">
