@@ -52,55 +52,59 @@
 
   <div class="Float--left Width--80">
     <b>
-    <br/>
-    <br/>
-    <br/>
-    Upload instructions:
-    <ul>
-      <li>Tab delimited ".txt" file</li>
-      <li>Following columns are required
-        <table class="table table-bordered"
-               *ngIf="getCompService().getRealm().toLowerCase() !== 'promise'">
-          <tr>
-            <td>participantId</td>
-            <td>shortId</td>
-            <td>firstName</td>
-            <td>lastName</td>
-            <td>street1</td>
-            <td>street2</td>
-            <td>city</td>
-            <td>postalCode</td>
-            <td>state</td>
-            <td>country</td>
-          </tr>
-        </table>
-        <table class="table table-bordered" *ngIf="getCompService().getRealm().toLowerCase() === 'promise'">
-          <tr>
-            <td>orderNumber</td>
-            <td>participantId</td>
-            <td>name</td>
-            <td>street1</td>
-            <td>street2</td>
-            <td>city</td>
-            <td>postalCode</td>
-            <td>state</td>
-            <td>country</td>
-          </tr>
-        </table>
-      </li>
-      <li
-        *ngIf="getCompService().getRealm().toLowerCase() !== 'promise' && getCompService().getRealm().toLowerCase() !== 'mmrf'">
-        participantId = altPID for Gen2 DDPs and participantId = participant_guid for Gen3 (Pepper) DDPs <br/>
-        <b>If your participant is a migrated one and has a altPID please use that ID for the upload, otherwise use the GUID</b></li>
-      <li
-        *ngIf="getCompService().getRealm().toLowerCase() !== 'promise' && getCompService().getRealm().toLowerCase() !== 'mmrf'">
-        shortId = shortId for Gen2 DDPs and shortId = legacy_shortid for Gen3 (Pepper) DDPs
-      </li>
-      <li *ngIf="getCompService().getRealm().toLowerCase() === 'promise'">orderNumber = Mayo order number AND
-        participantId = redCap participant ID
-      </li>
-      <li>Afterwards kits can be found under <u>'Kits without Labels'</u>. GP will trigger label creation.</li>
-    </ul>
+      <br/>
+      <br/>
+      <br/>
+      Upload instructions:
+      <ul>
+        <li>Tab delimited ".txt" file</li>
+        <li>Following columns are required
+          <table class="table table-bordered"
+                 *ngIf="getCompService().getRealm().toLowerCase() !== 'promise'">
+            <tr>
+              <td>participantId</td>
+              <td>shortId</td>
+              <td>firstName</td>
+              <td>lastName</td>
+              <td>street1</td>
+              <td>street2</td>
+              <td>city</td>
+              <td>postalCode</td>
+              <td>state</td>
+              <td>country</td>
+              <ng-container *ngIf="this.realmNameStoredForFile==='testboston'">
+                <td>phoneNumber</td>
+              </ng-container>
+            </tr>
+          </table>
+          <table class="table table-bordered" *ngIf="getCompService().getRealm().toLowerCase() === 'promise'">
+            <tr>
+              <td>orderNumber</td>
+              <td>participantId</td>
+              <td>name</td>
+              <td>street1</td>
+              <td>street2</td>
+              <td>city</td>
+              <td>postalCode</td>
+              <td>state</td>
+              <td>country</td>
+            </tr>
+          </table>
+        </li>
+        <li
+          *ngIf="getCompService().getRealm().toLowerCase() !== 'promise' && getCompService().getRealm().toLowerCase() !== 'mmrf'">
+          participantId = altPID for Gen2 DDPs and participantId = participant_guid for Gen3 (Pepper) DDPs <br/>
+          <b>If your participant is a migrated one and has a altPID please use that ID for the upload, otherwise use the
+            GUID</b></li>
+        <li
+          *ngIf="getCompService().getRealm().toLowerCase() !== 'promise' && getCompService().getRealm().toLowerCase() !== 'mmrf'">
+          shortId = shortId for Gen2 DDPs and shortId = legacy_shortid for Gen3 (Pepper) DDPs
+        </li>
+        <li *ngIf="getCompService().getRealm().toLowerCase() === 'promise'">orderNumber = Mayo order number AND
+          participantId = redCap participant ID
+        </li>
+        <li>Afterwards kits can be found under <u>'Kits without Labels'</u>. GP will trigger label creation.</li>
+      </ul>
     </b>
   </div>
 
