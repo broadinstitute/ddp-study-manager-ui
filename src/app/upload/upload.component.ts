@@ -141,7 +141,6 @@ export class UploadComponent implements OnInit {
     this.failedParticipants = [];
     this.loading = true;
     let jsonData: any[];
-    console.log( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) );
     this.dsmService.uploadTxtFile( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.kitType.name, this.file ).subscribe(
       data => {
         this.loading = false;
