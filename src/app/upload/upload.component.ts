@@ -48,6 +48,7 @@ export class UploadComponent implements OnInit {
     if (!auth.authenticated()) {
       auth.logout();
     }
+    this.realmNameStoredForFile = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
     this.route.queryParams.subscribe( params => {
       let realm = params[ DSMService.REALM ] || null;
       if (realm != null && realm !== "") {
@@ -213,12 +214,12 @@ export class UploadComponent implements OnInit {
     let array: UploadParticipant[] = [];
     for (let i = this.duplicateParticipants.length - 1; i >= 0; i--) {
       if (this.duplicateParticipants[ i ].selected) {
-        array.push(this.duplicateParticipants[i]);
+        array.push( this.duplicateParticipants[ i ] );
       }
     }
     for (let i = this.specialKits.length - 1; i >= 0; i--) {
       if (this.specialKits[ i ].selected) {
-        array.push(this.specialKits[i]);
+        array.push( this.specialKits[ i ] );
       }
     }
     let jsonParticipants = JSON.stringify( array );

@@ -19,7 +19,7 @@ export class UploadParticipant {
 
   constructor(public externalOrderNumber: string, public participantId: string, public shortId: string, public firstName: string, public lastName: string,
               public name: string, public street1: string, public street2: string, public city: string, public postalCode: string,
-              public state: string, public country: string) {
+              public state: string, public country: string, public phoneNumber: string) {
     this.externalOrderNumber = externalOrderNumber;
     this.participantId = participantId;
     this.shortId = shortId;
@@ -32,12 +32,13 @@ export class UploadParticipant {
     this.postalCode = postalCode;
     this.state = state;
     this.country = country;
+    this.phoneNumber = phoneNumber;
   }
 
   static parse(json): UploadParticipant {
     return new UploadParticipant(json.externalOrderNumber, json.participantId, json.shortId, json.firstName, json.lastName,
       json.name, json.street1, json.street2, json.city, json.postalCode,
-      json.state, json.country);
+      json.state, json.country, json.phoneNumber);
   }
 
 }
