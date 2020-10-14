@@ -272,11 +272,6 @@ export class Utils {
   private static getObjectAdditionalValue( o: Object, fieldName: string, column: any ) {
     if (o[ fieldName ] != null) {
       return o[fieldName][column.participantColumn.name];
-      // for (let nv of o[ fieldName ]) {
-      //   if (nv.name === column.participantColumn.name) {
-      //     return nv.value;
-      //   }
-      // }
     }
     return "";
   }
@@ -366,13 +361,27 @@ export class Utils {
               else {
                 let questionAnswer = this.getQuestionAnswerByName( activityData.questionsAnswers, col.participantColumn.name );
                 if (questionAnswer != null) {
-                  if (col.type === "DATE") {
+                  if (col.type === Filter.DATE_TYPE) {
                     value = questionAnswer.date;
                   }
                   else {
                     value = questionAnswer.answer; //TODO react to what kind of answer it is and make pretty
                   }
                 }
+              }
+            }
+            else if (col.participantColumn.tableAlias === "invitations") {
+              if (data != null && data.data != null  && data.data.invitations != null) {
+                let tmp: string = "";
+                data.data.invitations.forEach( ( invite ) => {
+                  if (col.type === Filter.DATE_TYPE) {
+                    tmp = tmp + " " + invite[ col.participantColumn.name ] == undefined ? "" : this.getDateFormatted( new Date( invite[ col.participantColumn.name ] ), this.DATE_STRING_IN_CVS );
+                  }
+                  else {
+                    tmp = tmp + " " + invite[ col.participantColumn.name ] == undefined ? "" : invite[ col.participantColumn.name ];
+                  }
+                } );
+                value = tmp.trim();
               }
             }
           }

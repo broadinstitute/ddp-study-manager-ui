@@ -124,6 +124,9 @@ export class ParticipantColumn {
   public static MF_BARCODE = new ParticipantColumn("MF code", "kitLabel", "k");
   public static STATUS_OUT = new ParticipantColumn("Status-out", "upsTrackingStatus", "k");
   public static STATUS_IN = new ParticipantColumn("Status-in", "upsReturnStatus", "k");
+  public static EXTERNAL_ORDER_NUMBER = new ParticipantColumn("External Order Number", "externalOrderNumber", "k");
+  public static EXTERNAL_ORDER_DATE = new ParticipantColumn("External Order Date", "externalOrderDate", "k");
+  public static CARE_EVOLVE = new ParticipantColumn("Ordered at CareEvolve", "careEvolve", "k");
   public static RESULT_TEST = new ParticipantColumn("Test Result", "result", "k", "testResult");
   public static CORRECTED_TEST = new ParticipantColumn("Test Corrected", "isCorrected", "k", "testResult");
   public static TIME_TEST = new ParticipantColumn("Test Time Completed", "timeCompleted", "k", "testResult");

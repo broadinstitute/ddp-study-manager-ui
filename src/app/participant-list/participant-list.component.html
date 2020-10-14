@@ -238,7 +238,7 @@
           </thead>
           <tbody>
           <tr
-            *ngFor="let pt of participantList| paginate: { itemsPerPage: hasRole().getUserSetting().getRowsPerPage(), currentPage: activePage }">
+            *ngFor="let pt of participantList | paginate: { itemsPerPage: rowsPerPage, currentPage: activePage }">
             <!--checkbox to assign or trigger blood kits-->
             <td>
               <md-checkbox color="primary" disableRipple *ngIf="pt.participant != null"
@@ -624,8 +624,21 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
           </tbody>
           <tfoot *ngIf="participantList != null">
           <tr>
-            <td [attr.colspan]="getColSpan()">
+            <td [attr.colspan]="getColSpan()-3">
               <pagination-controls class="custom-pagination" (pageChange)="activePage = $event"></pagination-controls>
+            </td>
+            <td colspan="3">
+              <div class="Float--right">
+                <button (click)="changeRowNumber(hasRole().getUserSetting().getRowSet0())">
+                  {{hasRole().getUserSetting().getRowSet0()}}
+                </button>
+                <button (click)="changeRowNumber(hasRole().getUserSetting().getRowSet1())">
+                  {{hasRole().getUserSetting().getRowSet1()}}
+                </button>
+                <button (click)="changeRowNumber(hasRole().getUserSetting().getRowSet2())">
+                  {{hasRole().getUserSetting().getRowSet2()}}
+                </button>
+              </div>
             </td>
           </tr>
           <tr>

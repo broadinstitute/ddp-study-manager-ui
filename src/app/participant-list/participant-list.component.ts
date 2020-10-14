@@ -14,6 +14,7 @@ import {Auth} from "../services/auth.service";
 import {ComponentService} from "../services/component.service";
 import {DSMService} from "../services/dsm.service";
 import {RoleService} from "../services/role.service";
+import {KitType} from "../utils/kit-type.model";
 import {Language} from "../utils/language";
 import {NameValue} from "../utils/name-value.model";
 import {PatchUtil} from "../utils/patch.model";
@@ -99,6 +100,7 @@ export class ParticipantListComponent implements OnInit {
   showHelp: boolean = false;
   filtered: boolean = false;
   hasInvitation: boolean = false;
+  rowsPerPage: number;
 
   constructor( private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
                private router: Router, private auth: Auth, private route: ActivatedRoute, private util: Utils, private language: Language ) {
@@ -158,6 +160,7 @@ export class ParticipantListComponent implements OnInit {
   }
 
   loadSettings() {
+    this.rowsPerPage = this.role.getUserSetting().getRowsPerPage();
     let jsonData: any;
     this.dsmService.getSettings( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.parent ).subscribe(
       data => {
@@ -265,7 +268,7 @@ export class ParticipantListComponent implements OnInit {
               }
               let name = activityDefinition.activityName == undefined || activityDefinition.activityName === "" ? activityDefinition.activityCode : activityDefinition.activityName;
               this.dataSources.set( activityDefinition.activityCode, name );
-              ;this.sourceColumns[ activityDefinition.activityCode ] = possibleColumns;
+              this.sourceColumns[ activityDefinition.activityCode ] = possibleColumns;
               this.selectedColumns[ activityDefinition.activityCode ] = [];
               //add now all these columns to allFieldsName for the search-bar
               possibleColumns.forEach( filter => {
@@ -323,6 +326,22 @@ export class ParticipantListComponent implements OnInit {
             let value: Value = Value.parse( val );
             this.mrCoverPdfSettings.push( value );
           } );
+        }
+        if (jsonData.kitTypes != null) {
+          let hasExternalShipper = false;
+          let options = new Array<NameValue>();
+          jsonData.kitTypes.forEach( ( val ) => {
+            let kitType = KitType.parse( val );
+            options.push( new NameValue( kitType.name, kitType.displayName ) );
+            if ( kitType.externalShipper ) {
+              hasExternalShipper = true;
+            }
+          });
+          this.sourceColumns[ "k" ].push( new Filter( ParticipantColumn.SAMPLE_TYPE, Filter.OPTION_TYPE, options ) );
+          if (hasExternalShipper) {
+            this.sourceColumns[ "k" ].push( new Filter( ParticipantColumn.EXTERNAL_ORDER_NUMBER, Filter.TEXT_TYPE ) );
+            this.sourceColumns[ "k" ].push( new Filter( ParticipantColumn.EXTERNAL_ORDER_DATE, Filter.DATE_TYPE ) );
+          }
         }
         this.orderColumns();
         this.getData();
@@ -1130,6 +1149,9 @@ export class ParticipantListComponent implements OnInit {
         Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"], ["abstractionActivities", "a"]], columns, "Participants-AbstractionActivity-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
         Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"], ["abstractionSummary", "a"]], columns, "Participants-Abstraction-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
         fileCount = fileCount + 1;
+      }  else if (source === "invitations") {
+        Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"], ["invitations", "invitations"]], columns, "Participants-Invitation-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION, true );
+        fileCount = fileCount + 1;
       } else {
         Utils.downloadCurrentData( this.participantList, [["data", "data"], [source, source]], columns, "Participants-" + source + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION, true );
         fileCount = fileCount + 1;
@@ -1458,4 +1480,7 @@ export class ParticipantListComponent implements OnInit {
     return true;
   }
 
+  changeRowNumber(rows: number) {
+    this.rowsPerPage = rows;
+  }
 }

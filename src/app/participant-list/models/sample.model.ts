@@ -10,7 +10,8 @@ export class Sample {
 
   constructor(public bspCollaboratorSampleId: string, public kitType: string, public scanDate: number, public error: boolean, public receiveDate: number, public deactivatedDate: number,
               public trackingNumberTo: string, public trackingNumberReturn: string, public kitLabel: string, public testResult: Array<TestResult>,
-              public upsTrackingStatus: string, public upsReturnStatus: string, public externalOrderStatus: string) {
+              public upsTrackingStatus: string, public upsReturnStatus: string, public externalOrderStatus: string, public externalOrderNumber: string, public externalOrderDate: number,
+              public careEvolve: boolean) {
     this.bspCollaboratorSampleId = bspCollaboratorSampleId;
     this.kitType = kitType;
     this.scanDate = scanDate;
@@ -24,6 +25,9 @@ export class Sample {
     this.upsTrackingStatus = upsTrackingStatus;
     this.upsReturnStatus = upsReturnStatus;
     this.externalOrderStatus = externalOrderStatus;
+    this.externalOrderNumber = externalOrderNumber;
+    this.externalOrderDate = externalOrderDate;
+    this.careEvolve = careEvolve;
   }
 
   get sampleQueue() {
@@ -59,6 +63,7 @@ export class Sample {
       }
     }
     return new Sample(json.bspCollaboratorSampleId, json.kitType, json.scanDate, json.error, json.receiveDate, json.deactivatedDate, json.trackingNumberTo,
-      json.trackingNumberReturn, json.kitLabel, testResults, json.upsTrackingStatus, json.upsReturnStatus, json.externalOrderStatus );
+      json.trackingNumberReturn, json.kitLabel, testResults, json.upsTrackingStatus, json.upsReturnStatus, json.externalOrderStatus, json.externalOrderNumber, json.externalOrderDate,
+      json.careEvolve);
   }
 }
