@@ -92,6 +92,7 @@ export class ParticipantListComponent implements OnInit {
   drugs: string[] = [];
   cancers: string[] = [];
   mrCoverPdfSettings: Value[] = [];
+  specialFormat: Value[] = [];
 
   sortField: string = null;
   sortDir: string = null;
@@ -341,6 +342,38 @@ export class ParticipantListComponent implements OnInit {
           if (hasExternalShipper) {
             this.sourceColumns[ "k" ].push( new Filter( ParticipantColumn.EXTERNAL_ORDER_NUMBER, Filter.TEXT_TYPE ) );
             this.sourceColumns[ "k" ].push( new Filter( ParticipantColumn.EXTERNAL_ORDER_DATE, Filter.DATE_TYPE ) );
+          }
+        }
+        if (jsonData.specialFormat != null) {
+          jsonData.specialFormat.forEach( ( val ) => {
+            let value: Value = Value.parse( val );
+            this.specialFormat.push( value );
+          } );
+        }
+        if (jsonData.hideESFields != null) {
+          let hideESFields: Value[] = [];
+          jsonData.hideESFields.forEach( ( val ) => {
+            let value: Value = Value.parse( val );
+            hideESFields.push( value );
+          } );
+          if (hideESFields != null && hideESFields.length > 0) {
+            hideESFields.forEach( (field) => {
+              console.log(field);
+              let esField = field.value.split(".");
+              console.log(esField);
+              if (esField != null) {
+                this.sourceColumns[ "data" ].forEach( source => {
+                  console.log(source);
+                  if (source.participantColumn.object === esField[0] && source.participantColumn.name === esField[1]) {
+                    //remove the ES columns
+                    let index = this.sourceColumns[ "data" ].indexOf( source );
+                    if (index !== -1) {
+                      this.sourceColumns[ "data" ].splice( index, 1 );
+                    }
+                  }
+                } );
+              }
+            })
           }
         }
         this.orderColumns();
