@@ -175,10 +175,6 @@ export class Filter {
   public static H_E_COUNT = new Filter( ParticipantColumn.H_E_COUNT, Filter.NUMBER_TYPE );
 
   //sample columns
-  //TODO remove hardcoding kit type
-  public static SAMPLE_TYPE = new Filter( ParticipantColumn.SAMPLE_TYPE, Filter.OPTION_TYPE, [
-    new NameValue( "SALIVA", "Saliva" ),
-    new NameValue( "BLOOD", "Blood" ) ] );
   public static SAMPLE_SENT = new Filter( ParticipantColumn.SAMPLE_SENT, Filter.DATE_TYPE );
   public static COLLABORATOR_SAMPLE = new Filter( ParticipantColumn.COLLABORATOR_SAMPLE, Filter.TEXT_TYPE );
   public static SAMPLE_RECEIVED = new Filter( ParticipantColumn.SAMPLE_RECEIVED, Filter.DATE_TYPE );
@@ -194,6 +190,7 @@ export class Filter {
   public static MF_BARCODE = new Filter( ParticipantColumn.MF_BARCODE, Filter.TEXT_TYPE );
   public static STATUS_OUT = new Filter( ParticipantColumn.STATUS_OUT, Filter.TEXT_TYPE );
   public static STATUS_IN = new Filter( ParticipantColumn.STATUS_IN, Filter.TEXT_TYPE );
+  public static CARE_EVOLVE = new Filter( ParticipantColumn.CARE_EVOLVE, Filter.CHECKBOX_TYPE );
   public static RESULT_TEST = new Filter(ParticipantColumn.RESULT_TEST, Filter.JSON_ARRAY_TYPE, null, new NameValue( ParticipantColumn.RESULT_TEST.name, null ),
   false, true, null, null, null, null, false, false, false, false, Filter.TEXT_TYPE );
   public static CORRECTED_TEST = new Filter(ParticipantColumn.CORRECTED_TEST, Filter.JSON_ARRAY_TYPE, null, new NameValue( ParticipantColumn.CORRECTED_TEST.name, null ),
@@ -237,7 +234,7 @@ export class Filter {
     Filter.TISSUE_EXPECTED_RETURN, Filter.TISSUE_RETURNED, Filter.TISSUE_TRACKING_NUMBER,
     Filter.TISSUE_FIRST_SM_ID, Filter.TISSUE_SHL_NUMBER, Filter.TISSUE_TUMOR_PERCENT, Filter.TISSUE_SEQUENCE, Filter.SCROLLS_COUNT,
     Filter.USS_COUNT, Filter.H_E_COUNT, Filter.BLOCKS_COUNT,
-    Filter.COLLABORATOR_SAMPLE, Filter.SAMPLE_TYPE, Filter.SAMPLE_SENT, Filter.SAMPLE_RECEIVED, Filter.SAMPLE_DEACTIVATION, Filter.SAMPLE_QUEUE,
+    Filter.COLLABORATOR_SAMPLE, Filter.SAMPLE_SENT, Filter.SAMPLE_RECEIVED, Filter.SAMPLE_DEACTIVATION, Filter.SAMPLE_QUEUE,
     Filter.TRACKING_TO_PARTICIPANT, Filter.TRACKING_RETURN, Filter.MF_BARCODE, Filter.STATUS_OUT, Filter.STATUS_IN, Filter.RESULT_TEST, Filter.CORRECTED_TEST, Filter.TIME_TEST,
     Filter.ABSTRACTION_ACTIVITY, Filter.ABSTRACTION_STATUS, Filter.ABSTRACTION_USER ];
 
