@@ -15,7 +15,6 @@ import {ComponentService} from "../services/component.service";
 import {DSMService} from "../services/dsm.service";
 import {RoleService} from "../services/role.service";
 import {KitType} from "../utils/kit-type.model";
-import {Language} from "../utils/language";
 import {NameValue} from "../utils/name-value.model";
 import {PatchUtil} from "../utils/patch.model";
 import {Result} from "../utils/result.model";
@@ -24,6 +23,7 @@ import {Utils} from "../utils/utils";
 import {ViewFilter} from "../filter-column/models/view-filter.model";
 import {Value} from "../utils/value.model";
 import {AssigneeParticipant} from "./models/assignee-participant.model";
+import {PreferredLanguage} from "./models/preferred-languages.model";
 import {Participant} from "./participant-list.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
 
@@ -101,9 +101,10 @@ export class ParticipantListComponent implements OnInit {
   filtered: boolean = false;
   hasInvitation: boolean = false;
   rowsPerPage: number;
+  preferredLanguages: PreferredLanguage[] = [];
 
   constructor( private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
-               private router: Router, private auth: Auth, private route: ActivatedRoute, private util: Utils, private language: Language ) {
+               private router: Router, private auth: Auth, private route: ActivatedRoute, private util: Utils ) {
     if (!auth.authenticated()) {
       auth.logout();
     }
@@ -344,6 +345,17 @@ export class ParticipantListComponent implements OnInit {
             this.sourceColumns[ "k" ].push( new Filter( ParticipantColumn.EXTERNAL_ORDER_DATE, Filter.DATE_TYPE ) );
           }
         }
+        if (jsonData.preferredLanguages != null) {
+          this.preferredLanguages = new Array<PreferredLanguage>();
+          let options = new Array<NameValue>();
+          jsonData.preferredLanguages.forEach( ( val ) => {
+            let language = PreferredLanguage.parse( val );
+            this.preferredLanguages.push(language);
+            options.push( new NameValue( language.languageCode, language.displayName ) );
+          });
+          this.sourceColumns[ "data" ].push( new Filter( ParticipantColumn.PREFERRED_LANGUAGE, Filter.OPTION_TYPE, options ) );
+        }
+
         if (jsonData.hideMRTissueWorkflow != null) {
           this.dataSources.delete( "m" );
           this.dataSources.delete( "oD" );
@@ -1151,8 +1163,11 @@ export class ParticipantListComponent implements OnInit {
     return this.util;
   }
 
-  getlanguage(): Language {
-    return this.language;
+  getLanguageName(languageCode: string): string {
+      let language = this.preferredLanguages.find( obj => {
+        return obj.languageCode === languageCode;
+      } );
+    return language.displayName;
   }
 
   getKeys() {
