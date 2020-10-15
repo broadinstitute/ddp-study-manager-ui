@@ -24,7 +24,7 @@
     <h3 class="Color--warn Line--Break">{{errorMessage}}</h3>
   </div>
 
-  <div *ngIf="additionalMessage != null">
+  <div *ngIf="additionalMessage != null && additionalMessage !== ''">
     <h3 class="Color--primary Line--Break">{{additionalMessage}}</h3>
     <br/>
   </div>

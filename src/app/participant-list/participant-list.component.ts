@@ -453,6 +453,7 @@ export class ParticipantListComponent implements OnInit {
         this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null, this.parent, true ).subscribe(
           data => {
             if (data != null) {
+              this.additionalMessage = "";
               this.participantList = [];
               this.originalParticipantList = [];
               this.copyParticipantList = [];
@@ -531,6 +532,7 @@ export class ParticipantListComponent implements OnInit {
             }
           }
           this.participantList = [];
+          this.additionalMessage = "";
           this.originalParticipantList = [];
           this.copyParticipantList = [];
           this.hasInvitation = false;
@@ -815,6 +817,7 @@ export class ParticipantListComponent implements OnInit {
           if (data != undefined && data != null && data !== "") {
             let jsonData: any[];
             this.participantList = [];
+            this.additionalMessage = "";
             this.originalParticipantList = [];
             this.copyParticipantList = [];
             this.filterQuery = "";
@@ -1329,6 +1332,7 @@ export class ParticipantListComponent implements OnInit {
     this.loadingParticipants = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
     this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), jsonPatch, this.parent, null ).subscribe( data => {
       this.participantList = [];
+      this.additionalMessage = "";
       this.originalParticipantList = [];
       this.copyParticipantList = [];
       this.hasInvitation = false;
