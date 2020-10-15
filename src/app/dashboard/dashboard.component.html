@@ -309,7 +309,7 @@
             </tr>
           </ng-container>
         </ng-container>
-        <tr>
+        <tr *ngIf="!hideMRTissueWorkflowCounter">
           <td>PT with minimal mr</td>
           <td>
             <ng-container *ngIf="ddp.dashboardValues['minimalMR'] !== null && ddp.dashboardValues['minimalMR'] !== undefined">
@@ -318,7 +318,7 @@
           </td>
           <td></td>
         </tr>
-
+ <ng-container *ngIf="!hideMRTissueWorkflowCounter">
         <ng-container *ngIf="ddp.dashboardValuesDetailed['readyToRequest'] !== null && ddp.dashboardValuesDetailed['notRequested'] !== null
           && ddp.dashboardValuesDetailed['faxSent'] !== null ">
           <tr>
@@ -1023,6 +1023,7 @@
             <td></td>
           </tr>
         </ng-container>
+ </ng-container>
 
         <ng-container *ngFor="let dashboardValue of activityKeys">
           <ng-container *ngIf="getActivityName(dashboardValue) as activity">

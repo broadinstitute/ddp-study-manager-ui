@@ -92,7 +92,6 @@ export class ParticipantListComponent implements OnInit {
   drugs: string[] = [];
   cancers: string[] = [];
   mrCoverPdfSettings: Value[] = [];
-  specialFormat: Value[] = [];
 
   sortField: string = null;
   sortDir: string = null;
@@ -307,7 +306,8 @@ export class ParticipantListComponent implements OnInit {
             //add when abstraction is searchable
             // this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
           } );
-        } else {
+        }
+        else {
           this.dataSources.delete( "a" );
         }
         if (jsonData.filters != null) {
@@ -344,11 +344,18 @@ export class ParticipantListComponent implements OnInit {
             this.sourceColumns[ "k" ].push( new Filter( ParticipantColumn.EXTERNAL_ORDER_DATE, Filter.DATE_TYPE ) );
           }
         }
-        if (jsonData.specialFormat != null) {
-          jsonData.specialFormat.forEach( ( val ) => {
-            let value: Value = Value.parse( val );
-            this.specialFormat.push( value );
-          } );
+        if (jsonData.hideMRTissueWorkflow != null) {
+          this.dataSources.delete( "m" );
+          this.dataSources.delete( "oD" );
+          this.dataSources.delete( "t" );
+          this.removeColumnFromSourceColumns("p", Filter.ONC_HISTORY_CREATED);
+          this.removeColumnFromSourceColumns("p", Filter.ONC_HISTORY_REVIEWED);
+          this.removeColumnFromSourceColumns("p", Filter.PAPER_CR_SENT);
+          this.removeColumnFromSourceColumns("p", Filter.PAPER_CR_RECEIVED);
+          this.removeColumnFromSourceColumns("p", Filter.MINIMAL_RECORDS);
+          this.removeColumnFromSourceColumns("p", Filter.ABSTRACTION_READY);
+          this.removeColumnFromSourceColumns("p", Filter.ASSIGNEE_MR);
+          this.removeColumnFromSourceColumns("p", Filter.ASSIGNEE_TISSUE);
         }
         if (jsonData.hideESFields != null) {
           let hideESFields: Value[] = [];
@@ -358,18 +365,12 @@ export class ParticipantListComponent implements OnInit {
           } );
           if (hideESFields != null && hideESFields.length > 0) {
             hideESFields.forEach( (field) => {
-              console.log(field);
               let esField = field.value.split(".");
-              console.log(esField);
               if (esField != null) {
                 this.sourceColumns[ "data" ].forEach( source => {
-                  console.log(source);
                   if (source.participantColumn.object === esField[0] && source.participantColumn.name === esField[1]) {
                     //remove the ES columns
-                    let index = this.sourceColumns[ "data" ].indexOf( source );
-                    if (index !== -1) {
-                      this.sourceColumns[ "data" ].splice( index, 1 );
-                    }
+                    this.removeColumnFromSourceColumns("data", source);
                   }
                 } );
               }
@@ -474,7 +475,6 @@ export class ParticipantListComponent implements OnInit {
               this.selectedColumns[ key ] = [];
             } );
             this.selectedColumns[ "data" ] = this.defaultColumns;
-            // this.selectedColumns = {};
           },
           err => {
             if (err._body === Auth.AUTHENTICATION_ERROR) {
@@ -487,6 +487,13 @@ export class ParticipantListComponent implements OnInit {
       }
     } else {
       this.selectFilter( null );
+    }
+  }
+
+  private removeColumnFromSourceColumns (source: string, filter: Filter) {
+    let index = this.sourceColumns[ source ].indexOf( filter );
+    if (index !== -1) {
+      this.sourceColumns[ source ].splice( index, 1 );
     }
   }
 
@@ -1515,5 +1522,9 @@ export class ParticipantListComponent implements OnInit {
 
   changeRowNumber(rows: number) {
     this.rowsPerPage = rows;
+  }
+
+  formatInvitation(invitationCode: string): string{
+    return invitationCode == undefined ? "" : invitationCode.match(/.{1,4}/g).join('-');
   }
 }

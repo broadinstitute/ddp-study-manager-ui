@@ -67,6 +67,7 @@ export class DashboardComponent implements OnInit {
   hasESData = false;
   activityDefinitionList: ActivityDefinition[] = [];
   participantList: Participant[] = [];
+  hideMRTissueWorkflowCounter: boolean = false;
 
   constructor( private dsmService: DSMService, private auth: Auth, private router: Router, private compService: ComponentService,
                private route: ActivatedRoute, private role: RoleService ) {
@@ -119,7 +120,6 @@ export class DashboardComponent implements OnInit {
                       this.getSourceColumnsFromFilterClass();
                       this.loadSettings();
                     }
-                    this.loadingDDPData = false;
                   },
                   err => {
                     if (err._body === Auth.AUTHENTICATION_ERROR) {
@@ -457,7 +457,11 @@ export class DashboardComponent implements OnInit {
             }
           } );
         }
+        if (jsonData.hideMRTissueWorkflow != null) {
+          this.hideMRTissueWorkflowCounter = true;
+        }
         this.getParticipantData();
+        this.loadingDDPData = false;
       },
       err => {
         if (err._body === Auth.AUTHENTICATION_ERROR) {

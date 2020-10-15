@@ -9,10 +9,7 @@ import {QuestionAnswer} from "../activity-data/models/question-answer.model";
 import {Filter} from "../filter-column/filter-column.model";
 import {AbstractionField} from "../medical-record-abstraction/medical-record-abstraction-field.model";
 import {Participant} from "../participant-list/participant-list.model";
-import {Tissue} from "../tissue/tissue.model";
-import {OncHistoryDetail} from "../onc-history-detail/onc-history-detail.model";
 import {NameValue} from "./name-value.model";
-import {DateFormatPipe} from '../pipe/custom-date.pipe';
 
 var fileSaver = require( "file-saver/FileSaver.js" );
 const Json2csvParser = require( "json2csv" ).Parser;
@@ -171,7 +168,7 @@ export class Utils {
     }
   }
 
-  public static downloadCurrentData( data: any[], paths: any[], columns: {}, fileName: string, isSurveyData ?: boolean ) {
+  public static downloadCurrentData( data: any[], paths: any[], columns: {}, fileName: string, isSurveyData ?: boolean) {
     let headers = "";
     for (let path of paths) {
       for (let i = 1; i < path.length; i += 2) {
@@ -370,12 +367,15 @@ export class Utils {
                 }
               }
             }
-            else if (col.participantColumn.tableAlias === "invitations") {
-              if (data != null && data.data != null  && data.data.invitations != null) {
+            else if ( col.participantColumn.tableAlias === "invitations" ) {
+              if ( data != null && data.data != null  && data.data.invitations != null ) {
                 let tmp: string = "";
                 data.data.invitations.forEach( ( invite ) => {
-                  if (col.type === Filter.DATE_TYPE) {
+                  if ( col.type === Filter.DATE_TYPE ) {
                     tmp = tmp + " " + invite[ col.participantColumn.name ] == undefined ? "" : this.getDateFormatted( new Date( invite[ col.participantColumn.name ] ), this.DATE_STRING_IN_CVS );
+                  }
+                  else if ( col.participantColumn.name === "guid" ) {
+                    tmp = tmp + " " + invite[ col.participantColumn.name ] == undefined ? "" : invite[ col.participantColumn.name ].match(/.{1,4}/g).join('-');
                   }
                   else {
                     tmp = tmp + " " + invite[ col.participantColumn.name ] == undefined ? "" : invite[ col.participantColumn.name ];

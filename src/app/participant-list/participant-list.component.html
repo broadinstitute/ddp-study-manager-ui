@@ -258,8 +258,11 @@
                           <ng-container *ngIf="col.type === 'DATE'">
                             {{invite[col.participantColumn.name] | date:'medium'}}
                           </ng-container>
-                          <ng-container *ngIf="col.type === 'TEXT'">
+                          <ng-container *ngIf="col.type === 'TEXT' && col.participantColumn.name !== 'guid'">
                             {{invite[col.participantColumn.name]}}
+                          </ng-container>
+                          <ng-container *ngIf="col.participantColumn.name === 'guid'">
+                            {{formatInvitation(invite[col.participantColumn.name])}}
                           </ng-container>
                         </p>
                       </li>
