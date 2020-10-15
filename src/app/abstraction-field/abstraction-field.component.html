@@ -370,10 +370,6 @@
           <input type="text" [ngClass]="{'Color--Field--Patched': isPatchedCurrently(field.displayName, 'filePage')}" placeholder="Page" mdInput
                  [(ngModel)]="viewValue.filePage" [disabled]="readonly">
         </md-input-container>
-        <md-input-container class="Input--Abstraction">
-          <input type="text" [ngClass]="{'Color--Field--Patched': isPatchedCurrently(field.displayName, 'matchPhrase')}" placeholder="Exact Match Phrase" mdInput
-                 [(ngModel)]="viewValue.matchPhrase" [disabled]="readonly" maxlength="1500">
-        </md-input-container>
       </ng-container>
       <ng-container *ngIf="viewValue == null">
         <md-input-container class="Input--Min-WIDTH">
@@ -392,12 +388,6 @@
                  mdInput autocomplete="off"
                  [(ngModel)]="field.fieldValue.filePage"
                  (change)="abstractionValueChanged($event, field, 'filePage')" [disabled]="readonly">
-        </md-input-container>
-        <md-input-container class="Input--Abstraction">
-          <input type="text" [ngClass]="{'Color--Field--Patched': isPatchedCurrently(field.displayName, 'matchPhrase')}" placeholder="Exact Match Phrase" aria-label="Number"
-                 mdInput autocomplete="off" maxlength="1500"
-                 [(ngModel)]="field.fieldValue.matchPhrase"
-                 (change)="abstractionValueChanged($event, field, 'matchPhrase')" [disabled]="readonly">
         </md-input-container>
       </ng-container>
     </td>
