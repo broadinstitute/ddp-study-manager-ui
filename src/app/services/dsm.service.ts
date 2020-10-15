@@ -413,10 +413,12 @@ export class DSMService {
   public uploadDuplicateParticipant( realm: string, kitType: string, jsonParticipants: string ): Observable<any> {
     let url = this.baseUrl + DSMService.UI + "kitUpload";
     let map: { name: string, value: any }[] = [];
-    map.push( { name: DSMService.REALM, value: realm } );
-    map.push( { name: "kitType", value: kitType } );
-    map.push( { name: "userId", value: this.role.userID() } );
-    map.push( { name: "uploadAnyway", value: true } );
+    map.push( {name: DSMService.REALM, value: realm} );
+    map.push( {name: "kitType", value: kitType} );
+    map.push( {name: "userId", value: this.role.userID()} );
+    map.push( {name: "uploadAnyway", value: true} );
+    map.push( {name: "Content-Type", value: "application/json; charset=utf-8"} );
+
     return this.http.post( url, jsonParticipants, this.buildQueryUploadHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError );
   }
 
