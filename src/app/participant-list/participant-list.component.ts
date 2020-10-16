@@ -1224,7 +1224,7 @@ export class ParticipantListComponent implements OnInit {
     }
 
     if (fileCount > 1) {
-      this.additionalMessage = "Table was downloaded in multiple documents, because of unrelated information";
+      this.additionalMessage = "Please note this view was downloaded in multiple files.";
     } else {
       this.additionalMessage = null;
     }
