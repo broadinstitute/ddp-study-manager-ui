@@ -118,10 +118,15 @@ export class ParticipantPageComponent implements OnInit {
   }
 
   getLanguageName(languageCode: string): string {
-    let language = this.preferredLanguage.find( obj => {
-      return obj.languageCode === languageCode;
-    } );
-    return language.displayName;
+    if (this.preferredLanguage != null && this.preferredLanguage.length > 0) {
+      let language = this.preferredLanguage.find( obj => {
+        return obj.languageCode === languageCode;
+      } );
+      if (language != null) {
+        return language.displayName;
+      }
+    }
+    return "";
   }
 
   getGroupHref( group: string ): string {

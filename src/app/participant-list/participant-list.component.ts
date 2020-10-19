@@ -1167,7 +1167,10 @@ export class ParticipantListComponent implements OnInit {
       let language = this.preferredLanguages.find( obj => {
         return obj.languageCode === languageCode;
       } );
-    return language.displayName;
+      if (language != null) {
+        return language.displayName;
+      }
+      return "";
   }
 
   getKeys() {
