@@ -123,7 +123,7 @@ participant.data.dsm['diagnosisYear'] != null">
           </tr>
           <tr *ngIf="participant.data.profile['preferredLanguage'] != null && participant.data.profile['preferredLanguage'] !== ''">
             <td>Preferred Language</td>
-            <td>{{getLanguage().getLanguageName(participant.data.profile['preferredLanguage'])}}</td>
+            <td>{{getLanguageName(participant.data.profile['preferredLanguage'])}}</td>
           </tr>
           </tbody>
         </table>

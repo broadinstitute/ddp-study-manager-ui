@@ -1,7 +1,7 @@
 <ng-container *ngIf="showParticipantInformation">
   <app-participant-page [parentList]="parent" [participant]="participant" [activeTab]="selectedTab"
                         [drugs]="drugs" [cancers]="cancers" [settings]="settings"
-                        [mrCoverPdfSettings]="mrCoverPdfSettings"
+                        [mrCoverPdfSettings]="mrCoverPdfSettings" [preferredLanguage]="preferredLanguages"
                         [activityDefinitions]="activityDefinitionList"
                         (leaveParticipant)="updateParticipant($event)"></app-participant-page>
 
@@ -24,7 +24,7 @@
     <h3 class="Color--warn Line--Break">{{errorMessage}}</h3>
   </div>
 
-  <div *ngIf="additionalMessage != null">
+  <div *ngIf="additionalMessage != null && additionalMessage !== ''">
     <h3 class="Color--primary Line--Break">{{additionalMessage}}</h3>
     <br/>
   </div>
@@ -258,8 +258,11 @@
                           <ng-container *ngIf="col.type === 'DATE'">
                             {{invite[col.participantColumn.name] | date:'medium'}}
                           </ng-container>
-                          <ng-container *ngIf="col.type === 'TEXT'">
+                          <ng-container *ngIf="col.type === 'TEXT' && col.participantColumn.name !== 'guid'">
                             {{invite[col.participantColumn.name]}}
+                          </ng-container>
+                          <ng-container *ngIf="col.participantColumn.name === 'guid'">
+                            {{formatInvitation(invite[col.participantColumn.name])}}
                           </ng-container>
                         </p>
                       </li>
@@ -388,7 +391,7 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                     </ng-container>
                     <ng-container
                       *ngIf="col.participantColumn.name === 'preferredLanguage' && pt.data[col.participantColumn.object] != null && pt.data[col.participantColumn.object][col.participantColumn.name]!= null">
-                      {{getlanguage().getLanguageName(pt.data[col.participantColumn.object][col.participantColumn.name])}}
+                      {{getLanguageName(pt.data[col.participantColumn.object][col.participantColumn.name])}}
                     </ng-container>
                   </div>
                   <div *ngIf="alias === 'p' && pt.participant != null">

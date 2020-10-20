@@ -51,14 +51,14 @@
           <li *ngIf="hasRole().allowedToHandleSamples()"><a [routerLink]="['/labelSettings']"> Label Settings </a></li>
         </ul>
       </li>
-      <li class="dropdown" *ngIf="(getAuth().authenticated() && hasRole().allowedToViewMedicalRecords())">
+      <li class="dropdown" *ngIf="(getAuth().authenticated() && (hasRole().allowedToViewMedicalRecords() || hasRole().allowedParticipantListView()))">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#" (click)="doNothing()"><b>Study</b>
           <span class="caret"></span></a>
         <ul class="dropdown-menu">
           <li><a href="#" [routerLink]="['/medicalRecordDashboard']"> Dashboard </a></li>
           <hr>
-          <li><a href="#" [routerLink]="['/participantList']"> Participant List </a></li>
-          <li><a href="#" [routerLink]="['/tissueList']"> Tissue List </a></li>
+          <li *ngIf="hasRole().allowedToViewMedicalRecords() || hasRole().allowedParticipantListView()"><a href="#" [routerLink]="['/participantList']"> Participant List </a></li>
+          <li *ngIf="hasRole().allowedToViewMedicalRecords()"><a href="#" [routerLink]="['/tissueList']"> Tissue List </a></li>
           <li *ngIf="hasRole().allowedToChangeFieldSettings()"><a href="#" [routerLink]="['/fieldSettings']">Field Settings</a></li>
           <li><a *ngIf="hasRole().isAbstractionAdmin()" href="#" [routerLink]="['/medicalRecordAbstractionSettings']"> MR Abstraction Settings </a></li>
         </ul>
@@ -78,7 +78,7 @@
       </li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
-      <li class="Float--left" *ngIf="getAuth().authenticated() && (hasRole().allowToViewSampleLists() || hasRole().allowedToHandleSamples() || hasRole().allowedToViewMedicalRecords())">
+      <li class="Float--left" *ngIf="getAuth().authenticated() && (hasRole().allowToViewSampleLists() || hasRole().allowedToHandleSamples() || hasRole().allowedToViewMedicalRecords() || hasRole().allowedParticipantListView())">
         <a href="#" [routerLink]="['/userSettings']"><b> User Settings </b></a>
       </li>
       <li class="Float--right"><a href="#" (click)="doLogin()" *ngIf="!getAuth().authenticated()"><b>Log In</b></a></li>

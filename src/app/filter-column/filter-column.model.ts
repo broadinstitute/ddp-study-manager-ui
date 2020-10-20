@@ -1,4 +1,3 @@
-import {Language} from "../utils/language";
 import {ParticipantColumn} from "./models/column.model";
 import {NameValue} from "../utils/name-value.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
@@ -38,7 +37,6 @@ export class Filter {
   public static EMAIL = new Filter( ParticipantColumn.EMAIL, Filter.TEXT_TYPE );
   public static REGISTRATION_DATE = new Filter( ParticipantColumn.REGISTRATION_DATE, Filter.DATE_TYPE );
   public static DO_NOT_CONTACT = new Filter( ParticipantColumn.DO_NOT_CONTACT, Filter.BOOLEAN_TYPE );
-  public static PREFERRED_LANGUAGE = new Filter( ParticipantColumn.PREFERRED_LANGUAGE, Filter.OPTION_TYPE, Language.getLanguageOptions());
   public static DATE_OF_MAJORITY = new Filter( ParticipantColumn.DATE_OF_MAJORITY, Filter.SHORT_DATE_TYPE );
   public static HAS_CONSENTED_TO_BLOOD = new Filter( ParticipantColumn.HAS_CONSENTED_TO_BLOOD, Filter.BOOLEAN_TYPE );
   public static HAS_CONSENTED_TO_TISSUE = new Filter( ParticipantColumn.HAS_CONSENTED_TO_TISSUE, Filter.BOOLEAN_TYPE );
@@ -212,7 +210,7 @@ export class Filter {
 
   public static ALL_COLUMNS = [
     Filter.REALM, Filter.SHORT_ID, Filter.LEGACY_SHORT_ID, Filter.LEGACY_PARTICIPANT_ID, Filter.PARTICIPANT_ID, Filter.FIRST_NAME, Filter.LAST_NAME,
-    Filter.COUNTRY, Filter.ENROLLMENT_STATUS, Filter.EMAIL, Filter.REGISTRATION_DATE, Filter.DO_NOT_CONTACT, Filter.PREFERRED_LANGUAGE,
+    Filter.COUNTRY, Filter.ENROLLMENT_STATUS, Filter.EMAIL, Filter.REGISTRATION_DATE, Filter.DO_NOT_CONTACT,
     Filter.DATE_OF_MAJORITY, Filter.HAS_CONSENTED_TO_BLOOD, Filter.HAS_CONSENTED_TO_TISSUE, Filter.DATE_OF_BIRTH,
     Filter.DIAGNOSIS_MONTH, Filter.DIAGNOSIS_YEAR,
     Filter.ONC_HISTORY_CREATED, Filter.ONC_HISTORY_REVIEWED, Filter.PAPER_CR_SENT, Filter.PAPER_CR_RECEIVED,

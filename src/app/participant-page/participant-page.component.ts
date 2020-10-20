@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from "@angula
 import {TabDirective} from "ngx-bootstrap";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
+import {PreferredLanguage} from "../participant-list/models/preferred-languages.model";
 import {Participant} from "../participant-list/participant-list.model";
 import {PDFModel} from "../pdf-download/pdf-download.model";
 
@@ -10,7 +11,6 @@ import {Auth} from "../services/auth.service";
 import {DSMService} from "../services/dsm.service";
 import {MedicalRecord} from "../medical-record/medical-record.model";
 import {RoleService} from "../services/role.service";
-import {Language} from "../utils/language";
 import {Utils} from "../utils/utils";
 import {Statics} from "../utils/statics";
 import {OncHistoryDetail} from "../onc-history-detail/onc-history-detail.model";
@@ -40,6 +40,7 @@ export class ParticipantPageComponent implements OnInit {
   @Input() participant: Participant;
   @Input() drugs: string[];
   @Input() cancers: string[];
+  @Input() preferredLanguage: Array<PreferredLanguage>;
   @Input() activeTab: string;
   @Input() activityDefinitions: Array<ActivityDefinition>;
   @Input() settings: {};
@@ -90,7 +91,7 @@ export class ParticipantPageComponent implements OnInit {
   disableDownload: boolean = false;
 
   constructor( private auth: Auth, private compService: ComponentService, private dsmService: DSMService, private router: Router,
-               private role: RoleService, private util: Utils, private route: ActivatedRoute, private language: Language ) {
+               private role: RoleService, private util: Utils, private route: ActivatedRoute) {
     if (!auth.authenticated()) {
       auth.logout();
     }
@@ -116,8 +117,16 @@ export class ParticipantPageComponent implements OnInit {
     return this.util;
   }
 
-  getLanguage(): Language {
-    return this.language;
+  getLanguageName(languageCode: string): string {
+    if (this.preferredLanguage != null && this.preferredLanguage.length > 0) {
+      let language = this.preferredLanguage.find( obj => {
+        return obj.languageCode === languageCode;
+      } );
+      if (language != null) {
+        return language.displayName;
+      }
+    }
+    return "";
   }
 
   getGroupHref( group: string ): string {
