@@ -514,13 +514,8 @@ export class ParticipantPageComponent implements OnInit {
   }
 
   downloadRequestPDF( requestOncHistoryList: Array<OncHistoryDetail> ) {
-    let map: { name: string, value: any }[] = [];
-    map.push( {name: DSMService.REALM, value: localStorage.getItem( ComponentService.MENU_SELECTED_REALM )} );
-    for (let onc of requestOncHistoryList) {
-      map.push( {name: "requestId", value: onc.oncHistoryDetailId} );
-    }
-    let ddpParticipantId = this.participant.participant.ddpParticipantId;
-    this.dsmService.downloadTissueRequestPDFs( ddpParticipantId, map ).subscribe(
+    this.dsmService.downloadPDF( this.participant.participant.ddpParticipantId, null, null, null, null,
+      localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), "tissue", null, requestOncHistoryList).subscribe(
       data => {
         var date = new Date();
         this.downloadFile( data, "_TissueRequest_" + this.facilityName + "_" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) );
@@ -915,7 +910,8 @@ export class ParticipantPageComponent implements OnInit {
 
   downloadPDFs( configName: string ) {
     this.disableDownload = true;
-    this.dsmService.downloadPDF( this.participant.data.profile[ 'guid' ], this.compService.getRealm(), configName ).subscribe(
+    this.dsmService.downloadPDF( this.participant.data.profile[ 'guid' ], null, null, null,null,
+      this.compService.getRealm(), configName, null, null).subscribe(
       data => {
         this.downloadFile( data, "_" + configName );
         this.disableDownload = false;
