@@ -110,6 +110,7 @@ import {ActivityDataComponent} from "./activity-data/activity-data.component";
 import {SearchBarComponent} from "./search-bar/search-bar.component";
 import {FieldSettingsComponent} from "./field-settings/field-settings.component";
 import { InvitationDataComponent } from './invitation-data/invitation-data.component';
+import { FieldTableComponent } from './field-table/field-table.component';
 
 @NgModule( {
   declarations: [
@@ -185,7 +186,8 @@ import { InvitationDataComponent } from './invitation-data/invitation-data.compo
     ParticipantListComponent,
     ActivityDataComponent,
     SearchBarComponent,
-    InvitationDataComponent
+    InvitationDataComponent,
+    FieldTableComponent
 
   ],
   imports: [
