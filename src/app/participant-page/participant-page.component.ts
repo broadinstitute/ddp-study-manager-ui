@@ -146,8 +146,8 @@ export class ParticipantPageComponent implements OnInit {
         this.participantNotConsented = false;
       }
       this.pdfs = new Array<PDFModel>();
-      this.pdfs.push(new PDFModel('cover','Cover PDF', 1));
       if (this.participant.data != null && this.participant.data.dsm != null && this.participant.data.dsm[ "pdfs" ] != null) {
+        this.pdfs.push(new PDFModel('cover','Cover PDF', 1));
         let tmp = this.participant.data.dsm[ "pdfs" ];
         if (tmp != null && tmp.length > 0) {
           tmp.forEach( (pdf, index) => {
@@ -159,6 +159,7 @@ export class ParticipantPageComponent implements OnInit {
       }
       else {
         //TODO can be removed when all studies are migrated
+        this.pdfs.push(new PDFModel('cover','Cover PDF', 1));
         this.pdfs.push(new PDFModel('consent','Consent PDF', 2));
         this.pdfs.push(new PDFModel('release','Release PDF', 3));
         this.pdfs.push(new PDFModel('irb','IRB Letter', 4));
