@@ -102,6 +102,7 @@ export class ParticipantListComponent implements OnInit {
   hasInvitation: boolean = false;
   rowsPerPage: number;
   preferredLanguages: PreferredLanguage[] = [];
+  hideMRTissueWorkflow: boolean = false;
 
   constructor( private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
                private router: Router, private auth: Auth, private route: ActivatedRoute, private util: Utils ) {
@@ -368,6 +369,7 @@ export class ParticipantListComponent implements OnInit {
           this.removeColumnFromSourceColumns("p", Filter.ABSTRACTION_READY);
           this.removeColumnFromSourceColumns("p", Filter.ASSIGNEE_MR);
           this.removeColumnFromSourceColumns("p", Filter.ASSIGNEE_TISSUE);
+          this.hideMRTissueWorkflow = true;
         }
         if (jsonData.hideESFields != null) {
           let hideESFields: Value[] = [];

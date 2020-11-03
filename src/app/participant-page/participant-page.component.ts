@@ -41,6 +41,7 @@ export class ParticipantPageComponent implements OnInit {
   @Input() drugs: string[];
   @Input() cancers: string[];
   @Input() preferredLanguage: Array<PreferredLanguage>;
+  @Input() hideMRTissueWorkflow: boolean;
   @Input() activeTab: string;
   @Input() activityDefinitions: Array<ActivityDefinition>;
   @Input() settings: {};
@@ -146,18 +147,18 @@ export class ParticipantPageComponent implements OnInit {
         this.participantNotConsented = false;
       }
       this.pdfs = new Array<PDFModel>();
-      if (this.participant.data != null && this.participant.data.dsm != null && this.participant.data.dsm[ "pdfs" ] != null) {
-        this.pdfs.push(new PDFModel('cover','Cover PDF', 1));
+      if (this.participant.data != null && this.participant.data.dsm != null && this.participant.data.dsm[ "pdfs" ] != null && this.participant.data.dsm[ "pdfs" ].length > 0) {
         let tmp = this.participant.data.dsm[ "pdfs" ];
         if (tmp != null && tmp.length > 0) {
+          this.pdfs.push(new PDFModel('cover','Cover PDF', 1));
           tmp.forEach( (pdf, index) => {
             pdf.order = index + 2;// +2 because 1 is cover pdf
             this.pdfs.push(pdf);
           })
+          this.pdfs.push(new PDFModel('irb','IRB Letter', tmp.length + 2));
         }
-        this.pdfs.push(new PDFModel('irb','IRB Letter', tmp.length + 2));
       }
-      else {
+      else if (!this.hideMRTissueWorkflow) {
         //TODO can be removed when all studies are migrated
         this.pdfs.push(new PDFModel('cover','Cover PDF', 1));
         this.pdfs.push(new PDFModel('consent','Consent PDF', 2));
