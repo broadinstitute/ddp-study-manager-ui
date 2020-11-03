@@ -35,6 +35,14 @@
       <i class="fas fa-spinner fa-spin fa-5x Color--primary"></i>
     </div>
   </span>
+    <div class="Width--100">
+      <h4>{{message}}</h4>
+      <span [hidden]="!downloading" class="Width--100">
+    <div align="center" class="Width--100 Height--100">
+      <i class="fas fa-spinner fa-spin fa-5x Color--primary"></i>
+    </div>
+  </span>
+    </div>
 
     <div *ngIf="!loadingParticipantPage" class="Width--100">
 
@@ -122,7 +130,7 @@ participant.data.dsm['diagnosisYear'] != null">
             <td>{{gender | titlecase}}</td>
           </tr>
           <tr *ngIf="participant.data.profile['preferredLanguage'] != null && participant.data.profile['preferredLanguage'] !== ''">
-            <td>Preferred Language</td>a
+            <td>Preferred Language</td>
             <td>{{getLanguageName(participant.data.profile['preferredLanguage'])}}</td>
           </tr>
           </tbody>
@@ -685,10 +693,14 @@ participant.data.dsm['diagnosisYear'] != null">
 
                   <div
                     *ngIf="participant != null && participant.oncHistoryDetails.length > 0 && getTissueConsent() == null || getTissueConsent()">
-                    <button md-raised-button (click)="requestTissue()" color="primary" [disabled]="participantExited"
-                            [disabled]="disableTissueRequestButton || hasRole().prohibitedToRequestTissue()"> Download
-                      Request Documents
+                    <button md-raised-button (click)="requestTissue(false)" color="primary" [disabled]="participantExited"
+                            [disabled]="disableTissueRequestButton || hasRole().prohibitedToRequestTissue()"> Download Request Documents
                     </button>
+                    <button md-raised-button color="primary"
+                            [disabled]="downloading"
+                            (click)="requestTissue(true)">Download PDF Bundle
+                    </button>
+                    <a href="#" (click)="doNothing('bundle')" *ngIf="!downloading" class="Router--Outlet"><b> Change order/files in Bundle</b></a>
                   </div>
                 </div>
               </ng-container>
@@ -874,34 +886,61 @@ participant.data.dsm['diagnosisYear'] != null">
 
   <app-modal>
     <div class="app-modal-header">
-      <ng-container *ngIf="!_showWarningModal">
+      <ng-container *ngIf="source === 'normal'">
         Note for medical record:
       </ng-container>
-      <ng-container *ngIf="_showWarningModal">
+      <ng-container *ngIf="source === 'warning'">
         Tissue Request Warning
+      </ng-container>
+      <ng-container *ngIf="source === 'bundle'">
+        Change order of PDFs in bundle
       </ng-container>
     </div>
     <div class="app-modal-body">
-      <ng-container *ngIf="!_showWarningModal">
+      <ng-container *ngIf="source === 'normal'">
       <textarea class="Width--100" maxlength="1000" [disabled]="participantExited"
                 *ngIf="noteMedicalRecord != null" [(ngModel)]="noteMedicalRecord.mrNotes"></textarea>
       </ng-container>
-      <ng-container *ngIf="_showWarningModal">
+      <ng-container *ngIf="source === 'warning'">
         {{warning}}
+      </ng-container>
+      <ng-container *ngIf="source === 'bundle'">
+        <table class="table table-condensed">
+          <tbody>
+          <tr *ngFor="let pdf of pdfs">
+            <td>
+              <md-select placeholder="Select PDF" [(ngModel)]="pdf.order">
+                <md-option *ngFor="let item of [].constructor(pdfs.length + 1); let i = index" [value]="i">
+                  {{i}}
+                </md-option>
+              </md-select>
+            </td>
+            <td>
+              {{pdf.displayName}}
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        Order = 0 will not add the pdf to the bundle
       </ng-container>
     </div>
     <div class="app-modal-footer">
       <button type="button" class="btn btn-default"
-              (click)="universalModal.hide()">Cancel
+              (click)="universalModal.hide()">Close
       </button>
-      <ng-container *ngIf="!_showWarningModal">
+      <ng-container *ngIf="source === 'normal'">
         <button type="button" class="btn btn-primary" [disabled]="participantExited"
                 (click)="saveNote()">Save & Close
         </button>
       </ng-container>
-      <ng-container *ngIf="_showWarningModal">
+      <ng-container *ngIf="source === 'warning'">
         <button type="button" class="btn btn-default" [disabled]="participantExited"
-                (click)="doRequest()">Request Anyway
+                (click)="doRequest(bundle)">Request Anyway
+        </button>
+      </ng-container>
+      <ng-container *ngIf="source === 'bundle'">
+        <button type="button" class="btn btn-primary" [disabled]="participantExited"
+                (click)="doRequest(true)">Download PDF Bundle
         </button>
       </ng-container>
     </div>
