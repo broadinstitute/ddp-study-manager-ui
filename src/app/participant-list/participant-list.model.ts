@@ -2,6 +2,7 @@ import {AbstractionGroup} from "../abstraction-group/abstraction-group.model";
 import {Abstraction} from "../medical-record-abstraction/medical-record-abstraction.model";
 import {MedicalRecord} from "../medical-record/medical-record.model";
 import {OncHistoryDetail} from "../onc-history-detail/onc-history-detail.model";
+import {ParticipantData} from "./models/participant-data.model";
 import {Sample} from "./models/sample.model";
 import {Data} from "./models/data.model";
 import {ParticipantDSMInformation} from "./models/participant.model";
@@ -12,7 +13,7 @@ export class Participant {
 
   constructor( public data: Data, public participant: ParticipantDSMInformation, public medicalRecords: Array<MedicalRecord>,
                public kits: Array<Sample>, public oncHistoryDetails: Array<OncHistoryDetail>, public abstractionActivities: Array<Abstraction>,
-               public abstractionSummary: Array<AbstractionGroup>,
+               public abstractionSummary: Array<AbstractionGroup>, public participantData: Array<ParticipantData>,
                public abstraction?: Abstraction, public review?: Abstraction, public qc?: Abstraction, public finalA?: Abstraction ) {
     this.data = data;
     this.participant = participant;
@@ -21,6 +22,7 @@ export class Participant {
     this.oncHistoryDetails = oncHistoryDetails;
     this.abstractionActivities = abstractionActivities;
     this.abstractionSummary = abstractionSummary;
+    this.participantData = participantData;
     this.abstraction = abstraction;
     this.review = review;
     this.qc = qc;
@@ -173,6 +175,15 @@ export class Participant {
       participant = ParticipantDSMInformation.parse( jsonData );
     }
 
-    return new Participant( data, participant, medicalRecords, samples, oncHistoryDetails, json.abstractionActivities, abstractionSummary, abstraction, review, qc, finalA );
+    let participantData: Array<ParticipantData> = [];
+    jsonData = json.participantData;
+    if (jsonData != null) {
+      jsonData.forEach( ( val ) => {
+        let data = ParticipantData.parse( val );
+        participantData.push( data );
+      } );
+    }
+
+    return new Participant( data, participant, medicalRecords, samples, oncHistoryDetails, json.abstractionActivities, abstractionSummary, participantData, abstraction, review, qc, finalA );
   }
 }

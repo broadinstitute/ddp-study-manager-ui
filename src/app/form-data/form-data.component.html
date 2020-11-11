@@ -1,0 +1,68 @@
+<table class="Width--100">
+  <tr>
+    <td class="TD--Padding Width--30">
+      {{fieldSetting.columnDisplay}}
+    </td>
+    <td>
+      <ng-container *ngIf="fieldSetting.displayType === 'TEXT'">
+        <md-input-container
+          [ngClass]="{'Width--100': true, 'Input--Abstraction': true}">
+          <input mdInput maxlength="200" autocomplete="off"
+                 placeholder="{{fieldSetting.columnDisplay}}"
+                 [value]="getParticipantData(fieldSetting.columnName)">
+        </md-input-container>
+      </ng-container>
+
+      <ng-container *ngIf="fieldSetting.displayType === 'NUMBER'">
+        <md-input-container [ngClass]="{'Width--100': true, 'Input--Abstraction': true}">
+          <input mdInput type="number"
+                 placeholder="{{fieldSetting.columnDisplay}}"
+                 [ngModel]="getParticipantData(fieldSetting.columnName)">
+        </md-input-container>
+      </ng-container>
+
+      <ng-container *ngIf="fieldSetting.displayType === 'DATE'">
+        <app-field-datepicker [dateString]="getParticipantData(fieldSetting.columnName)" [addCheckboxEstimated]="false"
+                              [showNAButton]="false" [showNotFoundButton]="false" [allowUnknownDay]="false">
+        </app-field-datepicker>
+      </ng-container>
+
+      <ng-container *ngIf="fieldSetting.displayType === 'CHECKBOX'">
+        <md-checkbox color="primary" disableRipple>
+        </md-checkbox>
+      </ng-container>
+
+      <ng-container *ngIf="fieldSetting.displayType === 'RADIO'">
+        <md-radio-group color="primary" disableRipple>
+          <div *ngFor="let radio of fieldSetting.possibleValues">
+            <md-radio-button value="{{radio.value}}">{{radio.value}}</md-radio-button>
+          </div>
+        </md-radio-group>
+      </ng-container>
+
+      <ng-container *ngIf="fieldSetting.displayType === 'TEXTAREA'">
+        <textarea maxlength="1000" placeholder="{{fieldSetting.columnDisplay}}"
+                  [ngClass]="{'Width--100': true}" [value]="getParticipantData()"></textarea>
+      </ng-container>
+
+      <ng-container *ngIf="fieldSetting.displayType === 'ACTIVITY' && fieldSetting.possibleValues != null && fieldSetting.possibleValues[0].type !== 'RADIO'">
+        <md-input-container
+          [ngClass]="{'Width--100': true, 'Input--Abstraction': true}">
+          <input mdInput maxlength="200" autocomplete="off" disabled="true"
+                 [ngModel]="getActivityAnswer()"
+                 placeholder="{{fieldSetting.columnDisplay}}">
+        </md-input-container>
+      </ng-container>
+
+      <ng-container *ngIf="fieldSetting.displayType === 'ACTIVITY' && fieldSetting.possibleValues != null
+      && fieldSetting.possibleValues[0].type != null && fieldSetting.possibleValues[0].type === 'RADIO'">
+        <md-radio-group disabled="true" disableRipple
+          [value]="getActivityAnswer()">
+          <div *ngFor="let radio of getOptions()">
+            <md-radio-button color="primary" value="{{radio}}">{{radio}}</md-radio-button>
+          </div>
+        </md-radio-group>
+      </ng-container>
+    </td>
+  </tr>
+</table>

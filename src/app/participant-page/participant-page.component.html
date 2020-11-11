@@ -866,6 +866,26 @@ participant.data.dsm['diagnosisYear'] != null">
                 </app-medical-record-abstraction>
               </div>
             </tab>
+            <ng-container *ngFor="let tab of settings['null']">
+              <tab heading="{{tab.columnDisplay}}" [active]="tabActive(tab.columnDisplay)" (select)="onSelect($event, tab.columnDisplay)">
+                <ng-container *ngFor="let group of settings[tab.columnName]">
+                  <div class="Display--block Width--100">
+                    <fieldset style="border: 1px black solid">
+                      <legend class="Group--Title" id="{{group.columnName}}">{{group.columnDisplay}}</legend>
+                      <ng-container *ngFor="let field of settings[group.columnName]">
+                        <ng-container *ngIf="field.displayType === 'ACTIVITY'">
+                          <app-form-data [fieldSetting]="field"
+                                         [activities]="participant.data.activities" [activityDefinitions]="activityDefinitions"></app-form-data>
+                        </ng-container>
+                        <ng-container *ngIf="field.displayType !== 'ACTIVITY'">
+                          <app-form-data [fieldTypeId]="tab.columnName" [fieldSetting]="field" [participantData]="participant.participantData"></app-form-data>
+                        </ng-container>
+                      </ng-container>
+                    </fieldset>
+                  </div>
+                </ng-container>
+              </tab>
+            </ng-container>
           </tabset>
         </ng-container>
       </div>

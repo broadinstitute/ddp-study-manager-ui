@@ -70,7 +70,7 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                 <ng-container *ngIf="qDef.questionType === 'PICKLIST' && questionAnswer.answer != null">
                   <ng-container *ngIf="qDef.selectMode === 'MULTIPLE'">
                     <ul *ngFor="let o of qDef.options">
-                      <li *ngIf="getUtil().isOptionSelected(questionAnswer.answer, o.optionStableId)"><b>{{o.optionText}}</b>
+                      <li *ngIf="getUtil().isOptionSelected(questionAnswer.answer, o.optionStableId)"><b>{{o.optionText}}</b>{{o.optionStableId}}
                         <ng-container *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, o.optionStableId) as oDetail">
                           <div>{{oDetail.details}}
                           </div>

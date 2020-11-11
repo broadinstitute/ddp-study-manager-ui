@@ -220,7 +220,7 @@ export class MedicalRecord {
       json.mrNotes, json.reviewMedicalRecord, json.type, json.nameDDP,
       json.institutionDDP, json.streetAddressDDP, json.cityDDP, json.stateDDP,
       json.isDeleted, json.oncHistoryDetails, result,
-      json.followUpRequired, json.followUpRequiredText, additionalValues );
+      json.followUpRequired, json.followUpRequiredText, additionalValues, json.mrUnableToObtainText );
   }
 
 
