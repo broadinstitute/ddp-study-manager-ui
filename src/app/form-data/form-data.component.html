@@ -4,27 +4,12 @@
       {{fieldSetting.columnDisplay}}
     </td>
     <td>
-      <ng-container *ngIf="fieldSetting.displayType === 'TEXT'">
-        <md-input-container
-          [ngClass]="{'Width--100': true, 'Input--Abstraction': true}">
-          <input mdInput maxlength="200" autocomplete="off"
-                 placeholder="{{fieldSetting.columnDisplay}}"
-                 [value]="getParticipantData(fieldSetting.columnName)">
-        </md-input-container>
-      </ng-container>
-
       <ng-container *ngIf="fieldSetting.displayType === 'NUMBER'">
         <md-input-container [ngClass]="{'Width--100': true, 'Input--Abstraction': true}">
           <input mdInput type="number"
                  placeholder="{{fieldSetting.columnDisplay}}"
-                 [ngModel]="getParticipantData(fieldSetting.columnName)">
+                 [ngModel]="getParticipantData()">
         </md-input-container>
-      </ng-container>
-
-      <ng-container *ngIf="fieldSetting.displayType === 'DATE'">
-        <app-field-datepicker [dateString]="getParticipantData(fieldSetting.columnName)" [addCheckboxEstimated]="false"
-                              [showNAButton]="false" [showNotFoundButton]="false" [allowUnknownDay]="false">
-        </app-field-datepicker>
       </ng-container>
 
       <ng-container *ngIf="fieldSetting.displayType === 'CHECKBOX'">
@@ -32,12 +17,36 @@
         </md-checkbox>
       </ng-container>
 
-      <ng-container *ngIf="fieldSetting.displayType === 'RADIO'">
-        <md-radio-group color="primary" disableRipple>
-          <div *ngFor="let radio of fieldSetting.possibleValues">
-            <md-radio-button value="{{radio.value}}">{{radio.value}}</md-radio-button>
-          </div>
-        </md-radio-group>
+      <ng-container *ngIf="fieldSetting.displayType === 'OPTIONS'">
+        <md-select [ngClass]="{'Input--Abstraction': true}" placeholder="{{fieldSetting.columnDisplay}}">
+          <md-option *ngFor="let value of fieldSetting.possibleValues" [value]="value.value">
+            <ng-container *ngIf="value.name !== undefined">
+              {{value.name}}
+            </ng-container>
+            <ng-container *ngIf="value.name === undefined && value.value !== undefined">
+              {{value.value}}
+            </ng-container>
+            <ng-container *ngIf="value.name === undefined && value.value === undefined">
+              {{value}}
+            </ng-container>
+          </md-option>
+        </md-select>
+      </ng-container>
+
+      <ng-container *ngIf="fieldSetting.displayType === 'BUTTON_SELECT'">
+        <md-button-toggle-group>
+          <md-button-toggle *ngFor="let value of fieldSetting.possibleValues" [value]="value.value">
+            <ng-container *ngIf="value.name !== undefined">
+              {{value.name}}
+            </ng-container>
+            <ng-container *ngIf="value.name === undefined && value.value !== undefined">
+              {{value.value}}
+            </ng-container>
+            <ng-container *ngIf="value.name === undefined && value.value === undefined">
+              {{value}}
+            </ng-container>
+          </md-button-toggle>
+        </md-button-toggle-group>
       </ng-container>
 
       <ng-container *ngIf="fieldSetting.displayType === 'TEXTAREA'">
@@ -45,23 +54,42 @@
                   [ngClass]="{'Width--100': true}" [value]="getParticipantData()"></textarea>
       </ng-container>
 
-      <ng-container *ngIf="fieldSetting.displayType === 'ACTIVITY' && fieldSetting.possibleValues != null && fieldSetting.possibleValues[0].type !== 'RADIO'">
+      <ng-container *ngIf="fieldSetting.displayType === 'TEXT'
+       || ((fieldSetting.displayType === 'ACTIVITY' || fieldSetting.displayType === 'ACTIVITY_STAFF') && fieldSetting.possibleValues != null && fieldSetting.possibleValues[0] != null && fieldSetting.possibleValues[0].type !== 'RADIO' && fieldSetting.possibleValues[0].type !== 'DATE')">
         <md-input-container
           [ngClass]="{'Width--100': true, 'Input--Abstraction': true}">
-          <input mdInput maxlength="200" autocomplete="off" disabled="true"
+          <input mdInput maxlength="200" autocomplete="off" [disabled]="fieldSetting.displayType === 'ACTIVITY'"
                  [ngModel]="getActivityAnswer()"
                  placeholder="{{fieldSetting.columnDisplay}}">
         </md-input-container>
       </ng-container>
 
-      <ng-container *ngIf="fieldSetting.displayType === 'ACTIVITY' && fieldSetting.possibleValues != null
-      && fieldSetting.possibleValues[0].type != null && fieldSetting.possibleValues[0].type === 'RADIO'">
-        <md-radio-group disabled="true" disableRipple
+      <ng-container *ngIf="fieldSetting.displayType === 'RADIO'
+      || ((fieldSetting.displayType === 'ACTIVITY' || fieldSetting.displayType === 'ACTIVITY_STAFF') && fieldSetting.possibleValues != null && fieldSetting.possibleValues[0] != null && fieldSetting.possibleValues[0].type != null && fieldSetting.possibleValues[0].type === 'RADIO')">
+        <md-radio-group [disabled]="fieldSetting.displayType === 'ACTIVITY'"
           [value]="getActivityAnswer()">
           <div *ngFor="let radio of getOptions()">
-            <md-radio-button color="primary" value="{{radio}}">{{radio}}</md-radio-button>
+            <ng-container *ngIf="radio.name !== undefined">
+              <md-radio-button color="primary" disableRipple
+                               value="{{radio.value}}">{{radio.name}}</md-radio-button>
+            </ng-container>
+            <ng-container *ngIf="radio.name === undefined && radio.value !== undefined">
+              <md-radio-button color="primary" disableRipple
+                               value="{{radio.value}}">{{radio.value}}</md-radio-button>
+            </ng-container>
+            <ng-container *ngIf="radio.name === undefined && radio.value === undefined">
+              <md-radio-button color="primary" disableRipple
+                               value="{{radio}}">{{radio}}</md-radio-button>
+            </ng-container>
           </div>
         </md-radio-group>
+      </ng-container>
+
+      <ng-container *ngIf="fieldSetting.displayType === 'DATE'
+       || ((fieldSetting.displayType === 'ACTIVITY' || fieldSetting.displayType === 'ACTIVITY_STAFF') && fieldSetting.possibleValues != null && fieldSetting.possibleValues[0] != null && fieldSetting.possibleValues[0].type === 'DATE')">
+        <app-field-datepicker [dateString]="getActivityAnswer()" [addCheckboxEstimated]="false" [disabled]="fieldSetting.displayType === 'ACTIVITY'"
+                              [showNAButton]="false" [showNotFoundButton]="false" [allowUnknownDay]="false">
+        </app-field-datepicker>
       </ng-container>
     </td>
   </tr>

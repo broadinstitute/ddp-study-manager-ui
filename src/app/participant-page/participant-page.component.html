@@ -880,20 +880,23 @@ participant.data.dsm['diagnosisYear'] != null">
             </tab>
             <ng-container *ngFor="let tab of settings['null']">
               <tab heading="{{tab.columnDisplay}}" [active]="tabActive(tab.columnDisplay)" (select)="onSelect($event, tab.columnDisplay)">
-                <ng-container *ngFor="let group of settings[tab.columnName]">
+                <ng-container *ngFor="let setting of settings[tab.columnName]; let settingIndex = index">
                   <div class="Display--block Width--100">
-                    <fieldset style="border: 1px black solid">
-                      <legend class="Group--Title" id="{{group.columnName}}">{{group.columnDisplay}}</legend>
-                      <ng-container *ngFor="let field of settings[group.columnName]">
-                        <ng-container *ngIf="field.displayType === 'ACTIVITY'">
-                          <app-form-data [fieldSetting]="field"
-                                         [activities]="participant.data.activities" [activityDefinitions]="activityDefinitions"></app-form-data>
+                    <ng-container *ngIf="setting.displayType === 'GROUP'">
+                      <fieldset style="border: 1px black solid">
+                        <legend class="Group--Title" id="{{setting.columnName}}">{{setting.columnDisplay}}</legend>
+                        <ng-container *ngFor="let field of settings[setting.columnName]; let fieldIndex = index">
+                          <app-form-data [fieldSetting]="field" [fieldTypeId]="tab.columnName"
+                                         [participant]="participant" [activityDefinitions]="activityDefinitions"></app-form-data>
+                          <hr *ngIf="fieldIndex !== settings[setting.columnName].length-1" style="border-color: lightgray">
                         </ng-container>
-                        <ng-container *ngIf="field.displayType !== 'ACTIVITY'">
-                          <app-form-data [fieldTypeId]="tab.columnName" [fieldSetting]="field" [participantData]="participant.participantData"></app-form-data>
-                        </ng-container>
-                      </ng-container>
-                    </fieldset>
+                      </fieldset>
+                    </ng-container>
+                    <ng-container *ngIf="setting.displayType !== 'GROUP'">
+                      <app-form-data [fieldSetting]="setting" [fieldTypeId]="tab.columnName"
+                                     [participant]="participant" [activityDefinitions]="activityDefinitions"></app-form-data>
+                      <hr *ngIf="settingIndex !== settings[tab.columnName].length-1" style="border-color: lightgray">
+                    </ng-container>
                   </div>
                 </ng-container>
               </tab>
