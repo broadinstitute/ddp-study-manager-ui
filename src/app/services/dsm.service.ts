@@ -418,6 +418,7 @@ export class DSMService {
     map.push( {name: "userId", value: this.role.userID()} );
     map.push( {name: "uploadAnyway", value: true} );
     map.push( {name: "Content-Type", value: "application/json; charset=utf-8"} );
+    map.push( {name: "reason", value: reason} );
 
     return this.http.post( url, jsonParticipants, this.buildQueryUploadHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError );
   }

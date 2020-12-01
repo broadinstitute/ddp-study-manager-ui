@@ -28,10 +28,13 @@ export class UploadComponent implements OnInit {
   errorMessage: string;
   additionalMessage: string;
 
+  selectedReason = null;
+
   loading: boolean = false;
   uploadPossible: boolean = false;
 
   kitTypes: Array<KitType> = [];
+  uploadReasons: Array<string> = [];
   kitType: KitType;
 
   file: File = null;
@@ -69,6 +72,7 @@ export class UploadComponent implements OnInit {
           if (localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) === val) {
             this.allowedToSeeInformation = true;
             this.getPossibleKitType();
+            this.getUploadReasons();
           }
         } );
         if (!this.allowedToSeeInformation) {
@@ -117,6 +121,31 @@ export class UploadComponent implements OnInit {
     }
   }
 
+  getUploadReasons() {
+    if (localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) != null && localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) !== "") {
+      this.loading = true;
+      let jsonData: any[];
+      this.dsmService.getUploadReasons( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) ).subscribe(
+        data => {
+          this.uploadReasons = [];
+          jsonData = data;
+          console.log( data );
+          jsonData.forEach( ( val ) => {
+            this.uploadReasons.push( val );
+          } );
+          this.loading = false;
+        },
+        err => {
+          if (err._body === Auth.AUTHENTICATION_ERROR) {
+            this.auth.logout();
+          }
+          this.loading = false;
+          this.errorMessage = "Error - Loading kit upload reasons\n" + err;
+        }
+      );
+    }
+  }
+
   typeChecked( type: KitType ) {
     this.uploadPossible = false;
     if (type.selected) {
@@ -141,7 +170,7 @@ export class UploadComponent implements OnInit {
     this.failedParticipants = [];
     this.loading = true;
     let jsonData: any[];
-    this.dsmService.uploadTxtFile( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.kitType.name, this.file ).subscribe(
+    this.dsmService.uploadTxtFile( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.kitType.name, this.file, this.selectedReason ).subscribe(
       data => {
         this.loading = false;
         // console.log(`received: ${JSON.stringify(data, null, 2)}`);
@@ -223,7 +252,7 @@ export class UploadComponent implements OnInit {
       }
     }
     let jsonParticipants = JSON.stringify( array );
-    this.dsmService.uploadDuplicateParticipant( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.kitType.name, jsonParticipants ).subscribe(
+    this.dsmService.uploadDuplicateParticipant( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.kitType.name, jsonParticipants, this.selectedReason ).subscribe(
       data => {
         this.loading = false;
         if (typeof data === "string") {
@@ -266,4 +295,13 @@ export class UploadComponent implements OnInit {
     return this.compService;
   }
 
+  chooseReason( selected ) {
+    if (this.selectedReason !== selected) {
+      this.selectedReason = selected;
+    }
+    else {
+      this.selectedReason = null;
+    }
+    console.log( this.selectedReason );
+  }
 }
