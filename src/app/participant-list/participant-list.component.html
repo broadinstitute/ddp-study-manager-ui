@@ -250,6 +250,20 @@
             <ng-container *ngFor="let alias of getKeys()">
               <td *ngFor="let col of selectedColumns[alias]"
                   (click)="openParticipant(pt, alias)">
+                <ng-container *ngIf="col.participantColumn.esData && pt.proxyData != null">
+                  <ng-container *ngIf="col.participantColumn.tableAlias === 'proxy'">
+                    <ul class="NO-PADDING-START">
+                      <li class="LIST-SEPARATOR" *ngFor="let proxy of pt.proxyData">
+                        <p class="BIT-OF-MARGIN" *ngIf="proxy != null">
+                          <ng-container *ngIf="col.type === 'TEXT'">
+                            {{proxy.profile[col.participantColumn.name]}}
+                          </ng-container>
+                        </p>
+                      </li>
+                    </ul>
+                  </ng-container>
+                </ng-container>
+
                 <ng-container *ngIf="col.participantColumn.esData && pt.data.invitations != null">
                   <ng-container *ngIf="col.participantColumn.tableAlias === 'invitations'">
                     <ul class="NO-PADDING-START">

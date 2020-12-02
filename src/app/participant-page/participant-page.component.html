@@ -127,6 +127,23 @@ participant.data.dsm['diagnosisYear'] != null">
           </tr>
           </tbody>
         </table>
+        <ng-container *ngIf="participant.proxyData != null && participant.proxyData.length > 0">
+          <b>Proxy Data</b>
+          <table class="table table-condensed">
+            <tbody>
+              <ng-container *ngFor="let proxy of participant.proxyData">
+                <tr>
+                  <td>Name</td>
+                  <td>{{proxy.profile['firstName']}} {{proxy.profile['lastName']}}</td>
+                </tr>
+                <tr *ngIf="proxy.profile['email'] != null">
+                  <td>E-Mail</td>
+                  <td>{{proxy.profile['email']}}</td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </ng-container>
         <ng-container *ngIf="participant.data.invitations != null && participant.data.invitations.length > 0">
           <ng-container *ngFor="let invitation of participant.data.invitations">
             <app-invitation-data *ngIf="invitation != null" [invitation]="invitation"></app-invitation-data>
