@@ -36,19 +36,33 @@
     <div>
       <b>Select reason to upload this batch</b>
     </div>
-    <div *ngFor="let uploadReason of this.uploadReasons">
-      <md-checkbox color="primary" [checked]="selectedReason === uploadReason"
-                   (change)="chooseReason(uploadReason)"
-                   disableRipple>{{uploadReason}}</md-checkbox>
+    <div>
+      <md-select [(ngModel)]="this.selectedReason">
+        <md-option *ngFor="let uploadReason of this.uploadReasons" value="{{uploadReason}}">{{uploadReason}}</md-option>
+      </md-select>
+    </div>
+  </div>
+  <br>
+  <div *ngIf="carriers.length > 0">
+    <div>
+      <b>Select Shipping Carrier</b>
+    </div>
+    <div>
+      <md-select [(ngModel)]="this.selectedCarrier">
+        <md-option *ngFor="let carrier of this.carriers" value="{{carrier}}">{{carrier}}</md-option>
+      </md-select>
     </div>
   </div>
   <br/>
-  <div *ngIf="kitType != null && (uploadReasons.length == 0 || selectedReason !== null)" class="Width--80">
+  <div *ngIf="kitType != null && (uploadReasons.length == 0 || selectedReason !== null)  && (carriers.length == 0 || selectedCarrier !== null)" class="Width--80">
     <app-filepicker [id]="'kitUploadFile'" [fileFormat]="'txt'" (fileSelected)="fileSelected($event)"></app-filepicker>
     <button type="button" md-raised-button color="primary"
             (click)="upload()"
             [disabled]="!(uploadPossible && file != null) || loading">Upload Kits
     </button>
+  </div>
+  <div>
+
   </div>
 
   <div *ngIf="failedParticipants != null && failedParticipants.length > 0">

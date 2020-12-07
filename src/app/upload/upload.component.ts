@@ -29,12 +29,14 @@ export class UploadComponent implements OnInit {
   additionalMessage: string;
 
   selectedReason = null;
+  selectedCarrier = null;
 
   loading: boolean = false;
   uploadPossible: boolean = false;
 
   kitTypes: Array<KitType> = [];
   uploadReasons: Array<string> = [];
+  carriers: Array<string> = [];
   kitType: KitType;
 
   file: File = null;
@@ -73,6 +75,7 @@ export class UploadComponent implements OnInit {
             this.allowedToSeeInformation = true;
             this.getPossibleKitType();
             this.getUploadReasons();
+            this.getShippingCarriers();
           }
         } );
         if (!this.allowedToSeeInformation) {
@@ -146,6 +149,31 @@ export class UploadComponent implements OnInit {
     }
   }
 
+  getShippingCarriers() {
+    if (localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) != null && localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) !== "") {
+      this.loading = true;
+      let jsonData: any[];
+      this.dsmService.getShippingCarriers( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) ).subscribe(
+        data => {
+          this.carriers = [];
+          jsonData = data;
+          console.log( data );
+          jsonData.forEach( ( val ) => {
+            this.carriers.push( val );
+          } );
+          this.loading = false;
+        },
+        err => {
+          if (err._body === Auth.AUTHENTICATION_ERROR) {
+            this.auth.logout();
+          }
+          this.loading = false;
+          this.errorMessage = "Error - Loading shipping carriers\n" + err;
+        }
+      );
+    }
+  }
+
   typeChecked( type: KitType ) {
     this.uploadPossible = false;
     if (type.selected) {
@@ -170,7 +198,7 @@ export class UploadComponent implements OnInit {
     this.failedParticipants = [];
     this.loading = true;
     let jsonData: any[];
-    this.dsmService.uploadTxtFile( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.kitType.name, this.file, this.selectedReason ).subscribe(
+    this.dsmService.uploadTxtFile( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.kitType.name, this.file, this.selectedReason, this.selectedCarrier ).subscribe(
       data => {
         this.loading = false;
         // console.log(`received: ${JSON.stringify(data, null, 2)}`);
@@ -252,7 +280,7 @@ export class UploadComponent implements OnInit {
       }
     }
     let jsonParticipants = JSON.stringify( array );
-    this.dsmService.uploadDuplicateParticipant( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.kitType.name, jsonParticipants, this.selectedReason ).subscribe(
+    this.dsmService.uploadDuplicateParticipant( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.kitType.name, jsonParticipants, this.selectedReason, this.selectedCarrier ).subscribe(
       data => {
         this.loading = false;
         if (typeof data === "string") {
@@ -295,13 +323,4 @@ export class UploadComponent implements OnInit {
     return this.compService;
   }
 
-  chooseReason( selected ) {
-    if (this.selectedReason !== selected) {
-      this.selectedReason = selected;
-    }
-    else {
-      this.selectedReason = null;
-    }
-    console.log( this.selectedReason );
-  }
 }
