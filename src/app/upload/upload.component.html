@@ -54,7 +54,7 @@
     </div>
   </div>
   <br/>
-  <div *ngIf="kitType != null && (uploadReasons.length == 0 || selectedReason !== null)  && (carriers.length == 0 || selectedCarrier !== null)" class="Width--80">
+  <div *ngIf="allOptionesSelected()" class="Width--80">
     <app-filepicker [id]="'kitUploadFile'" [fileFormat]="'txt'" (fileSelected)="fileSelected($event)"></app-filepicker>
     <button type="button" md-raised-button color="primary"
             (click)="upload()"

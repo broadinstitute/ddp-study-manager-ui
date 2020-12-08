@@ -132,7 +132,6 @@ export class UploadComponent implements OnInit {
         data => {
           this.uploadReasons = [];
           jsonData = data;
-          console.log( data );
           jsonData.forEach( ( val ) => {
             this.uploadReasons.push( val );
           } );
@@ -157,7 +156,6 @@ export class UploadComponent implements OnInit {
         data => {
           this.carriers = [];
           jsonData = data;
-          console.log( data );
           jsonData.forEach( ( val ) => {
             this.carriers.push( val );
           } );
@@ -323,4 +321,8 @@ export class UploadComponent implements OnInit {
     return this.compService;
   }
 
+  allOptionesSelected() {
+    return this.kitType != null && ( this.uploadReasons.length == 0 || this.selectedReason !== null ) &&
+      ( this.carriers.length == 0 || this.selectedCarrier !== null );
+  }
 }
