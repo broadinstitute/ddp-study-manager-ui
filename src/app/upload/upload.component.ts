@@ -110,6 +110,9 @@ export class UploadComponent implements OnInit {
             let kitType = KitType.parse( val );
             this.kitTypes.push( kitType );
           } );
+          if (this.kitTypes.length == 1) {
+            this.kitType = this.kitTypes[ 0 ];
+          }
           // console.info(`${this.kitTypes.length} kit types received: ${JSON.stringify(data, null, 2)}`);
           this.loading = false;
         },
@@ -173,10 +176,8 @@ export class UploadComponent implements OnInit {
   }
 
   typeChecked( type: KitType ) {
-    this.uploadPossible = false;
     if (type.selected) {
       this.kitType = type;
-      this.uploadPossible = true;
     }
     else {
       this.kitType = null;
@@ -322,7 +323,8 @@ export class UploadComponent implements OnInit {
   }
 
   allOptionesSelected() {
-    return this.kitType != null && ( this.uploadReasons.length == 0 || this.selectedReason !== null ) &&
+    this.uploadPossible = this.kitType != null && ( this.uploadReasons.length == 0 || this.selectedReason !== null ) &&
       ( this.carriers.length == 0 || this.selectedCarrier !== null );
+    return this.uploadPossible;
   }
 }
