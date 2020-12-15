@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AbstractionGroup} from "../abstraction-group/abstraction-group.model";
 import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
+import {Group} from "../activity-data/models/group.model";
 import {Option} from "../activity-data/models/option.model";
 import {QuestionAnswer} from "../activity-data/models/question-answer.model";
 import {QuestionDefinition} from "../activity-data/models/question-definition.model";
@@ -255,9 +256,26 @@ export class ParticipantListComponent implements OnInit {
                   if (question.questionType === "PICKLIST") {
                     options = new Array<NameValue>();
                     type = Filter.OPTION_TYPE;
-                    question.options.forEach( ( value: Option ) => {
-                      options.push( new NameValue( value.optionStableId, value.optionText ) );
-                    } );
+                    if (question.options != null) {
+                      question.options.forEach( ( option: Option ) => {
+                        options.push( new NameValue( option.optionStableId, option.optionText ) );
+                        if (option != null && option.nestedOptions != null) {
+                          option.nestedOptions.forEach( ( nOption: Option ) => {
+                            options.push( new NameValue( option.optionStableId + "." + nOption.optionStableId, nOption.optionText ) );
+                          } )
+                        }
+                      } );
+                    }
+                    if (question.groups != null) {
+                      question.groups.forEach( ( group: Group ) => {
+                        options.push( new NameValue( group.groupStableId, group.groupText ) );
+                        if (group.options != null) {
+                          group.options.forEach( ( gOption: Option ) => {
+                            options.push( new NameValue( group.groupStableId + "." + gOption.optionStableId, gOption.optionText ) );
+                          } )
+                        }
+                      } );
+                    }
                   } else if (question.questionType === "NUMERIC") {
                     type = Filter.NUMBER_TYPE;
                   }
@@ -507,7 +525,6 @@ export class ParticipantListComponent implements OnInit {
               this.copyParticipantList = [];
               let jsonData: any[];
               jsonData = data;
-              console.info(data);
               jsonData.forEach( ( val ) => {
                 let participant = Participant.parse( val );
                 this.participantList.push( participant );
@@ -582,7 +599,6 @@ export class ParticipantListComponent implements OnInit {
           this.copyParticipantList = [];
           let jsonData: any[];
           jsonData = data;
-          console.info(data);
           jsonData.forEach( ( val ) => {
             let participant = Participant.parse( val );
             this.participantList.push( participant );
