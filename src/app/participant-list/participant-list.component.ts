@@ -210,9 +210,11 @@ export class ParticipantListComponent implements OnInit {
               let options: Array<NameValue> = null;
               if (fieldSetting.displayType === "OPTIONS") {
                 options = new Array<NameValue>();
-                fieldSetting.possibleValues.forEach( ( value: Value ) => {
-                  options.push( new NameValue( value.value, value.value ) );
-                } );
+                if (fieldSetting.possibleValues != null) {
+                  fieldSetting.possibleValues.forEach( ( value: Value ) => {
+                    options.push( new NameValue( value.value, value.value ) );
+                  } );
+                }
               }
               let filter = new Filter( new ParticipantColumn( fieldSetting.columnDisplay, fieldSetting.columnName, key ), Filter.ADDITIONAL_VALUE_TYPE, options, new NameValue( fieldSetting.columnName, null ),
                 false, true, null, null, null, null, false, false, false, false, fieldSetting.displayType );

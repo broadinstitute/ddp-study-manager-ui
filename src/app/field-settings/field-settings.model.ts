@@ -12,18 +12,19 @@ export class FieldSettings {
   spaceError: boolean = false;
 
   constructor(public fieldSettingId: string, public columnName: string, public columnDisplay: string, public fieldType: string,
-              public displayType: string, public possibleValues: Value[]) {
+              public displayType: string, public possibleValues: Value[], public orderNumber: number) {
     this.fieldSettingId = fieldSettingId;
     this.columnName = columnName;
     this.columnDisplay = columnDisplay;
     this.fieldType = fieldType;
     this.displayType = displayType;
     this.possibleValues = possibleValues;
+    this.orderNumber = orderNumber;
   }
 
   static parse(json): FieldSettings {
     return new FieldSettings(json.fieldSettingId, json.columnName, json.columnDisplay, json.fieldType,
-      json.displayType, json.hasOwnProperty("possibleValues") ? json.possibleValues : []);
+      json.displayType, json.hasOwnProperty("possibleValues") ? json.possibleValues : [], json.orderNumber);
   }
 
   static addSettingWithType(map: Map<string, Array<FieldSettings>>, setting: FieldSettings, type: FieldType) {

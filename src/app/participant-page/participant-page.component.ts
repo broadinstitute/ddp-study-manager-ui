@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
 import {TabDirective} from "ngx-bootstrap";
 import {ActivatedRoute, Router} from "@angular/router";
+import {ActivityData} from "../activity-data/activity-data.model";
 import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
 import {PreferredLanguage} from "../participant-list/models/preferred-languages.model";
 import {Participant} from "../participant-list/participant-list.model";
