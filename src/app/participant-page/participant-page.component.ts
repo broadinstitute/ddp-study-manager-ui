@@ -41,6 +41,7 @@ export class ParticipantPageComponent implements OnInit {
   @Input() drugs: string[];
   @Input() cancers: string[];
   @Input() preferredLanguage: Array<PreferredLanguage>;
+  @Input() hideMRTissueWorkflow: boolean;
   @Input() activeTab: string;
   @Input() activityDefinitions: Array<ActivityDefinition>;
   @Input() settings: {};
@@ -58,7 +59,7 @@ export class ParticipantPageComponent implements OnInit {
   errorMessage: string;
   additionalMessage: string;
 
-  _showWarningModal = false;
+  source = 'normal';
 
   loadingParticipantPage: boolean = false;
 
@@ -89,6 +90,10 @@ export class ParticipantPageComponent implements OnInit {
   pdfs: Array<PDFModel> = [];
   selectedPDF: string;
   disableDownload: boolean = false;
+
+  downloading: boolean = false;
+  message: string = null;
+  bundle: boolean = false;
 
   constructor( private auth: Auth, private compService: ComponentService, private dsmService: DSMService, private router: Router,
                private role: RoleService, private util: Utils, private route: ActivatedRoute) {
@@ -141,8 +146,24 @@ export class ParticipantPageComponent implements OnInit {
       if (this.participant.data.status === undefined || this.participant.data.status.indexOf( Statics.CONSENT_SUSPENDED ) == -1) {
         this.participantNotConsented = false;
       }
-      if (this.participant.data.dsm != null && this.participant.data.dsm[ "pdfs" ] != null) {
-        this.pdfs = this.participant.data.dsm[ "pdfs" ];
+      this.pdfs = new Array<PDFModel>();
+      if (this.participant.data != null && this.participant.data.dsm != null && this.participant.data.dsm[ "pdfs" ] != null && this.participant.data.dsm[ "pdfs" ].length > 0) {
+        let tmp = this.participant.data.dsm[ "pdfs" ];
+        if (tmp != null && tmp.length > 0) {
+          this.pdfs.push(new PDFModel('cover','Cover PDF', 1));
+          tmp.forEach( (pdf, index) => {
+            pdf.order = index + 2;// +2 because 1 is cover pdf
+            this.pdfs.push(pdf);
+          })
+          this.pdfs.push(new PDFModel('irb','IRB Letter', tmp.length + 2));
+        }
+      }
+      else if (!this.hideMRTissueWorkflow) {
+        //TODO can be removed when all studies are migrated
+        this.pdfs.push(new PDFModel('cover','Cover PDF', 1));
+        this.pdfs.push(new PDFModel('consent','Consent PDF', 2));
+        this.pdfs.push(new PDFModel('release','Release PDF', 3));
+        this.pdfs.push(new PDFModel('irb','IRB Letter', 4));
       }
       //if surveys is null then it is a gen2 participant > go and get institution information
       if (this.participant.data.activities == null) {
@@ -417,26 +438,28 @@ export class ParticipantPageComponent implements OnInit {
     this.isOncHistoryDetailChanged = true;
   }
 
-  doRequest() {
+  doRequest(bundle: boolean) {
     let requestOncHistoryList: Array<OncHistoryDetail> = [];
     for (let oncHis of this.participant.oncHistoryDetails) {
       if (oncHis.selected) {
         requestOncHistoryList.push( oncHis );
       }
     }
-    this.downloadRequestPDF( requestOncHistoryList );
+    this.downloadRequestPDF( requestOncHistoryList, bundle );
     this.disableTissueRequestButton = true;
-    this._showWarningModal = false;
+    this.source = 'normal';
     this.universalModal.hide();
   }
 
-  requestTissue() {
-    this._showWarningModal = true;
+  requestTissue(bundle: boolean) {
+    this.bundle = bundle;
     this.warning = null;
     let doIt: boolean = true;
+    let somethingSelected: boolean = false;
     let firstOncHis: OncHistoryDetail = null;
     for (let oncHis of this.participant.oncHistoryDetails) {
       if (oncHis.selected) {
+        somethingSelected = true;
         if (firstOncHis == null) {
           firstOncHis = oncHis;
           this.facilityName = firstOncHis.facility;
@@ -444,7 +467,8 @@ export class ParticipantPageComponent implements OnInit {
         if (typeof firstOncHis.facility === "undefined" || firstOncHis.facility == null) {
           this.warning = "Facility is empty";
           doIt = false;
-        } else if (this.participant.kits != null) {
+        }
+        else if (this.participant.kits != null) {
           //no samples for pt
           let kitReturned: boolean = false;
           for (let kit of this.participant.kits) {
@@ -457,7 +481,8 @@ export class ParticipantPageComponent implements OnInit {
             doIt = false;
             this.warning = "No samples returned for participant yet";
           }
-        } else {
+        }
+        else {
           if (firstOncHis.facility !== oncHis.facility ||
             firstOncHis.fPhone !== oncHis.fPhone ||
             firstOncHis.fFax !== oncHis.fFax) {
@@ -468,8 +493,13 @@ export class ParticipantPageComponent implements OnInit {
       }
     }
     if (doIt && this.facilityName != null) {
-      this.doRequest();
-    } else {
+      this.doRequest(bundle);
+    }
+    else {
+      this.source = 'warning';
+      if (!somethingSelected) {
+        this.warning = "No tissue selected for requesting";
+      }
       this.universalModal.show();
     }
   }
@@ -513,14 +543,11 @@ export class ParticipantPageComponent implements OnInit {
     this.universalModal.hide();
   }
 
-  downloadRequestPDF( requestOncHistoryList: Array<OncHistoryDetail> ) {
-    let map: { name: string, value: any }[] = [];
-    map.push( {name: DSMService.REALM, value: localStorage.getItem( ComponentService.MENU_SELECTED_REALM )} );
-    for (let onc of requestOncHistoryList) {
-      map.push( {name: "requestId", value: onc.oncHistoryDetailId} );
-    }
-    let ddpParticipantId = this.participant.participant.ddpParticipantId;
-    this.dsmService.downloadTissueRequestPDFs( ddpParticipantId, map ).subscribe(
+  downloadRequestPDF( requestOncHistoryList: Array<OncHistoryDetail>, bundle: boolean ) {
+    this.downloading = true;
+    this.message = "Downloading... This might take a while";
+    this.dsmService.downloadPDF( this.participant.participant.ddpParticipantId, null, null, null, null,
+      localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), "tissue", this.pdfs, requestOncHistoryList).subscribe(
       data => {
         var date = new Date();
         this.downloadFile( data, "_TissueRequest_" + this.facilityName + "_" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) );
@@ -551,13 +578,16 @@ export class ParticipantPageComponent implements OnInit {
           }
           this.facilityName = null;
         }
+        this.downloading = false;
+        this.message = "Download finished."
       },
       err => {
         if (err._body === Auth.AUTHENTICATION_ERROR) {
           this.router.navigate( [Statics.HOME_URL] );
         }
         this.disableTissueRequestButton = false;
-        this.additionalMessage = "Error - Downloading pdf file\nPlease contact your DSM developer";
+        this.downloading = false;
+        this.message = "Failed to download pdf.";
       }
     );
     window.scrollTo( 0, 0 );
@@ -915,7 +945,8 @@ export class ParticipantPageComponent implements OnInit {
 
   downloadPDFs( configName: string ) {
     this.disableDownload = true;
-    this.dsmService.downloadPDF( this.participant.data.profile[ 'guid' ], this.compService.getRealm(), configName ).subscribe(
+    this.dsmService.downloadPDF( this.participant.data.profile[ 'guid' ], null, null, null,null,
+      this.compService.getRealm(), configName, null, null).subscribe(
       data => {
         this.downloadFile( data, "_" + configName );
         this.disableDownload = false;
@@ -928,5 +959,11 @@ export class ParticipantPageComponent implements OnInit {
         this.disableDownload = false;
       },
     );
+  }
+
+  doNothing(source: string) { //needed for the menu, otherwise page will refresh!
+    this.source = source;
+    this.universalModal.show();
+    return false;
   }
 }
