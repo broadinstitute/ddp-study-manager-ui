@@ -300,12 +300,12 @@ export class ParticipantListComponent implements OnInit {
               this.sourceColumns[ "a" ].push( new Filter( new ParticipantColumn( field.displayName, tmp, abstractionGroup.abstractionGroupId.toString(), "final" ), tmpType, tmpValues, new NameValue( tmp, null ) ) );
             } );
           } );
-          //add now all these columns to allFieldsName for the search-bar
-          this.sourceColumns[ "a" ].forEach( filter => {
-            let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
-            //add when abstraction is searchable
-            // this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
-          } );
+          //TODO add when abstraction is searchable
+          // add now all these columns to allFieldsName for the search-bar
+          // this.sourceColumns[ "a" ].forEach( filter => {
+          //   let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
+          //   // this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
+          // } );
         }
         else {
           this.dataSources.delete( "a" );
@@ -398,10 +398,11 @@ export class ParticipantListComponent implements OnInit {
 
           this.sourceColumns[ "proxy" ] = possibleColumns;
           this.selectedColumns[ "proxy" ] = [];
-          possibleColumns.forEach( filter => {
-            let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
-            this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
-          } );
+          //TODO add when proxy is searchable
+          // possibleColumns.forEach( filter => {
+          //   let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
+          //   this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
+          // } );
           this.orderColumns();
         }
         if (jsonData.hideESFields != null) {
