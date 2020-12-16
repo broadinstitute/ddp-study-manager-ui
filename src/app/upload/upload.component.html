@@ -11,7 +11,7 @@
   <br/>
 </div>
 
-  <span [hidden]="!loading" class="Width--100">
+<span [hidden]="!loading" class="Width--100">
     <div align="center" class="Width--100 Height--100">
       <i class="fas fa-spinner fa-spin fa-5x Color--primary"></i>
       <br/>
@@ -25,19 +25,44 @@
   <div class="Width--60">
     <div *ngIf="kitTypes != null && kitTypes.length > 0">
       <div *ngFor="let type of kitTypes">
-        <md-checkbox color="primary" [checked]="type.selected"
+        <md-checkbox color="primary" [checked]="type.selected || kitTypes.length == 1"
                      (change)="type.selected = $event.checked; typeChecked(type)"
                      disableRipple>{{type.displayName}}</md-checkbox>
       </div>
     </div>
   </div>
   <br/>
-  <div *ngIf="kitType != null" class="Width--80">
+  <div *ngIf="uploadReasons.length > 0">
+    <div>
+      <b>Select reason to upload this batch</b>
+    </div>
+    <div>
+      <md-select [(ngModel)]="this.selectedReason">
+        <md-option *ngFor="let uploadReason of this.uploadReasons" value="{{uploadReason}}">{{uploadReason}}</md-option>
+      </md-select>
+    </div>
+  </div>
+  <br>
+  <div *ngIf="carriers.length > 0">
+    <div>
+      <b>Select Shipping Carrier</b>
+    </div>
+    <div>
+      <md-select [(ngModel)]="this.selectedCarrier">
+        <md-option *ngFor="let carrier of this.carriers" value="{{carrier}}">{{carrier}}</md-option>
+      </md-select>
+    </div>
+  </div>
+  <br/>
+  <div *ngIf="allOptionesSelected()" class="Width--80">
     <app-filepicker [id]="'kitUploadFile'" [fileFormat]="'txt'" (fileSelected)="fileSelected($event)"></app-filepicker>
     <button type="button" md-raised-button color="primary"
             (click)="upload()"
             [disabled]="!(uploadPossible && file != null) || loading">Upload Kits
     </button>
+  </div>
+  <div>
+
   </div>
 
   <div *ngIf="failedParticipants != null && failedParticipants.length > 0">
