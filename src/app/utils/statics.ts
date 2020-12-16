@@ -23,6 +23,7 @@ export class Statics {
   public static UNSENT_OVERVIEW: string = "unsentOverview";
   public static SHIPPING_DASHBOARD: string = "shippingDashboard";
   public static MEDICALRECORD_DASHBOARD: string = "medicalRecordDashboard";
+  public static DYNAMIC_DASHBOARD: string = "dynamicDashboard";
 
   public static EMAIL_EVENT: string = "emailEvent";
   public static EMAIL_EVENT_FOLLOW_UP: string = "emailEventFollowUp";
