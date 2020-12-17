@@ -378,6 +378,7 @@ export class MedicalRecordComponent implements OnInit {
 
   close() {
     this.modal.hide();
+    return false;
   }
 
   startDateChanged( date: string ) {

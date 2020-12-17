@@ -1,3 +1,4 @@
+import {Group} from "./group.model";
 import {Option} from "./option.model";
 
 export class QuestionDefinition {
