@@ -112,6 +112,7 @@ export class DashboardComponent implements OnInit {
                     let result = Result.parse( data );
                     if (result.code != null && result.code !== 200) {
                       this.errorMessage = "Error - Getting all participant numbers\nPlease contact your DSM developer";
+                      console.log('Error while looking up medical records dashboard: ' + data);
                     }
                     else {
                       this.ddp = DDPInformation.parse( data );
