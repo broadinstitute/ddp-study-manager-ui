@@ -107,37 +107,44 @@ export class DashboardComponent implements OnInit {
             jsonData.forEach( ( val ) => {
               if (localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) === val) {
                 this.allowedToSeeInformation = true;
-                this.dsmService.getMedicalRecordDashboard( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), startDate, endDate ).subscribe(
-                  data => {
-                    let result = Result.parse( data );
-                    if (result.code != null && result.code !== 200) {
-                      this.errorMessage = "Error - Getting all participant numbers\nPlease contact your DSM developer";
+                if (localStorage.getItem(ComponentService.MENU_SELECTED_REALM) !== "testboston") {
+                  this.dsmService.getMedicalRecordDashboard( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), startDate, endDate ).subscribe(
+                    data => {
+                      let result = Result.parse( data );
+                      if (result.code != null && result.code !== 200) {
+                        this.errorMessage = "Error - Getting all participant numbers\nPlease contact your DSM developer";
+                      } else {
+                        this.ddp = DDPInformation.parse( data );
+                        this.activityKeys = this.getActivityKeys( this.ddp.dashboardValues );
+                        this.activityKeys.forEach( value => this.showActivityDetails[ value ] = false );
+                        this.getSourceColumnsFromFilterClass();
+                        this.loadSettings();
+                      }
+                    },
+                    err => {
+                      if (err._body === Auth.AUTHENTICATION_ERROR) {
+                        this.auth.logout();
+                      }
+                      this.loadingDDPData = false;
+                      this.errorMessage = "Error - Loading ddp information\nPlease contact your DSM developer";
                     }
-                    else {
-                      this.ddp = DDPInformation.parse( data );
-                      this.activityKeys = this.getActivityKeys( this.ddp.dashboardValues );
-                      this.activityKeys.forEach( value => this.showActivityDetails[ value ] = false );
-                      this.getSourceColumnsFromFilterClass();
-                      this.loadSettings();
-                    }
-                  },
-                  err => {
-                    if (err._body === Auth.AUTHENTICATION_ERROR) {
-                      this.auth.logout();
-                    }
-                    this.loadingDDPData = false;
-                    this.errorMessage = "Error - Loading ddp information\nPlease contact your DSM developer";
-                  }
-                );
+                  );
+                }
+                else {
+                  console.log("here");
+                  this.loadingDDPData = false;
+                  this.additionalMessage = "Currently no dashboard available...";
+                  console.log(this.additionalMessage);
+                }
               }
             } );
             if (!this.allowedToSeeInformation) {
               this.additionalMessage = "You are not allowed to see information of the selected realm at that category";
               this.loadingDDPData = false;
             }
-            else {
-              this.additionalMessage = null;
-            }
+            // else {
+              // this.additionalMessage = null;
+            // }
           },
           err => {
             return null;
@@ -188,6 +195,8 @@ export class DashboardComponent implements OnInit {
     else {
       this.additionalMessage = "Please select a realm";
     }
+
+    console.log(this.additionalMessage);
   }
 
   getDashboardInformation( url: string ) {
