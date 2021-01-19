@@ -284,6 +284,7 @@ export class Utils {
             if (fieldName !== "") {
               let value = this.getObjectAdditionalValue (o, fieldName, col);
               value = value == undefined ? "" : value;
+              value.replace("[\\r\\n]", " ");
               str = str + "\"" + value + "\"" + ",";
             }
           }
@@ -323,6 +324,7 @@ export class Utils {
                     } );
                   } );
                   value = tmp.trim();
+                  value.replace("[\\r\\n]", " ");
                 }
                 str = str + "\"" + value + "\"" + ","; //TODO make answer pretty
               }
@@ -337,6 +339,7 @@ export class Utils {
               value = this.getDateFormatted(value, Utils.DATE_STRING_IN_CVS);
             }
             value = value == undefined ? "" : value;
+            value.replace("[\\r\\n]", " ");
             str = str + "\"" + value + "\"" + ",";
           }
         }
@@ -385,6 +388,7 @@ export class Utils {
               }
             }
           }
+          value.replace("[\\r\\n]", " ");
           str = str + "\"" + value + "\"" + ",";
         }
       }

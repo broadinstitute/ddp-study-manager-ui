@@ -233,7 +233,7 @@ export class Filter {
     Filter.TISSUE_FIRST_SM_ID, Filter.TISSUE_SHL_NUMBER, Filter.TISSUE_TUMOR_PERCENT, Filter.TISSUE_SEQUENCE, Filter.SCROLLS_COUNT,
     Filter.USS_COUNT, Filter.H_E_COUNT, Filter.BLOCKS_COUNT,
     Filter.COLLABORATOR_SAMPLE, Filter.SAMPLE_SENT, Filter.SAMPLE_RECEIVED, Filter.SAMPLE_DEACTIVATION, Filter.SAMPLE_QUEUE,
-    Filter.TRACKING_TO_PARTICIPANT, Filter.TRACKING_RETURN, Filter.MF_BARCODE, Filter.STATUS_OUT, Filter.STATUS_IN, Filter.RESULT_TEST, Filter.CORRECTED_TEST, Filter.TIME_TEST,
+    Filter.TRACKING_TO_PARTICIPANT, Filter.TRACKING_RETURN, Filter.MF_BARCODE, Filter.STATUS_OUT, Filter.STATUS_IN, Filter.RESULT_TEST, Filter.CORRECTED_TEST, Filter.TIME_TEST, Filter.CARE_EVOLVE,
     Filter.ABSTRACTION_ACTIVITY, Filter.ABSTRACTION_STATUS, Filter.ABSTRACTION_USER ];
 
   constructor( public participantColumn: ParticipantColumn, public type: string, public options?: NameValue[], public filter2?: NameValue,
