@@ -6,9 +6,11 @@ import {Option} from "../activity-data/models/option.model";
 import {QuestionAnswer} from "../activity-data/models/question-answer.model";
 import {QuestionDefinition} from "../activity-data/models/question-definition.model";
 import {Assignee} from "../assignee/assignee.model";
+import {FieldSettings} from "../field-settings/field-settings.model";
 import {Filter} from "../filter-column/filter-column.model";
-import {ModalComponent} from "../modal/modal.component";
 import {ParticipantColumn} from "../filter-column/models/column.model";
+import {ViewFilter} from "../filter-column/models/view-filter.model";
+import {ModalComponent} from "../modal/modal.component";
 import {OncHistoryDetail} from "../onc-history-detail/onc-history-detail.model";
 import {Auth} from "../services/auth.service";
 import {ComponentService} from "../services/component.service";
@@ -20,12 +22,10 @@ import {PatchUtil} from "../utils/patch.model";
 import {Result} from "../utils/result.model";
 import {Statics} from "../utils/statics";
 import {Utils} from "../utils/utils";
-import {ViewFilter} from "../filter-column/models/view-filter.model";
 import {Value} from "../utils/value.model";
 import {AssigneeParticipant} from "./models/assignee-participant.model";
 import {PreferredLanguage} from "./models/preferred-languages.model";
 import {Participant} from "./participant-list.model";
-import {FieldSettings} from "../field-settings/field-settings.model";
 
 @Component( {
   selector: "app-participant-list",
