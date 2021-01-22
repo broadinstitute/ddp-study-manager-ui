@@ -395,6 +395,7 @@ export class Filter {
           if (filter.type === Filter.JSON_ARRAY_TYPE) {
             newFilter.filter1 = new NameValue( f.participantColumn.object, filter.filter1.value );
             newFilter.parentName = f.participantColumn.tableAlias;
+            newFilter.filter2 = f.filter2;
           }
           filters.push( newFilter );
         }
