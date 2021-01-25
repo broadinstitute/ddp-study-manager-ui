@@ -336,7 +336,7 @@ export class Utils {
               value = o[ col.participantColumn.object ][ col.participantColumn.name ];
             }
             if (col.type === Filter.DATE_TYPE) {
-              value = this.getDateFormatted(value, Utils.DATE_STRING_IN_CVS);
+              value = this.getDateFormatted(new Date(value), Utils.DATE_STRING_IN_CVS);
             }
             value = value == undefined ? "" : value;
             value.replace("[\\r\\n]", " ");
