@@ -26,6 +26,11 @@ export class AppComponent implements OnInit {
     return false;
   }
 
+  selectRealmAndDoNothing( newValue ) {
+    this.auth.selectRealm(newValue);
+    return false;
+  }
+
   doLogin() {
     localStorage.removeItem( ComponentService.MENU_SELECTED_REALM ); //if user logs in new or logs out, remove stored menu!
     if (this.auth.authenticated()) {
