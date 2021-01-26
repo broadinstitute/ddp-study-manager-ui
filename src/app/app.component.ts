@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
 
   selectRealmAndDoNothing( newValue ) {
     this.auth.selectRealm(newValue);
-    return false;
+    this.doNothing();
   }
 
   doLogin() {

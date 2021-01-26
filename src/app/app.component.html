@@ -8,7 +8,7 @@
           <b>Select realm</b>
           <span class="caret"></span>
         </a>
-        <ul class="dropdown-menu" [ngModel]="getAuth().selectedRealm"  >
+        <ul class="dropdown-menu">
           <li *ngFor="let realms of getAuth().realmList"> <a (click)="selectRealmAndDoNothing(realms.name)"> {{realms.value}} </a> </li>          
         </ul>
           <!-- <span class="Menu--Select"><b>Select realm: </b>
