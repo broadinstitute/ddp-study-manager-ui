@@ -9,15 +9,8 @@
           <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
-          <li *ngFor="let realms of getAuth().realmList"> <a (click)="selectRealmAndDoNothing(realms.name)"> {{realms.value}} </a> </li>          
+          <li *ngFor="let realms of getAuth().realmList" [ngClass]="{'active': isRealmChosen(realms.name)}"> <a (click)="selectRealmAndDoNothing(realms.name)"> {{realms.value}} </a> </li>          
         </ul>
-          <!-- <span class="Menu--Select"><b>Select realm: </b>
-          </span>
-          <select [ngModel]="getAuth().selectedRealm" class="SelectText"
-                  (click)="getAuth().getRealmList()" (ngModelChange)="getAuth().selectRealm($event)">
-            <option value="" selected>Please Select</option>
-            <option *ngFor="let realms of getAuth().realmList" [value]="realms.name">{{realms.value}}</option>
-          </select> -->
       </li>
       <li class="dropdown" *ngIf="getAuth().authenticated()
         && (hasRole().allowToViewSampleLists() || hasRole().allowedToHandleSamples() || hasRole().allowedToViewReceivingPage() || hasRole().allowedToDiscardSamples() || hasRole().allowedToExitParticipant())">
