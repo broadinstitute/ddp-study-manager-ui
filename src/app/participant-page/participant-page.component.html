@@ -524,6 +524,13 @@ participant.data.dsm['diagnosisYear'] != null">
                       <tr>
                         <td class="TD--Padding-Left Width--50">{{sample.receiveDate === 0 ? "-" : sample.receiveDate | date:'medium'}}</td>
                       </tr>
+                      <hr style="border-color: lightgray">
+                      <tr>
+                        <td class="TD--Padding Width--50 Data-Display-Question">Deactivated:</td>
+                      </tr>
+                      <tr>
+                        <td class="TD--Padding-Left Width--50">{{sample.deactivatedDate === 0 ? "-" : sample.deactivatedDate | date:'medium'}}</td>
+                      </tr>
                       <hr *ngIf="sample.trackingNumberTo != null"style="border-color: lightgray">
                       <tr *ngIf="sample.trackingNumberTo != null">
                         <td class="TD--Padding Width--50 Data-Display-Question">Tracking-out:</td>
