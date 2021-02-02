@@ -35,7 +35,7 @@ export class Sample {
   }
 
   get sampleQueue() {
-    if (this.externalOrderStatus !== null) {
+    if (this.externalOrderStatus !== null && this.externalOrderStatus !== undefined) {
       return this.externalOrderStatus + " (GBF)";
     }
     if (this.deactivatedDate !== 0) {
