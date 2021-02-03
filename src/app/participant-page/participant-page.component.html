@@ -30,13 +30,13 @@
     <a href="#" (click)="leavePage()"><b> << back to 'List' </b></a>
     <br/><br/><br/>
 
-    <span [hidden]="!loadingParticipantPage" class="Width--100">
+    <span [hidden]="!loadingParticipantPage && !updatingParticipant" class="Width--100">
     <div align="center" class="Width--100 Height--100">
       <i class="fas fa-spinner fa-spin fa-5x Color--primary"></i>
     </div>
   </span>
 
-    <div *ngIf="!loadingParticipantPage" class="Width--100">
+    <div *ngIf="!loadingParticipantPage && !updatingParticipant" class="Width--100">
 
       <div *ngIf="participantExited">
         <h3 class="Color--warn Line--Break">Participant was withdrawn from the study!</h3>
@@ -77,12 +77,36 @@
             <td>{{participant.data.profile['legacyAltPid']}}</td>
           </tr>
           <tr>
-            <td>Name</td>
-            <td>{{participant.data.profile['firstName']}} {{participant.data.profile['lastName']}}</td>
+            <td>First Name</td>
+            <input mdInput type="text" maxlength="200" autocomplete="off" placeholder="First Name"
+                 [(ngModel)]="updatedFirstName"
+                 [value]="updatedFirstName">
+            <button md-raised-button color="primary"
+                    (click)="updateFirstName()"
+                    [disabled]="updatedFirstName === participant.data.profile['firstName']"
+                    >Update 
+            </button>
+          </tr>
+          <tr>
+            <td>Last Name</td>
+            <input mdInput type="text" maxlength="200" autocomplete="off" placeholder="Last Name"
+                 [(ngModel)]="updatedLastName"
+                 [value]="updatedLastName">
+            <button md-raised-button color="primary"
+                    [disabled]="updatedLastName === participant.data.profile['lastName']"
+                    (click)="updateLastName()">Update
+            </button>
           </tr>
           <tr *ngIf="participant.data.profile['email'] != null">
             <td>E-Mail</td>
-            <td>{{participant.data.profile['email']}}</td>
+            <input mdInput type="text" maxlength="200" autocomplete="off" placeholder="Email"
+                 type="email"
+                 [(ngModel)]="updatedEmail"
+                 email>
+            <button md-raised-button color="primary"
+                    [disabled]="updatedEmail === participant.data.profile['email']"
+                    (click)="updateEmail()">Update
+            </button>
           </tr>
           <tr>
             <td>Date of Birth</td>

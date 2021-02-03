@@ -23,6 +23,8 @@ import {NameValue} from "../utils/name-value.model";
 import {Abstraction} from "../medical-record-abstraction/medical-record-abstraction.model";
 import {AbstractionGroup, AbstractionWrapper} from "../abstraction-group/abstraction-group.model";
 import {PatchUtil} from "../utils/patch.model";
+import { WebSocketService } from "../services/web-socket-service.service";
+import { SessionService } from "../services/session.service";
 
 var fileSaver = require( "file-saver/FileSaver.js" );
 
@@ -90,8 +92,16 @@ export class ParticipantPageComponent implements OnInit {
   selectedPDF: string;
   disableDownload: boolean = false;
 
+  updatedFirstName: string;
+  updatedLastName: string;
+  updatedEmail: string;
+  updatingParticipant: boolean = false;
+
+  payload = {};
+
   constructor( private auth: Auth, private compService: ComponentService, private dsmService: DSMService, private router: Router,
-               private role: RoleService, private util: Utils, private route: ActivatedRoute) {
+               private role: RoleService, private util: Utils, private route: ActivatedRoute, private webSocketService: WebSocketService,
+               private sessionService: SessionService) {
     if (!auth.authenticated()) {
       auth.logout();
     }
@@ -102,11 +112,33 @@ export class ParticipantPageComponent implements OnInit {
         this.leaveParticipant.emit( null );
       }
     } );
+    
   }
-
+  
   ngOnInit() {
+    this.setDefaultProfileValues();
+    this.payload = {
+      participantGuid: this.participant.data.profile[ "guid" ],
+      studyGuid: this.participant.data.ddp,
+      data: {}
+    };
+    this.webSocketService.setupSocketConnection('ui/websocket/editParticipant' + '?token=' + this.sessionService.getDSMToken());
+    this.webSocketService.onListen().subscribe(data => {
+      if (data['resultType'] === 'SUCCESS' && data['participantGuid'] === this.participant.data.profile[ "guid" ]) {
+        this.updatingParticipant = false;
+      } 
+      else if (data['resultType'] === 'ERROR' && data['participantGuid'] === this.participant.data.profile[ "guid" ]) {
+        this.updatingParticipant = false;
+      }
+    })
     this.loadInstitutions();
     window.scrollTo( 0, 0 );
+  }
+
+  private setDefaultProfileValues() {
+    this.updatedFirstName = this.participant.data.profile["firstName"];
+    this.updatedLastName = this.participant.data.profile["lastName"];
+    this.updatedEmail = this.participant.data.profile["email"];
   }
 
   hasRole(): RoleService {
@@ -115,6 +147,27 @@ export class ParticipantPageComponent implements OnInit {
 
   getUtil(): Utils {
     return this.util;
+  }
+
+  updateFirstName() {
+    this.updatingParticipant = true;
+    this.payload[ 'data' ][ 'firstName' ] = this.updatedFirstName;
+    this.webSocketService.sendMessage(this.payload);
+    delete this.payload[ 'data' ][ 'firstName' ];
+  }
+
+  updateLastName() {
+    this.updatingParticipant = true;
+    this.payload[ 'data' ][ 'lastName' ] = this.updatedFirstName;
+    this.webSocketService.sendMessage(this.payload);
+    delete this.payload[ 'data' ][ 'lastName' ];
+  }
+
+  updateEmail() {
+    this.updatingParticipant = true;
+    this.payload[ 'data' ][ 'email' ] = this.updatedEmail;
+    this.webSocketService.sendMessage(this.payload);
+    delete this.payload[ 'data' ][ 'email' ];
   }
 
   getLanguageName(languageCode: string): string {
