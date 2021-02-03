@@ -1211,7 +1211,7 @@ export class ParticipantListComponent implements OnInit {
         Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"], ["abstractionSummary", "a"]], columns, "Participants-Abstraction-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
         fileCount = fileCount + 1;
       }  else if (source === "invitations") {
-        Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"], ["invitations", "invitations"]], columns, "Participants-Invitation-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION, true );
+        Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"], ["invitations", "invitations"]], columns, "Participants-Invitation-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION, false );
         fileCount = fileCount + 1;
       } else {
         Utils.downloadCurrentData( this.participantList, [["data", "data"], [source, source]], columns, "Participants-" + source + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION, true );
