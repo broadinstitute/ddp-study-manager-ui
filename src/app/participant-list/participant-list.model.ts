@@ -13,7 +13,8 @@ export class Participant {
   constructor( public data: Data, public participant: ParticipantDSMInformation, public medicalRecords: Array<MedicalRecord>,
                public kits: Array<Sample>, public oncHistoryDetails: Array<OncHistoryDetail>, public abstractionActivities: Array<Abstraction>,
                public abstractionSummary: Array<AbstractionGroup>,
-               public abstraction?: Abstraction, public review?: Abstraction, public qc?: Abstraction, public finalA?: Abstraction ) {
+               public abstraction?: Abstraction, public review?: Abstraction, public qc?: Abstraction, public finalA?: Abstraction,
+               public proxyData?: Array<Data>) {
     this.data = data;
     this.participant = participant;
     this.medicalRecords = medicalRecords;
@@ -25,6 +26,7 @@ export class Participant {
     this.review = review;
     this.qc = qc;
     this.finalA = finalA;
+    this.proxyData = proxyData;
   }
 
   getSampleStatus(): string {
@@ -143,6 +145,15 @@ export class Participant {
       data = Data.parse( json.data );
     }
 
+    let proxyData: Array<Data> = [];
+    jsonData = json.proxyData;
+    if (jsonData != null) {
+      jsonData.forEach( ( val ) => {
+        let proxy = Data.parse( val );
+        proxyData.push( proxy );
+      } );
+    }
+
     let abstraction: Abstraction = new Abstraction( null, null, null, "abstraction", "not_started", null, null, null );
     let review: Abstraction = new Abstraction( null, null, null, "review", "not_started", null, null, null );
     let qc: Abstraction = new Abstraction( null, null, null, "qc", "not_started", null, null, null );
@@ -173,6 +184,6 @@ export class Participant {
       participant = ParticipantDSMInformation.parse( jsonData );
     }
 
-    return new Participant( data, participant, medicalRecords, samples, oncHistoryDetails, json.abstractionActivities, abstractionSummary, abstraction, review, qc, finalA );
+    return new Participant( data, participant, medicalRecords, samples, oncHistoryDetails, json.abstractionActivities, abstractionSummary, abstraction, review, qc, finalA, proxyData );
   }
 }

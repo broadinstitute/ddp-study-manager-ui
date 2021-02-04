@@ -1,8 +1,10 @@
 import {DatePipe} from "@angular/common";
 import {Injectable} from "@angular/core";
 import {FormControl} from "@angular/forms";
+import {groupBy} from "rxjs/operator/groupBy";
 import {AbstractionGroup} from "../abstraction-group/abstraction-group.model";
 import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
+import {Group} from "../activity-data/models/group.model";
 import {OptionDetail} from "../activity-data/models/option-detail.model";
 import {Option} from "../activity-data/models/option.model";
 import {QuestionAnswer} from "../activity-data/models/question-answer.model";
@@ -89,6 +91,24 @@ export class Utils {
       return nameValue.value;
     }
     return "";
+  }
+
+  isGroupSelected( selected: Array<string>, group: Group ): string {
+    return selected.find( answer => {
+      if (group.groupStableId === answer) {
+        return true;
+      }
+      return false;
+    } );
+  }
+
+  getAnswerText( groupAnswer: string, options: Array<Option> ): Option{
+    return options.find( option => {
+      if (option.optionStableId === groupAnswer) {
+        return true;
+      }
+      return false;
+    } );
   }
 
   isOptionSelected( selected: Array<string>, optionStableId: string ) {
