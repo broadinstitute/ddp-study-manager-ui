@@ -3,17 +3,16 @@ import {Headers, Http, RequestOptions, Response, ResponseContentType, URLSearchP
 import {Router} from "@angular/router";
 import {JwtHelper} from "angular2-jwt";
 import {Observable} from "rxjs";
+import {OncHistoryDetail} from "../onc-history-detail/onc-history-detail.model";
+import {PDFModel} from "../pdf-download/pdf-download.model";
 import {Value} from "../utils/value.model";
 import {SessionService} from "./session.service";
 import {RoleService} from "./role.service";
-import {Router} from "@angular/router";
 import {Statics} from "../utils/statics";
 import {ComponentService} from "./component.service";
 import {Abstraction} from "../medical-record-abstraction/medical-record-abstraction.model";
 import {ViewFilter} from "../filter-column/models/view-filter.model";
 import {Filter} from "../filter-column/filter-column.model";
-import {RoleService} from "./role.service";
-import {SessionService} from "./session.service";
 
 declare var DDP_ENV: any;
 
