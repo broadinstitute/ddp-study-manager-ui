@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
+import { MdDialog } from '@angular/material';
 import {TabDirective} from "ngx-bootstrap";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
@@ -11,8 +12,8 @@ import {Auth} from "../services/auth.service";
 import {DSMService} from "../services/dsm.service";
 import {MedicalRecord} from "../medical-record/medical-record.model";
 import {RoleService} from "../services/role.service";
-import {Utils} from "../utils/utils";
 import {Statics} from "../utils/statics";
+import {Utils} from "../utils/utils";
 import {OncHistoryDetail} from "../onc-history-detail/onc-history-detail.model";
 import {ModalComponent} from "../modal/modal.component";
 import {Tissue} from "../tissue/tissue.model";
@@ -25,6 +26,7 @@ import {AbstractionGroup, AbstractionWrapper} from "../abstraction-group/abstrac
 import {PatchUtil} from "../utils/patch.model";
 import { WebSocketService } from "../services/web-socket-service.service";
 import { SessionService } from "../services/session.service";
+import { ParticipantUpdateResultDialogComponent } from "../dialogs/participant-update-result-dialog.component";
 
 var fileSaver = require( "file-saver/FileSaver.js" );
 
@@ -101,7 +103,7 @@ export class ParticipantPageComponent implements OnInit {
 
   constructor( private auth: Auth, private compService: ComponentService, private dsmService: DSMService, private router: Router,
                private role: RoleService, private util: Utils, private route: ActivatedRoute, private webSocketService: WebSocketService,
-               private sessionService: SessionService) {
+               private sessionService: SessionService, public dialog: MdDialog) {
     if (!auth.authenticated()) {
       auth.logout();
     }
@@ -112,7 +114,6 @@ export class ParticipantPageComponent implements OnInit {
         this.leaveParticipant.emit( null );
       }
     } );
-    
   }
   
   ngOnInit() {
@@ -122,17 +123,33 @@ export class ParticipantPageComponent implements OnInit {
       studyGuid: this.participant.data.ddp,
       data: {}
     };
-    this.webSocketService.setupSocketConnection('ui/websocket/editParticipant' + '?token=' + this.sessionService.getDSMToken());
+    this.webSocketService.setupSocketConnection('ui/websocket/editParticipant', {token: this.sessionService.getDSMToken()});
     this.webSocketService.onListen().subscribe(data => {
-      if (data['resultType'] === 'SUCCESS' && data['participantGuid'] === this.participant.data.profile[ "guid" ]) {
-        this.updatingParticipant = false;
+      if (data['resultType'] === 'SUCCESS' && data['participantGuid'] === this.participant.data.profile[ "guid" ] 
+          && data[ 'userId' ] === this.role.userID()) {
+        this.openResultDialog("Participant successfully updated");
+        this.updateParticipantObjectOnSuccess();
       } 
-      else if (data['resultType'] === 'ERROR' && data['participantGuid'] === this.participant.data.profile[ "guid" ]) {
-        this.updatingParticipant = false;
+      else if (data['resultType'] === 'ERROR' && data['participantGuid'] === this.participant.data.profile[ "guid" ]
+          && data[ 'userId' ] === this.role.userID()) {
+        this.openResultDialog(data[ 'errorMessage' ]);
       }
     })
     this.loadInstitutions();
     window.scrollTo( 0, 0 );
+  }
+
+  private updateParticipantObjectOnSuccess() {
+    this.participant.data.profile["firstName"] = this.updatedFirstName;
+    this.participant.data.profile["lastName"] = this.updatedLastName;
+    this.participant.data.profile["email"] = this.updatedEmail;
+  }
+
+  private openResultDialog(text: string) {
+    this.updatingParticipant = false;
+    this.dialog.open(ParticipantUpdateResultDialogComponent, {
+      data: { message: text },
+    });
   }
 
   private setDefaultProfileValues() {

@@ -15,8 +15,13 @@ export class WebSocketService{
   constructor() { 
   }
 
-  setupSocketConnection(url: string) {
-    this.socket = new WebSocket(this.baseUrl + url);
+  setupSocketConnection(path: string, params: any) {
+    let url = new URL(this.baseUrl + path);
+    Object.keys(params).forEach(key => {
+      url.searchParams.append(key, params[key]);
+    });
+    debugger
+    this.socket = new WebSocket(url.toString());
   }
 
   sendMessage(json: any) {
