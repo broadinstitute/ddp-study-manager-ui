@@ -123,16 +123,16 @@ export class ParticipantPageComponent implements OnInit {
       studyGuid: this.participant.data.ddp,
       data: {}
     };
-    this.webSocketService.setupSocketConnection('ui/websocket/editParticipant', {token: this.sessionService.getDSMToken()});
+    this.webSocketService.setupSocketConnection("editParticipant", {token: this.sessionService.getDSMToken()});
     this.webSocketService.onListen().subscribe(data => {
-      if (data['resultType'] === 'SUCCESS' && data['participantGuid'] === this.participant.data.profile[ "guid" ] 
-          && data[ 'userId' ] === this.role.userID()) {
-        this.openResultDialog("Participant successfully updated");
+      if (data[ "resultType" ] === "SUCCESS" && data[ "participantGuid" ] === this.participant.data.profile[ "guid" ] 
+          && data[ "userId" ] === this.role.userID()) {
         this.updateParticipantObjectOnSuccess();
+        this.openResultDialog("Participant successfully updated");
       } 
-      else if (data['resultType'] === 'ERROR' && data['participantGuid'] === this.participant.data.profile[ "guid" ]
-          && data[ 'userId' ] === this.role.userID()) {
-        this.openResultDialog(data[ 'errorMessage' ]);
+      else if (data[ "resultType" ] === "ERROR" && data[ "participantGuid" ] === this.participant.data.profile[ "guid" ]
+          && data[ "userId" ] === this.role.userID()) {
+        this.openResultDialog(data[ "errorMessage" ]);
       }
     })
     this.loadInstitutions();
@@ -140,9 +140,9 @@ export class ParticipantPageComponent implements OnInit {
   }
 
   private updateParticipantObjectOnSuccess() {
-    this.participant.data.profile["firstName"] = this.updatedFirstName;
-    this.participant.data.profile["lastName"] = this.updatedLastName;
-    this.participant.data.profile["email"] = this.updatedEmail;
+    this.participant.data.profile[ "firstName" ] = this.updatedFirstName;
+    this.participant.data.profile[ "lastName" ] = this.updatedLastName;
+    this.participant.data.profile[ "email" ] = this.updatedEmail;
   }
 
   private openResultDialog(text: string) {
@@ -153,9 +153,9 @@ export class ParticipantPageComponent implements OnInit {
   }
 
   private setDefaultProfileValues() {
-    this.updatedFirstName = this.participant.data.profile["firstName"];
-    this.updatedLastName = this.participant.data.profile["lastName"];
-    this.updatedEmail = this.participant.data.profile["email"];
+    this.updatedFirstName = this.participant.data.profile[ "firstName" ];
+    this.updatedLastName = this.participant.data.profile[ "lastName" ];
+    this.updatedEmail = this.participant.data.profile[ "email" ];
   }
 
   hasRole(): RoleService {
@@ -168,23 +168,23 @@ export class ParticipantPageComponent implements OnInit {
 
   updateFirstName() {
     this.updatingParticipant = true;
-    this.payload[ 'data' ][ 'firstName' ] = this.updatedFirstName;
+    this.payload[ "data" ][ "firstName" ] = this.updatedFirstName;
     this.webSocketService.sendMessage(this.payload);
-    delete this.payload[ 'data' ][ 'firstName' ];
+    delete this.payload[ "data" ][ "firstName" ];
   }
 
   updateLastName() {
     this.updatingParticipant = true;
-    this.payload[ 'data' ][ 'lastName' ] = this.updatedFirstName;
+    this.payload[ "data" ][ "lastName" ] = this.updatedFirstName;
     this.webSocketService.sendMessage(this.payload);
-    delete this.payload[ 'data' ][ 'lastName' ];
+    delete this.payload[ "data" ][ "lastName" ];
   }
 
   updateEmail() {
     this.updatingParticipant = true;
-    this.payload[ 'data' ][ 'email' ] = this.updatedEmail;
+    this.payload[ "data" ][ "email" ] = this.updatedEmail;
     this.webSocketService.sendMessage(this.payload);
-    delete this.payload[ 'data' ][ 'email' ];
+    delete this.payload[ "data" ][ "email" ];
   }
 
   getLanguageName(languageCode: string): string {

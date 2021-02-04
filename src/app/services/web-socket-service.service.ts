@@ -1,12 +1,12 @@
-import { Injectable, Input, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { io } from 'socket.io-client';
-
 
 declare var DDP_ENV: any;
 
 @Injectable()
 export class WebSocketService{
+
+  private static WEBSOCKET: string = "ui/websocket/";
 
   private baseUrl = DDP_ENV.baseWebSocketUrl;
 
@@ -16,11 +16,10 @@ export class WebSocketService{
   }
 
   setupSocketConnection(path: string, params: any) {
-    let url = new URL(this.baseUrl + path);
+    let url = new URL(this.baseUrl + WebSocketService.WEBSOCKET + path);
     Object.keys(params).forEach(key => {
       url.searchParams.append(key, params[key]);
     });
-    debugger
     this.socket = new WebSocket(url.toString());
   }
 
@@ -32,7 +31,7 @@ export class WebSocketService{
     return new Observable(subscriber => {
       this.socket.onmessage = function(event) {
         subscriber.next(JSON.parse(event.data));
-      }
+      };
     })
   }
 
