@@ -1111,6 +1111,18 @@ export class ParticipantPageComponent implements OnInit {
         console.log(fieldSetting);
         console.log(this.participant);
         console.log(this.participant.participantData);
+
+        let nameValue: { name: string, value: any }[] = [];
+        nameValue.push({name: "d.data", value: JSON.stringify(participantData.data)});
+
+        if (fieldSetting.actions != null) {
+          fieldSetting.actions.forEach(( action ) => {
+            if (action != null && action.name != null && action.name != undefined) {
+              nameValue.push({name: action.name, value: action.value})
+            }
+          });
+        }
+
         let patch = {
           id: participantData.dataId,
           parent: "participantDataId",
@@ -1118,7 +1130,7 @@ export class ParticipantPageComponent implements OnInit {
           user: this.role.userMail(),
           fieldId: participantData.fieldTypeId,
           realm:  localStorage.getItem( ComponentService.MENU_SELECTED_REALM ),
-          nameValues: [ {name: "d.data", value: JSON.stringify(participantData.data)} ]
+          nameValues: nameValue
         };
 
         this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
