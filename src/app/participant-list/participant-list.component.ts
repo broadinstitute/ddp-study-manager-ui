@@ -100,6 +100,7 @@ export class ParticipantListComponent implements OnInit {
   currentView: string = null;
   showHelp: boolean = false;
   filtered: boolean = false;
+  hideMRTissueWorkflow: boolean = true;
   rowsPerPage: number;
   preferredLanguages: PreferredLanguage[] = [];
 
@@ -387,6 +388,7 @@ export class ParticipantListComponent implements OnInit {
           this.removeColumnFromSourceColumns("p", Filter.ABSTRACTION_READY);
           this.removeColumnFromSourceColumns("p", Filter.ASSIGNEE_MR);
           this.removeColumnFromSourceColumns("p", Filter.ASSIGNEE_TISSUE);
+          this.hideMRTissueWorkflow = jsonData.hideMRTissueWorkflow;
         }
         if (jsonData.hasInvitations != null) {
           this.dataSources.set( "invitations", "Invitation" );

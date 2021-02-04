@@ -3,6 +3,8 @@ import {TabDirective} from "ngx-bootstrap";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ActivityData} from "../activity-data/activity-data.model";
 import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
+import {FieldSettings} from "../field-settings/field-settings.model";
+import {ParticipantData} from "../participant-list/models/participant-data.model";
 import {PreferredLanguage} from "../participant-list/models/preferred-languages.model";
 import {Participant} from "../participant-list/participant-list.model";
 import {PDFModel} from "../pdf-download/pdf-download.model";
@@ -623,6 +625,24 @@ export class ParticipantPageComponent implements OnInit {
     return false;
   }
 
+  displayTab( fieldSetting: FieldSettings ): boolean {
+    if (fieldSetting != null && fieldSetting.possibleValues != null) {
+      let value: Value[] = fieldSetting.possibleValues;
+      if (value.length == 1 && value[0] != null && value[0].value != null) {
+        if (this.participant != null && this.participant.data != null && this.participant.data.activities != null) {
+          let activity = this.participant.data.activities.find( x => x.activityCode === value[0].value );
+          if (activity != null) {
+            return true;
+          }
+          else {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
+
   isPatchedCurrently( field: string ): boolean {
     if (this.currentPatchField === field) {
       return true;
@@ -966,5 +986,163 @@ export class ParticipantPageComponent implements OnInit {
     this.source = source;
     this.universalModal.show();
     return false;
+  }
+
+  getParticipantData(fieldSetting: FieldSettings, fieldTypeId: string) {
+    if (this.participant != null && this.participant.participantData != null && fieldTypeId != null && fieldSetting.columnName != null) {
+      let participantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === fieldTypeId);
+      if (participantData != null && participantData.data != null && participantData.data[fieldSetting.columnName] != null) {
+        return participantData.data[fieldSetting.columnName];
+      }
+    }
+    return "";
+  }
+
+  getActivityData(fieldSetting: FieldSettings) {
+    //type was activity or activity_staff and no saved staff answer. therefore lookup the activity answer
+    if (fieldSetting != null && fieldSetting.possibleValues != null && fieldSetting.possibleValues[0] != null && fieldSetting.possibleValues[0].value != null) {
+      let tmp: string[] = fieldSetting.possibleValues[ 0 ].value.split( '.' );
+      if (tmp != null && tmp.length > 1) {
+        if (tmp[ 0 ] === 'profile') {
+          return this.participant.data.profile[tmp[1]];
+        }
+        else {
+          if (this.participant != null && this.participant.data != null && this.participant.data.activities != null) {
+            let activity: ActivityData = this.participant.data.activities.find( activity => activity.activityCode === tmp[ 0 ] );
+            if (activity != null && activity.questionsAnswers != null) {
+              let questionAnswer = activity.questionsAnswers.find( questionAnswer => questionAnswer.stableId === tmp[ 1 ] );
+              if (questionAnswer != null) {
+                if (tmp.length == 2) {
+                  if (typeof questionAnswer.answer === "boolean") {
+                    if (questionAnswer.answer) {
+                      return "Yes";
+                    }
+                    return "No";
+                  }
+                  return questionAnswer.answer;
+                }
+                else if (tmp.length === 3) {
+                  if (fieldSetting.possibleValues != null && fieldSetting.possibleValues[ 0 ] != null && fieldSetting.possibleValues[ 0 ].type != null && fieldSetting.possibleValues[ 0 ].type === "RADIO") {
+                    if (questionAnswer.answer != null) {
+                      let found = questionAnswer.answer.find( answer => answer === tmp[ 2 ] )
+                      if (found != null) {
+                        return "Yes";
+                      }
+                      return "No";
+                    }
+                  }
+                  else if (this.activityDefinitions != null) {
+                    let definition: ActivityDefinition = this.activityDefinitions.find( definition => definition.activityCode === tmp[ 0 ] );
+                    if (definition != null && definition.questions != null) {
+                      let question = definition.questions.find( question => question.stableId === tmp[ 1 ] );
+                      if (question != null && question.childQuestions != null) {
+                        for (let i = 0; i < question.childQuestions.length; i++) {
+                          if (question.childQuestions[ i ] != null && question.childQuestions[ i ].stableId === tmp[ 2 ] && questionAnswer.answer[ 0 ][ i ] != null) {
+                            return questionAnswer.answer[ 0 ][ i ];
+                          }
+                        }
+                      }
+                      else if (question != null && question.options != null) {
+
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return "";
+  }
+
+  getActivityOptions(fieldSetting: FieldSettings) {
+    if (fieldSetting.displayType === 'ACTIVITY' || fieldSetting.displayType === 'ACTIVITY_STAFF') {
+      if (fieldSetting.possibleValues != null && fieldSetting.possibleValues[0] != null && fieldSetting.possibleValues[0].value != null
+        && fieldSetting.possibleValues[0].type != null) {
+        let tmp: string[] = fieldSetting.possibleValues[ 0 ].value.split( '.' );
+        if (tmp != null && tmp.length > 1) {
+          if (tmp.length == 2) {
+            if (this.activityDefinitions != null) {
+              let definition: ActivityDefinition = this.activityDefinitions.find( definition => definition.activityCode === tmp[ 0 ] );
+              if (definition != null && definition.questions != null) {
+                let question = definition.questions.find( question => question.stableId === tmp[ 1 ] );
+                if (question != null) {// && question.options != null) {
+                  if (question.questionType !== 'BOOLEAN' && question.options != null) {
+                    let options: string[] = [];
+                    for (let i = 0; i < question.options.length; i++) {
+                      options.push( question.options[ i ].optionText );
+                    }
+                    return options;
+                  }
+                  else {
+                    let options: string[] = [];
+                    options.push( "Yes" );
+                    options.push( "No" );
+                    return options;
+                  }
+                }
+              }
+            }
+          }
+          else if (tmp.length === 3) {
+            let options: string[] = [];
+            options.push( "Yes" );
+            options.push( "No" );
+            return options;
+          }
+        }
+      }
+    }
+    return [];
+  }
+
+  formPatch(value: any, fieldSetting: FieldSettings){
+    if (this.participant != null && this.participant.participantData != null && fieldSetting != null && fieldSetting.fieldType != null && fieldSetting.columnName != null) {
+      let participantData: ParticipantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === fieldSetting.fieldType);
+      if (participantData == null) {
+        let data: { [ k: string ]: any } = {};
+        data[fieldSetting.columnName] = value;
+        participantData = new ParticipantData (null, fieldSetting.fieldType, data );
+      }
+      if (participantData != null && participantData.data != null) {
+        participantData.data[fieldSetting.columnName] = value;
+        console.log(fieldSetting);
+        console.log(this.participant);
+        console.log(this.participant.participantData);
+        let patch = {
+          id: participantData.dataId,
+          parent: "participantDataId",
+          parentId: this.participant.data.profile[ "guid" ],
+          user: this.role.userMail(),
+          fieldId: participantData.fieldTypeId,
+          realm:  localStorage.getItem( ComponentService.MENU_SELECTED_REALM ),
+          nameValues: [ {name: "d.data", value: JSON.stringify(participantData.data)} ]
+        };
+
+        this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
+          data => {
+            let result = Result.parse( data );
+            if (result.code === 200) {
+              if (result.body != null && result.body !== "") {
+                let jsonData: any | any[] = JSON.parse( result.body );
+                if (jsonData.participantDataId !== undefined && jsonData.participantDataId !== "") {
+                  //todo need to overwrite this.participant.participantData?!
+                  console.log(jsonData.participantDataId);
+                }
+              }
+            }
+            this.patchFinished = true;
+          },
+          err => {
+            if (err._body === Auth.AUTHENTICATION_ERROR) {
+              this.router.navigate( [ Statics.HOME_URL ] );
+            }
+          }
+        );
+
+      }
+    }
   }
 }

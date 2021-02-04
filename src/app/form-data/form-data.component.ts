@@ -1,9 +1,6 @@
-import {Component, Input, OnInit} from "@angular/core";
-import {ActivityData} from "../activity-data/activity-data.model";
-import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
+import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {FieldSettings} from "../field-settings/field-settings.model";
-import {ParticipantData} from "../participant-list/models/participant-data.model";
-import {Participant} from "../participant-list/participant-list.model";
+import {NameValue} from "../utils/name-value.model";
 
 @Component({
   selector: 'app-form-data',
@@ -12,90 +9,35 @@ import {Participant} from "../participant-list/participant-list.model";
 })
 export class FormDataComponent implements OnInit {
 
-  @Input() fieldTypeId: String;
   @Input() fieldSetting: FieldSettings;
-  @Input() participant: Participant;
-  @Input() activityDefinitions: Array<ActivityDefinition>;
+  @Input() participantData: String;
+  @Input() activityData: String;
+  @Input() activityOptions: String[];
+  @Input() patchFinished: boolean;
+  @Output() patchData = new EventEmitter();
+
+  currentPatchField: string;
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  getParticipantData() {
-    if (this.participant != null && this.participant.participantData != null && this.fieldTypeId != null && this.fieldSetting.columnName != null) {
-      let participantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === this.fieldTypeId);
-      if (participantData != null) {
-        return participantData.data[this.fieldSetting.columnName];
-      }
-    }
-    return "";
-  }
-
   getActivityAnswer() {
-    let savedAnswer: string = null;
     if (this.fieldSetting.displayType !== 'ACTIVITY')  {
-      savedAnswer = this.getParticipantData();
-    }
-    if (savedAnswer != null && savedAnswer !== '') {
-      //return savedAnswer if there is one
-      return savedAnswer;
-    }
-    if (this.fieldSetting.possibleValues != null && this.fieldSetting.possibleValues[0] != null && this.fieldSetting.possibleValues[0].value != null) {
-      let tmp: string[] = this.fieldSetting.possibleValues[ 0 ].value.split( '.' );
-      if (tmp != null && tmp.length > 1) {
-        if (tmp[ 0 ] === 'profile') {
-          return this.participant.data.profile[tmp[1]];
-        }
-        else {
-          if (this.participant != null && this.participant.data != null && this.participant.data.activities != null) {
-            let activity: ActivityData = this.participant.data.activities.find( activity => activity.activityCode === tmp[ 0 ] );
-            if (activity != null && activity.questionsAnswers != null) {
-              let questionAnswer = activity.questionsAnswers.find( questionAnswer => questionAnswer.stableId === tmp[ 1 ] );
-              if (questionAnswer != null) {
-                if (tmp.length == 2) {
-                  if (typeof questionAnswer.answer === "boolean") {
-                    if (questionAnswer.answer) {
-                      return "Yes";
-                    }
-                    return "No";
-                  }
-                  return questionAnswer.answer;
-                }
-                else if (tmp.length === 3) {
-                  if (this.fieldSetting.possibleValues != null && this.fieldSetting.possibleValues[ 0 ] != null && this.fieldSetting.possibleValues[ 0 ].type != null && this.fieldSetting.possibleValues[ 0 ].type === "RADIO") {
-                    if (questionAnswer.answer != null) {
-                      let found = questionAnswer.answer.find( answer => answer === tmp[ 2 ] )
-                      if (found != null) {
-                        return "Yes";
-                      }
-                      return "No";
-                    }
-                  }
-                  else if (this.activityDefinitions != null) {
-                    let definition: ActivityDefinition = this.activityDefinitions.find( definition => definition.activityCode === tmp[ 0 ] );
-                    if (definition != null && definition.questions != null) {
-                      let question = definition.questions.find( question => question.stableId === tmp[ 1 ] );
-                      if (question != null && question.childQuestions != null) {
-                        for (let i = 0; i < question.childQuestions.length; i++) {
-                          if (question.childQuestions[ i ] != null && question.childQuestions[ i ].stableId === tmp[ 2 ] && questionAnswer.answer[ 0 ][ i ] != null) {
-                            return questionAnswer.answer[ 0 ][ i ];
-                          }
-                        }
-                      }
-                      else if (question != null && question.options != null) {
-
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
+      //get data from dsm db if it is not type activity
+      if (this.fieldSetting.displayType !== 'ACTIVITY_STAFF') {
+        //return savedAnswer if it is not type activity_staff
+        return this.participantData;
+      }
+      else {
+        //if it is type activity_staff only return if it is not empty, otherwise return answer from the activity
+        if (this.participantData != null && this.participantData !== '') {
+          return this.participantData;
         }
       }
     }
-    return "";
+    return this.activityData;
   }
 
   getOptions() {
@@ -103,42 +45,45 @@ export class FormDataComponent implements OnInit {
       return this.fieldSetting.possibleValues;
     }
     else {
-      if (this.fieldSetting.possibleValues != null && this.fieldSetting.possibleValues[0] != null && this.fieldSetting.possibleValues[0].value != null
-        && this.fieldSetting.possibleValues[0].type != null) {
-        let tmp: string[] = this.fieldSetting.possibleValues[ 0 ].value.split( '.' );
-        if (tmp != null && tmp.length > 1) {
-          if (tmp.length == 2) {
-            if (this.activityDefinitions != null) {
-              let definition: ActivityDefinition = this.activityDefinitions.find( definition => definition.activityCode === tmp[ 0 ] );
-              if (definition != null && definition.questions != null) {
-                let question = definition.questions.find( question => question.stableId === tmp[ 1 ] );
-                if (question != null) {// && question.options != null) {
-                  if (question.questionType !== 'BOOLEAN' && question.options != null) {
-                    let options: string[] = [];
-                    for (let i = 0; i < question.options.length; i++) {
-                      options.push( question.options[ i ].optionText );
-                    }
-                    return options;
-                  }
-                  else {
-                    let options: string[] = [];
-                    options.push( "Yes" );
-                    options.push( "No" );
-                    return options;
-                  }
-                }
-              }
-            }
-          }
-          else if (tmp.length === 3) {
-            let options: string[] = [];
-            options.push( "Yes" );
-            options.push( "No" );
-            return options;
-          }
-        }
+      return this.activityOptions;
+    }
+  }
+
+  valueChanged( value: any ) {
+    this.patchFinished = false;
+    let v;
+    if (typeof value === "string") {
+      v = value;
+    }
+    else {
+      if (value.srcElement != null && typeof value.srcElement.value === "string") {
+        v = value.srcElement.value;
+      }
+      else if (value.value != null) {
+        v = value.value;
+      }
+      else if (value.checked != null) {
+        v = value.checked;
+      }
+      else if (value.source.value != null && value.source.selected) {
+        v = value.source.value;
       }
     }
-    return [];
+    this.participantData = v;
+    this.patchData.emit( v );
+  }
+
+  isPatchedCurrently( field: string ): boolean {
+    if (this.currentPatchField === field) {
+      return true;
+    }
+    return false;
+  }
+
+  isCheckboxPatchedCurrently( field: string ): string {
+    if (this.currentPatchField === field) {
+      return "warn";
+    }
+    return "primary";
   }
 }

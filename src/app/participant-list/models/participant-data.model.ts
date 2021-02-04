@@ -1,6 +1,7 @@
 export class ParticipantData {
 
-  constructor(public fieldTypeId: string, public data: {} ) {
+  constructor(public dataId: string, public fieldTypeId: string, public data: {} ) {
+    this.dataId = dataId;
     this.fieldTypeId = fieldTypeId;
     this.data = data;
   }
@@ -10,6 +11,6 @@ export class ParticipantData {
     if (json.data != null) {
       data = JSON.parse(json.data);
     }
-    return new ParticipantData(json.fieldTypeId, data);
+    return new ParticipantData(json.dataId, json.fieldTypeId, data);
   }
 }
