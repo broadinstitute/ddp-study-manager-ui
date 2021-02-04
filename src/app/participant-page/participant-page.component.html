@@ -83,8 +83,8 @@
                  [value]="updatedFirstName">
             <button md-raised-button color="primary"
                     (click)="updateFirstName()"
-                    [disabled]="updatedFirstName === participant.data.profile['firstName']"
-                    >Update 
+                    [disabled]="updatedFirstName === participant.data.profile['firstName'] || updatedFirstName.length == 0"
+                    >Update
             </button>
           </tr>
           <tr>
@@ -93,18 +93,17 @@
                  [(ngModel)]="updatedLastName"
                  [value]="updatedLastName">
             <button md-raised-button color="primary"
-                    [disabled]="updatedLastName === participant.data.profile['lastName']"
+                    [disabled]="updatedLastName === participant.data.profile['lastName'] || updatedLastName.length == 0"
                     (click)="updateLastName()">Update
             </button>
           </tr>
           <tr *ngIf="participant.data.profile['email'] != null">
             <td>E-Mail</td>
-            <input mdInput type="text" maxlength="200" autocomplete="off" placeholder="Email"
-                 type="email"
+            <input mdInput type="email" maxlength="200" autocomplete="off" placeholder="Email"
                  [(ngModel)]="updatedEmail"
                  email>
             <button md-raised-button color="primary"
-                    [disabled]="updatedEmail === participant.data.profile['email']"
+                    [disabled]="updatedEmail === participant.data.profile['email'] || updatedEmail.length == 0"
                     (click)="updateEmail()">Update
             </button>
           </tr>
