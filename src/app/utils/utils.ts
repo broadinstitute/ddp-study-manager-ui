@@ -1,5 +1,5 @@
-import {Injectable} from "@angular/core";
 import {DatePipe} from "@angular/common";
+import {Injectable} from "@angular/core";
 import {FormControl} from "@angular/forms";
 import {groupBy} from "rxjs/operator/groupBy";
 import {AbstractionGroup} from "../abstraction-group/abstraction-group.model";
@@ -145,7 +145,7 @@ export class Utils {
   }
 
   public static getDateFormatted( date: Date, format: string ): string {
-    if (date instanceof Date && !isNaN(date.getTime())) {
+    if (date instanceof Date && !isNaN( date.getTime() )) {
       if (format != null) {
         return new DatePipe( "en-US" ).transform( date, format );
       }
@@ -188,7 +188,7 @@ export class Utils {
     }
   }
 
-  public static downloadCurrentData( data: any[], paths: any[], columns: {}, fileName: string, isSurveyData ?: boolean) {
+  public static downloadCurrentData( data: any[], paths: any[], columns: {}, fileName: string, isSurveyData ?: boolean ) {
     let headers = "";
     for (let path of paths) {
       for (let i = 1; i < path.length; i += 2) {
@@ -204,7 +204,7 @@ export class Utils {
         }
       }
     }
-    let csv = this.makeCSV(data, paths, columns);
+    let csv = this.makeCSV( data, paths, columns );
     csv = headers + "\r\n" + csv;
     let blob = new Blob( [ csv ], {type: "text/csv;charset=utf-8;"} );
     if (navigator.msSaveBlob) { // IE 10+
@@ -225,13 +225,13 @@ export class Utils {
     }
   }
 
-  private static makeCSV (data: any[], paths: any[], columns: {}): string {
+  private static makeCSV( data: any[], paths: any[], columns: {} ): string {
     let input = [];
     let result = [];
     for (let d of data) {
       let input = [];
       for (let path of paths) {
-        let output = this.makeCSVForObjectArray(d, path, columns, 0);
+        let output = this.makeCSVForObjectArray( d, path, columns, 0 );
         let temp = [];
 
         for (let o of output) {
@@ -251,7 +251,7 @@ export class Utils {
   }
 
 
-  public static makeCSVForObjectArray (data: Object, paths: any[], columns: {}, index: number): string[] {
+  public static makeCSVForObjectArray( data: Object, paths: any[], columns: {}, index: number ): string[] {
     let result: string[] = [];
     if (index > paths.length - 1) {
       return null;
@@ -266,8 +266,8 @@ export class Utils {
       }
       if (objects != null) {
         for (let o of objects) {
-          let oString = this.makeCSVString(o, columns[paths[index + 1]], data);
-          let a = this.makeCSVForObjectArray(o, paths, columns, index + 2);
+          let oString = this.makeCSVString( o, columns[ paths[ index + 1 ] ], data );
+          let a = this.makeCSVForObjectArray( o, paths, columns, index + 2 );
           if (a != null && a.length > 0) {
             for (let t of a) {
               result.push( oString + t );
@@ -278,7 +278,7 @@ export class Utils {
           }
         }
         if (objects.length == 0) {
-          let oString = this.makeCSVString(null, columns[paths[index + 1]]);
+          let oString = this.makeCSVString( null, columns[ paths[ index + 1 ] ] );
           result.push( oString );
         }
       }
@@ -288,12 +288,12 @@ export class Utils {
 
   private static getObjectAdditionalValue( o: Object, fieldName: string, column: any ) {
     if (o[ fieldName ] != null) {
-      return o[fieldName][column.participantColumn.name];
+      return o[ fieldName ][ column.participantColumn.name ];
     }
     return "";
   }
 
-  private static makeCSVString(o: Object, columns: any[], data?: any): string {
+  private static makeCSVString( o: Object, columns: any[], data?: any ): string {
     let str = "";
     let col: Filter;
     if (columns != null) {
@@ -302,8 +302,9 @@ export class Utils {
           if (col.type === "ADDITIONALVALUE") {
             let fieldName = "additionalValues";
             if (fieldName !== "") {
-              let value = this.getObjectAdditionalValue (o, fieldName, col);
+              let value = this.getObjectAdditionalValue( o, fieldName, col );
               value = value == undefined ? "" : value;
+              value.replace( "\\n", " " );
               str = str + "\"" + value + "\"" + ",";
             }
           }
@@ -342,7 +343,10 @@ export class Utils {
                       }
                     } );
                   } );
-                  value = tmp.trim();
+                  if (tmp !== undefined && tmp !== null && tmp !== "") {
+                    value = tmp.trim();
+                    value.replace( "\\n", " " );
+                  }
                 }
                 str = str + "\"" + value + "\"" + ","; //TODO make answer pretty
               }
@@ -354,9 +358,10 @@ export class Utils {
               value = o[ col.participantColumn.object ][ col.participantColumn.name ];
             }
             if (col.type === Filter.DATE_TYPE) {
-              value = this.getDateFormatted(value, Utils.DATE_STRING_IN_CVS);
+              value = this.getDateFormatted( new Date( value ), Utils.DATE_STRING_IN_CVS );
             }
             value = value == undefined ? "" : value;
+            value.replace( "\\n", " " );
             str = str + "\"" + value + "\"" + ",";
           }
         }
@@ -387,21 +392,24 @@ export class Utils {
                 }
               }
             }
-            else if ( col.participantColumn.tableAlias === "invitations" ) {
-              if ( data != null && data.data != null  && data.data.invitations != null ) {
+            else if (col.participantColumn.tableAlias === "invitations") {
+              if (data != null && data.data != null && data.data.invitations != null) {
                 let tmp: string = "";
                 data.data.invitations.forEach( ( invite ) => {
-                  if ( col.type === Filter.DATE_TYPE ) {
+                  if (col.type === Filter.DATE_TYPE) {
                     tmp = tmp + " " + invite[ col.participantColumn.name ] == undefined ? "" : this.getDateFormatted( new Date( invite[ col.participantColumn.name ] ), this.DATE_STRING_IN_CVS );
                   }
-                  else if ( col.participantColumn.name === "guid" ) {
-                    tmp = tmp + " " + invite[ col.participantColumn.name ] == undefined ? "" : invite[ col.participantColumn.name ].match(/.{1,4}/g).join('-');
+                  else if (col.participantColumn.name === "guid") {
+                    tmp = tmp + " " + invite[ col.participantColumn.name ] == undefined ? "" : invite[ col.participantColumn.name ].match( /.{1,4}/g ).join( "-" );
                   }
                   else {
                     tmp = tmp + " " + invite[ col.participantColumn.name ] == undefined ? "" : invite[ col.participantColumn.name ];
                   }
                 } );
-                value = tmp.trim();
+                if (tmp !== undefined && tmp !== null && tmp !== "") {
+                  value = tmp.trim();
+                  value.replace( "\\n", " " );
+                }
               }
             }
           }

@@ -576,10 +576,10 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                         <p class="BIT-OF-MARGIN">
                           <ng-container *ngIf="col.participantColumn.object !== 'testResult'">
                             <ng-container
-                              *ngIf="col.type !== 'DATE' && col.type !== 'BOOLEAN' && col.type !== 'OPTIONS'">{{sample[col.participantColumn.name]}}
+                              *ngIf="col.type !== 'DATE' && col.type !== 'BOOLEAN' && col.type !== 'OPTIONS' && col.type !== 'CHECKBOX'">{{sample[col.participantColumn.name]}}
                             </ng-container>
                             <ng-container
-                              *ngIf="col.type === 'BOOLEAN'">{{getUtil().getYesNo(sample[col.participantColumn.name])}}
+                              *ngIf="col.type === 'BOOLEAN' || col.type === 'CHECKBOX'">{{getUtil().getYesNo(sample[col.participantColumn.name])}}
                             </ng-container>
                             <ng-container
                               *ngIf="col.type === 'DATE' && sample[col.participantColumn.name] != 0">{{sample[col.participantColumn.name] |
