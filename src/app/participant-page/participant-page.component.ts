@@ -122,8 +122,6 @@ export class ParticipantPageComponent implements OnInit {
     this.payload = {
       participantGuid: this.participant.data.profile[ "guid" ],
       studyGuid: this.participant.data.ddp,
-      resultType: "SUCCESS",
-      userId: this.role.userID(),
       data: {}
     };
     // this.webSocketService.setupSocketConnection("editParticipant", {token: this.sessionService.getDSMToken()});
