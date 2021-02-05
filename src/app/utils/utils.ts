@@ -283,7 +283,7 @@ export class Utils {
             let fieldName = "additionalValues";
             if (fieldName !== "") {
               let value = this.getObjectAdditionalValue( o, fieldName, col );
-              value = value == undefined ? "" : value;
+              value = value == undefined ? "" : value.toString();
               value.replace( "\\n", " " );
               str = str + "\"" + value + "\"" + ",";
             }
@@ -295,7 +295,7 @@ export class Utils {
               } );
               if (abstractionField != null && abstractionField.fieldValue != null) {
                 let value = abstractionField.fieldValue.value;
-                value = value == undefined ? "" : value;
+                value = value == undefined ? "" : value.toString();
                 if (value !== "") {
                   let tmp = "";
                   let multiObject: Object[] = this.getMultiObjects( value );
@@ -340,7 +340,7 @@ export class Utils {
             if (col.type === Filter.DATE_TYPE) {
               value = this.getDateFormatted( new Date( value ), Utils.DATE_STRING_IN_CVS );
             }
-            value = value == undefined ? "" : value;
+            value = value == undefined ? "" : value.toString();
             value.replace( "\\n", " " );
             str = str + "\"" + value + "\"" + ",";
           }
