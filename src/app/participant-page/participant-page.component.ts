@@ -1,7 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild, OnChanges, SimpleChange, SimpleChanges, ChangeDetectorRef } from "@angular/core";
 import { MdDialog } from '@angular/material';
 import {TabDirective} from "ngx-bootstrap";
 import {ActivatedRoute, Router} from "@angular/router";
+import { Observable } from "rxjs";
 import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
 import {PreferredLanguage} from "../participant-list/models/preferred-languages.model";
 import {Participant} from "../participant-list/participant-list.model";
@@ -103,7 +104,7 @@ export class ParticipantPageComponent implements OnInit {
 
   constructor( private auth: Auth, private compService: ComponentService, private dsmService: DSMService, private router: Router,
                private role: RoleService, private util: Utils, private route: ActivatedRoute, private webSocketService: WebSocketService,
-               private sessionService: SessionService, public dialog: MdDialog) {
+               private sessionService: SessionService, public dialog: MdDialog, public cd: ChangeDetectorRef) {
     if (!auth.authenticated()) {
       auth.logout();
     }
@@ -121,20 +122,22 @@ export class ParticipantPageComponent implements OnInit {
     this.payload = {
       participantGuid: this.participant.data.profile[ "guid" ],
       studyGuid: this.participant.data.ddp,
+      resultType: "SUCCESS",
+      userId: this.role.userID(),
       data: {}
     };
-    this.webSocketService.setupSocketConnection("editParticipant", {token: this.sessionService.getDSMToken()});
-    this.webSocketService.onListen().subscribe(data => {
-      if (data[ "resultType" ] === "SUCCESS" && data[ "participantGuid" ] === this.participant.data.profile[ "guid" ] 
-          && data[ "userId" ] === this.role.userID()) {
-        this.updateParticipantObjectOnSuccess();
-        this.openResultDialog("Participant successfully updated");
-      } 
-      else if (data[ "resultType" ] === "ERROR" && data[ "participantGuid" ] === this.participant.data.profile[ "guid" ]
-          && data[ "userId" ] === this.role.userID()) {
-        this.openResultDialog(data[ "errorMessage" ]);
-      }
-    })
+    // this.webSocketService.setupSocketConnection("editParticipant", {token: this.sessionService.getDSMToken()});
+    // this.webSocketService.onListen().subscribe(data => {
+    //   if (data[ "resultType" ] === "SUCCESS" && data[ "participantGuid" ] === this.participant.data.profile[ "guid" ] 
+    //       && data[ "userId" ] === this.role.userID()) {
+    //     this.updateParticipantObjectOnSuccess();
+    //     this.openResultDialog("Participant successfully updated");
+    //   } 
+    //   else if (data[ "resultType" ] === "ERROR" && data[ "participantGuid" ] === this.participant.data.profile[ "guid" ]
+    //       && data[ "userId" ] === this.role.userID()) {
+    //     this.openResultDialog(data[ "errorMessage" ]);
+    //   }
+    // })
     this.loadInstitutions();
     window.scrollTo( 0, 0 );
   }
@@ -166,24 +169,67 @@ export class ParticipantPageComponent implements OnInit {
     return this.util;
   }
 
-  updateFirstName() {
+  updateFirstName() {    
     this.updatingParticipant = true;
     this.payload[ "data" ][ "firstName" ] = this.updatedFirstName;
-    this.webSocketService.sendMessage(this.payload);
+    this.dsmService.updateParticipant(JSON.stringify(this.payload)).subscribe( 
+      data => {
+        if (JSON.parse(data)[ "resultType" ] === "SUCCESS") {
+          this.updateParticipantObjectOnSuccess();
+          this.openResultDialog("Participant successfully updated");
+          this.updatingParticipant = false;
+        } 
+        else {
+          this.openResultDialog(JSON.parse(data)[ "errorMessage" ]);
+          this.updatingParticipant = false;
+        }
+      },
+      err => {
+      }
+    );
     delete this.payload[ "data" ][ "firstName" ];
+
   }
 
   updateLastName() {
     this.updatingParticipant = true;
     this.payload[ "data" ][ "lastName" ] = this.updatedFirstName;
-    this.webSocketService.sendMessage(this.payload);
+    this.dsmService.updateParticipant(JSON.stringify(this.payload)).subscribe( 
+      data => {
+        if (JSON.parse(data)[ "resultType" ] === "SUCCESS") {
+          this.updateParticipantObjectOnSuccess();
+          this.openResultDialog("Participant successfully updated");
+          this.updatingParticipant = false;
+        } 
+        else {
+          this.openResultDialog(JSON.parse(data)[ "errorMessage" ]);
+          this.updatingParticipant = false;
+        }
+      },
+      err => {
+      }
+    );
     delete this.payload[ "data" ][ "lastName" ];
   }
 
   updateEmail() {
     this.updatingParticipant = true;
     this.payload[ "data" ][ "email" ] = this.updatedEmail;
-    this.webSocketService.sendMessage(this.payload);
+    this.dsmService.updateParticipant(JSON.stringify(this.payload)).subscribe( 
+      data => {
+        if (JSON.parse(data)[ "resultType" ] === "SUCCESS") {
+          this.updateParticipantObjectOnSuccess();
+          this.openResultDialog("Participant successfully updated");
+          this.updatingParticipant = false;
+        } 
+        else {
+          this.openResultDialog(JSON.parse(data)[ "errorMessage" ]);
+          this.updatingParticipant = false;
+        }
+      },
+      err => {
+      }
+    );
     delete this.payload[ "data" ][ "email" ];
   }
 
