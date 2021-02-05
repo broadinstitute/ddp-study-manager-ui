@@ -92,7 +92,8 @@
             <td>Date of Majority</td>
             <td>{{getUtil().getDateFormatted(participant.data.dsm['dateOfMajority'])}}</td>
           </tr>
-          <tr>
+          <tr *ngIf="participant.data.dsm != null && (participant.data.dsm['diagnosisMonth'] != null ||
+          participant.data.dsm['diagnosisYear'] != null)">
             <td>Date of Diagnosis</td>
             <td>
               <ng-container *ngIf="participant.data.dsm != null && participant.data.dsm['diagnosisMonth'] != null &&
@@ -127,6 +128,23 @@ participant.data.dsm['diagnosisYear'] != null">
           </tr>
           </tbody>
         </table>
+        <ng-container *ngIf="participant.proxyData != null && participant.proxyData.length > 0">
+          <b>Proxy Data</b>
+          <table class="table table-condensed">
+            <tbody>
+              <ng-container *ngFor="let proxy of participant.proxyData">
+                <tr>
+                  <td>Name</td>
+                  <td>{{proxy.profile['firstName']}} {{proxy.profile['lastName']}}</td>
+                </tr>
+                <tr *ngIf="proxy.profile['email'] != null">
+                  <td>E-Mail</td>
+                  <td>{{proxy.profile['email']}}</td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </ng-container>
         <ng-container *ngIf="participant.data.invitations != null && participant.data.invitations.length > 0">
           <ng-container *ngFor="let invitation of participant.data.invitations">
             <app-invitation-data *ngIf="invitation != null" [invitation]="invitation"></app-invitation-data>
@@ -286,7 +304,7 @@ participant.data.dsm['diagnosisYear'] != null">
       <br/>
       <div class="Float--left Width--100" *ngIf="participant.participant != null">
         <table class="Width--100">
-          <tr>
+          <tr *ngIf="participant.medicalRecords != null && participant.medicalRecords.length > 0">
             <td class="Width--20">Participant Notes</td>
             <td class="Width--80">
             <textarea maxlength="1000" [disabled]="participantExited"
@@ -297,7 +315,7 @@ participant.data.dsm['diagnosisYear'] != null">
             </td>
           </tr>
           <ng-container *ngIf="showParticipantRecord">
-            <tr>
+            <tr *ngIf="participant.medicalRecords != null && participant.medicalRecords.length > 0">
               <td>Paper C/R Sent</td>
               <td>
                 <div class="Float--left">
@@ -316,7 +334,7 @@ participant.data.dsm['diagnosisYear'] != null">
               </td>
             </tr>
           </ng-container>
-          <tr>
+          <tr *ngIf="participant.medicalRecords != null && participant.medicalRecords.length > 0">
             <td>Onc History Created</td>
             <td>
               <div class="Float--left">
@@ -334,7 +352,7 @@ participant.data.dsm['diagnosisYear'] != null">
               </div>
             </td>
           </tr>
-          <tr>
+          <tr *ngIf="participant.medicalRecords != null && participant.medicalRecords.length > 0">
             <td>
               Incomplete/Minimal Medical Records
             </td>
@@ -347,7 +365,7 @@ participant.data.dsm['diagnosisYear'] != null">
               </md-checkbox>
             </td>
           </tr>
-          <tr>
+          <tr *ngIf="participant.medicalRecords != null && participant.medicalRecords.length > 0">
             <td>
               Ready for Abstraction
             </td>
@@ -411,39 +429,6 @@ participant.data.dsm['diagnosisYear'] != null">
       </div>
 
       <div class="Float--left Width--100">
-        <ng-container *ngIf="participant.participant == null && participant.kits == null">
-          <div class="Float--left Width--100">
-            <div class="Float--left Width--100"
-                 *ngIf="participant.data != null && participant.data.activities != null && participant.data.activities.length > 0">
-              <b class="Group--Title">Jump to:</b>
-            </div>
-            <div class="Float--left Width--100"
-                 *ngIf="participant.data != null && participant.data.activities != null && participant.data.activities.length > 0">
-              <ng-container *ngFor="let activity of participant.data.activities; let i = index">
-                <div class="Float--left" *ngIf="getActivityDefinition(activity.activityCode) as activityDef1">
-                  <a class="Abstraction--Jump--Group" pageScroll href="{{getGroupHref(activity.activityCode)}}"
-                     *ngIf="activityDef1 != null">{{activityDef1.activityName}}</a>
-                </div>
-                <ng-container *ngIf="i < participant.data.activities.length - 1">
-                  <div class="Float--left Vertical--line"></div>
-                </ng-container>
-              </ng-container>
-            </div>
-
-            <!--assumption for now is that activity will be different per ddp > dynamic-->
-            <div class="Float--left Width--100"
-                 *ngIf="participant.data != null && participant.data.activities != null && participant.data.activities.length > 0">
-              <hr style="border-color: black">
-              <ng-container *ngFor="let activity of participant.data.activities">
-                <ng-container *ngIf="getActivityDefinition(activity.activityCode) as activityDef2">
-                  <app-activity-data *ngIf="activityDef2 != null" [activityDefinition]="activityDef2"
-                                     [activity]="activity"></app-activity-data>
-                </ng-container>
-              </ng-container>
-            </div>
-          </div>
-        </ng-container>
-        <ng-container *ngIf="participant.participant != null || participant.kits != null">
           <!--tab order is not working when tabs have ngIf, will just put them at the end of static tabs. therefore ngIf=true is added to static tabs-->
           <tabset>
             <tab
@@ -532,7 +517,7 @@ participant.data.dsm['diagnosisYear'] != null">
                         <tr>
                           <td class="TD--Padding-Left Width--50">{{sample.deactivatedDate | date:'medium'}}</td>
                         </tr>
-                      </div>  
+                      </div>
                       <hr *ngIf="sample.trackingNumberTo != null"style="border-color: lightgray">
                       <tr *ngIf="sample.trackingNumberTo != null">
                         <td class="TD--Padding Width--50 Data-Display-Question">Tracking-out:</td>
@@ -883,7 +868,6 @@ participant.data.dsm['diagnosisYear'] != null">
               </div>
             </tab>
           </tabset>
-        </ng-container>
       </div>
     </div>
   </div>
