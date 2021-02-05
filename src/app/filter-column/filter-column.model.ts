@@ -458,7 +458,12 @@ export class Filter {
     this.range = false;
     this.exactMatch = true;
     this.filter1 = new NameValue( null, null );
-    this.filter2 = new NameValue( this.filter2 == null ? null : this.filter2.name, null );
+    if (this.type === Filter.JSON_ARRAY_TYPE) {
+      this.filter2 = new NameValue( this.filter2 == null ? null : this.filter2.name, this.filter2 == null ? null : this.filter2.value );
+    }
+    else {
+      this.filter2 = new NameValue( this.filter2 == null ? null : this.filter2.name, null );
+    }
     this.value1 = null;
     this.value2 = null;
     this.sortAsc = true;
