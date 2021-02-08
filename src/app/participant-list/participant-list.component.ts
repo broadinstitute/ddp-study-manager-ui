@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AbstractionGroup} from "../abstraction-group/abstraction-group.model";
 import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
+import {Group} from "../activity-data/models/group.model";
 import {Option} from "../activity-data/models/option.model";
 import {QuestionAnswer} from "../activity-data/models/question-answer.model";
 import {QuestionDefinition} from "../activity-data/models/question-definition.model";
@@ -99,7 +100,6 @@ export class ParticipantListComponent implements OnInit {
   currentView: string = null;
   showHelp: boolean = false;
   filtered: boolean = false;
-  hasInvitation: boolean = false;
   rowsPerPage: number;
   preferredLanguages: PreferredLanguage[] = [];
 
@@ -210,9 +210,11 @@ export class ParticipantListComponent implements OnInit {
               let options: Array<NameValue> = null;
               if (fieldSetting.displayType === "OPTIONS") {
                 options = new Array<NameValue>();
-                fieldSetting.possibleValues.forEach( ( value: Value ) => {
-                  options.push( new NameValue( value.value, value.value ) );
-                } );
+                if (fieldSetting.possibleValues != null) {
+                  fieldSetting.possibleValues.forEach( ( value: Value ) => {
+                    options.push( new NameValue( value.value, value.value ) );
+                  } );
+                }
               }
               let filter = new Filter( new ParticipantColumn( fieldSetting.columnDisplay, fieldSetting.columnName, key ), Filter.ADDITIONAL_VALUE_TYPE, options, new NameValue( fieldSetting.columnName, null ),
                 false, true, null, null, null, null, false, false, false, false, fieldSetting.displayType );
@@ -256,9 +258,26 @@ export class ParticipantListComponent implements OnInit {
                   if (question.questionType === "PICKLIST") {
                     options = new Array<NameValue>();
                     type = Filter.OPTION_TYPE;
-                    question.options.forEach( ( value: Option ) => {
-                      options.push( new NameValue( value.optionStableId, value.optionText ) );
-                    } );
+                    if (question.options != null) {
+                      question.options.forEach( ( option: Option ) => {
+                        options.push( new NameValue( option.optionStableId, option.optionText ) );
+                        if (option != null && option.nestedOptions != null) {
+                          option.nestedOptions.forEach( ( nOption: Option ) => {
+                            options.push( new NameValue( option.optionStableId + "." + nOption.optionStableId, nOption.optionText ) );
+                          } )
+                        }
+                      } );
+                    }
+                    if (question.groups != null) {
+                      question.groups.forEach( ( group: Group ) => {
+                        options.push( new NameValue( group.groupStableId, group.groupText ) );
+                        if (group.options != null) {
+                          group.options.forEach( ( gOption: Option ) => {
+                            options.push( new NameValue( group.groupStableId + "." + gOption.optionStableId, gOption.optionText ) );
+                          } )
+                        }
+                      } );
+                    }
                   } else if (question.questionType === "NUMERIC") {
                     type = Filter.NUMBER_TYPE;
                   }
@@ -369,6 +388,43 @@ export class ParticipantListComponent implements OnInit {
           this.removeColumnFromSourceColumns("p", Filter.ASSIGNEE_MR);
           this.removeColumnFromSourceColumns("p", Filter.ASSIGNEE_TISSUE);
         }
+        if (jsonData.hasInvitations != null) {
+          this.dataSources.set( "invitations", "Invitation" );
+
+          let possibleColumns: Array<Filter> = [];
+          possibleColumns.push( new Filter( new ParticipantColumn( "Created", "createdAt", "invitations", null, true ), Filter.DATE_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Accepted", "acceptedAt", "invitations", null, true ), Filter.DATE_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Verified", "verifiedAt", "invitations", null, true ), Filter.DATE_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Voided", "voidedAt", "invitations", null, true ), Filter.DATE_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Contact Email", "contactEmail", "invitations", null, true ), Filter.TEXT_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Invitation Code", "guid", "invitations", null, true ), Filter.TEXT_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Notes", "notes", "invitations", null, true ), Filter.TEXT_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Type", "type", "invitations", null, true ), Filter.TEXT_TYPE ) );
+
+          this.sourceColumns[ "invitations" ] = possibleColumns;
+          this.selectedColumns[ "invitations" ] = [];
+          possibleColumns.forEach( filter => {
+            let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
+            this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
+          } );
+          this.orderColumns();
+        }
+        if (jsonData.hasProxyData != null) {
+          this.dataSources.set( "proxy", "Proxy" );
+          let possibleColumns: Array<Filter> = [];
+          possibleColumns.push( new Filter( new ParticipantColumn( "First Name", "firstName", "proxy", "profile", true ), Filter.TEXT_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Last Name", "lastName", "proxy", "profile", true ), Filter.TEXT_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Email", "email", "proxy", "profile", true ), Filter.TEXT_TYPE ) );
+
+          this.sourceColumns[ "proxy" ] = possibleColumns;
+          this.selectedColumns[ "proxy" ] = [];
+          //TODO add when proxy is searchable
+          // possibleColumns.forEach( filter => {
+          //   let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
+          //   this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
+          // } );
+          this.orderColumns();
+        }
         if (jsonData.hideESFields != null) {
           let hideESFields: Value[] = [];
           jsonData.hideESFields.forEach( ( val ) => {
@@ -469,14 +525,10 @@ export class ParticipantListComponent implements OnInit {
               this.participantList = [];
               this.originalParticipantList = [];
               this.copyParticipantList = [];
-              this.hasInvitation = false;
               let jsonData: any[];
               jsonData = data;
               jsonData.forEach( ( val ) => {
                 let participant = Participant.parse( val );
-                if (participant.data.invitations != null && participant.data.invitations.length > 0 && !this.hasInvitation) {
-                  this.showInvitation();
-                }
                 this.participantList.push( participant );
               } );
               this.originalParticipantList = this.participantList;
@@ -547,14 +599,10 @@ export class ParticipantListComponent implements OnInit {
           this.additionalMessage = "";
           this.originalParticipantList = [];
           this.copyParticipantList = [];
-          this.hasInvitation = false;
           let jsonData: any[];
           jsonData = data;
           jsonData.forEach( ( val ) => {
             let participant = Participant.parse( val );
-            if (participant.data.invitations != null && participant.data.invitations.length > 0 && !this.hasInvitation) {
-              this.showInvitation();
-            }
             this.participantList.push( participant );
           } );
           this.originalParticipantList = this.participantList;
@@ -833,13 +881,9 @@ export class ParticipantListComponent implements OnInit {
             this.originalParticipantList = [];
             this.copyParticipantList = [];
             this.filterQuery = "";
-            this.hasInvitation = false;
             jsonData = data;
             jsonData.forEach( ( val ) => {
               let participant = Participant.parse( val );
-              if (participant.data.invitations != null && participant.data.invitations.length > 0 && !this.hasInvitation) {
-                this.showInvitation();
-              }
               this.participantList.push( participant );
             } );
             this.originalParticipantList = this.participantList;
@@ -1353,15 +1397,11 @@ export class ParticipantListComponent implements OnInit {
       this.additionalMessage = "";
       this.originalParticipantList = [];
       this.copyParticipantList = [];
-      this.hasInvitation = false;
       if (data != null) {
         let jsonData: any[];
         jsonData = data;
         jsonData.forEach( ( val ) => {
           let participant = Participant.parse( val );
-          if (participant.data.invitations != null && participant.data.invitations.length > 0 && !this.hasInvitation) {
-            this.showInvitation();
-          }
           this.participantList.push( participant );
         } );
         this.originalParticipantList = this.participantList;
@@ -1512,34 +1552,6 @@ export class ParticipantListComponent implements OnInit {
       return f.participantColumn.tableAlias === oncColumn.participantColumn.tableAlias && f.participantColumn.name === oncColumn.participantColumn.name;
     } );
     return f !== undefined;
-  }
-
-  showInvitation(): boolean {
-    if (this.getKeys().find( key => {
-      return key === "invitations";
-    } ) == null) {
-      this.dataSources.set( "invitations", "Invitation" );
-      this.hasInvitation = true;
-
-      let possibleColumns: Array<Filter> = [];
-      possibleColumns.push( new Filter( new ParticipantColumn( "Created", "createdAt", "invitations", null, true ), Filter.DATE_TYPE ) );
-      possibleColumns.push( new Filter( new ParticipantColumn( "Accepted", "acceptedAt", "invitations", null, true ), Filter.DATE_TYPE ) );
-      possibleColumns.push( new Filter( new ParticipantColumn( "Verified", "verifiedAt", "invitations", null, true ), Filter.DATE_TYPE ) );
-      possibleColumns.push( new Filter( new ParticipantColumn( "Voided", "voidedAt", "invitations", null, true ), Filter.DATE_TYPE ) );
-      possibleColumns.push( new Filter( new ParticipantColumn( "Contact Email", "contactEmail", "invitations", null, true ), Filter.TEXT_TYPE ) );
-      possibleColumns.push( new Filter( new ParticipantColumn( "Invitation Code", "guid", "invitations", null, true ), Filter.TEXT_TYPE ) );
-      possibleColumns.push( new Filter( new ParticipantColumn( "Notes", "notes", "invitations", null, true ), Filter.TEXT_TYPE ) );
-      possibleColumns.push( new Filter( new ParticipantColumn( "Type", "type", "invitations", null, true ), Filter.TEXT_TYPE ) );
-
-      this.sourceColumns[ "invitations" ] = possibleColumns;
-      this.selectedColumns[ "invitations" ] = [];
-      possibleColumns.forEach( filter => {
-        let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
-        this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
-      } );
-      this.orderColumns();
-    }
-    return true;
   }
 
   changeRowNumber(rows: number) {

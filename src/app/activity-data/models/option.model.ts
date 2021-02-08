@@ -1,8 +1,10 @@
 export class Option {
 
-  constructor( public optionStableId: string, public optionText: string ) {
+  constructor( public optionStableId: string, public optionText: string, public nestedOptionText: string, public nestedOptions: Array<Option> ) {
     this.optionStableId = optionStableId;
     this.optionText = optionText;
+    this.nestedOptionText = nestedOptionText;
+    this.nestedOptions = nestedOptions;
   }
 
   isSelected( stableId: string) {
@@ -13,6 +15,6 @@ export class Option {
   }
 
   static parse( json ): Option {
-    return new Option( json.optionStableId, json.optionText );
+    return new Option( json.optionStableId, json.optionText, json.nestedOptionText, json.nestedOptions );
   }
 }
