@@ -1019,6 +1019,9 @@ export class ParticipantPageComponent implements OnInit {
                     }
                     return "No";
                   }
+                  if (questionAnswer.answer instanceof Array) {
+                    return questionAnswer.answer[0];
+                  }
                   return questionAnswer.answer;
                 }
                 else if (tmp.length === 3) {
@@ -1070,9 +1073,9 @@ export class ParticipantPageComponent implements OnInit {
                 let question = definition.questions.find( question => question.stableId === tmp[ 1 ] );
                 if (question != null) {// && question.options != null) {
                   if (question.questionType !== 'BOOLEAN' && question.options != null) {
-                    let options: string[] = [];
+                    let options: NameValue[] = [];
                     for (let i = 0; i < question.options.length; i++) {
-                      options.push( question.options[ i ].optionText );
+                      options.push( new NameValue( question.options[ i ].optionText, question.options[ i ].optionStableId ));
                     }
                     return options;
                   }
@@ -1105,20 +1108,27 @@ export class ParticipantPageComponent implements OnInit {
         let data: { [ k: string ]: any } = {};
         data[fieldSetting.columnName] = value;
         participantData = new ParticipantData (null, fieldSetting.fieldType, data );
+        this.participant.participantData.push(participantData);
       }
       if (participantData != null && participantData.data != null) {
         participantData.data[fieldSetting.columnName] = value;
-        console.log(fieldSetting);
-        console.log(this.participant);
-        console.log(this.participant.participantData);
 
         let nameValue: { name: string, value: any }[] = [];
         nameValue.push({name: "d.data", value: JSON.stringify(participantData.data)});
 
         if (fieldSetting.actions != null) {
           fieldSetting.actions.forEach(( action ) => {
-            if (action != null && action.name != null && action.name != undefined) {
-              nameValue.push({name: action.name, value: action.value})
+            if (action != null && action.name != null && action.name != undefined && action.type != null && action.type != undefined) {
+              let participantData: ParticipantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === action.type);
+              if (participantData == null) {
+                let data: { [ k: string ]: any } = {};
+                data[action.name] = action.value;
+                participantData = new ParticipantData (null, action.type, data );
+              }
+              if (participantData != null && participantData.data != null) {
+                participantData.data[ action.name ] = action.value;
+                nameValue.push({name: "d.data", value: JSON.stringify(participantData.data)});
+              }
             }
           });
         }
