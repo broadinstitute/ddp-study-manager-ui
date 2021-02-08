@@ -100,6 +100,7 @@ export class ParticipantListComponent implements OnInit {
   currentView: string = null;
   showHelp: boolean = false;
   filtered: boolean = false;
+  hasInvitation: boolean = false;
   hideMRTissueWorkflow: boolean = true;
   rowsPerPage: number;
   preferredLanguages: PreferredLanguage[] = [];
@@ -389,6 +390,43 @@ export class ParticipantListComponent implements OnInit {
           this.removeColumnFromSourceColumns("p", Filter.ASSIGNEE_MR);
           this.removeColumnFromSourceColumns("p", Filter.ASSIGNEE_TISSUE);
           this.hideMRTissueWorkflow = jsonData.hideMRTissueWorkflow;
+        }
+        if (jsonData.hasInvitations != null) {
+          this.dataSources.set( "invitations", "Invitation" );
+
+          let possibleColumns: Array<Filter> = [];
+          possibleColumns.push( new Filter( new ParticipantColumn( "Created", "createdAt", "invitations", null, true ), Filter.DATE_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Accepted", "acceptedAt", "invitations", null, true ), Filter.DATE_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Verified", "verifiedAt", "invitations", null, true ), Filter.DATE_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Voided", "voidedAt", "invitations", null, true ), Filter.DATE_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Contact Email", "contactEmail", "invitations", null, true ), Filter.TEXT_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Invitation Code", "guid", "invitations", null, true ), Filter.TEXT_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Notes", "notes", "invitations", null, true ), Filter.TEXT_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Type", "type", "invitations", null, true ), Filter.TEXT_TYPE ) );
+
+          this.sourceColumns[ "invitations" ] = possibleColumns;
+          this.selectedColumns[ "invitations" ] = [];
+          possibleColumns.forEach( filter => {
+            let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
+            this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
+          } );
+          this.orderColumns();
+        }
+        if (jsonData.hasProxyData != null) {
+          this.dataSources.set( "proxy", "Proxy" );
+          let possibleColumns: Array<Filter> = [];
+          possibleColumns.push( new Filter( new ParticipantColumn( "First Name", "firstName", "proxy", "profile", true ), Filter.TEXT_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Last Name", "lastName", "proxy", "profile", true ), Filter.TEXT_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Email", "email", "proxy", "profile", true ), Filter.TEXT_TYPE ) );
+
+          this.sourceColumns[ "proxy" ] = possibleColumns;
+          this.selectedColumns[ "proxy" ] = [];
+          //TODO add when proxy is searchable
+          // possibleColumns.forEach( filter => {
+          //   let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
+          //   this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
+          // } );
+          this.orderColumns();
         }
         if (jsonData.hasInvitations != null) {
           this.dataSources.set( "invitations", "Invitation" );
