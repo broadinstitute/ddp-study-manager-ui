@@ -1,8 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild, OnChanges, SimpleChange, SimpleChanges, ChangeDetectorRef } from "@angular/core";
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild, OnDestroy } from "@angular/core";
 import { MdDialog } from '@angular/material';
 import {TabDirective} from "ngx-bootstrap";
 import {ActivatedRoute, Router} from "@angular/router";
-import { Observable } from "rxjs";
 import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
 import {PreferredLanguage} from "../participant-list/models/preferred-languages.model";
 import {Participant} from "../participant-list/participant-list.model";
@@ -25,8 +24,6 @@ import {NameValue} from "../utils/name-value.model";
 import {Abstraction} from "../medical-record-abstraction/medical-record-abstraction.model";
 import {AbstractionGroup, AbstractionWrapper} from "../abstraction-group/abstraction-group.model";
 import {PatchUtil} from "../utils/patch.model";
-import { WebSocketService } from "../services/web-socket-service.service";
-import { SessionService } from "../services/session.service";
 import { ParticipantUpdateResultDialogComponent } from "../dialogs/participant-update-result-dialog.component";
 
 var fileSaver = require( "file-saver/FileSaver.js" );
@@ -36,7 +33,7 @@ var fileSaver = require( "file-saver/FileSaver.js" );
   templateUrl: "./participant-page.component.html",
   styleUrls: [ "./participant-page.component.css" ]
 } )
-export class ParticipantPageComponent implements OnInit {
+export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   @ViewChild( ModalComponent )
   public universalModal: ModalComponent;
@@ -99,12 +96,12 @@ export class ParticipantPageComponent implements OnInit {
   updatedLastName: string;
   updatedEmail: string;
   updatingParticipant: boolean = false;
+  private checkParticipantStatusInterval: any;
 
-  payload = {};
+  private payload = {};
 
   constructor( private auth: Auth, private compService: ComponentService, private dsmService: DSMService, private router: Router,
-               private role: RoleService, private util: Utils, private route: ActivatedRoute, private webSocketService: WebSocketService,
-               private sessionService: SessionService, public dialog: MdDialog, public cd: ChangeDetectorRef) {
+               private role: RoleService, private util: Utils, private route: ActivatedRoute, public dialog: MdDialog) {
     if (!auth.authenticated()) {
       auth.logout();
     }
@@ -124,20 +121,46 @@ export class ParticipantPageComponent implements OnInit {
       studyGuid: this.participant.data.ddp,
       data: {}
     };
-    // this.webSocketService.setupSocketConnection("editParticipant", {token: this.sessionService.getDSMToken()});
-    // this.webSocketService.onListen().subscribe(data => {
-    //   if (data[ "resultType" ] === "SUCCESS" && data[ "participantGuid" ] === this.participant.data.profile[ "guid" ] 
-    //       && data[ "userId" ] === this.role.userID()) {
-    //     this.updateParticipantObjectOnSuccess();
-    //     this.openResultDialog("Participant successfully updated");
-    //   } 
-    //   else if (data[ "resultType" ] === "ERROR" && data[ "participantGuid" ] === this.participant.data.profile[ "guid" ]
-    //       && data[ "userId" ] === this.role.userID()) {
-    //     this.openResultDialog(data[ "errorMessage" ]);
-    //   }
-    // })
+    this.checkParticipantStatusInterval = setInterval(() => {
+      if (this.updatingParticipant) {
+        this.dsmService.checkUpdatingParticipantStatus(JSON.stringify(this.payload)).subscribe(
+          data => {
+            let parsedData = JSON.parse(data);
+            if (parsedData[ "resultType" ] === "SUCCESS" 
+                && this.isReturnedUserAndParticipantTheSame(parsedData)) {
+              this.updateParticipantObjectOnSuccess();
+              this.openResultDialog("Participant successfully updated");
+            } 
+            else if (parsedData[ "resultType" ] === "ERROR" 
+                && this.isReturnedUserAndParticipantTheSame(parsedData)){
+              this.openResultDialog(parsedData[ "errorMessage" ]);
+            }
+         },
+         err => {
+            this.openResultDialog("Error - Failed to update participant");
+         } 
+        );
+      };
+    }, 5000);
     this.loadInstitutions();
     window.scrollTo( 0, 0 );
+  }
+
+  ngOnDestroy() {
+
+    clearInterval(this.checkParticipantStatusInterval);
+
+  }
+  
+  private setDefaultProfileValues() {
+    this.updatedFirstName = this.participant.data.profile[ "firstName" ];
+    this.updatedLastName = this.participant.data.profile[ "lastName" ];
+    this.updatedEmail = this.participant.data.profile[ "email" ];
+  }
+
+  private isReturnedUserAndParticipantTheSame(parsedData: any) {
+    return parsedData[ "participantGuid" ] === this.participant.data.profile[ "guid" ]
+    && parsedData[ "userId"] === this.role.userID();
   }
 
   private updateParticipantObjectOnSuccess() {
@@ -153,12 +176,6 @@ export class ParticipantPageComponent implements OnInit {
     });
   }
 
-  private setDefaultProfileValues() {
-    this.updatedFirstName = this.participant.data.profile[ "firstName" ];
-    this.updatedLastName = this.participant.data.profile[ "lastName" ];
-    this.updatedEmail = this.participant.data.profile[ "email" ];
-  }
-
   hasRole(): RoleService {
     return this.role;
   }
@@ -170,41 +187,26 @@ export class ParticipantPageComponent implements OnInit {
   updateFirstName() {    
     this.updatingParticipant = true;
     this.payload[ "data" ][ "firstName" ] = this.updatedFirstName;
-    this.dsmService.updateParticipant(JSON.stringify(this.payload)).subscribe( 
+    this.dsmService.updateParticipant(JSON.stringify(this.payload)).subscribe(
       data => {
-        if (JSON.parse(data)[ "resultType" ] === "SUCCESS") {
-          this.updateParticipantObjectOnSuccess();
-          this.openResultDialog("Participant successfully updated");
-          this.updatingParticipant = false;
-        } 
-        else {
-          this.openResultDialog(JSON.parse(data)[ "errorMessage" ]);
-          this.updatingParticipant = false;
-        }
+
       },
       err => {
+        this.openResultDialog("Error - Failed to update participant");
       }
     );
     delete this.payload[ "data" ][ "firstName" ];
-
   }
 
   updateLastName() {
     this.updatingParticipant = true;
     this.payload[ "data" ][ "lastName" ] = this.updatedFirstName;
-    this.dsmService.updateParticipant(JSON.stringify(this.payload)).subscribe( 
+    this.dsmService.updateParticipant(JSON.stringify(this.payload)).subscribe(
       data => {
-        if (JSON.parse(data)[ "resultType" ] === "SUCCESS") {
-          this.updateParticipantObjectOnSuccess();
-          this.openResultDialog("Participant successfully updated");
-          this.updatingParticipant = false;
-        } 
-        else {
-          this.openResultDialog(JSON.parse(data)[ "errorMessage" ]);
-          this.updatingParticipant = false;
-        }
+
       },
       err => {
+        this.openResultDialog("Error - Failed to update participant");
       }
     );
     delete this.payload[ "data" ][ "lastName" ];
@@ -213,19 +215,12 @@ export class ParticipantPageComponent implements OnInit {
   updateEmail() {
     this.updatingParticipant = true;
     this.payload[ "data" ][ "email" ] = this.updatedEmail;
-    this.dsmService.updateParticipant(JSON.stringify(this.payload)).subscribe( 
+    this.dsmService.updateParticipant(JSON.stringify(this.payload)).subscribe(
       data => {
-        if (JSON.parse(data)[ "resultType" ] === "SUCCESS") {
-          this.updateParticipantObjectOnSuccess();
-          this.openResultDialog("Participant successfully updated");
-          this.updatingParticipant = false;
-        } 
-        else {
-          this.openResultDialog(JSON.parse(data)[ "errorMessage" ]);
-          this.updatingParticipant = false;
-        }
+
       },
       err => {
+        this.openResultDialog("Error - Failed to update participant");
       }
     );
     delete this.payload[ "data" ][ "email" ];

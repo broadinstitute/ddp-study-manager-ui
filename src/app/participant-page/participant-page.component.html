@@ -81,7 +81,8 @@
             <td>
               <input mdInput type="text" maxlength="200" autocomplete="off" placeholder="First Name"
                    [(ngModel)]="updatedFirstName"
-                   [value]="updatedFirstName">
+                   [value]="updatedFirstName"
+                   class="update-participant-input">
               <button md-raised-button color="primary"
                       (click)="updateFirstName()"
                       [disabled]="updatedFirstName === participant.data.profile['firstName'] || updatedFirstName.length == 0"
@@ -94,7 +95,8 @@
             <td>
               <input mdInput type="text" maxlength="200" autocomplete="off" placeholder="Last Name"
                   [(ngModel)]="updatedLastName"
-                  [value]="updatedLastName">
+                  [value]="updatedLastName"
+                  class="update-participant-input">
               <button md-raised-button color="primary"
                       [disabled]="updatedLastName === participant.data.profile['lastName'] || updatedLastName.length == 0"
                       (click)="updateLastName()">Update
@@ -106,7 +108,8 @@
             <td>
               <input mdInput type="email" maxlength="200" autocomplete="off" placeholder="Email"
                   [(ngModel)]="updatedEmail"
-                  email>
+                  email
+                  class="update-participant-input">
               <button md-raised-button color="primary"
                       [disabled]="updatedEmail === participant.data.profile['email'] || updatedEmail.length == 0"
                       (click)="updateEmail()">Update
