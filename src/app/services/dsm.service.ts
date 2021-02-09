@@ -52,12 +52,12 @@ export class DSMService {
 
   public updateParticipant( json: string ) {
     let url = this.baseUrl + DSMService.UI + "editParticipant";
-    return this.http.post( url, json, this.buildHeader() ).map( ( res: Response ) => res.json() ).catch( this.handleError );
+    return this.http.put( url, json, this.buildHeader() ).map( ( res: Response ) => res.json() ).catch( this.handleError );
   }
 
-  public checkUpdatingParticipantStatus( json: string ) {
+  public checkUpdatingParticipantStatus() {
     let url = this.baseUrl + DSMService.UI + "editParticipantMessageStatus";
-    return this.http.post( url, json, this.buildHeader() ).map( ( res: Response ) => res.json() ).catch( this.handleError );
+    return this.http.get( url, this.buildHeader() ).map( ( res: Response ) => res.json() ).catch( this.handleError );
   }
 
   public setKitSentRequest( json: string ) {

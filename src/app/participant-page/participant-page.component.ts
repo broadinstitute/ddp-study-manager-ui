@@ -123,7 +123,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     };
     this.checkParticipantStatusInterval = setInterval(() => {
       if (this.updatingParticipant) {
-        this.dsmService.checkUpdatingParticipantStatus(JSON.stringify(this.payload)).subscribe(
+        this.dsmService.checkUpdatingParticipantStatus().subscribe(
           data => {
             let parsedData = JSON.parse(data);
             if (parsedData[ "resultType" ] === "SUCCESS" 
