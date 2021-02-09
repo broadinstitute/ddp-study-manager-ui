@@ -27,6 +27,7 @@ import {AssigneeParticipant} from "./models/assignee-participant.model";
 import {PreferredLanguage} from "./models/preferred-languages.model";
 import {Participant} from "./participant-list.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
+import { debug } from "console";
 
 @Component( {
   selector: "app-participant-list",
@@ -1236,39 +1237,46 @@ export class ParticipantListComponent implements OnInit {
 
     let fileCount: number = 0;
 
+    let paths: any[][] = [];
+    let isSurveyData: boolean;
+
     for (let source of Object.keys( columns )) {
       if (source === "data" || source === "p" || source === "t") { //because data gets added to everything!
         continue;
       }
-
-      if (source === "m") {
-        Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"], ["medicalRecords", "m"]], columns, "Participants-MR-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
-        fileCount = fileCount + 1;
-      } else if (source === "oD") {
-        Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"], ["oncHistoryDetails", "oD", "tissues", "t"]], columns, "Participants-OncHistory-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
-        fileCount = fileCount + 1;
-      } else if (source === "k") {
-        Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"], ["kits", "k"]], columns, "Participants-Sample-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
-        fileCount = fileCount + 1;
-      } else if (source === "a") {
-        Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"], ["abstractionActivities", "a"]], columns, "Participants-AbstractionActivity-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
-        Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"], ["abstractionSummary", "a"]], columns, "Participants-Abstraction-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
-        fileCount = fileCount + 1;
-      }  else if (source === "invitations") {
-        Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"], ["invitations", "invitations"]], columns, "Participants-Invitation-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION, false );
-        fileCount = fileCount + 1;
-      } else {
-        Utils.downloadCurrentData( this.participantList, [["data", "data"], [source, source]], columns, "Participants-" + source + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION, true );
-        fileCount = fileCount + 1;
-      }
+      debugger
+      paths.push([source, source]);
+      // if (source === "m") {
+      //   Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"], ["medicalRecords", "m"]], columns, "Participants-MR-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
+      //   fileCount = fileCount + 1;
+      //   paths.push()
+      // } else if (source === "oD") {
+      //   Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"], ["oncHistoryDetails", "oD", "tissues", "t"]], columns, "Participants-OncHistory-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
+      //   fileCount = fileCount + 1;
+      // } else if (source === "k") {
+      //   Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"], ["kits", "k"]], columns, "Participants-Sample-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
+      //   fileCount = fileCount + 1;
+      // } else if (source === "a") {
+      //   Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"], ["abstractionActivities", "a"]], columns, "Participants-AbstractionActivity-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
+      //   Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"], ["abstractionSummary", "a"]], columns, "Participants-Abstraction-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
+      //   fileCount = fileCount + 1;
+      // }  else if (source === "invitations") {
+      //   Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"], ["invitations", "invitations"]], columns, "Participants-Invitation-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION, false );
+      //   fileCount = fileCount + 1;
+      // } else {
+      //   Utils.downloadCurrentData( this.participantList, [["data", "data"], [source, source]], columns, "Participants-" + source + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION, true );
+      //   fileCount = fileCount + 1;
+      // }
     }
 
-    if (fileCount == 0) {
-      if (this.selectedColumns[ "data" ] != null && this.selectedColumns[ "data" ].length > 0) {
-        fileCount = fileCount + 1;
-        Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"]], columns, "Participants-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
-      }
-    }
+    Utils.downloadCurrentData( this.participantList, paths, columns, "Participants-"  + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION, true );
+
+    // if (fileCount == 0) {
+    //   if (this.selectedColumns[ "data" ] != null && this.selectedColumns[ "data" ].length > 0) {
+    //     fileCount = fileCount + 1;
+    //     Utils.downloadCurrentData( this.participantList, [["data", "data"], ["participant", "p"]], columns, "Participants-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
+    //   }
+    // }
 
     if (fileCount > 1) {
       this.additionalMessage = "Please note this view was downloaded in multiple files.";

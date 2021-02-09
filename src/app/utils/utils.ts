@@ -1,6 +1,7 @@
 import {DatePipe} from "@angular/common";
 import {Injectable} from "@angular/core";
 import {FormControl} from "@angular/forms";
+import { debug } from "console";
 import {groupBy} from "rxjs/operator/groupBy";
 import {AbstractionGroup} from "../abstraction-group/abstraction-group.model";
 import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
@@ -189,6 +190,7 @@ export class Utils {
   }
 
   public static downloadCurrentData( data: any[], paths: any[], columns: {}, fileName: string, isSurveyData ?: boolean ) {
+    debugger
     let headers = "";
     for (let path of paths) {
       for (let i = 1; i < path.length; i += 2) {
