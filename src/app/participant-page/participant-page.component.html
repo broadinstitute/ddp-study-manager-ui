@@ -871,9 +871,26 @@ participant.data.dsm['diagnosisYear'] != null">
             <ng-container *ngFor="let tab of settings['null']">
               <ng-container *ngIf="displayTab(tab)">
                 <tab heading="{{tab.columnDisplay}}" [active]="tabActive(tab.columnDisplay)" (select)="onSelect($event, tab.columnDisplay)">
+<!--                  <br/>-->
+
+<!--                  <div class="Float&#45;&#45;left Width&#45;&#45;100">-->
+<!--                    <b class="Group&#45;&#45;Title">Jump to:</b>-->
+<!--                  </div>-->
+<!--                  <ng-container *ngFor="let setting of settings[tab.columnName]; let settingIndex = index">-->
+<!--                    <div class="Float&#45;&#45;left" *ngIf="setting.displayType === 'GROUP'">-->
+<!--                      <a class="Abstraction&#45;&#45;Jump&#45;&#45;Group" pageScroll href="{{setting.columnName}}">{{setting.columnDisplay}}</a>-->
+<!--                    </div>-->
+<!--                    <ng-container *ngIf="settingIndex < settings[tab.columnName].length - 1">-->
+<!--                      <div class="Float&#45;&#45;left Vertical&#45;&#45;line"></div>-->
+<!--                    </ng-container>-->
+<!--                  </ng-container>-->
+<!--                  <div class="Float&#45;&#45;left Width&#45;&#45;100">-->
+<!--                    <hr style="border-color: black">-->
+<!--                  </div>-->
+
                   <ng-container *ngFor="let setting of settings[tab.columnName]; let settingIndex = index">
-                    <div class="Display--block Width--100">
-                      <ng-container *ngIf="setting.displayType === 'GROUP'">
+                    <div class="Float--left Width--100">
+                      <div *ngIf="setting.displayType === 'GROUP'">
                         <fieldset style="border: 1px black solid">
                           <legend class="Group--Title" id="{{setting.columnName}}">{{setting.columnDisplay}}</legend>
                           <ng-container *ngFor="let field of settings[setting.columnName]; let fieldIndex = index">
@@ -882,7 +899,7 @@ participant.data.dsm['diagnosisYear'] != null">
                             <hr *ngIf="fieldIndex !== settings[setting.columnName].length-1" style="border-color: lightgray">
                           </ng-container>
                         </fieldset>
-                      </ng-container>
+                      </div>
                       <ng-container *ngIf="setting.displayType !== 'GROUP'">
                         <app-form-data [fieldSetting]="setting" [participantData]="getParticipantData(setting, tab.columnName)"
                                        [activityData]="getActivityData(setting)" [activityOptions]="getActivityOptions(setting)"
