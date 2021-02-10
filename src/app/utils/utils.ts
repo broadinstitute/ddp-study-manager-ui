@@ -190,7 +190,7 @@ export class Utils {
   }
 
   public static downloadCurrentData( data: any[], paths: any[], columns: {}, fileName: string, isSurveyData ?: boolean ) {
-    debugger
+    debugger;
     let headers = "";
     for (let path of paths) {
       for (let i = 1; i < path.length; i += 2) {
@@ -254,6 +254,7 @@ export class Utils {
 
 
   public static makeCSVForObjectArray( data: Object, paths: any[], columns: {}, index: number ): string[] {
+    debugger;
     let result: string[] = [];
     if (index > paths.length - 1) {
       return null;
