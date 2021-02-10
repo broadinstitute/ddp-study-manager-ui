@@ -125,7 +125,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
       if (this.updatingParticipant) {
         this.dsmService.checkUpdatingParticipantStatus().subscribe(
           data => {
-            let parsedData = JSON.parse(data);
+            let parsedData = JSON.parse(data.body);
             if (parsedData[ "resultType" ] === "SUCCESS" 
                 && this.isReturnedUserAndParticipantTheSame(parsedData)) {
               this.updateParticipantObjectOnSuccess();
