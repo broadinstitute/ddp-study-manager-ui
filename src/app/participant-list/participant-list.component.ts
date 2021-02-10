@@ -27,7 +27,6 @@ import {AssigneeParticipant} from "./models/assignee-participant.model";
 import {PreferredLanguage} from "./models/preferred-languages.model";
 import {Participant} from "./participant-list.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
-import { debug } from "console";
 
 @Component( {
   selector: "app-participant-list",
