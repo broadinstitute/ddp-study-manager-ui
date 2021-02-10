@@ -215,7 +215,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   updateLastName() {
     this.updatingParticipant = true;
     this.taskType = "UPDATE_LASTNAME";
-    this.payload[ "data" ][ "lastName" ] = this.updatedFirstName;
+    this.payload[ "data" ][ "lastName" ] = this.updatedLastName;
     this.dsmService.updateParticipant(JSON.stringify(this.payload)).subscribe(
       data => {
 
