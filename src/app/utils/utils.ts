@@ -361,7 +361,11 @@ export class Utils {
               value = o[ col.participantColumn.object ][ col.participantColumn.name ];
             }
             if (col.type === Filter.DATE_TYPE) {
-              value = this.getDateFormatted( new Date( value ), Utils.DATE_STRING_IN_CVS );
+              if (value === 0) {
+                value = "";
+              } else {
+                value = this.getDateFormatted( new Date( value ), Utils.DATE_STRING_IN_CVS );
+              }
             }
             value = value == undefined ? "" : value.toString();
             value.replace( "\\n", " " );
