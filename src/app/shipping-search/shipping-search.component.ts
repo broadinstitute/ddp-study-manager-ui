@@ -63,6 +63,7 @@ export class ShippingSearchComponent implements OnInit {
           if (this.kit == null || this.kit.length < 1) {
             this.additionalMessage = "Kit was not found.";
           }
+          console.log(this.kit);
           this.searching = false;
           // console.log(this.ddp);
         },
@@ -82,5 +83,21 @@ export class ShippingSearchComponent implements OnInit {
 
   getRole(): RoleService {
     return this.role;
+  }
+
+  showColumn( name: string ): boolean {
+    if (this.kit != null) {
+      let foundColumn = this.kit.find( kit => {
+        return kit[ name ] != null && kit[ name ] !== "" && kit[ name ] != 0;
+      } );
+      if (foundColumn != null) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  receiveATKit() {
+
   }
 }
