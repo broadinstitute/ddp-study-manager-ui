@@ -96,6 +96,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   updatedLastName: string;
   updatedEmail: string;
   updatingParticipant: boolean = false;
+  private taskType: string;
   private checkParticipantStatusInterval: any;
 
   private payload = {};
@@ -164,9 +165,21 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   }
 
   private updateParticipantObjectOnSuccess() {
-    this.participant.data.profile[ "firstName" ] = this.updatedFirstName;
-    this.participant.data.profile[ "lastName" ] = this.updatedLastName;
-    this.participant.data.profile[ "email" ] = this.updatedEmail;
+    switch (this.taskType) {
+      case "UPDATE_FIRSTNAME": {
+        this.participant.data.profile[ "firstName" ] = this.updatedFirstName;
+        break;
+      }
+      case "UPDATE_LASTNAME": {
+        this.participant.data.profile[ "lastName" ] = this.updatedLastName;
+        break;
+      }
+      case "UPDATE_EMAIL": {
+        this.participant.data.profile[ "email" ] = this.updatedEmail;
+        break;
+      }
+    }
+    this.taskType = "";
   }
 
   private openResultDialog(text: string) {
@@ -186,6 +199,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   updateFirstName() {    
     this.updatingParticipant = true;
+    this.taskType = "UPDATE_FIRSTNAME";
     this.payload[ "data" ][ "firstName" ] = this.updatedFirstName;
     this.dsmService.updateParticipant(JSON.stringify(this.payload)).subscribe(
       data => {
@@ -200,6 +214,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   updateLastName() {
     this.updatingParticipant = true;
+    this.taskType = "UPDATE_LASTNAME";
     this.payload[ "data" ][ "lastName" ] = this.updatedFirstName;
     this.dsmService.updateParticipant(JSON.stringify(this.payload)).subscribe(
       data => {
@@ -214,6 +229,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   updateEmail() {
     this.updatingParticipant = true;
+    this.taskType = "UPDATE_EMAIL";
     this.payload[ "data" ][ "email" ] = this.updatedEmail;
     this.dsmService.updateParticipant(JSON.stringify(this.payload)).subscribe(
       data => {
