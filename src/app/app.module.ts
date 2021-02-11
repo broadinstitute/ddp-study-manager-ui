@@ -111,7 +111,6 @@ import {ActivityDataComponent} from "./activity-data/activity-data.component";
 import {SearchBarComponent} from "./search-bar/search-bar.component";
 import {FieldSettingsComponent} from "./field-settings/field-settings.component";
 import { InvitationDataComponent } from './invitation-data/invitation-data.component';
-import { WebSocketService } from "./services/web-socket-service.service";
 import { ParticipantUpdateResultDialogComponent } from './dialogs/participant-update-result-dialog.component';
 
 @NgModule( {
@@ -231,7 +230,6 @@ import { ParticipantUpdateResultDialogComponent } from './dialogs/participant-up
     DSMService,
     RoleService,
     SessionService,
-    WebSocketService,
     Utils,
     Statics,
     Language
