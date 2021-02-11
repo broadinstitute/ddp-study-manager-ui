@@ -1,4 +1,5 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild, OnDestroy } from "@angular/core";
+import { MdDialog } from '@angular/material';
 import {TabDirective} from "ngx-bootstrap";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
@@ -11,8 +12,8 @@ import {Auth} from "../services/auth.service";
 import {DSMService} from "../services/dsm.service";
 import {MedicalRecord} from "../medical-record/medical-record.model";
 import {RoleService} from "../services/role.service";
-import {Utils} from "../utils/utils";
 import {Statics} from "../utils/statics";
+import {Utils} from "../utils/utils";
 import {OncHistoryDetail} from "../onc-history-detail/onc-history-detail.model";
 import {ModalComponent} from "../modal/modal.component";
 import {Tissue} from "../tissue/tissue.model";
@@ -23,6 +24,7 @@ import {NameValue} from "../utils/name-value.model";
 import {Abstraction} from "../medical-record-abstraction/medical-record-abstraction.model";
 import {AbstractionGroup, AbstractionWrapper} from "../abstraction-group/abstraction-group.model";
 import {PatchUtil} from "../utils/patch.model";
+import { ParticipantUpdateResultDialogComponent } from "../dialogs/participant-update-result-dialog.component";
 
 var fileSaver = require( "file-saver/FileSaver.js" );
 
@@ -31,7 +33,7 @@ var fileSaver = require( "file-saver/FileSaver.js" );
   templateUrl: "./participant-page.component.html",
   styleUrls: [ "./participant-page.component.css" ]
 } )
-export class ParticipantPageComponent implements OnInit {
+export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   @ViewChild( ModalComponent )
   public universalModal: ModalComponent;
@@ -90,8 +92,17 @@ export class ParticipantPageComponent implements OnInit {
   selectedPDF: string;
   disableDownload: boolean = false;
 
+  updatedFirstName: string;
+  updatedLastName: string;
+  updatedEmail: string;
+  updatingParticipant: boolean = false;
+  private taskType: string;
+  private checkParticipantStatusInterval: any;
+
+  private payload = {};
+
   constructor( private auth: Auth, private compService: ComponentService, private dsmService: DSMService, private router: Router,
-               private role: RoleService, private util: Utils, private route: ActivatedRoute) {
+               private role: RoleService, private util: Utils, private route: ActivatedRoute, public dialog: MdDialog) {
     if (!auth.authenticated()) {
       auth.logout();
     }
@@ -103,10 +114,79 @@ export class ParticipantPageComponent implements OnInit {
       }
     } );
   }
-
+  
   ngOnInit() {
+    this.setDefaultProfileValues();
+    this.payload = {
+      participantGuid: this.participant.data.profile[ "guid" ],
+      studyGuid: this.participant.data.ddp,
+      data: {}
+    };
+    this.checkParticipantStatusInterval = setInterval(() => {
+      if (this.updatingParticipant) {
+        this.dsmService.checkUpdatingParticipantStatus().subscribe(
+          data => {
+            let parsedData = JSON.parse(data.body);
+            if (parsedData[ "resultType" ] === "SUCCESS" 
+                && this.isReturnedUserAndParticipantTheSame(parsedData)) {
+              this.updateParticipantObjectOnSuccess();
+              this.openResultDialog("Participant successfully updated");
+            } 
+            else if (parsedData[ "resultType" ] === "ERROR" 
+                && this.isReturnedUserAndParticipantTheSame(parsedData)){
+              this.openResultDialog(parsedData[ "errorMessage" ]);
+            }
+         },
+         err => {
+            this.openResultDialog("Error - Failed to update participant");
+         } 
+        );
+      };
+    }, 5000);
     this.loadInstitutions();
     window.scrollTo( 0, 0 );
+  }
+
+  ngOnDestroy() {
+
+    clearInterval(this.checkParticipantStatusInterval);
+
+  }
+  
+  private setDefaultProfileValues() {
+    this.updatedFirstName = this.participant.data.profile[ "firstName" ];
+    this.updatedLastName = this.participant.data.profile[ "lastName" ];
+    this.updatedEmail = this.participant.data.profile[ "email" ];
+  }
+
+  private isReturnedUserAndParticipantTheSame(parsedData: any) {
+    return parsedData[ "participantGuid" ] === this.participant.data.profile[ "guid" ]
+    && parsedData[ "userId"] === this.role.userID();
+  }
+
+  private updateParticipantObjectOnSuccess() {
+    switch (this.taskType) {
+      case "UPDATE_FIRSTNAME": {
+        this.participant.data.profile[ "firstName" ] = this.updatedFirstName;
+        break;
+      }
+      case "UPDATE_LASTNAME": {
+        this.participant.data.profile[ "lastName" ] = this.updatedLastName;
+        break;
+      }
+      case "UPDATE_EMAIL": {
+        this.participant.data.profile[ "email" ] = this.updatedEmail;
+        break;
+      }
+    }
+    this.taskType = "";
+  }
+
+  private openResultDialog(text: string) {
+    this.updatingParticipant = false;
+    this.dialog.open(ParticipantUpdateResultDialogComponent, {
+      data: { message: text },
+    });
   }
 
   hasRole(): RoleService {
@@ -115,6 +195,51 @@ export class ParticipantPageComponent implements OnInit {
 
   getUtil(): Utils {
     return this.util;
+  }
+
+  updateFirstName() {    
+    this.updatingParticipant = true;
+    this.taskType = "UPDATE_FIRSTNAME";
+    this.payload[ "data" ][ "firstName" ] = this.updatedFirstName;
+    this.dsmService.updateParticipant(JSON.stringify(this.payload)).subscribe(
+      data => {
+
+      },
+      err => {
+        this.openResultDialog("Error - Failed to update participant");
+      }
+    );
+    delete this.payload[ "data" ][ "firstName" ];
+  }
+
+  updateLastName() {
+    this.updatingParticipant = true;
+    this.taskType = "UPDATE_LASTNAME";
+    this.payload[ "data" ][ "lastName" ] = this.updatedLastName;
+    this.dsmService.updateParticipant(JSON.stringify(this.payload)).subscribe(
+      data => {
+
+      },
+      err => {
+        this.openResultDialog("Error - Failed to update participant");
+      }
+    );
+    delete this.payload[ "data" ][ "lastName" ];
+  }
+
+  updateEmail() {
+    this.updatingParticipant = true;
+    this.taskType = "UPDATE_EMAIL";
+    this.payload[ "data" ][ "email" ] = this.updatedEmail;
+    this.dsmService.updateParticipant(JSON.stringify(this.payload)).subscribe(
+      data => {
+
+      },
+      err => {
+        this.openResultDialog("Error - Failed to update participant");
+      }
+    );
+    delete this.payload[ "data" ][ "email" ];
   }
 
   getLanguageName(languageCode: string): string {

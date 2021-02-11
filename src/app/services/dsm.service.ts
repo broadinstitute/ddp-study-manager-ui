@@ -3,6 +3,7 @@ import {Headers, Http, RequestOptions, Response, ResponseContentType, URLSearchP
 import {Router} from "@angular/router";
 import {JwtHelper} from "angular2-jwt";
 import {Observable} from "rxjs";
+import { retry } from "rxjs/operator/retry";
 import {Filter} from "../filter-column/filter-column.model";
 import {ViewFilter} from "../filter-column/models/view-filter.model";
 import {Abstraction} from "../medical-record-abstraction/medical-record-abstraction.model";
@@ -47,6 +48,16 @@ export class DSMService {
     let map: { name: string, value: any }[] = [];
     map.push( {name: "userId", value: this.role.userID()} );
     return this.http.post( url, json, this.buildQueryHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError );
+  }
+
+  public updateParticipant( json: string ) {
+    let url = this.baseUrl + DSMService.UI + "editParticipant";
+    return this.http.put( url, json, this.buildHeader() ).map( ( res: Response ) => res.json() ).catch( this.handleError );
+  }
+
+  public checkUpdatingParticipantStatus() {
+    let url = this.baseUrl + DSMService.UI + "editParticipantMessageStatus";
+    return this.http.get( url, this.buildHeader() ).map( ( res: Response ) => res.json() ).catch( this.handleError );
   }
 
   public setKitSentRequest( json: string ) {

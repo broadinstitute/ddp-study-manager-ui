@@ -21,7 +21,8 @@ import {
   MdCheckboxModule,
   MdInputModule,
   MdRadioModule,
-  MdSelectModule
+  MdSelectModule,
+  MdDialogModule
 } from "@angular/material";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {CookieModule} from "ngx-cookie";
@@ -110,6 +111,7 @@ import {ActivityDataComponent} from "./activity-data/activity-data.component";
 import {SearchBarComponent} from "./search-bar/search-bar.component";
 import {FieldSettingsComponent} from "./field-settings/field-settings.component";
 import { InvitationDataComponent } from './invitation-data/invitation-data.component';
+import { ParticipantUpdateResultDialogComponent } from './dialogs/participant-update-result-dialog.component';
 
 @NgModule( {
   declarations: [
@@ -185,9 +187,10 @@ import { InvitationDataComponent } from './invitation-data/invitation-data.compo
     ParticipantListComponent,
     ActivityDataComponent,
     SearchBarComponent,
-    InvitationDataComponent
-
+    InvitationDataComponent,
+    ParticipantUpdateResultDialogComponent
   ],
+  entryComponents: [ParticipantUpdateResultDialogComponent],
   imports: [
     BrowserModule,
     FormsModule,
@@ -204,6 +207,7 @@ import { InvitationDataComponent } from './invitation-data/invitation-data.compo
     MdButtonToggleModule,
     NgxPageScrollModule,
     MdAutocompleteModule,
+    MdDialogModule,
 
     DataTableModule,
     NgxPaginationModule,
