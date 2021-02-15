@@ -119,7 +119,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     this.setDefaultProfileValues();
     this.payload = {
       participantGuid: this.participant.data.profile[ "guid" ],
-      studyGuid: this.participant.data.ddp,
+      instanceName: this.compService.getRealm(),
       data: {}
     };
     this.checkParticipantStatusInterval = setInterval(() => {
