@@ -48,8 +48,11 @@
           <th>
             <mfDefaultSorter by="realm">DDP-Realm</mfDefaultSorter>
           </th>
-          <th>
+          <th *ngIf="!showColumn('hruid')">
             <mfDefaultSorter by="collaboratorParticipantId">Short ID</mfDefaultSorter>
+          </th>
+          <th *ngIf="showColumn('hruid')">
+            <mfDefaultSorter by="hruid">Short ID</mfDefaultSorter>
           </th>
           <th>
             <mfDefaultSorter by="collaboratorParticipantId">Collaborator Participant ID</mfDefaultSorter>
@@ -100,7 +103,8 @@
       <tbody>
       <tr *ngFor="let kitRequest of mf.data">
         <td>{{kitRequest.realm}}</td>
-        <td>{{kitRequest.getID()}}</td>
+        <td *ngIf="!showColumn('hruid')">{{kitRequest.getID()}}</td>
+        <td *ngIf="showColumn('hruid')">{{kitRequest.hruid}}</td>
         <td>{{kitRequest.collaboratorParticipantId}}</td>
         <td *ngIf="showColumn('bspCollaboratorSampleId')">{{kitRequest.bspCollaboratorSampleId}}</td>
         <td *ngIf="showColumn('shippingId')">{{kitRequest.shippingId}}</td>
@@ -134,7 +138,7 @@
         <td *ngIf="showColumn('gender')">{{kitRequest.gender}}</td>
         <td *ngIf="!showColumn('receiveDateString')">
           <button md-raised-button type="button" color="primary" *ngIf="(kitRequest.receiveDateString === '' || kitRequest.receiveDateString === null || kitRequest.receiveDateString === undefined) && kitRequest.realm === 'AT'"
-                  (click)="receiveATKit()">Mark Received</button>
+                  (click)="receiveATKit(kitRequest)">Mark Received</button>
         </td>
       </tr>
       <tbody>

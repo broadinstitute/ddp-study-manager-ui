@@ -117,7 +117,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
       }
     } );
   }
-  
+
   ngOnInit() {
     this.setDefaultProfileValues();
     this.payload = {
@@ -130,19 +130,19 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
         this.dsmService.checkUpdatingParticipantStatus().subscribe(
           data => {
             let parsedData = JSON.parse(data.body);
-            if (parsedData[ "resultType" ] === "SUCCESS" 
+            if (parsedData[ "resultType" ] === "SUCCESS"
                 && this.isReturnedUserAndParticipantTheSame(parsedData)) {
               this.updateParticipantObjectOnSuccess();
               this.openResultDialog("Participant successfully updated");
-            } 
-            else if (parsedData[ "resultType" ] === "ERROR" 
+            }
+            else if (parsedData[ "resultType" ] === "ERROR"
                 && this.isReturnedUserAndParticipantTheSame(parsedData)){
               this.openResultDialog(parsedData[ "errorMessage" ]);
             }
          },
          err => {
             this.openResultDialog("Error - Failed to update participant");
-         } 
+         }
         );
       };
     }, 5000);
@@ -155,7 +155,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     clearInterval(this.checkParticipantStatusInterval);
 
   }
-  
+
   private setDefaultProfileValues() {
     this.updatedFirstName = this.participant.data.profile[ "firstName" ];
     this.updatedLastName = this.participant.data.profile[ "lastName" ];
@@ -200,7 +200,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     return this.util;
   }
 
-  updateFirstName() {    
+  updateFirstName() {
     this.updatingParticipant = true;
     this.taskType = "UPDATE_FIRSTNAME";
     this.payload[ "data" ][ "firstName" ] = this.updatedFirstName;
@@ -1203,28 +1203,32 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
         let nameValue: { name: string, value: any }[] = [];
         nameValue.push({name: "d.data", value: JSON.stringify(participantData.data)});
-
+        let participantDataSec: ParticipantData = null;
         if (fieldSetting.actions != null) {
           fieldSetting.actions.forEach(( action ) => {
             if (action != null && action.name != null && action.name != undefined && action.type != null && action.type != undefined) {
-              let participantData: ParticipantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === action.type);
-              if (participantData == null) {
+              participantDataSec = this.participant.participantData.find(participantData => participantData.fieldTypeId === action.type);
+              if (participantDataSec == null) {
                 let data: { [ k: string ]: any } = {};
                 data[action.name] = action.value;
-                participantData = new ParticipantData (null, action.type, data );
+                participantDataSec = new ParticipantData (null, action.type, data );
               }
-              if (participantData != null && participantData.data != null) {
-                participantData.data[ action.name ] = action.value;
-                nameValue.push({name: "d.data", value: JSON.stringify(participantData.data)});
+              if (participantDataSec != null && participantDataSec.data != null) {
+                participantDataSec.data[ action.name ] = action.value;
+                nameValue.push({name: "d.data", value: JSON.stringify(participantDataSec.data)});
               }
             }
           });
         }
 
+        let participantId = this.participant.data.profile[ "guid" ];
+        if (this.participant.data.profile[ "legacyAltPid" ] != null && this.participant.data.profile[ "legacyAltPid" ] != undefined && this.participant.data.profile[ "legacyAltPid" ] !== ''){
+          participantId = this.participant.data.profile[ "legacyAltPid" ];
+        }
         let patch = {
           id: participantData.dataId,
           parent: "participantDataId",
-          parentId: this.participant.data.profile[ "guid" ],
+          parentId: participantId,
           user: this.role.userMail(),
           fieldId: participantData.fieldTypeId,
           realm:  localStorage.getItem( ComponentService.MENU_SELECTED_REALM ),
@@ -1238,8 +1242,9 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
               if (result.body != null && result.body !== "") {
                 let jsonData: any | any[] = JSON.parse( result.body );
                 if (jsonData.participantDataId !== undefined && jsonData.participantDataId !== "") {
-                  //todo need to overwrite this.participant.participantData?!
-                  console.log(jsonData.participantDataId);
+                  if (participantData != null) {
+                    participantData.dataId = jsonData.participantDataId;
+                  }
                 }
               }
             }

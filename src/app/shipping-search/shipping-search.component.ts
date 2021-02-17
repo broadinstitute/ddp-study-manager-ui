@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {ScanError} from "../scan/error.model";
+import {ScanValue} from "../scan/scan.model";
 import { Auth } from "../services/auth.service";
 import { Statics } from "../utils/statics";
 import { DSMService } from "../services/dsm.service";
@@ -97,7 +99,16 @@ export class ShippingSearchComponent implements OnInit {
     return false;
   }
 
-  receiveATKit() {
+  receiveATKit(kitRequest: KitRequest) {
+    let singleScanValues: Array<ScanValue> = [];
+    singleScanValues.push(new ScanValue(kitRequest.kitLabel));
+    this.dsmService.setKitReceivedRequest(JSON.stringify(singleScanValues)).subscribe(// need to subscribe, otherwise it will not send!
+      data => {
+        // kitRequest.receiveDateString =
+      },
+      err => {
+      }
+    );
 
   }
 }
