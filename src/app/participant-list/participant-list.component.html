@@ -433,6 +433,16 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                       {{getLanguageName(pt.data[col.participantColumn.object][col.participantColumn.name])}}
                     </ng-container>
                   </div>
+
+
+                  <div *ngIf="settings[ alias ] != null && settings [alias] != undefined && pt.participantData != null">
+                    <ng-container>
+                      {{getParticipantData(pt, col.participantColumn.name, alias)}}
+                    </ng-container>
+                  </div>
+
+
+
                   <div *ngIf="alias === 'p' && pt.participant != null">
                     <ng-container
                       *ngIf="pt.participant[col.participantColumn.name] != null && col.type !== 'ADDITIONALVALUE' && col.type !== 'DATE' && col.type !== 'CHECKBOX'">

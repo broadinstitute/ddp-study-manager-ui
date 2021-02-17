@@ -227,13 +227,22 @@ export class ParticipantListComponent implements OnInit {
                 }
                 this.sourceColumns[ "p" ].push( filter );
               } else {
-                if (this.sourceColumns[ key ] == null || this.sourceColumns[ key ] == undefined) {
-                  this.sourceColumns[ key ] = [];
+                if (this.sourceColumns[ fieldSetting.fieldType ] == null || this.sourceColumns[ fieldSetting.fieldType ] == undefined) {
+                  this.sourceColumns[ fieldSetting.fieldType ] = [];
                 }
-                this.sourceColumns[ key ].push( filter );
+                if (key === null || key === "null") {
+                  if (fieldSetting.displayType === "TAB" && !this.dataSources.has(fieldSetting.columnName)) {
+                    this.dataSources.set(fieldSetting.columnName, fieldSetting.columnDisplay);
+                  }
+                }
+                if (fieldSetting.displayType == null || fieldSetting.displayType == undefined || fieldSetting.displayType !== "GROUP") {
+                  this.sourceColumns[ fieldSetting.fieldType ].push( filter );
+                }
               }
               this.settings[ key ].push( fieldSetting );
-              this.allFieldNames.add( filter.participantColumn.tableAlias + "." + filter.participantColumn.name );
+              if (fieldSetting.displayType == null || fieldSetting.displayType == undefined || fieldSetting.displayType !== "GROUP") {
+                this.allFieldNames.add( filter.participantColumn.tableAlias + "." + filter.participantColumn.name );
+              }
             } );
           } );
         }
@@ -363,6 +372,9 @@ export class ParticipantListComponent implements OnInit {
             this.sourceColumns[ "k" ].push( new Filter( ParticipantColumn.EXTERNAL_ORDER_NUMBER, Filter.TEXT_TYPE ) );
             this.sourceColumns[ "k" ].push( new Filter( ParticipantColumn.EXTERNAL_ORDER_DATE, Filter.DATE_TYPE ) );
           }
+        }
+        else {
+          this.dataSources.delete( "k" );
         }
         if (jsonData.preferredLanguages != null) {
           this.preferredLanguages = new Array<PreferredLanguage>();
@@ -1560,5 +1572,15 @@ export class ParticipantListComponent implements OnInit {
 
   formatInvitation(invitationCode: string): string{
     return invitationCode == undefined ? "" : invitationCode.match(/.{1,4}/g).join('-');
+  }
+
+  getParticipantData(participant: Participant, column: string, fieldTypeId: string) {
+    if (participant != null && participant.participantData != null && fieldTypeId != null && column != null) {
+      let participantData = participant.participantData.find(participantData => participantData.fieldTypeId === fieldTypeId);
+      if (participantData != null && participantData.data != null && participantData.data[column] != null) {
+        return participantData.data[column];
+      }
+    }
+    return "";
   }
 }

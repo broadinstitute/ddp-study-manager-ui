@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {ScanError} from "../scan/error.model";
+import {ScanValue} from "../scan/scan.model";
 import { Auth } from "../services/auth.service";
 import { Statics } from "../utils/statics";
 import { DSMService } from "../services/dsm.service";
@@ -63,6 +65,7 @@ export class ShippingSearchComponent implements OnInit {
           if (this.kit == null || this.kit.length < 1) {
             this.additionalMessage = "Kit was not found.";
           }
+          console.log(this.kit);
           this.searching = false;
           // console.log(this.ddp);
         },
@@ -82,5 +85,30 @@ export class ShippingSearchComponent implements OnInit {
 
   getRole(): RoleService {
     return this.role;
+  }
+
+  showColumn( name: string ): boolean {
+    if (this.kit != null) {
+      let foundColumn = this.kit.find( kit => {
+        return kit[ name ] != null && kit[ name ] !== "" && kit[ name ] != 0;
+      } );
+      if (foundColumn != null) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  receiveATKit(kitRequest: KitRequest) {
+    let singleScanValues: Array<ScanValue> = [];
+    singleScanValues.push(new ScanValue(kitRequest.kitLabel));
+    this.dsmService.setKitReceivedRequest(JSON.stringify(singleScanValues)).subscribe(// need to subscribe, otherwise it will not send!
+      data => {
+        // kitRequest.receiveDateString =
+      },
+      err => {
+      }
+    );
+
   }
 }
