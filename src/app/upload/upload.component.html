@@ -90,7 +90,6 @@
           <table class="table table-bordered"
                  *ngIf="getCompService().getRealm().toLowerCase() !== 'promise'">
             <tr>
-              <td>participantId</td>
               <td>shortId</td>
               <td>firstName</td>
               <td>lastName</td>
@@ -106,11 +105,6 @@
             </tr>
           </table>
         </li>
-        <li
-          *ngIf="getCompService().getRealm().toLowerCase() !== 'promise' && getCompService().getRealm().toLowerCase() !== 'mmrf'">
-          participantId = altPID for Gen2 DDPs and participantId = participant_guid for Gen3 (Pepper) DDPs <br/>
-          <b>If your participant is a migrated one and has a altPID please use that ID for the upload, otherwise use the
-            GUID</b></li>
         <li
           *ngIf="getCompService().getRealm().toLowerCase() !== 'promise' && getCompService().getRealm().toLowerCase() !== 'mmrf'">
           shortId = shortId for Gen2 DDPs and shortId = legacy_shortid for Gen3 (Pepper) DDPs
