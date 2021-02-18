@@ -385,8 +385,9 @@ export class Utils {
                 if (questionAnswer != null) {
                   if (col.type === Filter.DATE_TYPE) {
                     value = questionAnswer.date;
-                  }
-                  else {
+                  } else if (col.type === Filter.COMPOSITE_TYPE) {
+                    questionAnswer.answer.map(arr => value += arr.join(', ') + '\n');
+                  } else {
                     value = questionAnswer.answer; //TODO react to what kind of answer it is and make pretty
                   }
                 }
