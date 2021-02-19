@@ -50,6 +50,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   @Input() oncHistoryId: string;
   @Input() mrId: string;
   @Output() leaveParticipant = new EventEmitter();
+  @Output('ngModelChange') update = new EventEmitter();
 
   participantExited: boolean = true;
   participantNotConsented: boolean = true;
@@ -98,6 +99,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   updatingParticipant: boolean = false;
   private taskType: string;
   private checkParticipantStatusInterval: any;
+  isEmailValid: boolean;
 
   private payload = {};
 
@@ -240,6 +242,18 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
       }
     );
     delete this.payload[ "data" ][ "email" ];
+  }
+
+  validateEmailInput( changedValue ) { 
+    const regexToValidateEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    let isValid = regexToValidateEmail.test(changedValue);
+    if (isValid) {
+      this.isEmailValid = true;
+      this.updatedEmail = changedValue;
+      this.update.emit(changedValue);
+    } else {
+      this.isEmailValid = false;
+    }
   }
 
   getLanguageName(languageCode: string): string {
