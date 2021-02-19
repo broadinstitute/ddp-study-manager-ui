@@ -13,12 +13,6 @@
 <!--Information added by participant-->
 <div *ngIf="errorMessage == null && participant != null">
 
-  <span [hidden]="!loading" class="Width--100">
-    <div align="center" class="Width--100 Height--100">
-      <i class="fas fa-spinner fa-spin fa-5x Color--primary"></i>
-    </div>
-  </span>
-
   <br/>
   <a href="#" (click)="backToList()"><b> << back to List </b></a>
   <br/><br/>
@@ -94,7 +88,8 @@
         </tr>
         <tr *ngFor="let fs of this.settings['oD']">
           <td> {{fs.columnDisplay}}</td>
-          <td>{{this.oncHistoryDetail.additionalValues[fs.columnName]}}</td>
+          <td *ngIf="oncHistoryDetail.additionalValues !== null && oncHistoryDetail.additionalValues !== undefined">{{oncHistoryDetail.additionalValues[fs.columnName]}}</td>
+          <td *ngIf="oncHistoryDetail.additionalValues == null || oncHistoryDetail.additionalValues == undefined"></td>
         </tr>
         <tr>
           <td>Facility</td>

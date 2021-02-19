@@ -112,6 +112,7 @@ import {SearchBarComponent} from "./search-bar/search-bar.component";
 import {FieldSettingsComponent} from "./field-settings/field-settings.component";
 import { InvitationDataComponent } from './invitation-data/invitation-data.component';
 import { ParticipantUpdateResultDialogComponent } from './dialogs/participant-update-result-dialog.component';
+import { FormDataComponent } from './form-data/form-data.component';
 
 @NgModule( {
   declarations: [
@@ -188,7 +189,9 @@ import { ParticipantUpdateResultDialogComponent } from './dialogs/participant-up
     ActivityDataComponent,
     SearchBarComponent,
     InvitationDataComponent,
-    ParticipantUpdateResultDialogComponent
+    ParticipantUpdateResultDialogComponent,
+    FormDataComponent
+
   ],
   entryComponents: [ParticipantUpdateResultDialogComponent],
   imports: [

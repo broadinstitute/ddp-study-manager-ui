@@ -13,8 +13,9 @@ export class KitRequest {
                public trackingNumberTo: string, public trackingNumberReturn: string, public trackingUrlTo: string,
                public trackingUrlReturn: string, public scanDate: number, public error: boolean, public message: string,
                public receiveDate: number, public deactivatedDate: number, public deactivationReason: string, public participant: Address,
-               public easypostAddressId: string, public nameLabel: string, public kitLabel: string, public express: boolean, public labelTriggeredDate: number, public noReturn: boolean,
-               public externalOrderNumber: string, public externalOrderStatus: string, public preferredLanguage: string ) {
+               public easypostAddressId: string, public nameLabel: string, public kitLabel: string, public express: boolean, public labelTriggeredDate: number,
+               public noReturn: boolean, public externalOrderNumber: string, public externalOrderStatus: string, public preferredLanguage: string,
+               public receiveDateString: string, public hruid: string, public gender: string ) {
     this.participantId = participantId;
     this.collaboratorParticipantId = collaboratorParticipantId;
     this.bspCollaboratorSampleId = bspCollaboratorSampleId;
@@ -45,6 +46,9 @@ export class KitRequest {
     this.externalOrderNumber = externalOrderNumber;
     this.externalOrderStatus = externalOrderStatus;
     this.preferredLanguage = preferredLanguage;
+    this.receiveDateString = receiveDateString;
+    this.hruid = hruid;
+    this.gender = gender;
   }
 
   public getID(): any {
@@ -100,7 +104,8 @@ export class KitRequest {
       json.trackingNumberTo, json.trackingNumberReturn, json.trackingUrlTo,
       json.trackingUrlReturn, json.scanDate, json.error, json.message,
       json.receiveDate, json.deactivatedDate, json.deactivationReason, json.participant, json.easypostAddressId, json.nameLabel,
-      json.kitLabel, json.express, json.labelTriggeredDate, json.noReturn, json.externalOrderNumber, json.externalOrderStatus, json.preferredLanguage );
+      json.kitLabel, json.express, json.labelTriggeredDate, json.noReturn, json.externalOrderNumber, json.externalOrderStatus, json.preferredLanguage,
+      json.receiveDateString, json.hruid, json.gender);
   }
 
   getScannedTrackingUrl(trackingNumber: string) {
