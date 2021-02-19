@@ -1086,6 +1086,27 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     return "";
   }
 
+  getDisplayName(displayName: string, columnName: string) {
+    if (displayName.indexOf('#') > -1) {
+      let replacements: string[] = displayName.split('#');
+      if (replacements != null && replacements.length > 0 && this.participant != null && this.participant.participantData != null) {
+        let tmp = displayName;
+        let participantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === columnName);
+        replacements.forEach( replace => {
+          let value = participantData.data[replace.trim()];
+          if (value != null && value != undefined) {
+            tmp = tmp.replace( '#' + replace.trim(), value);
+          }
+        } )
+        return tmp;
+      }
+      return displayName;
+    }
+    else {
+      return displayName;
+    }
+  }
+
   getActivityData(fieldSetting: FieldSettings) {
     //type was activity or activity_staff and no saved staff answer. therefore lookup the activity answer
     if (fieldSetting != null && fieldSetting.possibleValues != null && fieldSetting.possibleValues[0] != null && fieldSetting.possibleValues[0].value != null) {
@@ -1189,13 +1210,21 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     return [];
   }
 
-  formPatch(value: any, fieldSetting: FieldSettings){
-    if (this.participant != null && this.participant.participantData != null && fieldSetting != null && fieldSetting.fieldType != null && fieldSetting.columnName != null) {
-      let participantData: ParticipantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === fieldSetting.fieldType);
+  formPatch(value: any, fieldSetting: FieldSettings, groupSetting: FieldSettings) {
+    if (fieldSetting == null || fieldSetting.fieldType == null) {
+      this.errorMessage = "Didn't save change";
+      return;
+    }
+    let fieldTypeId = fieldSetting.fieldType;
+    if (groupSetting != null) {
+      fieldTypeId = groupSetting.fieldType;
+    }
+    if (this.participant != null && this.participant.participantData != null && fieldTypeId != null && fieldSetting.columnName != null) {
+      let participantData: ParticipantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === fieldTypeId);
       if (participantData == null) {
         let data: { [ k: string ]: any } = {};
         data[fieldSetting.columnName] = value;
-        participantData = new ParticipantData (null, fieldSetting.fieldType, data );
+        participantData = new ParticipantData (null, fieldTypeId, data );
         this.participant.participantData.push(participantData);
       }
       if (participantData != null && participantData.data != null) {
@@ -1222,7 +1251,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
         }
 
         let participantId = this.participant.data.profile[ "guid" ];
-        if (this.participant.data.profile[ "legacyAltPid" ] != null && this.participant.data.profile[ "legacyAltPid" ] != undefined && this.participant.data.profile[ "legacyAltPid" ] !== ''){
+        if (this.participant.data.profile[ "legacyAltPid" ] != null && this.participant.data.profile[ "legacyAltPid" ] != undefined && this.participant.data.profile[ "legacyAltPid" ] !== '') {
           participantId = this.participant.data.profile[ "legacyAltPid" ];
         }
         let patch = {
@@ -1230,7 +1259,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
           parent: "participantDataId",
           parentId: participantId,
           user: this.role.userMail(),
-          fieldId: participantData.fieldTypeId,
+          fieldId: fieldTypeId,
           realm:  localStorage.getItem( ComponentService.MENU_SELECTED_REALM ),
           nameValues: nameValue
         };

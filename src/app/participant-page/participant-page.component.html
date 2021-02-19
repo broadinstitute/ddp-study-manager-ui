@@ -902,7 +902,7 @@ participant.data.dsm['diagnosisYear'] != null">
 <!--            tabs from fieldSettings-->
             <ng-container *ngFor="let tab of settings['null']">
               <ng-container *ngIf="displayTab(tab)">
-                <tab heading="{{tab.columnDisplay}}" [active]="tabActive(tab.columnDisplay)" (select)="onSelect($event, tab.columnDisplay)">
+                <tab heading="{{getDisplayName(tab.columnDisplay, tab.columnName)}}" [active]="tabActive(tab.columnDisplay)" (select)="onSelect($event, tab.columnDisplay)" >
 <!--                  <br/>-->
 
 <!--                  <div class="Float&#45;&#45;left Width&#45;&#45;100">-->
@@ -927,7 +927,8 @@ participant.data.dsm['diagnosisYear'] != null">
                           <legend class="Group--Title" id="{{setting.columnName}}">{{setting.columnDisplay}}</legend>
                           <ng-container *ngFor="let field of settings[setting.columnName]; let fieldIndex = index">
                             <app-form-data [fieldSetting]="field" [participantData]="getParticipantData(field, tab.columnName)"
-                                           [activityData]="getActivityData(field)" [activityOptions]="getActivityOptions(field)"></app-form-data>
+                                           [activityData]="getActivityData(field)" [activityOptions]="getActivityOptions(field)"
+                                           (patchData)="formPatch($event, field, setting)"></app-form-data>
                             <hr *ngIf="fieldIndex !== settings[setting.columnName].length-1" style="border-color: lightgray">
                           </ng-container>
                         </fieldset>
@@ -935,7 +936,7 @@ participant.data.dsm['diagnosisYear'] != null">
                       <ng-container *ngIf="setting.displayType !== 'GROUP'">
                         <app-form-data [fieldSetting]="setting" [participantData]="getParticipantData(setting, tab.columnName)"
                                        [activityData]="getActivityData(setting)" [activityOptions]="getActivityOptions(setting)"
-                                       (patchData)="formPatch($event, setting)"></app-form-data>
+                                       (patchData)="formPatch($event, setting, null)"></app-form-data>
                         <hr *ngIf="settingIndex !== settings[tab.columnName].length-1" style="border-color: lightgray">
                       </ng-container>
                     </div>
