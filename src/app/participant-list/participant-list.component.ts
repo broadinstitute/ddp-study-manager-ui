@@ -27,7 +27,6 @@ import {AssigneeParticipant} from "./models/assignee-participant.model";
 import {PreferredLanguage} from "./models/preferred-languages.model";
 import {Participant} from "./participant-list.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
-import { debug } from "console";
 
 @Component( {
   selector: "app-participant-list",
@@ -1086,7 +1085,6 @@ export class ParticipantListComponent implements OnInit {
   }
 
   sortByColumnName( col: Filter, sortParent: string ) {
-    debugger;
     this.sortDir = this.sortField === col.participantColumn.name ? ( this.sortDir === "asc" ? "desc" : "asc" ) : "asc";
     this.sortField = col.participantColumn.name;
     this.sortParent = sortParent;
@@ -1094,7 +1092,6 @@ export class ParticipantListComponent implements OnInit {
   }
 
   private doSort( object: string ) {
-    debugger;
     let order = this.sortDir === "asc" ? 1 : -1;
     if (this.sortParent === "data" && object != null) {
       this.participantList.sort( ( a, b ) => {
@@ -1119,7 +1116,7 @@ export class ParticipantListComponent implements OnInit {
         }
       } );
     } else if (this.sortParent === "m") {
-      this.participantList.map( participant => 
+      this.participantList.map( participant =>
         participant.medicalRecords.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ))
       )
       this.participantList.sort( ( a, b ) => {
@@ -1128,12 +1125,11 @@ export class ParticipantListComponent implements OnInit {
         } else if (b.medicalRecords === null || b.medicalRecords == undefined || b.medicalRecords.length < 1) {
           return -1;
         } else {
-          debugger;
           return this.sort(a.medicalRecords[0][this.sortField], b.medicalRecords[0][this.sortField], order );
         }
       } );
     } else if (this.sortParent === "oD") {
-      this.participantList.map( participant => 
+      this.participantList.map( participant =>
         participant.oncHistoryDetails.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ))
       )
       this.participantList.sort( ( a, b ) => {
@@ -1142,13 +1138,12 @@ export class ParticipantListComponent implements OnInit {
         } else if (b.oncHistoryDetails === null || b.oncHistoryDetails == undefined || b.oncHistoryDetails.length < 1) {
           return -1;
         } else {
-          debugger;
           return this.sort(a.oncHistoryDetails[0][this.sortField], b.oncHistoryDetails[0][this.sortField], order );
         }
       } );
     } else if (this.sortParent === "t") {
     } else if (this.sortParent === "k") {
-      this.participantList.map( participant => 
+      this.participantList.map( participant =>
         participant.kits.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ))
       )
       this.participantList.sort( ( a, b ) => {
@@ -1157,7 +1152,6 @@ export class ParticipantListComponent implements OnInit {
         } else if (b.kits === null || b.kits == undefined || b.kits.length < 1) {
           return -1;
         } else {
-          debugger;
           return this.sort(a.kits[0][this.sortField], b.kits[0][this.sortField], order );
         }
       } );
@@ -1168,12 +1162,11 @@ export class ParticipantListComponent implements OnInit {
         if (activityData !== null && activityData !== undefined) {
           let questionAnswer = this.getQuestionAnswerByName( activityData.questionsAnswers, this.sortField );
           if (questionAnswer !== null && questionAnswer !== undefined && questionAnswer.questionType === "COMPOSITE") {
-            debugger;
-            questionAnswer.answer.sort( ( n, m ) => this.sort( n.join(), m.join(), order ))      
+            questionAnswer.answer.sort( ( n, m ) => this.sort( n.join(), m.join(), order ));
           }
         }
       })
-      
+
       this.participantList.sort( ( a, b ) => {
         let activityDataA = a.data.getActivityDataByCode( this.sortParent );
         let activityDataB = b.data.getActivityDataByCode( this.sortParent );
