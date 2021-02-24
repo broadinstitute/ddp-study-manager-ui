@@ -28,6 +28,7 @@ export class RoleService {
   private _isAbstractionAdmin: boolean = false;
   private _canEditDrugList: boolean = false;
   private _isParticipantListView: boolean = false;
+  private _isParticipantEdit: boolean = false;
 
   private _userId: string;
   private _user: string;
@@ -115,6 +116,9 @@ export class RoleService {
           }
           else if (entry === 'pt_list_view') {
             this._isParticipantListView = true;
+          }
+          else if (entry === 'participant_edit') {
+            this._isParticipantEdit = true;
           }
         }
       }
@@ -236,5 +240,9 @@ export class RoleService {
 
   public allowedParticipantListView() {
     return this._isParticipantListView;
+  }
+
+  public allowedToEditParticipant() {
+    return this._isParticipantEdit;
   }
 }
