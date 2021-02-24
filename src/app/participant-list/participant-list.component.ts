@@ -1007,6 +1007,9 @@ export class ParticipantListComponent implements OnInit {
             let filter2 = new NameValue( "uploadReason", "true" );
             filterText = Filter.getFilterJson( tmp, filter1, filter2, null, false, Filter.OPTION_TYPE, false, true, false, filter.participantColumn )
           }
+          else {
+            filterText = Filter.getFilterText( filter, tmp );
+          }
         }
       }
     }
