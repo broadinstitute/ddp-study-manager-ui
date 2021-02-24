@@ -536,6 +536,13 @@ participant.data.dsm['diagnosisYear'] != null">
                       <tr>
                         <td class="TD--Padding-Left Width--50">{{sample.kitLabel}}</td>
                       </tr>
+                      <hr *ngIf="sample.externalOrderNumber != null && sample.externalOrderNumber != undefined" style="border-color: lightgray">
+                      <tr *ngIf="sample.externalOrderNumber != null && sample.externalOrderNumber != undefined">
+                        <td class="TD--Padding Width--50 Data-Display-Question">External Order Number:</td>
+                      </tr>
+                      <tr *ngIf="sample.externalOrderNumber != null && sample.externalOrderNumber != undefined">
+                        <td class="TD--Padding-Left Width--50">{{sample.externalOrderNumber}}</td>
+                      </tr>
                       <hr style="border-color: lightgray">
                       <tr>
                         <td class="TD--Padding Width--50 Data-Display-Question">Sent:</td>

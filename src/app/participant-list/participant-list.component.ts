@@ -360,13 +360,28 @@ export class ParticipantListComponent implements OnInit {
         if (jsonData.kitTypes != null) {
           let hasExternalShipper = false;
           let options = new Array<NameValue>();
+          let optionsUpload = new Array<NameValue>();
           jsonData.kitTypes.forEach( ( val ) => {
             let kitType = KitType.parse( val );
+            if ( kitType.uploadReasons != null && kitType.uploadReasons != undefined) {
+              kitType.uploadReasons.forEach( (val) => {
+                let found = optionsUpload.find(option => {
+                  return option.value === val;
+                } );
+                if (found == null) {
+                  optionsUpload.push( new NameValue( val, val ) );
+                }
+              })
+            }
             options.push( new NameValue( kitType.name, kitType.displayName ) );
             if ( kitType.externalShipper ) {
               hasExternalShipper = true;
             }
           });
+          if (optionsUpload.length > 0) {
+            optionsUpload.push( new NameValue( "SAMPLE_UPLOAD_EMPTY", "NORMAL" ) );
+            this.sourceColumns[ "k" ].push( new Filter( ParticipantColumn.UPLOAD_REASON, Filter.OPTION_TYPE, optionsUpload ) );
+          }
           this.sourceColumns[ "k" ].push( new Filter( ParticipantColumn.SAMPLE_TYPE, Filter.OPTION_TYPE, options ) );
           if (hasExternalShipper) {
             this.sourceColumns[ "k" ].push( new Filter( ParticipantColumn.EXTERNAL_ORDER_NUMBER, Filter.TEXT_TYPE ) );
@@ -987,7 +1002,27 @@ export class ParticipantListComponent implements OnInit {
           }
         }
       }
-    } else {
+    }
+    else if (filter.participantColumn.name === "uploadReason") {
+      if (filter.type === Filter.OPTION_TYPE) {
+        let option = null;
+        for (let [key, value] of Object.entries( filter.selectedOptions )) {
+          if (value) {
+            status = filter.options[ key ].name;
+            break;
+          }
+          if (option === "UPLOAD_REASON_EMPTY") {
+            let filter1 = new NameValue( "uploadReason", null );
+            let filter2 = new NameValue( "uploadReason", "true" );
+            filterText = Filter.getFilterJson( tmp, filter1, filter2, null, false, Filter.OPTION_TYPE, false, true, false, filter.participantColumn )
+          }
+          else {
+            filterText = Filter.getFilterText( filter, tmp );
+          }
+        }
+      }
+    }
+    else {
       filterText = Filter.getFilterText( filter, tmp );
     }
     if (filterText != null) {
