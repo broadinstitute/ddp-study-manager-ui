@@ -967,7 +967,7 @@ export class ParticipantListComponent implements OnInit {
           }
         }
         if (status != null) {
-          if (status === "sent") {
+          if (status === "shipped") {
             let filter1 = new NameValue( "scanDate", null );
             let filter2 = new NameValue( "scanDate", "true" );
             filterText = Filter.getFilterJson( tmp, filter1, filter2, null, false, Filter.DATE_TYPE, false, false, true, filter.participantColumn );
