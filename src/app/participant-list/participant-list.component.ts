@@ -1151,41 +1151,57 @@ export class ParticipantListComponent implements OnInit {
         }
       } );
     } else if (this.sortParent === "m") {
+      this.participantList.map( participant =>
+        participant.medicalRecords.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ))
+      )
       this.participantList.sort( ( a, b ) => {
         if (a.medicalRecords === null || a.medicalRecords == undefined || a.medicalRecords.length < 1) {
           return 1;
         } else if (b.medicalRecords === null || b.medicalRecords == undefined || b.medicalRecords.length < 1) {
           return -1;
         } else {
-          a.medicalRecords.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ) );
-          b.medicalRecords.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ) );
+          return this.sort(a.medicalRecords[0][this.sortField], b.medicalRecords[0][this.sortField], order );
         }
       } );
     } else if (this.sortParent === "oD") {
+      this.participantList.map( participant =>
+        participant.oncHistoryDetails.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ))
+      )
       this.participantList.sort( ( a, b ) => {
         if (a.oncHistoryDetails === null || a.oncHistoryDetails == undefined || a.oncHistoryDetails.length < 1) {
           return 1;
         } else if (b.oncHistoryDetails === null || b.oncHistoryDetails == undefined || b.oncHistoryDetails.length < 1) {
           return -1;
         } else {
-          a.oncHistoryDetails.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ) );
-          b.oncHistoryDetails.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ) );
+          return this.sort(a.oncHistoryDetails[0][this.sortField], b.oncHistoryDetails[0][this.sortField], order );
         }
       } );
     } else if (this.sortParent === "t") {
     } else if (this.sortParent === "k") {
+      this.participantList.map( participant =>
+        participant.kits.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ))
+      )
       this.participantList.sort( ( a, b ) => {
         if (a.kits === null || a.kits == undefined || a.kits.length < 1) {
           return 1;
         } else if (b.kits === null || b.kits == undefined || b.kits.length < 1) {
           return -1;
         } else {
-          a.kits.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ) );
-          b.kits.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ) );
+          return this.sort(a.kits[0][this.sortField], b.kits[0][this.sortField], order );
         }
       } );
     } else {
       //activity data
+      this.participantList.map( participant => {
+        let activityData = participant.data.getActivityDataByCode( this.sortParent );
+        if (activityData !== null && activityData !== undefined) {
+          let questionAnswer = this.getQuestionAnswerByName( activityData.questionsAnswers, this.sortField );
+          if (questionAnswer !== null && questionAnswer !== undefined && questionAnswer.questionType === "COMPOSITE") {
+            questionAnswer.answer.sort( ( n, m ) => this.sort( n.join(), m.join(), order ));
+          }
+        }
+      })
+
       this.participantList.sort( ( a, b ) => {
         let activityDataA = a.data.getActivityDataByCode( this.sortParent );
         let activityDataB = b.data.getActivityDataByCode( this.sortParent );
