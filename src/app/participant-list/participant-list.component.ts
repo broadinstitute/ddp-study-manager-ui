@@ -1422,8 +1422,8 @@ export class ParticipantListComponent implements OnInit {
     this.clearManualFilters();
     this.deselectQuickFilters();
     this.setSelectedFilterName( "" );
-    queryText = queryText.replace("k.uploadReason = 'NORMAL'", "k.uploadReason is null");
-    queryText = queryText.replace("k.uploadReason like 'NORMAL'", "k.uploadReason is null");
+    queryText = queryText.replace("( k.uploadReason = 'NORMAL' )", "k.uploadReason IS NULL");
+    queryText = queryText.replace("( k.uploadReason like 'NORMAL' )", "k.uploadReason IS NULL");
     let data = {
       "filterQuery": queryText,
       "parent": this.parent
