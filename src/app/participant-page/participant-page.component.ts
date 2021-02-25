@@ -114,12 +114,12 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
       }
     } );
   }
-  
+
   ngOnInit() {
     this.setDefaultProfileValues();
     this.payload = {
       participantGuid: this.participant.data.profile[ "guid" ],
-      studyGuid: this.participant.data.ddp,
+      instanceName: this.compService.getRealm(),
       data: {}
     };
     this.checkParticipantStatusInterval = setInterval(() => {
@@ -127,19 +127,19 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
         this.dsmService.checkUpdatingParticipantStatus().subscribe(
           data => {
             let parsedData = JSON.parse(data.body);
-            if (parsedData[ "resultType" ] === "SUCCESS" 
+            if (parsedData[ "resultType" ] === "SUCCESS"
                 && this.isReturnedUserAndParticipantTheSame(parsedData)) {
               this.updateParticipantObjectOnSuccess();
               this.openResultDialog("Participant successfully updated");
-            } 
-            else if (parsedData[ "resultType" ] === "ERROR" 
+            }
+            else if (parsedData[ "resultType" ] === "ERROR"
                 && this.isReturnedUserAndParticipantTheSame(parsedData)){
               this.openResultDialog(parsedData[ "errorMessage" ]);
             }
          },
          err => {
             this.openResultDialog("Error - Failed to update participant");
-         } 
+         }
         );
       };
     }, 5000);
@@ -152,7 +152,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     clearInterval(this.checkParticipantStatusInterval);
 
   }
-  
+
   private setDefaultProfileValues() {
     this.updatedFirstName = this.participant.data.profile[ "firstName" ];
     this.updatedLastName = this.participant.data.profile[ "lastName" ];
@@ -197,7 +197,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     return this.util;
   }
 
-  updateFirstName() {    
+  updateFirstName() {
     this.updatingParticipant = true;
     this.taskType = "UPDATE_FIRSTNAME";
     this.payload[ "data" ][ "firstName" ] = this.updatedFirstName;

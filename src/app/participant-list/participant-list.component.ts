@@ -372,11 +372,14 @@ export class ParticipantListComponent implements OnInit {
           if (optionsUpload.length > 0) {
             optionsUpload.push( new NameValue( "SAMPLE_UPLOAD_EMPTY", "NORMAL" ) );
             this.sourceColumns[ "k" ].push( new Filter( ParticipantColumn.UPLOAD_REASON, Filter.OPTION_TYPE, optionsUpload ) );
+            this.allFieldNames.add( "k" + "." + ParticipantColumn.UPLOAD_REASON.name );
           }
           this.sourceColumns[ "k" ].push( new Filter( ParticipantColumn.SAMPLE_TYPE, Filter.OPTION_TYPE, options ) );
           if (hasExternalShipper) {
             this.sourceColumns[ "k" ].push( new Filter( ParticipantColumn.EXTERNAL_ORDER_NUMBER, Filter.TEXT_TYPE ) );
             this.sourceColumns[ "k" ].push( new Filter( ParticipantColumn.EXTERNAL_ORDER_DATE, Filter.DATE_TYPE ) );
+            this.allFieldNames.add( "k" + "." + ParticipantColumn.EXTERNAL_ORDER_NUMBER.name );
+            this.allFieldNames.add( "k" + "." + ParticipantColumn.EXTERNAL_ORDER_DATE.name );
           }
         }
         else {
@@ -999,17 +1002,17 @@ export class ParticipantListComponent implements OnInit {
         let option = null;
         for (let [key, value] of Object.entries( filter.selectedOptions )) {
           if (value) {
-            status = filter.options[ key ].name;
+            option = filter.options[ key ].name;
             break;
           }
-          if (option === "UPLOAD_REASON_EMPTY") {
-            let filter1 = new NameValue( "uploadReason", null );
-            let filter2 = new NameValue( "uploadReason", "true" );
-            filterText = Filter.getFilterJson( tmp, filter1, filter2, null, false, Filter.OPTION_TYPE, false, true, false, filter.participantColumn )
-          }
-          else {
-            filterText = Filter.getFilterText( filter, tmp );
-          }
+        }
+        if (option === "SAMPLE_UPLOAD_EMPTY") {
+          let filter1 = new NameValue( "uploadReason", null );
+          let filter2 = new NameValue( "uploadReason", null );
+          filterText = Filter.getFilterJson( tmp, filter1, filter2, [], true, Filter.OPTION_TYPE, false, true, false, filter.participantColumn )
+        }
+        else {
+          filterText = Filter.getFilterText( filter, tmp );
         }
       }
     }
@@ -1419,6 +1422,8 @@ export class ParticipantListComponent implements OnInit {
     this.clearManualFilters();
     this.deselectQuickFilters();
     this.setSelectedFilterName( "" );
+    queryText = queryText.replace("k.uploadReason = 'NORMAL'", "k.uploadReason is null");
+    queryText = queryText.replace("k.uploadReason like 'NORMAL'", "k.uploadReason is null");
     let data = {
       "filterQuery": queryText,
       "parent": this.parent
