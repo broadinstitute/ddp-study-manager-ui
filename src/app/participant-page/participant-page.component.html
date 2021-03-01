@@ -81,7 +81,6 @@
             <td *ngIf="hasRole().allowedToEditParticipant()">
               <input mdInput type="text" maxlength="200" autocomplete="off" placeholder="First Name"
                     [(ngModel)]="updatedFirstName"
-                    [value]="updatedFirstName"
                     class="update-participant-input">
               <button md-raised-button color="primary"
                       (click)="updateFirstName()"
@@ -98,7 +97,6 @@
             <td *ngIf="hasRole().allowedToEditParticipant()">
               <input mdInput type="text" maxlength="200" autocomplete="off" placeholder="Last Name"
                   [(ngModel)]="updatedLastName"
-                  [value]="updatedLastName"
                   class="update-participant-input">
               <button md-raised-button color="primary"
                       [disabled]="updatedLastName === participant.data.profile['lastName'] || updatedLastName.length == 0"
@@ -112,18 +110,20 @@
           <tr>
             <td>E-Mail</td>
             <td *ngIf="hasRole().allowedToEditParticipant()">
+              <span *ngIf="isEmailValid == false" class="invalid-email">E-Mail is not valid</span>
               <input mdInput type="email" maxlength="200" autocomplete="off" placeholder="Email"
-                  [(ngModel)]="updatedEmail"
-                  email
-                  class="update-participant-input">
+              [ngModel]="updatedEmail"
+              (ngModelChange)="validateEmailInput($event)"
+              email
+              class="update-participant-input">
               <button md-raised-button color="primary"
-                      [disabled]="updatedEmail === participant.data.profile['email'] || updatedEmail.length == 0"
-                      (click)="updateEmail()">Update
-              </button>
-            </td>
-            <td *ngIf="!hasRole().allowedToEditParticipant()">
-              {{participant.data.profile['email']}}
-            </td>
+              [disabled]="updatedEmail === participant.data.profile['email'] || updatedEmail.length == 0 || isEmailValid == false"
+              (click)="updateEmail()">Update
+            </button>
+          </td>
+          <td *ngIf="!hasRole().allowedToEditParticipant()">
+            {{participant.data.profile['email']}}
+          </td>
           </tr>
           <tr>
             <td>Date of Birth</td>
