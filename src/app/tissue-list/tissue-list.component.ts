@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
+import {Component, OnInit, ViewChild, HostListener} from "@angular/core";
 import {Participant} from "../participant-list/participant-list.model";
 import {RoleService} from "../services/role.service";
 import {DSMService} from "../services/dsm.service";
@@ -102,6 +102,12 @@ export class TissueListComponent implements OnInit {
   wrongQuery: boolean = false;
   allFieldNames = new Set();
   showHelp: boolean;
+
+  @HostListener('click') onClick() {
+    if (!this.filterQuery) {
+      this.selectedFilterName = "";
+    }
+  }
 
   constructor( public role: RoleService, private dsmService: DSMService, private compService: ComponentService,
                private router: Router, private auth: Auth, private route: ActivatedRoute, http: Http ) {
@@ -604,6 +610,7 @@ export class TissueListComponent implements OnInit {
       //check if it was a tableAlias data filter -> filter client side
       this.filterProfileForNoESRelams( null );
     }
+
   }
 
   openTissue( oncHis: OncHistoryDetail, participant: Participant, tissueId ) {
