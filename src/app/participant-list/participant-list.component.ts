@@ -102,6 +102,7 @@ export class ParticipantListComponent implements OnInit {
   filtered: boolean = false;
   rowsPerPage: number;
   preferredLanguages: PreferredLanguage[] = [];
+  savedSelectedColumns = {};
 
   constructor( private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
                private router: Router, private auth: Auth, private route: ActivatedRoute, private util: Utils ) {
@@ -114,6 +115,7 @@ export class ParticipantListComponent implements OnInit {
         //        this.compService.realmMenu = realm;
         this.additionalMessage = null;
         this.checkRight();
+        this.saveSelectedColumns()
       }
     } );
   }
@@ -474,6 +476,10 @@ export class ParticipantListComponent implements OnInit {
         }
         this.orderColumns();
         this.getData();
+        debugger;
+        this.renewSelectedColumns();
+        console.log(this.selectedColumns, "3333333333333333333");
+        console.log(this.sourceColumns, "333333333333333333");
       },
       err => {
         if (err._body === Auth.AUTHENTICATION_ERROR) {
@@ -482,6 +488,8 @@ export class ParticipantListComponent implements OnInit {
         throw "Error - Loading display settings" + err;
       }
     );
+    console.log(this.selectedColumns, "1111111111111111");
+    console.log(this.sourceColumns, "111111111111111111");
   }
 
   getQuestionOrStableId( question: QuestionDefinition ): string {
@@ -803,6 +811,22 @@ export class ParticipantListComponent implements OnInit {
     } else {
       this.selectedColumns[ parent ].push( column );
     }
+  }
+
+  renewSelectedColumns() {
+    debugger;
+    if (this.selectedColumns["data"] && this.sourceColumns["data"]) {
+      this.selectedColumns["data"] = this.savedSelectedColumns["data"].map(filter => {
+        let column = this.sourceColumns["data"].find(f => 
+          f.participantColumn.tableAlias === filter.participantColumn.tableAlias && f.participantColumn.name === filter.participantColumn.name
+        )
+        return column;
+      })
+    }
+  }
+
+  saveSelectedColumns() {
+    this.savedSelectedColumns = this.selectedColumns;
   }
 
   openParticipant( participant: Participant, colSource: string ) {
