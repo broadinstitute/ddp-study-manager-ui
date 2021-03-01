@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, HostListener} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {Participant} from "../participant-list/participant-list.model";
 import {RoleService} from "../services/role.service";
 import {DSMService} from "../services/dsm.service";
@@ -102,12 +102,6 @@ export class TissueListComponent implements OnInit {
   wrongQuery: boolean = false;
   allFieldNames = new Set();
   showHelp: boolean;
-
-  @HostListener('click') onClick() {
-    if (!this.filterQuery) {
-      this.selectedFilterName = "";
-    }
-  }
 
   constructor( public role: RoleService, private dsmService: DSMService, private compService: ComponentService,
                private router: Router, private auth: Auth, private route: ActivatedRoute, http: Http ) {
@@ -532,17 +526,16 @@ export class TissueListComponent implements OnInit {
     }
     this.currentQuickFilterName = "";
   }
-
+  
   hasRole(): RoleService {
     return this.role;
   }
-
+  
   public doFilter() {
     this.isDefaultFilter = false;
     this.additionalMessage = "";
     let json = [];
-    this.filterQuery = "";
-    this.textQuery = null;
+    this.cleanSearchBoxAndSavedFilter();
     this.loading = true;
     json.concat( this.currentFilter );
     for (let array of this.dataSources) {
@@ -558,11 +551,11 @@ export class TissueListComponent implements OnInit {
         if (filterText != null) {
           json.push( filterText );
         }
-
-
+        
+        
       }
     }
-
+    
     let data = {
       "filters": json,
       "parent": this.parent,
@@ -611,6 +604,12 @@ export class TissueListComponent implements OnInit {
       this.filterProfileForNoESRelams( null );
     }
 
+  }
+
+  private cleanSearchBoxAndSavedFilter() {
+    this.filterQuery = "";
+    this.textQuery = null;
+    this.selectedFilterName = " ";
   }
 
   openTissue( oncHis: OncHistoryDetail, participant: Participant, tissueId ) {
@@ -1141,6 +1140,7 @@ export class TissueListComponent implements OnInit {
 
 
   public doFilterByQuery( queryText: string ) {
+    this.deactivateSavedFilterIfNotInUse(queryText);
     this.dsmService.applyFilter( null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.parent, queryText ).subscribe( data => {
       let date = new Date();
       this.additionalMessage = null;
@@ -1167,6 +1167,12 @@ export class TissueListComponent implements OnInit {
     } );
   }
 
+
+  private deactivateSavedFilterIfNotInUse(queryText: string) {
+    if (this.filterQuery !== queryText) {
+      this.selectedFilterName = "";
+    }
+  }
 
   getButtonColorStyle( isOpened: boolean ): string {
     if (isOpened) {
