@@ -23,7 +23,7 @@
   <br/>
   <br/>
   <div class="Width--60">
-    <div *ngIf="kitTypes != null && kitTypes.length > 0">
+    <div *ngIf="kitTypes != null && kitTypes.length > 1">
       <div *ngFor="let type of kitTypes">
         <md-checkbox color="primary" [checked]="type.selected || kitTypes.length == 1"
                      (change)="type.selected = $event.checked; typeChecked(type)"

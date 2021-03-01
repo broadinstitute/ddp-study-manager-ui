@@ -381,11 +381,14 @@ export class ParticipantListComponent implements OnInit {
           if (optionsUpload.length > 0) {
             optionsUpload.push( new NameValue( "SAMPLE_UPLOAD_EMPTY", "NORMAL" ) );
             this.sourceColumns[ "k" ].push( new Filter( ParticipantColumn.UPLOAD_REASON, Filter.OPTION_TYPE, optionsUpload ) );
+            this.allFieldNames.add( "k" + "." + ParticipantColumn.UPLOAD_REASON.name );
           }
           this.sourceColumns[ "k" ].push( new Filter( ParticipantColumn.SAMPLE_TYPE, Filter.OPTION_TYPE, options ) );
           if (hasExternalShipper) {
             this.sourceColumns[ "k" ].push( new Filter( ParticipantColumn.EXTERNAL_ORDER_NUMBER, Filter.TEXT_TYPE ) );
             this.sourceColumns[ "k" ].push( new Filter( ParticipantColumn.EXTERNAL_ORDER_DATE, Filter.DATE_TYPE ) );
+            this.allFieldNames.add( "k" + "." + ParticipantColumn.EXTERNAL_ORDER_NUMBER.name );
+            this.allFieldNames.add( "k" + "." + ParticipantColumn.EXTERNAL_ORDER_DATE.name );
           }
         }
         else {
@@ -1008,17 +1011,17 @@ export class ParticipantListComponent implements OnInit {
         let option = null;
         for (let [key, value] of Object.entries( filter.selectedOptions )) {
           if (value) {
-            status = filter.options[ key ].name;
+            option = filter.options[ key ].name;
             break;
           }
-          if (option === "UPLOAD_REASON_EMPTY") {
-            let filter1 = new NameValue( "uploadReason", null );
-            let filter2 = new NameValue( "uploadReason", "true" );
-            filterText = Filter.getFilterJson( tmp, filter1, filter2, null, false, Filter.OPTION_TYPE, false, true, false, filter.participantColumn )
-          }
-          else {
-            filterText = Filter.getFilterText( filter, tmp );
-          }
+        }
+        if (option === "SAMPLE_UPLOAD_EMPTY") {
+          let filter1 = new NameValue( "uploadReason", null );
+          let filter2 = new NameValue( "uploadReason", null );
+          filterText = Filter.getFilterJson( tmp, filter1, filter2, [], true, Filter.OPTION_TYPE, false, true, false, filter.participantColumn )
+        }
+        else {
+          filterText = Filter.getFilterText( filter, tmp );
         }
       }
     }
@@ -1151,41 +1154,57 @@ export class ParticipantListComponent implements OnInit {
         }
       } );
     } else if (this.sortParent === "m") {
+      this.participantList.map( participant =>
+        participant.medicalRecords.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ))
+      )
       this.participantList.sort( ( a, b ) => {
         if (a.medicalRecords === null || a.medicalRecords == undefined || a.medicalRecords.length < 1) {
           return 1;
         } else if (b.medicalRecords === null || b.medicalRecords == undefined || b.medicalRecords.length < 1) {
           return -1;
         } else {
-          a.medicalRecords.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ) );
-          b.medicalRecords.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ) );
+          return this.sort(a.medicalRecords[0][this.sortField], b.medicalRecords[0][this.sortField], order );
         }
       } );
     } else if (this.sortParent === "oD") {
+      this.participantList.map( participant =>
+        participant.oncHistoryDetails.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ))
+      )
       this.participantList.sort( ( a, b ) => {
         if (a.oncHistoryDetails === null || a.oncHistoryDetails == undefined || a.oncHistoryDetails.length < 1) {
           return 1;
         } else if (b.oncHistoryDetails === null || b.oncHistoryDetails == undefined || b.oncHistoryDetails.length < 1) {
           return -1;
         } else {
-          a.oncHistoryDetails.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ) );
-          b.oncHistoryDetails.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ) );
+          return this.sort(a.oncHistoryDetails[0][this.sortField], b.oncHistoryDetails[0][this.sortField], order );
         }
       } );
     } else if (this.sortParent === "t") {
     } else if (this.sortParent === "k") {
+      this.participantList.map( participant =>
+        participant.kits.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ))
+      )
       this.participantList.sort( ( a, b ) => {
         if (a.kits === null || a.kits == undefined || a.kits.length < 1) {
           return 1;
         } else if (b.kits === null || b.kits == undefined || b.kits.length < 1) {
           return -1;
         } else {
-          a.kits.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ) );
-          b.kits.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ) );
+          return this.sort(a.kits[0][this.sortField], b.kits[0][this.sortField], order );
         }
       } );
     } else {
       //activity data
+      this.participantList.map( participant => {
+        let activityData = participant.data.getActivityDataByCode( this.sortParent );
+        if (activityData !== null && activityData !== undefined) {
+          let questionAnswer = this.getQuestionAnswerByName( activityData.questionsAnswers, this.sortField );
+          if (questionAnswer !== null && questionAnswer !== undefined && questionAnswer.questionType === "COMPOSITE") {
+            questionAnswer.answer.sort( ( n, m ) => this.sort( n.join(), m.join(), order ));
+          }
+        }
+      })
+
       this.participantList.sort( ( a, b ) => {
         let activityDataA = a.data.getActivityDataByCode( this.sortParent );
         let activityDataB = b.data.getActivityDataByCode( this.sortParent );
@@ -1412,6 +1431,8 @@ export class ParticipantListComponent implements OnInit {
     this.clearManualFilters();
     this.deselectQuickFilters();
     this.setSelectedFilterName( "" );
+    queryText = queryText.replace("( k.uploadReason = 'NORMAL' )", "k.uploadReason IS NULL");
+    queryText = queryText.replace("( k.uploadReason like 'NORMAL' )", "k.uploadReason IS NULL");
     let data = {
       "filterQuery": queryText,
       "parent": this.parent

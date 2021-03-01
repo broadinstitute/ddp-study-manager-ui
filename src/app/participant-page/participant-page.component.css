@@ -5,3 +5,8 @@
     width: auto !important;
     vertical-align: initial !important;
 }
+.invalid-email {
+    display: block;
+    line-height: normal;
+    color:red;
+}
