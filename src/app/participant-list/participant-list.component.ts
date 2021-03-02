@@ -790,7 +790,7 @@ export class ParticipantListComponent implements OnInit {
   }
 
   public setSelectedFilterName( filterName ) {
-    this.selectedFilterName === filterName;
+    this.selectedFilterName = filterName;
   }
 
 
@@ -958,6 +958,7 @@ export class ParticipantListComponent implements OnInit {
     } else {
       this.filtered = false;
       this.filterQuery = "";
+      this.selectedFilterName = null;
       this.deselectQuickFilters();
       //TODO - can be changed later to all using the same - after all studies are migrated!
       //check if it was a tableAlias data filter -> filter client side
@@ -1448,7 +1449,7 @@ export class ParticipantListComponent implements OnInit {
   public doFilterByQuery( queryText: string ) {
     this.clearManualFilters();
     this.deselectQuickFilters();
-    this.setSelectedFilterName( "" );
+    this.deactivateSavedFilterIfNotInUse(queryText);
     queryText = queryText.replace("( k.uploadReason = 'NORMAL' )", "k.uploadReason IS NULL");
     queryText = queryText.replace("( k.uploadReason like 'NORMAL' )", "k.uploadReason IS NULL");
     let data = {
@@ -1488,6 +1489,12 @@ export class ParticipantListComponent implements OnInit {
       this.loadingParticipants = null;
       this.additionalMessage = "Error - Filtering Participant List, Please contact your DSM developer";
     } );
+  }
+
+  private deactivateSavedFilterIfNotInUse(queryText: string) {
+    if (this.filterQuery !== queryText) {
+      this.selectedFilterName = "";
+    } 
   }
 
   getQuestionAnswerByName( questionsAnswers: Array<QuestionAnswer>, name: string ) {
