@@ -51,8 +51,7 @@ export class ViewFilter {
       }
       parsedColumns = p;
     }
-
-    return new ViewFilter( currentFilter, json.filterName, parsedColumns, json.shared === "1" ? true : false, json.fDeleted, json.userId, json.id,
+    return new ViewFilter( currentFilter, json.filterName, parsedColumns, json.shared, json.fDeleted, json.userId, json.id,
       json.parent, json.icon, json.quickFilterName, json.queryItems);
   }
 
