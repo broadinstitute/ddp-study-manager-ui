@@ -102,6 +102,7 @@ export class ParticipantListComponent implements OnInit {
   filtered: boolean = false;
   rowsPerPage: number;
   preferredLanguages: PreferredLanguage[] = [];
+  savedSelectedColumns = {};
 
   constructor( private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
                private router: Router, private auth: Auth, private route: ActivatedRoute, private util: Utils ) {
@@ -114,6 +115,7 @@ export class ParticipantListComponent implements OnInit {
         //        this.compService.realmMenu = realm;
         this.additionalMessage = null;
         this.checkRight();
+        this.saveSelectedColumns();
       }
     } );
   }
@@ -477,6 +479,7 @@ export class ParticipantListComponent implements OnInit {
         }
         this.orderColumns();
         this.getData();
+        this.renewSelectedColumns();
       },
       err => {
         if (err._body === Auth.AUTHENTICATION_ERROR) {
@@ -806,6 +809,21 @@ export class ParticipantListComponent implements OnInit {
     } else {
       this.selectedColumns[ parent ].push( column );
     }
+  }
+
+  renewSelectedColumns() {
+    if (this.selectedColumns["data"] && this.sourceColumns["data"]) {
+      this.selectedColumns["data"] = this.savedSelectedColumns["data"].map(filter => {
+        let column = this.sourceColumns["data"].find(f =>
+          f.participantColumn.tableAlias === filter.participantColumn.tableAlias && f.participantColumn.name === filter.participantColumn.name
+        )
+        return column;
+      });
+    }
+  }
+
+  saveSelectedColumns() {
+    this.savedSelectedColumns = this.selectedColumns;
   }
 
   openParticipant( participant: Participant, colSource: string ) {
