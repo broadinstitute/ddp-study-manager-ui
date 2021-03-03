@@ -1265,6 +1265,10 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
             }
           });
         }
+        if (fieldSetting.fieldType === "RADIO" && fieldSetting.possibleValues != null) {
+          let possibleValues = fieldSetting.possibleValues;
+          let possibleValue = possibleValues.find(value => value.name === fieldSetting.columnName && value.values != null)
+        }
 
         let participantId = this.participant.data.profile[ "guid" ];
         if (this.participant.data.profile[ "legacyAltPid" ] != null && this.participant.data.profile[ "legacyAltPid" ] != undefined && this.participant.data.profile[ "legacyAltPid" ] !== '') {
