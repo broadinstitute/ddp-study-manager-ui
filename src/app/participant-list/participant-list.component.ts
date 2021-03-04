@@ -812,7 +812,7 @@ export class ParticipantListComponent implements OnInit {
   }
 
   renewSelectedColumns() {
-    if (this.selectedColumns["data"] && this.sourceColumns["data"]) {
+    if (this.savedSelectedColumns["data"] && this.sourceColumns["data"]) {
       this.selectedColumns["data"] = this.savedSelectedColumns["data"].map(filter => {
         let column = this.sourceColumns["data"].find(f =>
           f.participantColumn.tableAlias === filter.participantColumn.tableAlias && f.participantColumn.name === filter.participantColumn.name
@@ -1494,7 +1494,7 @@ export class ParticipantListComponent implements OnInit {
   private deactivateSavedFilterIfNotInUse(queryText: string) {
     if (this.filterQuery !== queryText) {
       this.selectedFilterName = "";
-    } 
+    }
   }
 
   getQuestionAnswerByName( questionsAnswers: Array<QuestionAnswer>, name: string ) {
