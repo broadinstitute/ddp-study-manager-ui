@@ -1195,16 +1195,19 @@ export class ParticipantListComponent implements OnInit {
       } );
     } else {
       //activity data
+      debugger;
       this.participantList.map( participant => {
         let activityData = participant.data.getActivityDataByCode( this.sortParent );
         if (activityData !== null && activityData !== undefined) {
           let questionAnswer = this.getQuestionAnswerByName( activityData.questionsAnswers, this.sortField );
           if (questionAnswer !== null && questionAnswer !== undefined && questionAnswer.questionType === "COMPOSITE") {
             questionAnswer.answer.sort( ( n, m ) => this.sort( n.join(), m.join(), order ));
+          } else if (questionAnswer !== null && questionAnswer !== undefined && questionAnswer.questionType === "PICKLIST") {
+            questionAnswer.answer.sort( (n, m) => this.sort(this.findOptionValue(n, activityData.activityCode, questionAnswer.stableId),
+             this.findOptionValue(m, activityData.activityCode, questionAnswer.stableId), order))
           }
         }
       })
-
       this.participantList.sort( ( a, b ) => {
         let activityDataA = a.data.getActivityDataByCode( this.sortParent );
         let activityDataB = b.data.getActivityDataByCode( this.sortParent );
@@ -1225,6 +1228,12 @@ export class ParticipantListComponent implements OnInit {
             } else {
               if (questionAnswerA.questionType === "DATE") {
                 return this.sort( questionAnswerA.date, questionAnswerB.date, order );
+              } else if (questionAnswerA.questionType === "PICKLIST") {
+                let optionValuesA = "";
+                let optionValuesB = "";
+                questionAnswerA.answer.map(option => optionValuesA += this.findOptionValue(option, activityDataA.activityCode, questionAnswerA.stableId));
+                questionAnswerB.answer.map(option => optionValuesB += this.findOptionValue(option, activityDataB.activityCode, questionAnswerB.stableId));
+                return this.sort( optionValuesA, optionValuesB, order );
               } else {
                 return this.sort( questionAnswerA.answer, questionAnswerB.answer, order );
               }
@@ -1263,6 +1272,12 @@ export class ParticipantListComponent implements OnInit {
         }
       }
     }
+  }
+
+  findOptionValue(chosenOption: Array<string>, activityCode: string, stableId: string) {
+    let filter = this.selectedColumns[activityCode].find(f => f.participantColumn.name === stableId);
+    let optionValue = filter.options.find(option => option.name === chosenOption);
+    return optionValue.value;
   }
 
   public isSelectedFilter( filterName ): boolean {
@@ -1328,6 +1343,7 @@ export class ParticipantListComponent implements OnInit {
   }
 
   getOptionDisplay( options: NameValue[], key: string ) {
+    console.log(options);
     if (options != null) {
       let nameValue = options.find( obj => {
         return obj.name === key;
