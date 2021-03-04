@@ -247,7 +247,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     delete this.payload[ "data" ][ "email" ];
   }
 
-  validateEmailInput( changedValue ) { 
+  validateEmailInput( changedValue ) {
     const regexToValidateEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     let isValid = regexToValidateEmail.test(changedValue);
     if (isValid) {
@@ -1106,12 +1106,14 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
       if (replacements != null && replacements.length > 0 && this.participant != null && this.participant.participantData != null) {
         let tmp = displayName;
         let participantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === columnName);
-        replacements.forEach( replace => {
-          let value = participantData.data[replace.trim()];
-          if (value != null && value != undefined) {
-            tmp = tmp.replace( '#' + replace.trim(), value);
-          }
-        } )
+        if (participantData != null && participantData.data != null) {
+          replacements.forEach( replace => {
+            let value = participantData.data[ replace.trim() ];
+            if (value != null && value != undefined) {
+              tmp = tmp.replace( '#' + replace.trim(), value );
+            }
+          } )
+        }
         return tmp;
       }
       return displayName;
