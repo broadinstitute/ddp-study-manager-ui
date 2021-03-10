@@ -116,7 +116,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     "Daugther",
     "Father",
     "Half Sibling (Maternal)",
-    "Half Sibling (Pternal)",
+    "Half Sibling (Paternal)",
     "Maternal Aunt",
     "Maternal First Cousin",
     "Maternal Grandfather",
@@ -189,7 +189,26 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   }
 
   submitFamilyMember() {
-    console.log(this.familyMemberFirstName, this.familyMemberLastName, this.familyMemberSubjectId, this.chosenRelation);
+    let payload = {
+      participantGuid: this.participant.data.profile["guid"],
+      realm: this.compService.getRealm(),
+      data: {
+        firstName: this.familyMemberFirstName,
+        lastName: this.familyMemberLastName,
+        memberType: this.chosenRelation,
+        familyId: 234,
+        collaboratorParticipantId: this.familyMemberSubjectId
+      },
+      userId: this.role.userID()
+    }
+    this.dsmService.addFamilyMemberRequest(JSON.stringify(payload)).subscribe(
+      data => {
+
+      },
+      err => {
+        
+      }
+    )
   }
 
   showFamilyMemberPopUpOnClick() {
