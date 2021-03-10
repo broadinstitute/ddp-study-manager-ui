@@ -150,6 +150,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     }, 5000);
     this.loadInstitutions();
     window.scrollTo( 0, 0 );
+    debugger;
   }
 
   ngOnDestroy() {
@@ -1304,5 +1305,12 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
       }
     }
+  }
+
+  createRelativeTabHeading(data: any): string {
+    if (data) {
+      return data.MEMBER_TYPE + " - " + data.DATSTAT_FIRSTNAME + " " + data.DATSTAT_LASTNAME;
+    }
+    return "";
   }
 }

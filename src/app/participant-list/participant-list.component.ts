@@ -116,6 +116,7 @@ export class ParticipantListComponent implements OnInit {
         this.additionalMessage = null;
         this.checkRight();
         this.saveSelectedColumns();
+        debugger
       }
     } );
   }
@@ -128,6 +129,7 @@ export class ParticipantListComponent implements OnInit {
       this.checkRight();
     }
     window.scrollTo( 0, 0 );
+    debugger
   }
 
   private checkRight() {
@@ -827,6 +829,7 @@ export class ParticipantListComponent implements OnInit {
   }
 
   openParticipant( participant: Participant, colSource: string ) {
+    debugger;
     if (participant != null) {
       let tabAnchor = "Survey Data";
       if (colSource === "m" || participant.data.activities == null) {
