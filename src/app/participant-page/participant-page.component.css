@@ -10,3 +10,8 @@
     line-height: normal;
     color:red;
 }
+
+.family-member-form {
+    /* width: 30% !important; */
+    display: inline-block;
+}

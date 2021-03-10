@@ -52,6 +52,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   @Input() mrCoverPdfSettings: Value[];
   @Input() oncHistoryId: string;
   @Input() mrId: string;
+  @Input() isAddFamilyMember: boolean;
   @Output() leaveParticipant = new EventEmitter();
   @Output('ngModelChange') update = new EventEmitter();
 
@@ -106,6 +107,35 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   private payload = {};
 
+  showFamilyMemberPopUp: boolean = false;
+  familyMemberFirstName: string;
+  familyMemberLastName: string;
+  familyMemberSubjectId: string;
+  relations = [
+    "Brother",
+    "Daugther",
+    "Father",
+    "Half Sibling (Maternal)",
+    "Half Sibling (Pternal)",
+    "Maternal Aunt",
+    "Maternal First Cousin",
+    "Maternal Grandfather",
+    "Maternal Grandmother",
+    "Maternal Uncle",
+    "Mother",
+    "Other",
+    "Paternal Aunt",
+    "Paternal First Cousin",
+    "Paternal Grandfather",
+    "Paternal Grandmother",
+    "Paternal Uncle",
+    "Self",
+    "Sister",
+    "Son"
+  ]
+  chosenRelation: string;
+
+
   constructor( private auth: Auth, private compService: ComponentService, private dsmService: DSMService, private router: Router,
                private role: RoleService, private util: Utils, private route: ActivatedRoute, public dialog: MdDialog) {
     if (!auth.authenticated()) {
@@ -157,6 +187,19 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     clearInterval(this.checkParticipantStatusInterval);
 
   }
+
+  submitFamilyMember() {
+    console.log(this.familyMemberFirstName, this.familyMemberLastName, this.familyMemberSubjectId, this.chosenRelation);
+  }
+
+  showFamilyMemberPopUpOnClick() {
+    this.showFamilyMemberPopUp = !this.showFamilyMemberPopUp;
+  }
+
+  isFamilyMemberFieldsEmpty() {
+    return !this.familyMemberFirstName || !this.familyMemberLastName || !this.familyMemberSubjectId || !this.chosenRelation;
+  }
+
 
   private setDefaultProfileValues() {
     this.updatedFirstName = this.participant.data.profile[ "firstName" ];
