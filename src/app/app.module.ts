@@ -113,6 +113,7 @@ import {FieldSettingsComponent} from "./field-settings/field-settings.component"
 import { InvitationDataComponent } from './invitation-data/invitation-data.component';
 import { ParticipantUpdateResultDialogComponent } from './dialogs/participant-update-result-dialog.component';
 import { FormDataComponent } from './form-data/form-data.component';
+import { AddFamilyMemberComponent } from './popups/add-family-member/add-family-member.component';
 
 @NgModule( {
   declarations: [
@@ -190,10 +191,10 @@ import { FormDataComponent } from './form-data/form-data.component';
     SearchBarComponent,
     InvitationDataComponent,
     ParticipantUpdateResultDialogComponent,
-    FormDataComponent
-
+    FormDataComponent,
+    AddFamilyMemberComponent
   ],
-  entryComponents: [ParticipantUpdateResultDialogComponent],
+  entryComponents: [ParticipantUpdateResultDialogComponent, AddFamilyMemberComponent],
   imports: [
     BrowserModule,
     FormsModule,

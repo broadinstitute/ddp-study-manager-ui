@@ -28,6 +28,7 @@ import {Abstraction} from "../medical-record-abstraction/medical-record-abstract
 import {AbstractionGroup, AbstractionWrapper} from "../abstraction-group/abstraction-group.model";
 import {PatchUtil} from "../utils/patch.model";
 import { ParticipantUpdateResultDialogComponent } from "../dialogs/participant-update-result-dialog.component";
+import { AddFamilyMemberComponent } from "../popups/add-family-member/add-family-member.component";
 
 var fileSaver = require( "file-saver/FileSaver.js" );
 
@@ -107,35 +108,6 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   private payload = {};
 
-  showFamilyMemberPopUp: boolean = false;
-  familyMemberFirstName: string;
-  familyMemberLastName: string;
-  familyMemberSubjectId: string;
-  relations = [
-    "Brother",
-    "Daugther",
-    "Father",
-    "Half Sibling (Maternal)",
-    "Half Sibling (Paternal)",
-    "Maternal Aunt",
-    "Maternal First Cousin",
-    "Maternal Grandfather",
-    "Maternal Grandmother",
-    "Maternal Uncle",
-    "Mother",
-    "Other",
-    "Paternal Aunt",
-    "Paternal First Cousin",
-    "Paternal Grandfather",
-    "Paternal Grandmother",
-    "Paternal Uncle",
-    "Self",
-    "Sister",
-    "Son"
-  ]
-  chosenRelation: string;
-
-
   constructor( private auth: Auth, private compService: ComponentService, private dsmService: DSMService, private router: Router,
                private role: RoleService, private util: Utils, private route: ActivatedRoute, public dialog: MdDialog) {
     if (!auth.authenticated()) {
@@ -188,37 +160,12 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   }
 
-  submitFamilyMember() {
-    let payload = {
-      participantGuid: this.participant.data.profile["guid"],
-      realm: this.compService.getRealm(),
-      data: {
-        firstName: this.familyMemberFirstName,
-        lastName: this.familyMemberLastName,
-        memberType: this.chosenRelation,
-        familyId: 234,
-        collaboratorParticipantId: this.familyMemberSubjectId
-      },
-      userId: this.role.userID()
-    }
-    this.dsmService.addFamilyMemberRequest(JSON.stringify(payload)).subscribe(
-      data => {
-
-      },
-      err => {
-        
-      }
-    )
-  }
-
   showFamilyMemberPopUpOnClick() {
-    this.showFamilyMemberPopUp = !this.showFamilyMemberPopUp;
+    this.dialog.open(AddFamilyMemberComponent, {
+      data: {participant : this.participant},
+      disableClose : true,
+    });
   }
-
-  isFamilyMemberFieldsEmpty() {
-    return !this.familyMemberFirstName || !this.familyMemberLastName || !this.familyMemberSubjectId || !this.chosenRelation;
-  }
-
 
   private setDefaultProfileValues() {
     this.updatedFirstName = this.participant.data.profile[ "firstName" ];

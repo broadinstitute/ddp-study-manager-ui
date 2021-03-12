@@ -172,6 +172,16 @@ participant.data.dsm['diagnosisYear'] != null">
           </tr>
           </tbody>
         </table>
+
+        <div *ngIf="isAddFamilyMember" class="Float--right Width--100">
+          <div class="family-member-button">
+            <button md-mini-fab color="primary" class="md-fab-bottom-left" (click)="showFamilyMemberPopUpOnClick()">
+              +
+            </button>
+            <span>Add Family Member</span>
+          </div>
+        </div>
+        
         <ng-container *ngIf="participant.proxyData != null && participant.proxyData.length > 0">
           <b>Proxy Data</b>
           <table class="table table-condensed">
@@ -471,52 +481,6 @@ participant.data.dsm['diagnosisYear'] != null">
             </tr>
           </ng-container>
         </table>
-      </div>
-
-      <div *ngIf="isAddFamilyMember" class="Float--right Width--100">
-        <div class="family-member-button">
-          <button md-mini-fab color="primary" class="md-fab-bottom-left" (click)="showFamilyMemberPopUpOnClick()">
-            +
-          </button>
-          <span>Add Family Member</span>
-        </div>
-        <div class="family-member-form" *ngIf="showFamilyMemberPopUp">
-          <div>
-            <label>First Name</label>
-            <input type="text" 
-              name="first-name"
-              mdInput
-              [(ngModel)]="familyMemberFirstName">
-          </div>
-          
-          <div>
-            <label>Last Name</label>
-            <input type="text" 
-              name="last-name"
-              mdInput
-              [(ngModel)]="familyMemberLastName">  
-          </div>
-
-          
-          <div>
-            <label>Subject ID</label>
-            <input type="text" 
-            name="subject-id"
-            mdInput
-            [(ngModel)]="familyMemberSubjectId">  
-          </div>
-
-          <div>
-            <label>Relation</label>
-            <md-select [(ngModel)]="chosenRelation">
-              <md-option *ngFor="let relation of relations" [value]="relation">
-                {{relation}}
-              </md-option>
-            </md-select>
-          </div>
-
-          <button class="btn btn-primary" [disabled]="isFamilyMemberFieldsEmpty()" (click)="submitFamilyMember()">Submit</button>
-        </div>
       </div>
 
       <div class="Float--left Width--100">
