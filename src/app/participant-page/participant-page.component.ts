@@ -1231,6 +1231,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
       this.errorMessage = "Didn't save change";
       return;
     }
+    console.log("patching");
     let fieldTypeId = fieldSetting.fieldType;
     if (groupSetting != null) {
       fieldTypeId = groupSetting.fieldType;
@@ -1249,14 +1250,23 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
         let nameValue: { name: string, value: any }[] = [];
         nameValue.push({name: "d.data", value: JSON.stringify(participantData.data)});
         let participantDataSec: ParticipantData = null;
+        let actionPatch: Value[] = null;
         if (fieldSetting.actions != null) {
           fieldSetting.actions.forEach(( action ) => {
             if (action != null && action.name != null && action.name != undefined && action.type != null && action.type != undefined) {
               participantDataSec = this.participant.participantData.find(participantData => participantData.fieldTypeId === action.type);
               if (participantDataSec == null) {
-                let data: { [ k: string ]: any } = {};
-                data[action.name] = action.value;
-                participantDataSec = new ParticipantData (null, action.type, data );
+                if (action.type !== 'ELASTIC_EXPORT') {
+                  let data: { [ k: string ]: any } = {};
+                  data[ action.name ] = action.value;
+                  participantDataSec = new ParticipantData( null, action.type, data );
+                }
+                else {
+                  if (actionPatch === null) {
+                    actionPatch = [];
+                  }
+                  actionPatch.push(action);
+                }
               }
               if (participantDataSec != null && participantDataSec.data != null) {
                 participantDataSec.data[ action.name ] = action.value;
@@ -1281,8 +1291,11 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
           user: this.role.userMail(),
           fieldId: fieldTypeId,
           realm:  localStorage.getItem( ComponentService.MENU_SELECTED_REALM ),
-          nameValues: nameValue
+          nameValues: nameValue,
+          actions: actionPatch,
         };
+
+        console.log(patch);
 
         this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
           data => {

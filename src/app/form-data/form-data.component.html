@@ -19,8 +19,9 @@
       </ng-container>
 
       <ng-container *ngIf="fieldSetting.displayType === 'OPTIONS'">
-        <md-select [ngClass]="{'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}" placeholder="{{fieldSetting.columnDisplay}}">
-          <md-option *ngFor="let value of fieldSetting.possibleValues" [value]="value.value" (change)="valueChanged($event)">
+        <md-select [ngClass]="{'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}" placeholder="{{fieldSetting.columnDisplay}}"
+                   [ngModel]="getActivityAnswer()" (change)="valueChanged($event)">
+          <md-option *ngFor="let value of fieldSetting.possibleValues" [value]="value.value">
             <ng-container *ngIf="value.name !== undefined">
               {{value.name}}
             </ng-container>
