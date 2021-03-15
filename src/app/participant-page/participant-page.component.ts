@@ -150,7 +150,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     }, 5000);
     this.loadInstitutions();
     window.scrollTo( 0, 0 );
-    debugger;
+    debugger
   }
 
   ngOnDestroy() {
@@ -1091,9 +1091,9 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  getParticipantData(fieldSetting: FieldSettings, fieldTypeId: string) {
-    if (this.participant != null && this.participant.participantData != null && fieldTypeId != null && fieldSetting.columnName != null) {
-      let participantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === fieldTypeId);
+  getParticipantData(fieldSetting: FieldSettings, dataId: string) {
+    if (this.participant != null && this.participant.participantData != null && dataId != null && fieldSetting.columnName != null) {
+      let participantData = this.participant.participantData.find(participantData => participantData.dataId === dataId);
       if (participantData != null && participantData.data != null && participantData.data[fieldSetting.columnName] != null) {
         return participantData.data[fieldSetting.columnName];
       }
@@ -1227,7 +1227,8 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     return [];
   }
 
-  formPatch(value: any, fieldSetting: FieldSettings, groupSetting: FieldSettings) {
+  formPatch(value: any, fieldSetting: FieldSettings, groupSetting: FieldSettings, dataId?: string) {
+    debugger
     if (fieldSetting == null || fieldSetting.fieldType == null) {
       this.errorMessage = "Didn't save change";
       return;
@@ -1236,8 +1237,8 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     if (groupSetting != null) {
       fieldTypeId = groupSetting.fieldType;
     }
-    if (this.participant != null && this.participant.participantData != null && fieldTypeId != null && fieldSetting.columnName != null) {
-      let participantData: ParticipantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === fieldTypeId);
+    if (this.participant != null && this.participant.participantData != null && fieldTypeId != null && fieldSetting.columnName != null && dataId != null) {
+      let participantData: ParticipantData = this.participant.participantData.find(participantData => participantData.dataId === dataId);
       if (participantData == null) {
         let data: { [ k: string ]: any } = {};
         data[fieldSetting.columnName] = value;
@@ -1250,22 +1251,22 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
         let nameValue: { name: string, value: any }[] = [];
         nameValue.push({name: "d.data", value: JSON.stringify(participantData.data)});
         let participantDataSec: ParticipantData = null;
-        if (fieldSetting.actions != null) {
-          fieldSetting.actions.forEach(( action ) => {
-            if (action != null && action.name != null && action.name != undefined && action.type != null && action.type != undefined) {
-              participantDataSec = this.participant.participantData.find(participantData => participantData.fieldTypeId === action.type);
-              if (participantDataSec == null) {
-                let data: { [ k: string ]: any } = {};
-                data[action.name] = action.value;
-                participantDataSec = new ParticipantData (null, action.type, data );
-              }
-              if (participantDataSec != null && participantDataSec.data != null) {
-                participantDataSec.data[ action.name ] = action.value;
-                nameValue.push({name: "d.data", value: JSON.stringify(participantDataSec.data)});
-              }
-            }
-          });
-        }
+        // if (fieldSetting.actions != null) {
+        //   fieldSetting.actions.forEach(( action ) => {
+        //     if (action != null && action.name != null && action.name != undefined && action.type != null && action.type != undefined) {
+        //       participantDataSec = this.participant.participantData.find(participantData => participantData.fieldTypeId === action.type);
+        //       if (participantDataSec == null) {
+        //         let data: { [ k: string ]: any } = {};
+        //         data[action.name] = action.value;
+        //         participantDataSec = new ParticipantData (null, action.type, data );
+        //       }
+        //       if (participantDataSec != null && participantDataSec.data != null) {
+        //         participantDataSec.data[ action.name ] = action.value;
+        //         nameValue.push({name: "d.data", value: JSON.stringify(participantDataSec.data)});
+        //       }
+        //     }
+        //   });
+        // }
 
         let participantId = this.participant.data.profile[ "guid" ];
         if (this.participant.data.profile[ "legacyAltPid" ] != null && this.participant.data.profile[ "legacyAltPid" ] != undefined && this.participant.data.profile[ "legacyAltPid" ] !== '') {

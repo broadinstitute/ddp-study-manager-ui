@@ -50,6 +50,7 @@ export class FormDataComponent implements OnInit {
   }
 
   valueChanged( value: any ) {
+    debugger
     this.patchFinished = false;
     let v;
     if (typeof value === "string") {
