@@ -1249,14 +1249,23 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
         let nameValue: { name: string, value: any }[] = [];
         nameValue.push({name: "d.data", value: JSON.stringify(participantData.data)});
         let participantDataSec: ParticipantData = null;
+        let actionPatch: Value[] = null;
         if (fieldSetting.actions != null) {
           fieldSetting.actions.forEach(( action ) => {
             if (action != null && action.name != null && action.name != undefined && action.type != null && action.type != undefined) {
               participantDataSec = this.participant.participantData.find(participantData => participantData.fieldTypeId === action.type);
               if (participantDataSec == null) {
-                let data: { [ k: string ]: any } = {};
-                data[action.name] = action.value;
-                participantDataSec = new ParticipantData (null, action.type, data );
+                if (action.type !== 'ELASTIC_EXPORT') {
+                  let data: { [ k: string ]: any } = {};
+                  data[ action.name ] = action.value;
+                  participantDataSec = new ParticipantData( null, action.type, data );
+                }
+                else {
+                  if (actionPatch === null) {
+                    actionPatch = [];
+                  }
+                  actionPatch.push(action);
+                }
               }
               if (participantDataSec != null && participantDataSec.data != null) {
                 participantDataSec.data[ action.name ] = action.value;
@@ -1264,6 +1273,10 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
               }
             }
           });
+        }
+        if (fieldSetting.fieldType === "RADIO" && fieldSetting.possibleValues != null) {
+          let possibleValues = fieldSetting.possibleValues;
+          let possibleValue = possibleValues.find(value => value.name === fieldSetting.columnName && value.values != null)
         }
 
         let participantId = this.participant.data.profile[ "guid" ];
@@ -1277,7 +1290,8 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
           user: this.role.userMail(),
           fieldId: fieldTypeId,
           realm:  localStorage.getItem( ComponentService.MENU_SELECTED_REALM ),
-          nameValues: nameValue
+          nameValues: nameValue,
+          actions: actionPatch,
         };
 
         this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
@@ -1301,7 +1315,6 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
             }
           }
         );
-
       }
     }
   }
