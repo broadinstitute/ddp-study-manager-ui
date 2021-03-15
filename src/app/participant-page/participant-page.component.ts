@@ -1231,7 +1231,6 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
       this.errorMessage = "Didn't save change";
       return;
     }
-    console.log("patching");
     let fieldTypeId = fieldSetting.fieldType;
     if (groupSetting != null) {
       fieldTypeId = groupSetting.fieldType;
@@ -1295,8 +1294,6 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
           actions: actionPatch,
         };
 
-        console.log(patch);
-
         this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
           data => {
             let result = Result.parse( data );
@@ -1318,7 +1315,6 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
             }
           }
         );
-
       }
     }
   }
