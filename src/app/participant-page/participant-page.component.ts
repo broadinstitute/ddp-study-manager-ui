@@ -150,7 +150,6 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     }, 5000);
     this.loadInstitutions();
     window.scrollTo( 0, 0 );
-    debugger
   }
 
   ngOnDestroy() {
@@ -1228,7 +1227,6 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   }
 
   formPatch(value: any, fieldSetting: FieldSettings, groupSetting: FieldSettings, dataId?: string) {
-    debugger
     if (fieldSetting == null || fieldSetting.fieldType == null) {
       this.errorMessage = "Didn't save change";
       return;
@@ -1251,22 +1249,22 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
         let nameValue: { name: string, value: any }[] = [];
         nameValue.push({name: "d.data", value: JSON.stringify(participantData.data)});
         let participantDataSec: ParticipantData = null;
-        // if (fieldSetting.actions != null) {
-        //   fieldSetting.actions.forEach(( action ) => {
-        //     if (action != null && action.name != null && action.name != undefined && action.type != null && action.type != undefined) {
-        //       participantDataSec = this.participant.participantData.find(participantData => participantData.fieldTypeId === action.type);
-        //       if (participantDataSec == null) {
-        //         let data: { [ k: string ]: any } = {};
-        //         data[action.name] = action.value;
-        //         participantDataSec = new ParticipantData (null, action.type, data );
-        //       }
-        //       if (participantDataSec != null && participantDataSec.data != null) {
-        //         participantDataSec.data[ action.name ] = action.value;
-        //         nameValue.push({name: "d.data", value: JSON.stringify(participantDataSec.data)});
-        //       }
-        //     }
-        //   });
-        // }
+        if (fieldSetting.actions != null) {
+          fieldSetting.actions.forEach(( action ) => {
+            if (action != null && action.name != null && action.name != undefined && action.type != null && action.type != undefined) {
+              participantDataSec = this.participant.participantData.find(participantData => participantData.fieldTypeId === action.type);
+              if (participantDataSec == null) {
+                let data: { [ k: string ]: any } = {};
+                data[action.name] = action.value;
+                participantDataSec = new ParticipantData (null, action.type, data );
+              }
+              if (participantDataSec != null && participantDataSec.data != null) {
+                participantDataSec.data[ action.name ] = action.value;
+                nameValue.push({name: "d.data", value: JSON.stringify(participantDataSec.data)});
+              }
+            }
+          });
+        }
 
         let participantId = this.participant.data.profile[ "guid" ];
         if (this.participant.data.profile[ "legacyAltPid" ] != null && this.participant.data.profile[ "legacyAltPid" ] != undefined && this.participant.data.profile[ "legacyAltPid" ] !== '') {

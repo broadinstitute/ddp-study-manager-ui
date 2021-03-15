@@ -827,6 +827,7 @@ export class ParticipantListComponent implements OnInit {
   }
 
   openParticipant( participant: Participant, colSource: string ) {
+    var t0 = performance.now()
     if (participant != null) {
       let tabAnchor = "Survey Data";
       if (colSource === "m" || participant.data.activities == null) {
@@ -871,6 +872,8 @@ export class ParticipantListComponent implements OnInit {
         this.showTissue = false;
       }
     }
+    var t1 = performance.now();
+    console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.")
   }
 
   openTissue( participant: Participant, oncHistory: OncHistoryDetail ) {
