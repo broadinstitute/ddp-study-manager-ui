@@ -17,6 +17,8 @@ export class AddFamilyMemberComponent implements OnInit {
   familyMemberFirstName: string;
   familyMemberLastName: string;
   familyMemberSubjectId: string;
+  chosenRelation: string;
+  isCopyProbandInfo: boolean = false;
   relations = [
     "Brother",
     "Daugther",
@@ -39,7 +41,6 @@ export class AddFamilyMemberComponent implements OnInit {
     "Sister",
     "Son"
   ]
-  chosenRelation: string;
 
   constructor(@Inject(MD_DIALOG_DATA) public data: {participant: any}, private dsmService: DSMService, 
               private compService: ComponentService, private role: RoleService, public dialog: MdDialog,
@@ -54,6 +55,7 @@ export class AddFamilyMemberComponent implements OnInit {
 
   submitFamilyMember() {
     let shortId = this.data.participant.data.profile["hruid"];
+    debugger;
     let payload = {
       participantGuid: this.data.participant.data.profile["guid"],
       realm: this.compService.getRealm(),
@@ -62,7 +64,8 @@ export class AddFamilyMemberComponent implements OnInit {
         lastName: this.familyMemberLastName,
         memberType: this.chosenRelation,
         familyId: shortId,
-        collaboratorParticipantId: shortId + "_" + this.familyMemberSubjectId
+        collaboratorParticipantId: shortId + "_" + this.familyMemberSubjectId,
+        copyProbandInfo: this.isCopyProbandInfo
       },
       userId: this.role.userID()
     }
