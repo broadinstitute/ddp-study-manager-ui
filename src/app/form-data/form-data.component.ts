@@ -70,7 +70,6 @@ export class FormDataComponent implements OnInit {
       }
     }
     this.participantData = v;
-    console.log(v);
     this.patchData.emit( v );
   }
 
