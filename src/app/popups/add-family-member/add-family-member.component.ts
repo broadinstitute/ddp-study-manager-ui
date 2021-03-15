@@ -6,6 +6,7 @@ import { ParticipantUpdateResultDialogComponent } from "../../dialogs/participan
 import {ComponentService} from "../../services/component.service";
 import {DSMService} from "../../services/dsm.service";
 import {RoleService} from "../../services/role.service";
+import { Statics } from '../../utils/statics';
 
 @Component({
   selector: 'app-add-family-member',
@@ -17,28 +18,6 @@ export class AddFamilyMemberComponent implements OnInit {
   familyMemberFirstName: string;
   familyMemberLastName: string;
   familyMemberSubjectId: string;
-  relations = [
-    "Brother",
-    "Daugther",
-    "Father",
-    "Half Sibling (Maternal)",
-    "Half Sibling (Paternal)",
-    "Maternal Aunt",
-    "Maternal First Cousin",
-    "Maternal Grandfather",
-    "Maternal Grandmother",
-    "Maternal Uncle",
-    "Mother",
-    "Other",
-    "Paternal Aunt",
-    "Paternal First Cousin",
-    "Paternal Grandfather",
-    "Paternal Grandmother",
-    "Paternal Uncle",
-    "Self",
-    "Sister",
-    "Son"
-  ]
   chosenRelation: string;
 
   constructor(@Inject(MD_DIALOG_DATA) public data: {participant: any}, private dsmService: DSMService, 
@@ -91,5 +70,9 @@ export class AddFamilyMemberComponent implements OnInit {
 
   close() {
     this.dialogRef.close()
+  }
+
+  getRelations() {
+    return Statics.RELATIONS;
   }
 }

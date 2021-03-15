@@ -6,6 +6,14 @@
 
 .family-member-form {
     padding-top: 20px;
-    border-collapse: separate; 
+    /* border-collapse: separate;  */
     border-spacing: 1em;
+}
+
+.subject-id-info {
+    display: block;
+}
+
+.subject-id-info.active {
+    color:red;
 }

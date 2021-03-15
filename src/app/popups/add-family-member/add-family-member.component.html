@@ -3,58 +3,64 @@
     <div (click)="close()" class="family-member-close">
       X
     </div>
-    <table class="family-member-form">
-      <tr>
-        <td><b>First Name</b></td>
-        <td>
-          <input 
-            type="text" 
-            name="first-name"
+    <table class="family-member-form table table-condensed">
+      <tbody>
+        <tr>
+          <td><b>First Name</b></td>
+          <td>
+            <input 
+              type="text" 
+              name="first-name"
+              mdInput
+              [(ngModel)]="familyMemberFirstName">
+          </td>
+        </tr>
+        
+        <tr>
+          <td><b>Last Name</b></td>
+          <td>
+            <input 
+              type="text" 
+              name="last-name"
+              mdInput
+              [(ngModel)]="familyMemberLastName">  
+          </td>
+        </tr>
+    
+        
+        <tr>
+          <td><b>Subject ID</b></td>
+          <td>
+            <span [ngClass]="{'subject-id-info': true, 'active': subjectId.errors?.pattern}">* only number to add to family ID needed</span>
+            <input 
+            type="text"
+            maxlength="10" 
+            name="subjectId"
             mdInput
-            [(ngModel)]="familyMemberFirstName">
-        </td>
-      </tr>
-      
-      <tr>
-        <td><b>Last Name</b></td>
-        <td>
-          <input 
-            type="text" 
-            name="last-name"
-            mdInput
-            [(ngModel)]="familyMemberLastName">  
-        </td>
-      </tr>
-  
-      
-      <tr>
-        <td><b>Subject ID</b></td>
-        <td>
-          <input 
-          type="text"
-          maxlength="10" 
-          name="subject-id"
-          mdInput
-          [(ngModel)]="familyMemberSubjectId">  
-        </td>
-      </tr>
-  
-      <tr>
-        <td><b>Relation</b></td>
-        <td>
-          <md-select [(ngModel)]="chosenRelation">
-            <md-option *ngFor="let relation of relations" [value]="relation">
-              {{relation}}
-            </md-option>
-          </md-select>
-        </td>
-      </tr>
-  
-      <tr>
-        <td>
-          <button class="btn btn-primary" [disabled]="isFamilyMemberFieldsEmpty()" (click)="submitFamilyMember()">Submit</button>
-        </td>
-      </tr>
+            [(ngModel)]="familyMemberSubjectId"
+            #subjectId="ngModel"  
+            pattern="^\d+$"
+            >  
+          </td>
+        </tr>
+    
+        <tr>
+          <td><b>Relation</b></td>
+          <td>
+            <md-select [(ngModel)]="chosenRelation">
+              <md-option *ngFor="let relation of getRelations()" [value]="relation">
+                {{relation}}
+              </md-option>
+            </md-select>
+          </td>
+        </tr>
+    
+        <tr>
+          <td>
+            <button class="btn btn-primary" [disabled]="isFamilyMemberFieldsEmpty() || subjectId.errors?.pattern" (click)="submitFamilyMember()">Submit</button>
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </md-dialog-content>
