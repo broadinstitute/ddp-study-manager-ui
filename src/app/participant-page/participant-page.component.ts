@@ -1090,9 +1090,9 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  getParticipantData(fieldSetting: FieldSettings, fieldTypeId: string) {
-    if (this.participant != null && this.participant.participantData != null && fieldTypeId != null && fieldSetting.columnName != null) {
-      let participantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === fieldTypeId);
+  getParticipantData(fieldSetting: FieldSettings, dataId: string) {
+    if (this.participant != null && this.participant.participantData != null && dataId != null && fieldSetting.columnName != null) {
+      let participantData = this.participant.participantData.find(participantData => participantData.dataId === dataId);
       if (participantData != null && participantData.data != null && participantData.data[fieldSetting.columnName] != null) {
         return participantData.data[fieldSetting.columnName];
       }
@@ -1226,7 +1226,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     return [];
   }
 
-  formPatch(value: any, fieldSetting: FieldSettings, groupSetting: FieldSettings) {
+  formPatch(value: any, fieldSetting: FieldSettings, groupSetting: FieldSettings, dataId?: string) {
     if (fieldSetting == null || fieldSetting.fieldType == null) {
       this.errorMessage = "Didn't save change";
       return;
@@ -1235,8 +1235,8 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     if (groupSetting != null) {
       fieldTypeId = groupSetting.fieldType;
     }
-    if (this.participant != null && this.participant.participantData != null && fieldTypeId != null && fieldSetting.columnName != null) {
-      let participantData: ParticipantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === fieldTypeId);
+    if (this.participant != null && this.participant.participantData != null && fieldTypeId != null && fieldSetting.columnName != null && dataId != null) {
+      let participantData: ParticipantData = this.participant.participantData.find(participantData => participantData.dataId === dataId);
       if (participantData == null) {
         let data: { [ k: string ]: any } = {};
         data[fieldSetting.columnName] = value;
@@ -1269,7 +1269,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
               }
               if (participantDataSec != null && participantDataSec.data != null) {
                 participantDataSec.data[ action.name ] = action.value;
-                nameValue.push({name: "d.data", value: JSON.stringify(participantDataSec.data)});
+                nameValue.unshift({name: "d.data", value: JSON.stringify(participantDataSec.data)});
               }
             }
           });
@@ -1317,5 +1317,12 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
         );
       }
     }
+  }
+
+  createRelativeTabHeading(data: any): string {
+    if (data) {
+      return data.MEMBER_TYPE + " - " + data.DATSTAT_FIRSTNAME + " " + data.DATSTAT_LASTNAME;
+    }
+    return "";
   }
 }
