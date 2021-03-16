@@ -29,9 +29,9 @@
     
         
         <tr>
-          <td><b>Subject ID</b></td>
+          <td><b>Relationship ID</b></td>
           <td>
-            <span [ngClass]="{'subject-id-info': true, 'active': subjectId.errors?.pattern}">* only number to add to family ID needed</span>
+            <span [ngClass]="{'subject-id-info': true, 'active': subjectId.errors?.pattern}">* Add relationship id as x or x_y</span>
             <input 
             type="text"
             maxlength="10" 
@@ -39,7 +39,7 @@
             mdInput
             [(ngModel)]="familyMemberSubjectId"
             #subjectId="ngModel"  
-            pattern="^\d+$"
+            pattern="^(\d*)([0-9]+)(_[0-9]+)*"
             >  
           </td>
         </tr>
