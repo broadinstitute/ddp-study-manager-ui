@@ -6,6 +6,7 @@ import { ParticipantUpdateResultDialogComponent } from "../../dialogs/participan
 import {ComponentService} from "../../services/component.service";
 import {DSMService} from "../../services/dsm.service";
 import {RoleService} from "../../services/role.service";
+import { Statics } from '../../utils/statics';
 
 @Component({
   selector: 'app-add-family-member',
@@ -19,34 +20,19 @@ export class AddFamilyMemberComponent implements OnInit {
   familyMemberSubjectId: string;
   chosenRelation: string;
   isCopyProbandInfo: boolean = false;
-  relations = [
-    "Brother",
-    "Daugther",
-    "Father",
-    "Half Sibling (Maternal)",
-    "Half Sibling (Paternal)",
-    "Maternal Aunt",
-    "Maternal First Cousin",
-    "Maternal Grandfather",
-    "Maternal Grandmother",
-    "Maternal Uncle",
-    "Mother",
-    "Other",
-    "Paternal Aunt",
-    "Paternal First Cousin",
-    "Paternal Grandfather",
-    "Paternal Grandmother",
-    "Paternal Uncle",
-    "Self",
-    "Sister",
-    "Son"
-  ]
+  isParticipantProbandEmpty: boolean = this.getProbandDataId() == null;
 
   constructor(@Inject(MD_DIALOG_DATA) public data: {participant: any}, private dsmService: DSMService, 
               private compService: ComponentService, private role: RoleService, public dialog: MdDialog,
               private dialogRef: MdDialogRef<AddFamilyMemberComponent>) { }
 
   ngOnInit() {
+    this.dsmService.getParticipantData(this.compService.getRealm(), this.data.participant.data.profile["guid"], "participantList").subscribe(
+      data => {
+        if (data != null && data)
+      }
+    );
+    debugger;
   }
 
   isFamilyMemberFieldsEmpty() {
@@ -55,7 +41,6 @@ export class AddFamilyMemberComponent implements OnInit {
 
   submitFamilyMember() {
     let shortId = this.data.participant.data.profile["hruid"];
-    debugger;
     let payload = {
       participantGuid: this.data.participant.data.profile["guid"],
       realm: this.compService.getRealm(),
@@ -64,9 +49,9 @@ export class AddFamilyMemberComponent implements OnInit {
         lastName: this.familyMemberLastName,
         memberType: this.chosenRelation,
         familyId: shortId,
-        collaboratorParticipantId: shortId + "_" + this.familyMemberSubjectId,
-        copyProbandInfo: this.isCopyProbandInfo
+        collaboratorParticipantId: shortId + "_" + this.familyMemberSubjectId
       },
+      copyProbandInfo: this.isCopyProbandInfo,
       userId: this.role.userID()
     }
     this.dsmService.addFamilyMemberRequest(JSON.stringify(payload)).subscribe(
@@ -94,5 +79,15 @@ export class AddFamilyMemberComponent implements OnInit {
 
   close() {
     this.dialogRef.close()
+  }
+
+  getRelations() {
+    return Statics.RELATIONS;
+  }
+
+  getProbandDataId() {
+    return this.data.participant.participantData
+          .filter(p => p.data.MEMBER_TYPE === Statics.PARTICIPANT_PROBAND)
+          .shift();
   }
 }
