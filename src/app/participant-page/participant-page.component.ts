@@ -29,6 +29,7 @@ import {AbstractionGroup, AbstractionWrapper} from "../abstraction-group/abstrac
 import {PatchUtil} from "../utils/patch.model";
 import { ParticipantUpdateResultDialogComponent } from "../dialogs/participant-update-result-dialog.component";
 import { AddFamilyMemberComponent } from "../popups/add-family-member/add-family-member.component";
+import { Sample } from "../participant-list/models/sample.model";
 
 var fileSaver = require( "file-saver/FileSaver.js" );
 
@@ -1099,9 +1100,18 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  getParticipantData(fieldSetting: FieldSettings, dataId: string) {
-    if (this.participant != null && this.participant.participantData != null && dataId != null && fieldSetting.columnName != null) {
-      let participantData = this.participant.participantData.find(participantData => participantData.dataId === dataId);
+  getParticipantData(fieldSetting: FieldSettings, relative: ParticipantData) {
+    if (this.participant != null && this.participant.participantData != null && relative.dataId != null && fieldSetting.columnName != null) {
+      let kitFieldsDict = {'DATE_KIT_RECEIVED': 'receiveDate', 'DATE_KIT_SENT': 'scanDate', 'KIT_TYPE_TO_REQUEST': 'kitType'};
+      if (fieldSetting.columnName in kitFieldsDict) {
+        let sample: Sample = this.participant.kits.find(kit => kit.bspCollaboratorSampleId === relative.data[fieldSetting.columnName]);
+        if (sample[kitFieldsDict[fieldSetting.columnName]]) {
+          return sample[kitFieldsDict[fieldSetting.columnName]];
+        } else {
+          return "";
+        }
+      }
+      let participantData = this.participant.participantData.find(participantData => participantData.dataId === relative.dataId);
       if (participantData != null && participantData.data != null && participantData.data[fieldSetting.columnName] != null) {
         return participantData.data[fieldSetting.columnName];
       }
