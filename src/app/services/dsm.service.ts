@@ -173,6 +173,16 @@ export class DSMService {
     return this.http.get( url, this.buildQueryHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError );
   }
 
+  public getParticipantDsmData( realm: string, ddpParticipantId: string): Observable<any> {
+    let url = this.baseUrl + DSMService.UI + "getParticipantData";
+    let map: { name: string, value: any }[] = [];
+    let userId = this.role.userID();
+    map.push( {name: DSMService.REALM, value: realm} );
+    map.push( {name: "ddpParticipantId", value: ddpParticipantId} );
+    map.push( {name: "userId", value: userId} );
+    return this.http.get( url, this.buildQueryHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError );
+  }
+
   public getSettings( realm: string, parent: string ): Observable<any> {
     let url = this.baseUrl + DSMService.UI + "displaySettings/" + realm;
     let map: { name: string, value: any }[] = [];
