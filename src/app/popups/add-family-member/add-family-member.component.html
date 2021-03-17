@@ -1,0 +1,66 @@
+<md-dialog-content>
+  <div class="family-member-popup">
+    <div (click)="close()" class="family-member-close">
+      X
+    </div>
+    <table class="family-member-form table table-condensed">
+      <tbody>
+        <tr>
+          <td><b>First Name</b></td>
+          <td>
+            <input 
+              type="text" 
+              name="first-name"
+              mdInput
+              [(ngModel)]="familyMemberFirstName">
+          </td>
+        </tr>
+        
+        <tr>
+          <td><b>Last Name</b></td>
+          <td>
+            <input 
+              type="text" 
+              name="last-name"
+              mdInput
+              [(ngModel)]="familyMemberLastName">  
+          </td>
+        </tr>
+    
+        
+        <tr>
+          <td><b>Relationship ID</b></td>
+          <td>
+            <span [ngClass]="{'subject-id-info': true, 'active': subjectId.errors?.pattern}">* Add relationship id as x or x_y</span>
+            <input 
+            type="text"
+            maxlength="10" 
+            name="subjectId"
+            mdInput
+            [(ngModel)]="familyMemberSubjectId"
+            #subjectId="ngModel"  
+            pattern="^(\d*)([0-9]+)(_[0-9]+)*"
+            >  
+          </td>
+        </tr>
+    
+        <tr>
+          <td><b>Relation</b></td>
+          <td>
+            <md-select [(ngModel)]="chosenRelation">
+              <md-option *ngFor="let relation of getRelations()" [value]="relation">
+                {{relation}}
+              </md-option>
+            </md-select>
+          </td>
+        </tr>
+    
+        <tr>
+          <td>
+            <button class="btn btn-primary" [disabled]="isFamilyMemberFieldsEmpty() || subjectId.errors?.pattern" (click)="submitFamilyMember()">Submit</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</md-dialog-content>

@@ -70,5 +70,28 @@ export class Statics {
 
   public static EXITED = "EXITED";
   public static CONSENT_SUSPENDED = "CONSENT_SUSPENDED";
+  
+  public static RELATIONS = [
+    "Brother",
+    "Daugther",
+    "Father",
+    "Half Sibling (Maternal)",
+    "Half Sibling (Paternal)",
+    "Maternal Aunt",
+    "Maternal First Cousin",
+    "Maternal Grandfather",
+    "Maternal Grandmother",
+    "Maternal Uncle",
+    "Mother",
+    "Other",
+    "Paternal Aunt",
+    "Paternal First Cousin",
+    "Paternal Grandfather",
+    "Paternal Grandmother",
+    "Paternal Uncle",
+    "Self",
+    "Sister",
+    "Son"
+  ]
 
 }

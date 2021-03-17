@@ -24,18 +24,21 @@
     <br/>
   </div>
 
-  <div *ngIf="errorMessage == null" class="Width--100">
 
+  
+  <div *ngIf="errorMessage == null" class="Width--100">
+    
     <br/>
     <a href="#" (click)="leavePage()"><b> << back to 'List' </b></a>
     <br/><br/><br/>
-
+    
     <span [hidden]="!loadingParticipantPage && !updatingParticipant" class="Width--100">
-    <div align="center" class="Width--100 Height--100">
-      <i class="fas fa-spinner fa-spin fa-5x Color--primary"></i>
-    </div>
-  </span>
-
+      <div align="center" class="Width--100 Height--100">
+        <i class="fas fa-spinner fa-spin fa-5x Color--primary"></i>
+      </div>
+    </span>
+    
+    
     <div *ngIf="!loadingParticipantPage && !updatingParticipant" class="Width--100">
 
       <div *ngIf="participantExited">
@@ -169,6 +172,16 @@ participant.data.dsm['diagnosisYear'] != null">
           </tr>
           </tbody>
         </table>
+
+        <div *ngIf="isAddFamilyMember" class="Float--right Width--100">
+          <div class="family-member-button">
+            <button md-mini-fab color="primary" class="md-fab-bottom-left" (click)="showFamilyMemberPopUpOnClick()">
+              +
+            </button>
+            <span>Add Family Member</span>
+          </div>
+        </div>
+        
         <ng-container *ngIf="participant.proxyData != null && participant.proxyData.length > 0">
           <b>Proxy Data</b>
           <table class="table table-condensed">
@@ -211,6 +224,7 @@ participant.data.dsm['diagnosisYear'] != null">
             </button>
           </ng-container>
         </ng-container>
+
         <!--Abstraction start buttons-->
         <div *ngIf="counterReceived > 0 && parentList === 'participantList'">
           <div class="Float--left TD--Padding">

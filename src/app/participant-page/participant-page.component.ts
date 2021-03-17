@@ -28,6 +28,7 @@ import {Abstraction} from "../medical-record-abstraction/medical-record-abstract
 import {AbstractionGroup, AbstractionWrapper} from "../abstraction-group/abstraction-group.model";
 import {PatchUtil} from "../utils/patch.model";
 import { ParticipantUpdateResultDialogComponent } from "../dialogs/participant-update-result-dialog.component";
+import { AddFamilyMemberComponent } from "../popups/add-family-member/add-family-member.component";
 
 var fileSaver = require( "file-saver/FileSaver.js" );
 
@@ -52,6 +53,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   @Input() mrCoverPdfSettings: Value[];
   @Input() oncHistoryId: string;
   @Input() mrId: string;
+  @Input() isAddFamilyMember: boolean;
   @Output() leaveParticipant = new EventEmitter();
   @Output('ngModelChange') update = new EventEmitter();
 
@@ -156,6 +158,13 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
     clearInterval(this.checkParticipantStatusInterval);
 
+  }
+
+  showFamilyMemberPopUpOnClick() {
+    this.dialog.open(AddFamilyMemberComponent, {
+      data: {participant : this.participant},
+      disableClose : true,
+    });
   }
 
   private setDefaultProfileValues() {

@@ -103,6 +103,7 @@ export class ParticipantListComponent implements OnInit {
   rowsPerPage: number;
   preferredLanguages: PreferredLanguage[] = [];
   savedSelectedColumns = {};
+  isAddFamilyMember: boolean = false;
 
   constructor( private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
                private router: Router, private auth: Auth, private route: ActivatedRoute, private util: Utils ) {
@@ -476,6 +477,11 @@ export class ParticipantListComponent implements OnInit {
               }
             })
           }
+        }
+        if (jsonData.addFamilyMember === true) {
+          this.isAddFamilyMember = true;
+        } else {
+          this.isAddFamilyMember = false;
         }
         this.orderColumns();
         this.getData();
