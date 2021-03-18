@@ -68,7 +68,7 @@ export class DSMService {
   }
 
   public addFamilyMemberRequest( json: string ) {
-    let url = this.baseUrl + DSMService.UI + "addFamilyMember";
+    let url = this.baseUrl + DSMService.UI + "familyMember";
     return this.http.post( url, json, this.buildHeader() ).map( ( res: Response ) => res.json() ).catch( this.handleError );
   }
 
