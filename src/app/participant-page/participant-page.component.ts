@@ -1103,9 +1103,9 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   getParticipantData(fieldSetting: FieldSettings, relative: ParticipantData) {
     if (this.participant != null && this.participant.participantData != null && relative.dataId != null && fieldSetting.columnName != null) {
       let kitFieldsDict = {'DATE_KIT_RECEIVED': 'receiveDate', 'DATE_KIT_SENT': 'scanDate', 'KIT_TYPE_TO_REQUEST': 'kitType'};
-      if (fieldSetting.columnName in kitFieldsDict) {
+      if (fieldSetting.displayType === 'SAMPLE') {
         let sample: Sample = this.participant.kits.find(kit => kit.bspCollaboratorSampleId === relative.data[fieldSetting.columnName]);
-        if (sample[kitFieldsDict[fieldSetting.columnName]]) {
+        if (sample && kitFieldsDict[fieldSetting.columnName] && sample[kitFieldsDict[fieldSetting.columnName]]) {
           return sample[kitFieldsDict[fieldSetting.columnName]];
         } else {
           return "";

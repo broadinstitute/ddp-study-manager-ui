@@ -97,6 +97,13 @@
                               (dateChanged)="valueChanged($event)">
         </app-field-datepicker>
       </ng-container>
+
+      <ng-container *ngIf="fieldSetting.displayType === 'SAMPLE'">
+        <textarea maxlength="1000" placeholder="{{fieldSetting.columnDisplay}}"
+                  [ngClass]="{'Width--50': true, 'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}" [value]="participantData"
+                  [readonly]="true"
+        ></textarea>
+      </ng-container>
     </td>
   </tr>
 </table>
