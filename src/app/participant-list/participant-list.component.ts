@@ -102,6 +102,8 @@ export class ParticipantListComponent implements OnInit {
   filtered: boolean = false;
   rowsPerPage: number;
   preferredLanguages: PreferredLanguage[] = [];
+  savedSelectedColumns = {};
+  isAddFamilyMember: boolean = false;
 
   constructor( private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
                private router: Router, private auth: Auth, private route: ActivatedRoute, private util: Utils ) {
@@ -114,6 +116,7 @@ export class ParticipantListComponent implements OnInit {
         //        this.compService.realmMenu = realm;
         this.additionalMessage = null;
         this.checkRight();
+        this.saveSelectedColumns();
       }
     } );
   }
@@ -475,8 +478,14 @@ export class ParticipantListComponent implements OnInit {
             })
           }
         }
+        if (jsonData.addFamilyMember === true) {
+          this.isAddFamilyMember = true;
+        } else {
+          this.isAddFamilyMember = false;
+        }
         this.orderColumns();
         this.getData();
+        this.renewSelectedColumns();
       },
       err => {
         if (err._body === Auth.AUTHENTICATION_ERROR) {
@@ -787,7 +796,7 @@ export class ParticipantListComponent implements OnInit {
   }
 
   public setSelectedFilterName( filterName ) {
-    this.selectedFilterName === filterName;
+    this.selectedFilterName = filterName;
   }
 
 
@@ -806,6 +815,21 @@ export class ParticipantListComponent implements OnInit {
     } else {
       this.selectedColumns[ parent ].push( column );
     }
+  }
+
+  renewSelectedColumns() {
+    if (this.savedSelectedColumns["data"] && this.sourceColumns["data"]) {
+      this.selectedColumns["data"] = this.savedSelectedColumns["data"].map(filter => {
+        let column = this.sourceColumns["data"].find(f =>
+          f.participantColumn.tableAlias === filter.participantColumn.tableAlias && f.participantColumn.name === filter.participantColumn.name
+        )
+        return column;
+      });
+    }
+  }
+
+  saveSelectedColumns() {
+    this.savedSelectedColumns = this.selectedColumns;
   }
 
   openParticipant( participant: Participant, colSource: string ) {
@@ -940,6 +964,7 @@ export class ParticipantListComponent implements OnInit {
     } else {
       this.filtered = false;
       this.filterQuery = "";
+      this.selectedFilterName = null;
       this.deselectQuickFilters();
       //TODO - can be changed later to all using the same - after all studies are migrated!
       //check if it was a tableAlias data filter -> filter client side
@@ -970,7 +995,7 @@ export class ParticipantListComponent implements OnInit {
           }
         }
         if (status != null) {
-          if (status === "sent") {
+          if (status === "shipped") {
             let filter1 = new NameValue( "scanDate", null );
             let filter2 = new NameValue( "scanDate", "true" );
             filterText = Filter.getFilterJson( tmp, filter1, filter2, null, false, Filter.DATE_TYPE, false, false, true, filter.participantColumn );
@@ -1457,7 +1482,7 @@ export class ParticipantListComponent implements OnInit {
   public doFilterByQuery( queryText: string ) {
     this.clearManualFilters();
     this.deselectQuickFilters();
-    this.setSelectedFilterName( "" );
+    this.deactivateSavedFilterIfNotInUse(queryText);
     queryText = queryText.replace("( k.uploadReason = 'NORMAL' )", "k.uploadReason IS NULL");
     queryText = queryText.replace("( k.uploadReason like 'NORMAL' )", "k.uploadReason IS NULL");
     let data = {
@@ -1497,6 +1522,12 @@ export class ParticipantListComponent implements OnInit {
       this.loadingParticipants = null;
       this.additionalMessage = "Error - Filtering Participant List, Please contact your DSM developer";
     } );
+  }
+
+  private deactivateSavedFilterIfNotInUse(queryText: string) {
+    if (this.filterQuery !== queryText) {
+      this.selectedFilterName = "";
+    }
   }
 
   getQuestionAnswerByName( questionsAnswers: Array<QuestionAnswer>, name: string ) {

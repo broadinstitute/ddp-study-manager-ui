@@ -67,6 +67,11 @@ export class DSMService {
     return this.http.post( url, json, this.buildQueryHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError );
   }
 
+  public addFamilyMemberRequest( json: string ) {
+    let url = this.baseUrl + DSMService.UI + "addFamilyMember";
+    return this.http.post( url, json, this.buildHeader() ).map( ( res: Response ) => res.json() ).catch( this.handleError );
+  }
+
   public getKitRequests( realm: string, target: string, name: string ): Observable<any> {
     let url = this.baseUrl + DSMService.UI + "kitRequests";
     let map: { name: string, value: any }[] = [];

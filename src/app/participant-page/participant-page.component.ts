@@ -28,6 +28,7 @@ import {Abstraction} from "../medical-record-abstraction/medical-record-abstract
 import {AbstractionGroup, AbstractionWrapper} from "../abstraction-group/abstraction-group.model";
 import {PatchUtil} from "../utils/patch.model";
 import { ParticipantUpdateResultDialogComponent } from "../dialogs/participant-update-result-dialog.component";
+import { AddFamilyMemberComponent } from "../popups/add-family-member/add-family-member.component";
 
 var fileSaver = require( "file-saver/FileSaver.js" );
 
@@ -52,6 +53,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   @Input() mrCoverPdfSettings: Value[];
   @Input() oncHistoryId: string;
   @Input() mrId: string;
+  @Input() isAddFamilyMember: boolean;
   @Output() leaveParticipant = new EventEmitter();
   @Output('ngModelChange') update = new EventEmitter();
 
@@ -158,6 +160,13 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   }
 
+  showFamilyMemberPopUpOnClick() {
+    this.dialog.open(AddFamilyMemberComponent, {
+      data: {participant : this.participant},
+      disableClose : true,
+    });
+  }
+
   private setDefaultProfileValues() {
     this.updatedFirstName = this.participant.data.profile[ "firstName" ];
     this.updatedLastName = this.participant.data.profile[ "lastName" ];
@@ -247,7 +256,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     delete this.payload[ "data" ][ "email" ];
   }
 
-  validateEmailInput( changedValue ) { 
+  validateEmailInput( changedValue ) {
     const regexToValidateEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     let isValid = regexToValidateEmail.test(changedValue);
     if (isValid) {
@@ -1090,9 +1099,9 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  getParticipantData(fieldSetting: FieldSettings, fieldTypeId: string) {
-    if (this.participant != null && this.participant.participantData != null && fieldTypeId != null && fieldSetting.columnName != null) {
-      let participantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === fieldTypeId);
+  getParticipantData(fieldSetting: FieldSettings, dataId: string) {
+    if (this.participant != null && this.participant.participantData != null && dataId != null && fieldSetting.columnName != null) {
+      let participantData = this.participant.participantData.find(participantData => participantData.dataId === dataId);
       if (participantData != null && participantData.data != null && participantData.data[fieldSetting.columnName] != null) {
         return participantData.data[fieldSetting.columnName];
       }
@@ -1106,12 +1115,14 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
       if (replacements != null && replacements.length > 0 && this.participant != null && this.participant.participantData != null) {
         let tmp = displayName;
         let participantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === columnName);
-        replacements.forEach( replace => {
-          let value = participantData.data[replace.trim()];
-          if (value != null && value != undefined) {
-            tmp = tmp.replace( '#' + replace.trim(), value);
-          }
-        } )
+        if (participantData != null && participantData.data != null) {
+          replacements.forEach( replace => {
+            let value = participantData.data[ replace.trim() ];
+            if (value != null && value != undefined) {
+              tmp = tmp.replace( '#' + replace.trim(), value );
+            }
+          } )
+        }
         return tmp;
       }
       return displayName;
@@ -1224,7 +1235,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     return [];
   }
 
-  formPatch(value: any, fieldSetting: FieldSettings, groupSetting: FieldSettings) {
+  formPatch(value: any, fieldSetting: FieldSettings, groupSetting: FieldSettings, dataId?: string) {
     if (fieldSetting == null || fieldSetting.fieldType == null) {
       this.errorMessage = "Didn't save change";
       return;
@@ -1233,8 +1244,8 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     if (groupSetting != null) {
       fieldTypeId = groupSetting.fieldType;
     }
-    if (this.participant != null && this.participant.participantData != null && fieldTypeId != null && fieldSetting.columnName != null) {
-      let participantData: ParticipantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === fieldTypeId);
+    if (this.participant != null && this.participant.participantData != null && fieldTypeId != null && fieldSetting.columnName != null && dataId != null) {
+      let participantData: ParticipantData = this.participant.participantData.find(participantData => participantData.dataId === dataId);
       if (participantData == null) {
         let data: { [ k: string ]: any } = {};
         data[fieldSetting.columnName] = value;
@@ -1247,21 +1258,34 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
         let nameValue: { name: string, value: any }[] = [];
         nameValue.push({name: "d.data", value: JSON.stringify(participantData.data)});
         let participantDataSec: ParticipantData = null;
+        let actionPatch: Value[] = null;
         if (fieldSetting.actions != null) {
           fieldSetting.actions.forEach(( action ) => {
             if (action != null && action.name != null && action.name != undefined && action.type != null && action.type != undefined) {
               participantDataSec = this.participant.participantData.find(participantData => participantData.fieldTypeId === action.type);
               if (participantDataSec == null) {
-                let data: { [ k: string ]: any } = {};
-                data[action.name] = action.value;
-                participantDataSec = new ParticipantData (null, action.type, data );
+                if (action.type !== 'ELASTIC_EXPORT') {
+                  let data: { [ k: string ]: any } = {};
+                  data[ action.name ] = action.value;
+                  participantDataSec = new ParticipantData( null, action.type, data );
+                }
+                else {
+                  if (actionPatch === null) {
+                    actionPatch = [];
+                  }
+                  actionPatch.push(action);
+                }
               }
               if (participantDataSec != null && participantDataSec.data != null) {
                 participantDataSec.data[ action.name ] = action.value;
-                nameValue.push({name: "d.data", value: JSON.stringify(participantDataSec.data)});
+                nameValue.unshift({name: "d.data", value: JSON.stringify(participantDataSec.data)});
               }
             }
           });
+        }
+        if (fieldSetting.fieldType === "RADIO" && fieldSetting.possibleValues != null) {
+          let possibleValues = fieldSetting.possibleValues;
+          let possibleValue = possibleValues.find(value => value.name === fieldSetting.columnName && value.values != null)
         }
 
         let participantId = this.participant.data.profile[ "guid" ];
@@ -1275,7 +1299,8 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
           user: this.role.userMail(),
           fieldId: fieldTypeId,
           realm:  localStorage.getItem( ComponentService.MENU_SELECTED_REALM ),
-          nameValues: nameValue
+          nameValues: nameValue,
+          actions: actionPatch,
         };
 
         this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
@@ -1299,8 +1324,14 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
             }
           }
         );
-
       }
     }
+  }
+
+  createRelativeTabHeading(data: any): string {
+    if (data) {
+      return data.MEMBER_TYPE + " - " + data.DATSTAT_FIRSTNAME + " " + data.DATSTAT_LASTNAME;
+    }
+    return "";
   }
 }
