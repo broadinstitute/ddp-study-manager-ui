@@ -1379,7 +1379,6 @@ export class ParticipantListComponent implements OnInit {
   }
 
   getOptionDisplay( options: NameValue[], key: string ) {
-    console.log(options);
     if (options != null) {
       let nameValue = options.find( obj => {
         return obj.name === key;
