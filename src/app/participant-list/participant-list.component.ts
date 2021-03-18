@@ -1156,7 +1156,6 @@ export class ParticipantListComponent implements OnInit {
   }
 
   private doSort( object: string, colType: string ) {
-    debugger;
     let order = this.sortDir === "asc" ? 1 : -1;
     if (this.sortParent === "data" && object != null) {
       this.participantList.sort( ( a, b ) => {
@@ -1222,7 +1221,6 @@ export class ParticipantListComponent implements OnInit {
       } );
     } else {
       //activity data
-      debugger;
       this.participantList.map( participant => {
         let activityData = participant.data.getActivityDataByCode( this.sortParent );
         if (activityData !== null && activityData !== undefined) {
@@ -1233,7 +1231,6 @@ export class ParticipantListComponent implements OnInit {
         }
       })
       this.participantList.sort( ( a, b ) => {
-        debugger
         let activityDataA = a.data.getActivityDataByCode( this.sortParent );
         let activityDataB = b.data.getActivityDataByCode( this.sortParent );
         if (activityDataA == null) {
