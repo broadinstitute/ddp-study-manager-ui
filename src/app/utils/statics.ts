@@ -72,28 +72,28 @@ export class Statics {
   public static CONSENT_SUSPENDED = "CONSENT_SUSPENDED";
   
   public static RELATIONS = [
-    "Brother",
-    "Daughter",
-    "Father",
-    "Half Sibling (Maternal)",
-    "Half Sibling (Paternal)",
-    "Maternal Aunt",
-    "Maternal First Cousin",
-    "Maternal Grandfather",
-    "Maternal Grandmother",
-    "Maternal Uncle",
-    "Mother",
-    "Other",
-    "Paternal Aunt",
-    "Paternal First Cousin",
-    "Paternal Grandfather",
-    "Paternal Grandmother",
-    "Paternal Uncle",
-    "Self",
-    "Sister",
-    "Son"
+    {key: "Brother", value: "BROTHER"},
+    {key: "Daughter", value: "DAUGHTER"},
+    {key: "Father", value: "FATHER"},
+    {key: "Half Sibling (Maternal)", value: "HALF_SIBLING_MATERNAL"},
+    {key: "Half Sibling (Paternal)", value: "HALF_SIBLING_PATERNAL"},
+    {key: "Maternal Aunt", value: "MATERNAL AUNT"},
+    {key: "Maternal First Cousin", value: "MATERNAL_FIRST_COUSIN"},
+    {key: "Maternal Grandfather", value: "MATERNAL_GRANDFATHER"},
+    {key: "Maternal Grandmother", value: "MATERNAL_GRANDMOTHER"},
+    {key: "Maternal Uncle", value: "MATERNAL_UNCLE"},
+    {key: "Mother", value: "MOTHER"},
+    {key: "Other", value: "OTHER"},
+    {key: "Paternal Aunt", value: "PATERNAL_AUNT"},
+    {key: "Paternal First Cousin", value: "PATERNAL_FIRST_COUSIN"},
+    {key: "Paternal Grandfather", value: "PATERNAL_GRANDFATHER"},
+    {key: "Paternal Grandmother", value: "PATERNAL_GRANDMOTHER"},
+    {key: "Paternal Uncle", value: "PATERNAL_UNCLE"},
+    {key: "Self", value: "SELF"},
+    {key: "Sister", value: "SISTER"},
+    {key: "Son", value: "SON"}
   ]
 
-  public static PARTICIPANT_PROBAND = "Self";
+  public static PARTICIPANT_PROBAND = "SELF";
 
 }

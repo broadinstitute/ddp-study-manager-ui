@@ -91,7 +91,7 @@ export class AddFamilyMemberComponent implements OnInit {
   getRelations() {
     let relations = Statics.RELATIONS;
     if (!this.isParticipantProbandEmpty) {
-      relations = relations.filter(rel => rel !== Statics.PARTICIPANT_PROBAND)
+      relations = relations.filter(rel => rel.value !== Statics.PARTICIPANT_PROBAND)
     }
     return relations;
   }
