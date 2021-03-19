@@ -929,51 +929,56 @@ participant.data.dsm['diagnosisYear'] != null">
                 </app-medical-record-abstraction>
               </div>
             </tab>
-<!--            tabs from fieldSettings-->
-            <ng-container *ngFor="let tab of settings['null']">
-              <ng-container *ngIf="displayTab(tab)">
-                <tab heading="{{getDisplayName(tab.columnDisplay, tab.columnName)}}" [active]="tabActive(tab.columnDisplay)" (select)="onSelect($event, tab.columnDisplay)" >
-<!--                  <br/>-->
+            
+            <ng-container *ngFor="let relative of participant.participantData; trackBy: trackById">
+              <!--            tabs from fieldSettings-->
+              <ng-container *ngFor="let tab of settings['null']">
+                <ng-container *ngIf="displayTab(tab)">
+                  <tab heading="{{createRelativeTabHeading(relative.data)}}" [active]="tabActive(relative.dataId)" (select)="onSelect($event, relative.dataId)" >
+                  <br/>
 
-<!--                  <div class="Float&#45;&#45;left Width&#45;&#45;100">-->
-<!--                    <b class="Group&#45;&#45;Title">Jump to:</b>-->
-<!--                  </div>-->
-<!--                  <ng-container *ngFor="let setting of settings[tab.columnName]; let settingIndex = index">-->
-<!--                    <div class="Float&#45;&#45;left" *ngIf="setting.displayType === 'GROUP'">-->
-<!--                      <a class="Abstraction&#45;&#45;Jump&#45;&#45;Group" pageScroll href="{{setting.columnName}}">{{setting.columnDisplay}}</a>-->
-<!--                    </div>-->
-<!--                    <ng-container *ngIf="settingIndex < settings[tab.columnName].length - 1">-->
-<!--                      <div class="Float&#45;&#45;left Vertical&#45;&#45;line"></div>-->
-<!--                    </ng-container>-->
-<!--                  </ng-container>-->
-<!--                  <div class="Float&#45;&#45;left Width&#45;&#45;100">-->
-<!--                    <hr style="border-color: black">-->
-<!--                  </div>-->
-
-                  <ng-container *ngFor="let setting of settings[tab.columnName]; let settingIndex = index">
-                    <div class="Float--left Width--100">
-                      <div *ngIf="setting.displayType === 'GROUP'">
-                        <fieldset style="border: 1px black solid">
-                          <legend class="Group--Title" id="{{setting.columnName}}">{{setting.columnDisplay}}</legend>
-                          <ng-container *ngFor="let field of settings[setting.columnName]; let fieldIndex = index">
-                            <app-form-data [fieldSetting]="field" [participantData]="getParticipantData(field, tab.columnName)"
-                                           [activityData]="getActivityData(field)" [activityOptions]="getActivityOptions(field)"
-                                           (patchData)="formPatch($event, field, setting)"></app-form-data>
-                            <hr *ngIf="fieldIndex !== settings[setting.columnName].length-1" style="border-color: lightgray">
+  <!--                  <div class="Float&#45;&#45;left Width&#45;&#45;100">-->
+  <!--                    <b class="Group&#45;&#45;Title">Jump to:</b>-->
+  <!--                  </div>-->
+  <!--                  <ng-container *ngFor="let setting of settings[tab.columnName]; let settingIndex = index">-->
+  <!--                    <div class="Float&#45;&#45;left" *ngIf="setting.displayType === 'GROUP'">-->
+  <!--                      <a class="Abstraction&#45;&#45;Jump&#45;&#45;Group" pageScroll href="{{setting.columnName}}">{{setting.columnDisplay}}</a>-->
+  <!--                    </div>-->
+  <!--                    <ng-container *ngIf="settingIndex < settings[tab.columnName].length - 1">-->
+  <!--                      <div class="Float&#45;&#45;left Vertical&#45;&#45;line"></div>-->
+  <!--                    </ng-container>-->
+  <!--                  </ng-container>-->
+  <!--                  <div class="Float&#45;&#45;left Width&#45;&#45;100">-->
+  <!--                    <hr style="border-color: black">-->
+  <!--                  </div>-->
+                    <ng-container *ngIf="tabActive(relative.dataId)">
+                      <ng-container *ngFor="let setting of settings[tab.columnName]; let settingIndex = index">
+                        <div class="Float--left Width--100">
+                          <div *ngIf="setting.displayType === 'GROUP'">
+                            <fieldset style="border: 1px black solid">
+                              <legend class="Group--Title" id="{{setting.columnName}}">{{setting.columnDisplay}}</legend>
+                              <ng-container *ngFor="let field of settings[setting.columnName]; let fieldIndex = index">
+                                <app-form-data [fieldSetting]="field" [participantData]="getParticipantData(field, relative)"
+                                              [activityData]="getActivityData(field)" [activityOptions]="getActivityOptions(field)"
+                                              (patchData)="formPatch($event, field, setting, relative.dataId)"></app-form-data>    
+                                <hr *ngIf="fieldIndex !== settings[setting.columnName].length-1" style="border-color: lightgray">
+                              </ng-container>
+                            </fieldset>
+                          </div>
+                          <ng-container *ngIf="setting.displayType !== 'GROUP'">
+                            <app-form-data [fieldSetting]="setting" [participantData]="getParticipantData(setting, relative.dataId)"
+                                          [activityData]="getActivityData(setting)" [activityOptions]="getActivityOptions(setting)"
+                                          (patchData)="formPatch($event, setting, null, relative.dataId)"></app-form-data>
+                            <hr *ngIf="settingIndex !== settings[tab.columnName].length-1" style="border-color: lightgray">
                           </ng-container>
-                        </fieldset>
-                      </div>
-                      <ng-container *ngIf="setting.displayType !== 'GROUP'">
-                        <app-form-data [fieldSetting]="setting" [participantData]="getParticipantData(setting, tab.columnName)"
-                                       [activityData]="getActivityData(setting)" [activityOptions]="getActivityOptions(setting)"
-                                       (patchData)="formPatch($event, setting, null)"></app-form-data>
-                        <hr *ngIf="settingIndex !== settings[tab.columnName].length-1" style="border-color: lightgray">
+                        </div>
                       </ng-container>
-                    </div>
-                  </ng-container>
-                </tab>
+                    </ng-container>  
+                  </tab>
+                </ng-container>
               </ng-container>
             </ng-container>
+
           </tabset>
       </div>
     </div>

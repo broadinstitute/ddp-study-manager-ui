@@ -29,6 +29,7 @@ import {AbstractionGroup, AbstractionWrapper} from "../abstraction-group/abstrac
 import {PatchUtil} from "../utils/patch.model";
 import { ParticipantUpdateResultDialogComponent } from "../dialogs/participant-update-result-dialog.component";
 import { AddFamilyMemberComponent } from "../popups/add-family-member/add-family-member.component";
+import { Sample } from "../participant-list/models/sample.model";
 
 var fileSaver = require( "file-saver/FileSaver.js" );
 
@@ -1099,9 +1100,18 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  getParticipantData(fieldSetting: FieldSettings, fieldTypeId: string) {
-    if (this.participant != null && this.participant.participantData != null && fieldTypeId != null && fieldSetting.columnName != null) {
-      let participantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === fieldTypeId);
+  getParticipantData(fieldSetting: FieldSettings, relative: ParticipantData) {
+    if (this.participant != null && this.participant.participantData != null && relative.dataId != null && fieldSetting.columnName != null) {
+      let kitFieldsDict = {'DATE_KIT_RECEIVED': 'receiveDate', 'DATE_KIT_SENT': 'scanDate', 'KIT_TYPE_TO_REQUEST': 'kitType'};
+      if (fieldSetting.displayType === 'SAMPLE') {
+        let sample: Sample = this.participant.kits.find(kit => kit.bspCollaboratorSampleId === relative.data[fieldSetting.columnName]);
+        if (sample && kitFieldsDict[fieldSetting.columnName] && sample[kitFieldsDict[fieldSetting.columnName]]) {
+          return sample[kitFieldsDict[fieldSetting.columnName]];
+        } else {
+          return "";
+        }
+      }
+      let participantData = this.participant.participantData.find(participantData => participantData.dataId === relative.dataId);
       if (participantData != null && participantData.data != null && participantData.data[fieldSetting.columnName] != null) {
         return participantData.data[fieldSetting.columnName];
       }
@@ -1235,7 +1245,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     return [];
   }
 
-  formPatch(value: any, fieldSetting: FieldSettings, groupSetting: FieldSettings) {
+  formPatch(value: any, fieldSetting: FieldSettings, groupSetting: FieldSettings, dataId?: string) {
     if (fieldSetting == null || fieldSetting.fieldType == null) {
       this.errorMessage = "Didn't save change";
       return;
@@ -1244,8 +1254,8 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     if (groupSetting != null) {
       fieldTypeId = groupSetting.fieldType;
     }
-    if (this.participant != null && this.participant.participantData != null && fieldTypeId != null && fieldSetting.columnName != null) {
-      let participantData: ParticipantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === fieldTypeId);
+    if (this.participant != null && this.participant.participantData != null && fieldTypeId != null && fieldSetting.columnName != null && dataId != null) {
+      let participantData: ParticipantData = this.participant.participantData.find(participantData => participantData.dataId === dataId);
       if (participantData == null) {
         let data: { [ k: string ]: any } = {};
         data[fieldSetting.columnName] = value;
@@ -1258,21 +1268,34 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
         let nameValue: { name: string, value: any }[] = [];
         nameValue.push({name: "d.data", value: JSON.stringify(participantData.data)});
         let participantDataSec: ParticipantData = null;
+        let actionPatch: Value[] = null;
         if (fieldSetting.actions != null) {
           fieldSetting.actions.forEach(( action ) => {
             if (action != null && action.name != null && action.name != undefined && action.type != null && action.type != undefined) {
               participantDataSec = this.participant.participantData.find(participantData => participantData.fieldTypeId === action.type);
               if (participantDataSec == null) {
-                let data: { [ k: string ]: any } = {};
-                data[action.name] = action.value;
-                participantDataSec = new ParticipantData (null, action.type, data );
+                if (action.type !== 'ELASTIC_EXPORT') {
+                  let data: { [ k: string ]: any } = {};
+                  data[ action.name ] = action.value;
+                  participantDataSec = new ParticipantData( null, action.type, data );
+                }
+                else {
+                  if (actionPatch === null) {
+                    actionPatch = [];
+                  }
+                  actionPatch.push(action);
+                }
               }
               if (participantDataSec != null && participantDataSec.data != null) {
                 participantDataSec.data[ action.name ] = action.value;
-                nameValue.push({name: "d.data", value: JSON.stringify(participantDataSec.data)});
+                nameValue.unshift({name: "d.data", value: JSON.stringify(participantDataSec.data)});
               }
             }
           });
+        }
+        if (fieldSetting.fieldType === "RADIO" && fieldSetting.possibleValues != null) {
+          let possibleValues = fieldSetting.possibleValues;
+          let possibleValue = possibleValues.find(value => value.name === fieldSetting.columnName && value.values != null)
         }
 
         let participantId = this.participant.data.profile[ "guid" ];
@@ -1286,7 +1309,8 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
           user: this.role.userMail(),
           fieldId: fieldTypeId,
           realm:  localStorage.getItem( ComponentService.MENU_SELECTED_REALM ),
-          nameValues: nameValue
+          nameValues: nameValue,
+          actions: actionPatch,
         };
 
         this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
@@ -1310,8 +1334,14 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
             }
           }
         );
-
       }
     }
+  }
+
+  createRelativeTabHeading(data: any): string {
+    if (data) {
+      return data.MEMBER_TYPE + " - " + data.DATSTAT_FIRSTNAME + " " + data.DATSTAT_LASTNAME;
+    }
+    return "";
   }
 }
