@@ -1151,10 +1151,11 @@ export class ParticipantListComponent implements OnInit {
     this.sortDir = this.sortField === col.participantColumn.name ? ( this.sortDir === "asc" ? "desc" : "asc" ) : "asc";
     this.sortField = col.participantColumn.name;
     this.sortParent = sortParent;
-    this.doSort( col.participantColumn.object );
+    let colType = col.type;
+    this.doSort( col.participantColumn.object, colType );
   }
 
-  private doSort( object: string ) {
+  private doSort( object: string, colType: string ) {
     let order = this.sortDir === "asc" ? 1 : -1;
     if (this.sortParent === "data" && object != null) {
       this.participantList.sort( ( a, b ) => {
@@ -1163,11 +1164,11 @@ export class ParticipantListComponent implements OnInit {
         } else if (b.data[ object ] == null) {
           return -1;
         } else {
-          return this.sort( a.data[ object ][ this.sortField ], b.data[ object ][ this.sortField ], order );
+          return this.sort( a.data[ object ][ this.sortField ], b.data[ object ][ this.sortField ], order, undefined, colType );
         }
       } );
     } else if (this.sortParent === "data" && object == null) {
-      this.participantList.sort( ( a, b ) => ( a.data == null || b.data == null ) ? 1 : this.sort( a.data, b.data, order, this.sortField ) );
+      this.participantList.sort( ( a, b ) => ( a.data == null || b.data == null ) ? 1 : this.sort( a.data, b.data, order, this.sortField, colType ) );
     } else if (this.sortParent === "p") {
       this.participantList.sort( ( a, b ) => {
         if (a.participant == null || a.participant[ this.sortField ] == null) {
@@ -1175,12 +1176,12 @@ export class ParticipantListComponent implements OnInit {
         } else if (b.participant == null || b.participant[ this.sortField ] == null) {
           return -1;
         } else {
-          return this.sort( a.participant[ this.sortField ], b.participant[ this.sortField ], order );
+          return this.sort( a.participant[ this.sortField ], b.participant[ this.sortField ], order, undefined, colType );
         }
       } );
     } else if (this.sortParent === "m") {
       this.participantList.map( participant =>
-        participant.medicalRecords.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ))
+        participant.medicalRecords.sort( (n, m) => this.sort( n[ this.sortField ], m[ this.sortField ], order, undefined, colType ))
       )
       this.participantList.sort( ( a, b ) => {
         if (a.medicalRecords === null || a.medicalRecords == undefined || a.medicalRecords.length < 1) {
@@ -1188,12 +1189,12 @@ export class ParticipantListComponent implements OnInit {
         } else if (b.medicalRecords === null || b.medicalRecords == undefined || b.medicalRecords.length < 1) {
           return -1;
         } else {
-          return this.sort(a.medicalRecords[0][this.sortField], b.medicalRecords[0][this.sortField], order );
+          return this.sort(a.medicalRecords[0][this.sortField], b.medicalRecords[0][this.sortField], order, undefined, colType );
         }
       } );
     } else if (this.sortParent === "oD") {
       this.participantList.map( participant =>
-        participant.oncHistoryDetails.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ))
+        participant.oncHistoryDetails.sort( (n, m) => this.sort( n[ this.sortField ], m[ this.sortField ], order, undefined, colType ))
       )
       this.participantList.sort( ( a, b ) => {
         if (a.oncHistoryDetails === null || a.oncHistoryDetails == undefined || a.oncHistoryDetails.length < 1) {
@@ -1201,13 +1202,13 @@ export class ParticipantListComponent implements OnInit {
         } else if (b.oncHistoryDetails === null || b.oncHistoryDetails == undefined || b.oncHistoryDetails.length < 1) {
           return -1;
         } else {
-          return this.sort(a.oncHistoryDetails[0][this.sortField], b.oncHistoryDetails[0][this.sortField], order );
+          return this.sort(a.oncHistoryDetails[0][this.sortField], b.oncHistoryDetails[0][this.sortField], order, undefined, colType );
         }
       } );
     } else if (this.sortParent === "t") {
     } else if (this.sortParent === "k") {
       this.participantList.map( participant =>
-        participant.kits.sort( ( n, m ) => this.sort( n[ this.sortField ], m[ this.sortField ], order ))
+        participant.kits.sort( (n, m) => this.sort( n[ this.sortField ], m[ this.sortField ], order, undefined, colType ))
       )
       this.participantList.sort( ( a, b ) => {
         if (a.kits === null || a.kits == undefined || a.kits.length < 1) {
@@ -1215,7 +1216,7 @@ export class ParticipantListComponent implements OnInit {
         } else if (b.kits === null || b.kits == undefined || b.kits.length < 1) {
           return -1;
         } else {
-          return this.sort(a.kits[0][this.sortField], b.kits[0][this.sortField], order );
+          return this.sort(a.kits[0][this.sortField], b.kits[0][this.sortField], order, undefined, colType );
         }
       } );
     } else {
@@ -1229,7 +1230,6 @@ export class ParticipantListComponent implements OnInit {
           }
         }
       })
-
       this.participantList.sort( ( a, b ) => {
         let activityDataA = a.data.getActivityDataByCode( this.sortParent );
         let activityDataB = b.data.getActivityDataByCode( this.sortParent );
@@ -1250,6 +1250,23 @@ export class ParticipantListComponent implements OnInit {
             } else {
               if (questionAnswerA.questionType === "DATE") {
                 return this.sort( questionAnswerA.date, questionAnswerB.date, order );
+              } else if (questionAnswerA.questionType === "PICKLIST") {
+                let optionsA = this.selectedColumns[activityDataA.activityCode].find(f => f.participantColumn.name === questionAnswerA.stableId).options;
+                let sortedListStringA = "";
+                optionsA.forEach(element => {
+                  if (questionAnswerA.answer.includes(element.name)) {
+                    sortedListStringA += this.findOptionValue(element.name, activityDataA.activityCode, questionAnswerA.stableId);
+                  }
+                });
+                
+                let optionsB = this.selectedColumns[activityDataB.activityCode].find(f => f.participantColumn.name === questionAnswerB.stableId).options;
+                let sortedListStringB = "";
+                optionsB.forEach(element => {
+                  if (questionAnswerB.answer.includes(element.name)) {
+                    sortedListStringB += this.findOptionValue(element.name, activityDataB.activityCode, questionAnswerB.stableId);
+                  }
+                });                
+                return this.sort( sortedListStringA, sortedListStringB, order );
               } else {
                 return this.sort( questionAnswerA.answer, questionAnswerB.answer, order );
               }
@@ -1260,14 +1277,14 @@ export class ParticipantListComponent implements OnInit {
     }
   }
 
-  private sort( x, y, order, sortField? ) {
+  private sort( x, y, order, sortField?, colType? ) {
     if (sortField !== undefined && x != undefined && y != undefined && x != null && y != null) {
       x = x[ sortField ];
       y = y[ sortField ];
     }
-    if (x === null || x == undefined || x === "") {
+    if (x === null || x == undefined || x === "" || (colType == "DATE" && x === 0)) {
       return 1;
-    } else if (y === null || y == undefined || y === "") {
+    } else if (y === null || y == undefined || y === "" || (colType == "DATE" && y === 0)) {
       return -1;
     } else {
       if (typeof x === "string") {
@@ -1288,6 +1305,12 @@ export class ParticipantListComponent implements OnInit {
         }
       }
     }
+  }
+
+  findOptionValue(chosenOption: Array<string>, activityCode: string, stableId: string) {
+    let filter = this.selectedColumns[activityCode].find(f => f.participantColumn.name === stableId);
+    let optionValue = filter.options.find(option => option.name === chosenOption);
+    return optionValue.value;
   }
 
   public isSelectedFilter( filterName ): boolean {
