@@ -101,7 +101,7 @@ export class AddFamilyMemberComponent implements OnInit {
     let probandData = this.data.participant.participantData
           .filter(p => p.data.MEMBER_TYPE === Statics.PARTICIPANT_PROBAND)
           .shift();
-    if (probandData.hasOwnProperty("dataId")) {
+    if (probandData != null && probandData.hasOwnProperty("dataId")) {
       ddpParticipantDataId = probandData["dataId"]
     }
     return ddpParticipantDataId;
