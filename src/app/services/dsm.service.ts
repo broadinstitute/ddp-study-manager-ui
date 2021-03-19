@@ -68,7 +68,7 @@ export class DSMService {
   }
 
   public addFamilyMemberRequest( json: string ) {
-    let url = this.baseUrl + DSMService.UI + "addFamilyMember";
+    let url = this.baseUrl + DSMService.UI + "familyMember";
     return this.http.post( url, json, this.buildHeader() ).map( ( res: Response ) => res.json() ).catch( this.handleError );
   }
 
@@ -170,6 +170,16 @@ export class DSMService {
     map.push( {name: "ddpParticipantId", value: ddpParticipantId} );
     map.push( {name: "userId", value: userId} );
     map.push( {name: "parent", value: parent} );
+    return this.http.get( url, this.buildQueryHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError );
+  }
+
+  public getParticipantDsmData( realm: string, ddpParticipantId: string): Observable<any> {
+    let url = this.baseUrl + DSMService.UI + "getParticipantData";
+    let map: { name: string, value: any }[] = [];
+    let userId = this.role.userID();
+    map.push( {name: DSMService.REALM, value: realm} );
+    map.push( {name: "ddpParticipantId", value: ddpParticipantId} );
+    map.push( {name: "userId", value: userId} );
     return this.http.get( url, this.buildQueryHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError );
   }
 

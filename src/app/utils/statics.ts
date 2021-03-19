@@ -94,4 +94,6 @@ export class Statics {
     "Son"
   ]
 
+  public static PARTICIPANT_PROBAND = "Self";
+
 }

@@ -26,8 +26,7 @@
               [(ngModel)]="familyMemberLastName">  
           </td>
         </tr>
-    
-        
+      
         <tr>
           <td><b>Relationship ID</b></td>
           <td>
@@ -43,7 +42,7 @@
             >  
           </td>
         </tr>
-    
+        
         <tr>
           <td><b>Relation</b></td>
           <td>
@@ -54,11 +53,23 @@
             </md-select>
           </td>
         </tr>
+
+        <tr>
+          <td><b>Copy Proband Info</b></td>
+          <td>
+            <md-checkbox
+            [(ngModel)]="isCopyProbandInfo"
+            [color]="'primary'"
+            [disabled]="isParticipantProbandEmpty">
+            </md-checkbox>
+          </td>
+        </tr>
     
         <tr>
           <td>
             <button class="btn btn-primary" [disabled]="isFamilyMemberFieldsEmpty() || subjectId.errors?.pattern" (click)="submitFamilyMember()">Submit</button>
           </td>
+          <td></td>
         </tr>
       </tbody>
     </table>

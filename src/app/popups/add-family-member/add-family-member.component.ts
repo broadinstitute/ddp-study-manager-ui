@@ -19,18 +19,32 @@ export class AddFamilyMemberComponent implements OnInit {
   familyMemberLastName: string;
   familyMemberSubjectId: string;
   chosenRelation: string;
+  isCopyProbandInfo: boolean = false;
+  probandDataId: number = this.getProbandDataId();
+  isParticipantProbandEmpty: boolean = this.getProbandDataId() == null;
 
   constructor(@Inject(MD_DIALOG_DATA) public data: {participant: any}, private dsmService: DSMService, 
               private compService: ComponentService, private role: RoleService, public dialog: MdDialog,
               private dialogRef: MdDialogRef<AddFamilyMemberComponent>) { }
 
   ngOnInit() {
+    this.dsmService.getParticipantDsmData(this.compService.getRealm(), this.data.participant.data.profile["guid"]).subscribe(
+      data => {
+        if (data != null) {
+          this.data.participant.participantData = data;
+          this.isParticipantProbandEmpty = this.getProbandDataId() == null;
+          if (!this.isParticipantProbandEmpty) {
+            this.probandDataId = this.getProbandDataId();
+          }
+        }
+      }
+    );
   }
-
+  
   isFamilyMemberFieldsEmpty() {
     return !this.familyMemberFirstName || !this.familyMemberLastName || !this.familyMemberSubjectId || !this.chosenRelation;
   }
-
+  
   submitFamilyMember() {
     let shortId = this.data.participant.data.profile["hruid"];
     let payload = {
@@ -43,6 +57,8 @@ export class AddFamilyMemberComponent implements OnInit {
         familyId: shortId,
         collaboratorParticipantId: shortId + "_" + this.familyMemberSubjectId
       },
+      copyProbandInfo: this.isCopyProbandInfo,
+      probandDataId: this.probandDataId,
       userId: this.role.userID()
     }
     this.dsmService.addFamilyMemberRequest(JSON.stringify(payload)).subscribe(
@@ -73,6 +89,21 @@ export class AddFamilyMemberComponent implements OnInit {
   }
 
   getRelations() {
-    return Statics.RELATIONS;
+    let relations = Statics.RELATIONS;
+    if (!this.isParticipantProbandEmpty) {
+      relations = relations.filter(rel => rel !== Statics.PARTICIPANT_PROBAND)
+    }
+    return relations;
+  }
+
+  getProbandDataId() : number {
+    let ddpParticipantDataId;
+    let probandData = this.data.participant.participantData
+          .filter(p => p.data.MEMBER_TYPE === Statics.PARTICIPANT_PROBAND)
+          .shift();
+    if (probandData.hasOwnProperty("dataId")) {
+      ddpParticipantDataId = probandData["dataId"]
+    }
+    return ddpParticipantDataId;
   }
 }
