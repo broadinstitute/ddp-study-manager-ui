@@ -73,7 +73,7 @@ export class Statics {
   
   public static RELATIONS = [
     "Brother",
-    "Daugther",
+    "Daughter",
     "Father",
     "Half Sibling (Maternal)",
     "Half Sibling (Paternal)",
