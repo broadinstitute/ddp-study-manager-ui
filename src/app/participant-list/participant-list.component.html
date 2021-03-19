@@ -273,7 +273,7 @@
                       <li class="LIST-SEPARATOR" *ngFor="let invite of pt.data.invitations">
                         <p class="BIT-OF-MARGIN" *ngIf="invite != null">
                           <ng-container *ngIf="col.type === 'DATE'">
-                            {{invite[col.participantColumn.name] | date:'medium'}}
+                            {{parseMillisToDateString(invite[col.participantColumn.name])}}
                           </ng-container>
                           <ng-container *ngIf="col.type === 'TEXT' && col.participantColumn.name !== 'guid'">
                             {{invite[col.participantColumn.name]}}
