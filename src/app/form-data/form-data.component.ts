@@ -16,11 +16,14 @@ export class FormDataComponent implements OnInit {
   @Input() patchFinished: boolean;
   @Output() patchData = new EventEmitter();
 
+  defaultValuesToSave: FieldSettings[] = [];
+
   currentPatchField: string;
 
   constructor() { }
 
   ngOnInit() {
+    console.log("---------------------", this.defaultValuesToSave);
   }
 
   getActivityAnswer() {
@@ -28,7 +31,19 @@ export class FormDataComponent implements OnInit {
       //get data from dsm db if it is not type activity
       if (this.fieldSetting.displayType !== 'ACTIVITY_STAFF') {
         //return savedAnswer if it is not type activity_staff
-        return this.participantData;
+        if (this.participantData) {
+          return this.participantData;
+        }
+        if (this.fieldSetting.possibleValues != null) {
+          let value = "";
+          this.fieldSetting.possibleValues.forEach(v => {
+            if (v['default']) {
+              value = v.value;
+              this.defaultValuesToSave.push(this.fieldSetting);
+            };
+          });
+          return value;
+        }
       }
       else {
         //if it is type activity_staff only return if it is not empty, otherwise return answer from the activity
