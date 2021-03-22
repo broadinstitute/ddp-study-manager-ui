@@ -782,6 +782,13 @@ export class ParticipantListComponent implements OnInit {
     this.getData();
   }
 
+  public parseMillisToDateString( dateInMillis: number ) : string {
+    const date = new Date(dateInMillis);
+    const options = {year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'UTC'};
+    const dateString = date.toLocaleString('en-US', options);
+    return dateString;
+  }
+
   public clearManualFilters() {
     this.dataSources.forEach( ( value: string, key: string ) => {
       if (this.selectedColumns[ key ] != null) {
