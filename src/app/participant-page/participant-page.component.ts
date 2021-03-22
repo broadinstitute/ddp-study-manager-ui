@@ -1204,6 +1204,10 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     return "";
   }
 
+  getTabsSettingList() {
+    return this.settings['null'];
+  }
+
   getActivityOptions(fieldSetting: FieldSettings) {
     if (fieldSetting.displayType === 'ACTIVITY' || fieldSetting.displayType === 'ACTIVITY_STAFF') {
       if (fieldSetting.possibleValues != null && fieldSetting.possibleValues[0] != null && fieldSetting.possibleValues[0].value != null
@@ -1246,6 +1250,14 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   }
 
   formPatch(value: any, fieldSetting: FieldSettings, groupSetting: FieldSettings, dataId?: string) {
+    if (value.value && value.dataId && value.fieldSetting && value.groupSetting) {
+      let incomingValue = value;
+      value = incomingValue.value;
+      fieldSetting = incomingValue.fieldSetting;
+      groupSetting = incomingValue.groupSetting;
+      dataId = incomingValue.dataId;
+    }
+    debugger;
     if (fieldSetting == null || fieldSetting.fieldType == null) {
       this.errorMessage = "Didn't save change";
       return;

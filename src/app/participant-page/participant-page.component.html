@@ -930,27 +930,19 @@ participant.data.dsm['diagnosisYear'] != null">
               </div>
             </tab>
             
-            <ng-container *ngFor="let relative of participant.participantData; trackBy: trackById">
-              <!--            tabs from fieldSettings-->
+            <app-form-data [settings]="settings" [participant]="participant"
+                          [getParticipantDataFunction]="getParticipantData"
+                          [getActivityDataFunction]="getActivityData" [getActivityOptionsFunction]="getActivityOptions"
+                          (patchData)="formPatch($event)"
+                          [activeTab]="activeTab"></app-form-data>    
+            
+            <!--            tabs from fieldSettings-->
+            <!-- <ng-container *ngFor="let relative of participant.participantData; trackBy: trackById">
               <ng-container *ngFor="let tab of settings['null']">
                 <ng-container *ngIf="displayTab(tab)">
                   <tab heading="{{createRelativeTabHeading(relative.data)}}" [active]="tabActive(relative.dataId)" (select)="onSelect($event, relative.dataId)" >
                   <br/>
 
-  <!--                  <div class="Float&#45;&#45;left Width&#45;&#45;100">-->
-  <!--                    <b class="Group&#45;&#45;Title">Jump to:</b>-->
-  <!--                  </div>-->
-  <!--                  <ng-container *ngFor="let setting of settings[tab.columnName]; let settingIndex = index">-->
-  <!--                    <div class="Float&#45;&#45;left" *ngIf="setting.displayType === 'GROUP'">-->
-  <!--                      <a class="Abstraction&#45;&#45;Jump&#45;&#45;Group" pageScroll href="{{setting.columnName}}">{{setting.columnDisplay}}</a>-->
-  <!--                    </div>-->
-  <!--                    <ng-container *ngIf="settingIndex < settings[tab.columnName].length - 1">-->
-  <!--                      <div class="Float&#45;&#45;left Vertical&#45;&#45;line"></div>-->
-  <!--                    </ng-container>-->
-  <!--                  </ng-container>-->
-  <!--                  <div class="Float&#45;&#45;left Width&#45;&#45;100">-->
-  <!--                    <hr style="border-color: black">-->
-  <!--                  </div>-->
                     <ng-container *ngIf="tabActive(relative.dataId)">
                       <ng-container *ngFor="let setting of settings[tab.columnName]; let settingIndex = index">
                         <div class="Float--left Width--100">
@@ -958,9 +950,6 @@ participant.data.dsm['diagnosisYear'] != null">
                             <fieldset style="border: 1px black solid">
                               <legend class="Group--Title" id="{{setting.columnName}}">{{setting.columnDisplay}}</legend>
                               <ng-container *ngFor="let field of settings[setting.columnName]; let fieldIndex = index">
-                                <app-form-data [fieldSetting]="field" [participantData]="getParticipantData(field, relative)"
-                                              [activityData]="getActivityData(field)" [activityOptions]="getActivityOptions(field)"
-                                              (patchData)="formPatch($event, field, setting, relative.dataId)"></app-form-data>    
                                 <hr *ngIf="fieldIndex !== settings[setting.columnName].length-1" style="border-color: lightgray">
                               </ng-container>
                             </fieldset>
@@ -977,7 +966,7 @@ participant.data.dsm['diagnosisYear'] != null">
                   </tab>
                 </ng-container>
               </ng-container>
-            </ng-container>
+            </ng-container> -->
 
           </tabset>
       </div>

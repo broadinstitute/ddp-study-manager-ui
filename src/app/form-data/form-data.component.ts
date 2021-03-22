@@ -1,6 +1,10 @@
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {FieldSettings} from "../field-settings/field-settings.model";
+import { TabDirective } from "ngx-bootstrap";
+import { FieldSettings } from "../field-settings/field-settings.model";
+import { ParticipantData } from "../participant-list/models/participant-data.model";
+import { Participant } from "../participant-list/participant-list.model";
 import {NameValue} from "../utils/name-value.model";
+import { Value } from "../utils/value.model";
 
 @Component({
   selector: 'app-form-data',
@@ -9,11 +13,18 @@ import {NameValue} from "../utils/name-value.model";
 })
 export class FormDataComponent implements OnInit {
 
-  @Input() fieldSetting: FieldSettings;
+  @Input() localFieldSetting: FieldSettings;
+  @Input() settings: any;
+  @Input() activeTab: string;
+  @Input() participant: Participant;
   @Input() participantData: String;
   @Input() activityData: String;
   @Input() activityOptions: String[];
   @Input() patchFinished: boolean;
+  @Input() patchDataFunction: (value: any, fieldSetting: FieldSettings, groupSetting: FieldSettings, dataId?: string) => void;
+  @Input() getParticipantDataFunction: (fieldSetting: FieldSettings, relative: ParticipantData) => String;
+  @Input() getActivityDataFunction: (fieldSetting: FieldSettings) => String;
+  @Input() getActivityOptionsFunction: (fieldSetting: FieldSettings) => String[];
   @Output() patchData = new EventEmitter();
 
   defaultValuesToSave: FieldSettings[] = [];
@@ -23,23 +34,24 @@ export class FormDataComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log("---------------------", this.defaultValuesToSave);
+    console.log("---------------------", this.settings);
   }
 
-  getActivityAnswer() {
-    if (this.fieldSetting.displayType !== 'ACTIVITY')  {
+  getActivityAnswer(fieldSetting: FieldSettings, participantData: ParticipantData) {
+    let pData = this.getParticipantDataFunction(fieldSetting, participantData);
+    if (fieldSetting.displayType !== 'ACTIVITY')  {
       //get data from dsm db if it is not type activity
-      if (this.fieldSetting.displayType !== 'ACTIVITY_STAFF') {
+      if (fieldSetting.displayType !== 'ACTIVITY_STAFF') {
         //return savedAnswer if it is not type activity_staff
-        if (this.participantData) {
-          return this.participantData;
+        if (pData) {
+          return pData;
         }
-        if (this.fieldSetting.possibleValues != null) {
+        if (fieldSetting.possibleValues != null) {
           let value = "";
-          this.fieldSetting.possibleValues.forEach(v => {
+          fieldSetting.possibleValues.forEach(v => {
             if (v['default']) {
               value = v.value;
-              this.defaultValuesToSave.push(this.fieldSetting);
+              this.defaultValuesToSave.push(fieldSetting);
             };
           });
           return value;
@@ -47,24 +59,69 @@ export class FormDataComponent implements OnInit {
       }
       else {
         //if it is type activity_staff only return if it is not empty, otherwise return answer from the activity
-        if (this.participantData != null && this.participantData !== '') {
-          return this.participantData;
+        if (pData != null && pData !== '') {
+          return pData;
         }
       }
     }
-    return this.activityData;
+    return this.getActivityDataFunction(fieldSetting);
   }
 
-  getOptions() {
-    if (this.fieldSetting.displayType !== 'ACTIVITY' && this.fieldSetting.displayType !== 'ACTIVITY_STAFF') {
-      return this.fieldSetting.possibleValues;
+  displayTab( fieldSetting: FieldSettings ): boolean {
+    if (fieldSetting != null && fieldSetting.possibleValues != null) {
+      let value: Value[] = fieldSetting.possibleValues;
+      if (value.length == 1 && value[0] != null && value[0].value != null) {
+        if (this.participant != null && this.participant.data != null && this.participant.data.activities != null) {
+          let activity = this.participant.data.activities.find( x => x.activityCode === value[0].value );
+          if (activity != null) {
+            return true;
+          }
+          else {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
+
+  createRelativeTabHeading(data: any): string {
+    if (data) {
+      return data.MEMBER_TYPE + " - " + data.DATSTAT_FIRSTNAME + " " + data.DATSTAT_LASTNAME;
+    }
+    return "";
+  }
+
+  getParticipantData(fieldSetting: FieldSettings, relative: ParticipantData) {
+    return this.getParticipantDataFunction(fieldSetting, relative);
+  }
+
+  tabActive( tab: string ): boolean {
+    if (this.activeTab === tab) {
+      return true;
+    }
+    return false;
+  }
+
+
+  onSelect( data: TabDirective, tabName: string ): void {
+    if (data instanceof TabDirective) {
+      // this.selectedTabTitle = data.heading;
+      this.activeTab = tabName;
+    }
+  }
+
+
+  getOptions(fieldSetting: FieldSettings) {
+    if (fieldSetting.displayType !== 'ACTIVITY' && fieldSetting.displayType !== 'ACTIVITY_STAFF') {
+      return fieldSetting.possibleValues;
     }
     else {
-      return this.activityOptions;
+      return this.getActivityOptionsFunction(fieldSetting);
     }
   }
 
-  valueChanged( value: any ) {
+  valueChanged( value: any, fieldSetting: FieldSettings, groupSetting: FieldSettings, dataId: any ) {
     this.patchFinished = false;
     let v;
     if (typeof value === "string") {
@@ -85,7 +142,7 @@ export class FormDataComponent implements OnInit {
       }
     }
     this.participantData = v;
-    this.patchData.emit( v );
+    this.patchData.emit({value: v, fieldSetting: fieldSetting, groupSetting: groupSetting, dataId: dataId});
   }
 
   isPatchedCurrently( field: string ): boolean {
