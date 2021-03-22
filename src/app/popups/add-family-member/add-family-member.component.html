@@ -47,8 +47,8 @@
           <td><b>Relation</b></td>
           <td>
             <md-select [(ngModel)]="chosenRelation">
-              <md-option *ngFor="let relation of getRelations()" [value]="relation">
-                {{relation}}
+              <md-option *ngFor="let relation of getRelations()" [value]="relation.value">
+                {{relation.key}}
               </md-option>
             </md-select>
           </td>
