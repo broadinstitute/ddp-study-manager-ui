@@ -1100,20 +1100,22 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  getParticipantData(fieldSetting: FieldSettings, relative: ParticipantData) {
-    if (this.participant != null && this.participant.participantData != null && relative.dataId != null && fieldSetting.columnName != null) {
+  getParticipantData(fieldSetting: FieldSettings, personsParticipantData: ParticipantData) {
+    if (this.participant && this.participant.participantData && personsParticipantData && fieldSetting.columnName) {
       let kitFieldsDict = {'DATE_KIT_RECEIVED': 'receiveDate', 'DATE_KIT_SENT': 'scanDate', 'KIT_TYPE_TO_REQUEST': 'kitType'};
       if (fieldSetting.displayType === 'SAMPLE') {
-        let sample: Sample = this.participant.kits.find(kit => kit.bspCollaboratorSampleId === relative.data[fieldSetting.columnName]);
+        let sample: Sample = this.participant.kits.find(kit => kit.bspCollaboratorSampleId === personsParticipantData.data[fieldSetting.columnName]);
         if (sample && kitFieldsDict[fieldSetting.columnName] && sample[kitFieldsDict[fieldSetting.columnName]]) {
           return sample[kitFieldsDict[fieldSetting.columnName]];
         } else {
           return "";
         }
-      }
-      let participantData = this.participant.participantData.find(participantData => participantData.dataId === relative.dataId);
-      if (participantData != null && participantData.data != null && participantData.data[fieldSetting.columnName] != null) {
-        return participantData.data[fieldSetting.columnName];
+      } else if (personsParticipantData && personsParticipantData.data) {
+        if (personsParticipantData.data[fieldSetting.columnName]) {
+          return personsParticipantData.data[fieldSetting.columnName];
+        } else if (fieldSetting.columnName === 'AGE' && personsParticipantData.data['DATSTAT_DATEOFBIRTH']) {
+          return this.countAge(personsParticipantData.data['DATSTAT_DATEOFBIRTH']);
+        }
       }
     }
     return "";
@@ -1343,5 +1345,11 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
       return data.MEMBER_TYPE + " - " + data.DATSTAT_FIRSTNAME + " " + data.DATSTAT_LASTNAME;
     }
     return "";
+  }
+
+  countAge(dateOfBirth: string) {
+    let diff = Date.now() - Date.parse(dateOfBirth);
+    let ageDate = new Date(diff);
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
   }
 }

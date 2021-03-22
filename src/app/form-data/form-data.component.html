@@ -8,7 +8,8 @@
         <md-input-container [ngClass]="{'Width--100': true, 'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}">
           <input mdInput type="number"
                  placeholder="{{fieldSetting.columnDisplay}}"
-                 [ngModel]="participantData" (change)="valueChanged($event)">
+                 [ngModel]="participantData" (change)="valueChanged($event)"
+                 [readonly] = "fieldSetting.readonly">
         </md-input-container>
       </ng-container>
 
@@ -101,8 +102,8 @@
       <ng-container *ngIf="fieldSetting.displayType === 'SAMPLE'">
         <textarea maxlength="1000" placeholder="{{fieldSetting.columnDisplay}}"
                   [ngClass]="{'Width--50': true, 'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}" [value]="participantData"
-                  [readonly]="true"
-        ></textarea>
+                  [readonly]="fieldSetting.readonly">
+        </textarea>
       </ng-container>
     </td>
   </tr>
