@@ -954,7 +954,7 @@ participant.data.dsm['diagnosisYear'] != null">
                     <ng-container *ngIf="tabActive(relative.dataId)">
                       <accordion>
                         <accordion-group *ngFor="let setting of settings[tab.columnName]; let settingIndex = index" 
-                          [heading]="setting.columnDisplay" [isOpen]="true">
+                          [heading]="setting.columnDisplay" [isOpen]="false">
                           <div class="Float--left Width--100">
                             <div *ngIf="setting.displayType === 'GROUP'">
                               <fieldset style="border: 1px black solid">
