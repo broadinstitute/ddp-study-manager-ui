@@ -55,6 +55,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   @Input() oncHistoryId: string;
   @Input() mrId: string;
   @Input() isAddFamilyMember: boolean;
+  @Input() showTabFields: boolean;
   @Output() leaveParticipant = new EventEmitter();
   @Output('ngModelChange') update = new EventEmitter();
 
