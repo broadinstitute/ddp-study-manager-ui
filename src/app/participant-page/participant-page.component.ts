@@ -109,6 +109,9 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   private payload = {};
 
+  readonly kitFieldsDict = {'DATE_KIT_RECEIVED': 'receiveDate', 'DATE_KIT_SENT': 'scanDate', 'KIT_TYPE_TO_REQUEST': 'kitType'};
+
+
   constructor( private auth: Auth, private compService: ComponentService, private dsmService: DSMService, private router: Router,
                private role: RoleService, private util: Utils, private route: ActivatedRoute, public dialog: MdDialog) {
     if (!auth.authenticated()) {
@@ -1102,19 +1105,19 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   getParticipantData(fieldSetting: FieldSettings, personsParticipantData: ParticipantData) {
     if (this.participant && this.participant.participantData && personsParticipantData && fieldSetting.columnName) {
-      let kitFieldsDict = {'DATE_KIT_RECEIVED': 'receiveDate', 'DATE_KIT_SENT': 'scanDate', 'KIT_TYPE_TO_REQUEST': 'kitType'};
       if (fieldSetting.displayType === 'SAMPLE') {
         let sample: Sample = this.participant.kits.find(kit => kit.bspCollaboratorSampleId === personsParticipantData.data[fieldSetting.columnName]);
-        if (sample && kitFieldsDict[fieldSetting.columnName] && sample[kitFieldsDict[fieldSetting.columnName]]) {
-          return sample[kitFieldsDict[fieldSetting.columnName]];
+        if (sample && this.kitFieldsDict[fieldSetting.columnName] && sample[this.kitFieldsDict[fieldSetting.columnName]]) {
+          return sample[this.kitFieldsDict[fieldSetting.columnName]];
         } else {
           return "";
         }
       } else if (personsParticipantData && personsParticipantData.data) {
         if (personsParticipantData.data[fieldSetting.columnName]) {
           return personsParticipantData.data[fieldSetting.columnName];
-        } else if (fieldSetting.columnName === 'AGE' && personsParticipantData.data['DATSTAT_DATEOFBIRTH']) {
-          return this.countAge(personsParticipantData.data['DATSTAT_DATEOFBIRTH']);
+        } else if (fieldSetting.actions && fieldSetting.actions[0].type && fieldSetting.actions[0].type === 'CALC' && 
+                    fieldSetting.actions[0].value && personsParticipantData.data[fieldSetting.actions[0].value]) {
+          return this.countYears(personsParticipantData.data[fieldSetting.actions[0].value]);
         }
       }
     }
@@ -1347,9 +1350,9 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     return "";
   }
 
-  countAge(dateOfBirth: string) {
-    let diff = Date.now() - Date.parse(dateOfBirth);
-    let ageDate = new Date(diff);
-    return Math.abs(ageDate.getUTCFullYear() - 1970);
+  countYears(startDate: string) {
+    let diff = Date.now() - Date.parse(startDate);
+    let diffDate = new Date(diff);
+    return Math.abs(diffDate.getUTCFullYear() - 1970);
   }
 }
