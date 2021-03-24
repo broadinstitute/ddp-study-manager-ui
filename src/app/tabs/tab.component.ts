@@ -5,10 +5,9 @@
  */
 
  import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Tab } from './tab.model';
 
  @Component({
-   selector: 'my-tab',
+   selector: 'tabChild',
    styles: [
      `
      .pane{
@@ -18,17 +17,20 @@ import { Tab } from './tab.model';
    ],
    template: `
      <div [hidden]="!active" class="pane">
-       <ng-content></ng-content>
+       <ng-content *ngIf="!disabled"></ng-content>
      </div>
    `
  })
  export class TabComponent {
    @Input('tabTitle') title: string;
    @Input() active = false;
+   @Input() isGrandChild = false;
+   @Input() disabled = false;
    @Output() putTab = new EventEmitter();
 
    ngOnInit() {
-       this.putTab.emit(this);
+     this.putTab.emit(this);
    }
+
  }
  

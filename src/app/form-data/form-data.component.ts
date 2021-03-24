@@ -12,7 +12,6 @@ import { ComponentService } from "../services/component.service";
 import { DSMService } from "../services/dsm.service";
 import { RoleService } from "../services/role.service";
 import { TabComponent } from "../tabs/tab.component";
-import { Tab } from "../tabs/tab.model";
 import {NameValue} from "../utils/name-value.model";
 import { Result } from "../utils/result.model";
 import { Statics } from "../utils/statics";
@@ -25,25 +24,18 @@ import { Value } from "../utils/value.model";
 })
 export class FormDataComponent implements OnInit {
 
-  @Input() localFieldSetting: FieldSettings;
   @Input() settings: any;
-  @Input() activeTab: string;
+  @Input() doRender: boolean;
   @Input() participant: Participant;
-  @Input() participantData: String;
-  @Input() activityData: String;
-  @Input() activityOptions: String[];
-  @Input() patchFinished: boolean;
-  @Input() patchDataFunction: (value: any, fieldSetting: FieldSettings, groupSetting: FieldSettings, dataId?: string) => void;
   @Input() activityDefinitions: Array<ActivityDefinition>;
-  @Output() patchData = new EventEmitter();
   @Output() putTab = new EventEmitter();
 
   defaultValuesToSave: FieldSettings[] = [];
 
   currentPatchField: string;
 
-  constructor(private dsmService: DSMService, private router: Router,
-    private role: RoleService) { }
+
+  constructor(private dsmService: DSMService, private router: Router, private role: RoleService) { }
 
   ngOnInit() {
   }
@@ -120,9 +112,8 @@ export class FormDataComponent implements OnInit {
           return "";
         }
       }
-      let participantData = this.participant.participantData.find(participantData => participantData.dataId === relative.dataId);
-      if (participantData != null && participantData.data != null && participantData.data[fieldSetting.columnName] != null) {
-        return participantData.data[fieldSetting.columnName];
+      if (relative != null && relative.data != null && relative.data[fieldSetting.columnName] != null) {
+        return relative.data[fieldSetting.columnName];
       }
     }
     return "";
@@ -190,15 +181,29 @@ export class FormDataComponent implements OnInit {
     return "";
   }
 
-  formPatch(value: any, fieldSetting: FieldSettings, groupSetting: FieldSettings, dataId?: string) {
-    if (value.value && value.dataId && value.fieldSetting && value.groupSetting) {
-      let incomingValue = value;
-      value = incomingValue.value;
-      fieldSetting = incomingValue.fieldSetting;
-      groupSetting = incomingValue.groupSetting;
-      dataId = incomingValue.dataId;
+  valueChanged( value: any, fieldSetting: FieldSettings, groupSetting: FieldSettings, dataId: any ) {
+    let v;
+    if (typeof value === "string") {
+      v = value;
     }
-    debugger;
+    else {
+      if (value.srcElement != null && typeof value.srcElement.value === "string") {
+        v = value.srcElement.value;
+      }
+      else if (value.value != null) {
+        v = value.value;
+      }
+      else if (value.checked != null) {
+        v = value.checked;
+      }
+      else if (value.source.value != null && value.source.selected) {
+        v = value.source.value;
+      }
+    }
+    this.formPatch(v, fieldSetting, groupSetting, dataId);
+  }
+
+  formPatch(value: any, fieldSetting: FieldSettings, groupSetting: FieldSettings, dataId?: string) {
     if (fieldSetting == null || fieldSetting.fieldType == null) {
       // this.errorMessage = "Didn't save change";
       return;
@@ -279,7 +284,6 @@ export class FormDataComponent implements OnInit {
                 }
               }
             }
-            this.patchFinished = true;
           },
           err => {
             if (err._body === Auth.AUTHENTICATION_ERROR) {
@@ -331,23 +335,6 @@ export class FormDataComponent implements OnInit {
     }
     return [];
   }
-  
-
-  tabActive( tab: string ): boolean {
-    if (this.activeTab === tab) {
-      return true;
-    }
-    return false;
-  }
-  
-  
-  onSelect( data: TabDirective, tabName: string ): void {
-    debugger;
-    if (data instanceof TabDirective) {
-      // this.selectedTabTitle = data.heading;
-      this.activeTab = tabName;
-    }
-  }
 
 
   getOptions(fieldSetting: FieldSettings) {
@@ -357,30 +344,6 @@ export class FormDataComponent implements OnInit {
     else {
       return this.getActivityOptions(fieldSetting);
     }
-  }
-
-  valueChanged( value: any, fieldSetting: FieldSettings, groupSetting: FieldSettings, dataId: any ) {
-    this.patchFinished = false;
-    let v;
-    if (typeof value === "string") {
-      v = value;
-    }
-    else {
-      if (value.srcElement != null && typeof value.srcElement.value === "string") {
-        v = value.srcElement.value;
-      }
-      else if (value.value != null) {
-        v = value.value;
-      }
-      else if (value.checked != null) {
-        v = value.checked;
-      }
-      else if (value.source.value != null && value.source.selected) {
-        v = value.source.value;
-      }
-    }
-    this.participantData = v;
-    this.patchData.emit({value: v, fieldSetting: fieldSetting, groupSetting: groupSetting, dataId: dataId});
   }
 
   isPatchedCurrently( field: string ): boolean {

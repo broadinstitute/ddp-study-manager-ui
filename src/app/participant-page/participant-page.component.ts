@@ -30,7 +30,6 @@ import {PatchUtil} from "../utils/patch.model";
 import { ParticipantUpdateResultDialogComponent } from "../dialogs/participant-update-result-dialog.component";
 import { AddFamilyMemberComponent } from "../popups/add-family-member/add-family-member.component";
 import { Sample } from "../participant-list/models/sample.model";
-import { Tab } from "../tabs/tab.model";
 import { TabComponent } from "../tabs/tab.component";
 
 var fileSaver = require( "file-saver/FileSaver.js" );
@@ -113,6 +112,9 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   participantTabs: TabComponent[] = [];
 
+  doRender: boolean;
+
+
   constructor( private auth: Auth, private compService: ComponentService, private dsmService: DSMService, private router: Router,
                private role: RoleService, private util: Utils, private route: ActivatedRoute, public dialog: MdDialog) {
     if (!auth.authenticated()) {
@@ -159,6 +161,10 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     window.scrollTo( 0, 0 );
   }
 
+  activateRender() {
+    this.doRender = true;
+  }
+
   ngOnDestroy() {
 
     clearInterval(this.checkParticipantStatusInterval);
@@ -167,6 +173,24 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   putTab(tab: TabComponent) {
     this.participantTabs.push(tab);
+    this.participantTabs.sort((a, b) => {
+      if (!a.disabled && !b.disabled) {
+        if (a.title.includes("-") && b.title.includes("-") && a.title.startsWith("SELF")) {
+          return -1;
+        }
+        return 0;
+      } else if (!a.disabled) {
+        return -1;
+      } else if (a.disabled) {
+        return 1;
+      } 
+    })
+    if (this.participantTabs.length > 0 && this.participantTabs[0].isGrandChild) {
+      this.participantTabs[0].active = true;
+      setTimeout(() => {
+        this.doRender = true;
+      }, 50);
+    }
   }
 
   showFamilyMemberPopUpOnClick() {
@@ -1131,22 +1155,5 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     else {
       return displayName;
     }
-  }
-
-  
-
-  getTabsSettingList() {
-    return this.settings['null'];
-  }
-
-  
-
-  
-
-  createRelativeTabHeading(data: any): string {
-    if (data) {
-      return data.MEMBER_TYPE + " - " + data.DATSTAT_FIRSTNAME + " " + data.DATSTAT_LASTNAME;
-    }
-    return "";
   }
 }

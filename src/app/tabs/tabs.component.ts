@@ -11,18 +11,19 @@
   ViewChild,
   ComponentFactoryResolver,
   ViewContainerRef,
-  Input
+  EventEmitter,
+  Input,
+  Output
 } from '@angular/core';
 import { FormDataComponent } from '../form-data/form-data.component';
 
 import { TabComponent } from './tab.component';
-import { Tab } from './tab.model';
 
 @Component({
-  selector: 'my-tabs',
+  selector: 'tabFamily',
   template: `
     <ul class="nav nav-tabs">
-      <li *ngFor="let tab of participantTabs" (click)="selectTab(tab)" [class.active]="tab.active">
+      <li *ngFor="let tab of participantTabs" (click)="selectTab(tab)" [ngClass]="{'disabled': tab.disabled}" [class.active]="tab.active">
         <a href="javascript:void(0);">{{tab.title}}</a>
       </li>
     </ul>
@@ -35,10 +36,16 @@ import { Tab } from './tab.model';
       text-align: right;
       cursor: pointer;
     }
+
+    .disabled {
+      pointer-events:none;
+      opacity:0.6; 
+    }
+
     `
   ]
 })
-export class TabsComponent implements AfterContentInit {
+export class TabsComponent{
   
   @ContentChildren(TabComponent) tabs: QueryList<TabComponent>;
   // @ContentChildren(FormDataComponent) formdatas: QueryList<FormDataComponent>;
@@ -46,24 +53,28 @@ export class TabsComponent implements AfterContentInit {
 
   @Input() participantTabs: TabComponent[];
 
+  @Output() activateDoRender = new EventEmitter<void>(true);
 
   ngOnChanges() {
     setTimeout(() => {
     })
-
   }
   
   
   ngAfterContentInit() {
     let activeTabs = this.participantTabs.filter((tab)=>tab.active);
     // if there is no active tab set, activate the first
-    if(activeTabs.length === 0) {
-      this.selectTab(this.participantTabs[0]);
+    if(activeTabs.length === 0 && !this.participantTabs[0].disabled) {
+      this.activateTab(this.participantTabs[0]);
     }
-
   }
   
   selectTab(tab: TabComponent){
+    this.activateTab(tab);
+    this.activateDoRender.emit();
+  }
+
+  activateTab(tab: TabComponent) {
     // deactivate all tabs
     this.participantTabs.forEach(tab => tab.active = false);
     
@@ -72,4 +83,5 @@ export class TabsComponent implements AfterContentInit {
       tab.active = true;
     }
   }
+  
 }
