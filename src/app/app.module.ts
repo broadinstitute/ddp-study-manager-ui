@@ -114,6 +114,8 @@ import { InvitationDataComponent } from './invitation-data/invitation-data.compo
 import { ParticipantUpdateResultDialogComponent } from './dialogs/participant-update-result-dialog.component';
 import { FormDataComponent } from './form-data/form-data.component';
 import { AddFamilyMemberComponent } from './popups/add-family-member/add-family-member.component';
+import { TabsComponent } from './tabs/tabs.component';
+import { TabComponent } from './tabs/tab.component';
 
 @NgModule( {
   declarations: [
@@ -192,7 +194,9 @@ import { AddFamilyMemberComponent } from './popups/add-family-member/add-family-
     InvitationDataComponent,
     ParticipantUpdateResultDialogComponent,
     FormDataComponent,
-    AddFamilyMemberComponent
+    AddFamilyMemberComponent,
+    TabsComponent,
+    TabComponent
   ],
   entryComponents: [ParticipantUpdateResultDialogComponent, AddFamilyMemberComponent],
   imports: [

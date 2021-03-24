@@ -1,132 +1,133 @@
-<ng-container *ngFor="let relative of participant.participantData">
+<ng-container *ngFor="let relative of participant.participantData" >
   <ng-container *ngFor="let tab of settings['null']">
     <ng-container *ngIf="displayTab(tab)">
-      <tab heading="{{createRelativeTabHeading(relative.data)}}" [active]="tabActive(relative.dataId)" (select)="onSelect($event, relative.dataId)"></tab>
-      <br/>
-      <ng-container *ngIf="tabActive(relative.dataId)">
-        <ng-container *ngFor="let fieldSetting of settings[tab.columnName]; let settingIndex = index">
-          <div class="Float--left Width--100">
-            <div *ngIf="fieldSetting.displayType === 'GROUP'">
-              <fieldset style="border: 1px black solid">
-                <legend class="Group--Title" id="{{fieldSetting.columnName}}">{{fieldSetting.columnDisplay}}</legend>
-                <ng-container *ngFor="let field of settings[fieldSetting.columnName]; let fieldIndex = index">
-
-                  <table class="Width--100">
-                    <tr>
-                        <td class="TD--Padding Width--30">
-                          {{field.columnDisplay}}
-                        </td>
-                        <td>
-                            <ng-container *ngIf="field.displayType === 'NUMBER'">
-                              <md-input-container [ngClass]="{'Width--100': true, 'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(field.columnName)}">
-                                <input mdInput type="number"
-                                placeholder="{{field.columnDisplay}}"
-                                [ngModel]="getParticipantData(field, relative.dataId)" (change)="valueChanged($event, field, fieldSetting, relative.dataId)">
-                              </md-input-container>
-                            </ng-container>
+      <my-tab tabTitle="{{createRelativeTabHeading(relative.data)}}" (putTab)="formDataPutTab($event)" (click)="onSelect($event, relative.dataId)">
+        <br/>
+        <ng-container *ngIf="tabActive(relative.dataId)">
+          <ng-container *ngFor="let fieldSetting of settings[tab.columnName]; let settingIndex = index">
+            <div class="Float--left Width--100">
+              <div *ngIf="fieldSetting.displayType === 'GROUP'">
+                <fieldset style="border: 1px black solid">
+                  <legend class="Group--Title" id="{{fieldSetting.columnName}}">{{fieldSetting.columnDisplay}}</legend>
+                  <ng-container *ngFor="let field of settings[fieldSetting.columnName]; let fieldIndex = index">
+  
+                    <table class="Width--100">
+                      <tr>
+                          <td class="TD--Padding Width--30">
+                            {{field.columnDisplay}}
+                          </td>
+                          <td>
+                              <ng-container *ngIf="field.displayType === 'NUMBER'">
+                                <md-input-container [ngClass]="{'Width--100': true, 'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(field.columnName)}">
+                                  <input mdInput type="number"
+                                  placeholder="{{field.columnDisplay}}"
+                                  [ngModel]="getParticipantData(field, relative.dataId)" (change)="valueChanged($event, field, fieldSetting, relative.dataId)">
+                                </md-input-container>
+                              </ng-container>
+                              
+                              <ng-container *ngIf="field.displayType === 'CHECKBOX'">
+                                <md-checkbox [color]="isCheckboxPatchedCurrently(field.columnName)" disableRipple
+                                (change)="valueChanged($event, field, fieldSetting, relative.dataId)">
+                                </md-checkbox>
+                              </ng-container>
                             
-                            <ng-container *ngIf="field.displayType === 'CHECKBOX'">
-                              <md-checkbox [color]="isCheckboxPatchedCurrently(field.columnName)" disableRipple
-                              (change)="valueChanged($event, field, fieldSetting, relative.dataId)">
-                              </md-checkbox>
+                            <ng-container *ngIf="field.displayType === 'OPTIONS'">
+                              <md-select [ngClass]="{'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(field.columnName)}" placeholder="{{field.columnDisplay}}"
+                                [ngModel]="getActivityAnswer(field, relative)" (change)="valueChanged($event, field, fieldSetting, relative.dataId)">
+                                <md-option *ngFor="let value of field.possibleValues" [value]="value.value">
+                                  <ng-container *ngIf="value.name !== undefined">
+                                    {{value.name}}
+                                  </ng-container>
+                                  <ng-container *ngIf="value.name === undefined && value.value !== undefined">
+                                    {{value.value}}
+                                  </ng-container>
+                                  <ng-container *ngIf="value.name === undefined && value.value === undefined">
+                                    {{value}}
+                                  </ng-container>
+                                </md-option>
+                              </md-select>
                             </ng-container>
                           
-                          <ng-container *ngIf="field.displayType === 'OPTIONS'">
-                            <md-select [ngClass]="{'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(field.columnName)}" placeholder="{{field.columnDisplay}}"
-                              [ngModel]="getActivityAnswer(field, relative)" (change)="valueChanged($event, field, fieldSetting, relative.dataId)">
-                              <md-option *ngFor="let value of field.possibleValues" [value]="value.value">
-                                <ng-container *ngIf="value.name !== undefined">
-                                  {{value.name}}
-                                </ng-container>
-                                <ng-container *ngIf="value.name === undefined && value.value !== undefined">
-                                  {{value.value}}
-                                </ng-container>
-                                <ng-container *ngIf="value.name === undefined && value.value === undefined">
-                                  {{value}}
-                                </ng-container>
-                              </md-option>
-                            </md-select>
-                          </ng-container>
+                            <ng-container *ngIf="field.displayType === 'BUTTON_SELECT'">
+                              <md-button-toggle-group
+                              [ngClass]="{'Color--Button-Select--Patched': isPatchedCurrently(field.columnName)}">
+                                <md-button-toggle *ngFor="let value of field.possibleValues" [value]="value.value" (change)="valueChanged($event, field, fieldSetting, relative.dataId)">
+                                  <ng-container *ngIf="value.name !== undefined">
+                                    {{value.name}}
+                                  </ng-container>
+                                  <ng-container *ngIf="value.name === undefined && value.value !== undefined">
+                                    {{value.value}}
+                                  </ng-container>
+                                  <ng-container *ngIf="value.name === undefined && value.value === undefined">
+                                    {{value}}
+                                  </ng-container>
+                                </md-button-toggle>
+                              </md-button-toggle-group>
+                            </ng-container>
                         
-                          <ng-container *ngIf="field.displayType === 'BUTTON_SELECT'">
-                            <md-button-toggle-group
-                            [ngClass]="{'Color--Button-Select--Patched': isPatchedCurrently(field.columnName)}">
-                              <md-button-toggle *ngFor="let value of field.possibleValues" [value]="value.value" (change)="valueChanged($event, field, fieldSetting, relative.dataId)">
-                                <ng-container *ngIf="value.name !== undefined">
-                                  {{value.name}}
-                                </ng-container>
-                                <ng-container *ngIf="value.name === undefined && value.value !== undefined">
-                                  {{value.value}}
-                                </ng-container>
-                                <ng-container *ngIf="value.name === undefined && value.value === undefined">
-                                  {{value}}
-                                </ng-container>
-                              </md-button-toggle>
-                            </md-button-toggle-group>
-                          </ng-container>
-                      
-                          <ng-container *ngIf="field.displayType === 'TEXTAREA'">
-                            <textarea maxlength="1000" placeholder="{{field.columnDisplay}}"
-                            [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently(field.columnName)}" [value]="getParticipantData(field, relative.dataId)"
-                            (change)="valueChanged($event, field, fieldSetting, relative.dataId)"></textarea>
-                          </ng-container>
-                      
-                          <ng-container *ngIf="field.displayType === 'TEXT'
-                            || ((field.displayType === 'ACTIVITY' || field.displayType === 'ACTIVITY_STAFF') && field.possibleValues != null && field.possibleValues[0] != null && field.possibleValues[0].type !== 'RADIO' && field.possibleValues[0].type !== 'DATE')">
-                            <md-input-container
-                            [ngClass]="{'Width--100': true, 'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(field.columnName)}">
-                            <input mdInput maxlength="200" autocomplete="off" [disabled]="field.displayType === 'ACTIVITY'"
-                            [ngModel]="getActivityAnswer(field, relative)" (change)="valueChanged($event, field, fieldSetting, relative.dataId)"
-                            placeholder="{{field.columnDisplay}}">
-                            </md-input-container>
-                          </ng-container>
-              
-                          <ng-container *ngIf="field.displayType === 'RADIO'
-                          || ((field.displayType === 'ACTIVITY' || field.displayType === 'ACTIVITY_STAFF') && field.possibleValues != null && field.possibleValues[0] != null && field.possibleValues[0].type != null && field.possibleValues[0].type === 'RADIO')">
-                            <md-radio-group [disabled]="field.displayType === 'ACTIVITY'"
-                              [value]="getActivityAnswer(field, relative)" (change)="valueChanged($event, field, fieldSetting, relative.dataId)">
-                              <div *ngFor="let radio of getOptions(field)">
-                                <ng-container *ngIf="radio.name !== undefined">
-                                  <md-radio-button color="primary" disableRipple
-                                  value="{{radio.value}}">{{radio.name}}</md-radio-button>
-                                </ng-container>
-                                <ng-container *ngIf="radio.name === undefined && radio.value !== undefined">
-                                  <md-radio-button color="primary" disableRipple
-                                  value="{{radio.value}}">{{radio.value}}</md-radio-button>
-                                </ng-container>
-                                <ng-container *ngIf="radio.name === undefined && radio.value === undefined">
-                                  <md-radio-button color="primary" disableRipple
-                                  value="{{radio}}">{{radio}}</md-radio-button>
-                                </ng-container>
-                              </div>
-                            </md-radio-group>
-                          </ng-container>
-              
-                          <ng-container *ngIf="field.displayType === 'DATE'
-                            || ((field.displayType === 'ACTIVITY' || field.displayType === 'ACTIVITY_STAFF') && field.possibleValues != null && field.possibleValues[0] != null && field.possibleValues[0].type === 'DATE')">
-                            <app-field-datepicker [dateString]="getActivityAnswer(field, relative)" [addCheckboxEstimated]="false" [disabled]="field.displayType === 'ACTIVITY'"
-                              [showNAButton]="false" [showNotFoundButton]="false" [allowUnknownDay]="false"
-                              [colorDuringPatch]="isPatchedCurrently(field.columnName)"
-                              (dateChanged)="valueChanged($event, field, fieldSetting, relative.dataId)">
-                            </app-field-datepicker>
-                          </ng-container>
-              
-                          <ng-container *ngIf="field.displayType === 'SAMPLE'">
-                            <textarea maxlength="1000" placeholder="{{field.columnDisplay}}"
-                              [ngClass]="{'Width--50': true, 'Color--Field--Patched': isPatchedCurrently(field.columnName)}" [value]="getParticipantData(field, relative.dataId)"
-                              [readonly]="true"
-                            ></textarea>
-                          </ng-container>
-                      </td>
-                    </tr>
-                  </table>
-                  <hr *ngIf="fieldIndex !== settings[fieldSetting.columnName].length-1" style="border-color: lightgray">
-                </ng-container>
-              </fieldset>
+                            <ng-container *ngIf="field.displayType === 'TEXTAREA'">
+                              <textarea maxlength="1000" placeholder="{{field.columnDisplay}}"
+                              [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently(field.columnName)}" [value]="getParticipantData(field, relative.dataId)"
+                              (change)="valueChanged($event, field, fieldSetting, relative.dataId)"></textarea>
+                            </ng-container>
+                        
+                            <ng-container *ngIf="field.displayType === 'TEXT'
+                              || ((field.displayType === 'ACTIVITY' || field.displayType === 'ACTIVITY_STAFF') && field.possibleValues != null && field.possibleValues[0] != null && field.possibleValues[0].type !== 'RADIO' && field.possibleValues[0].type !== 'DATE')">
+                              <md-input-container
+                              [ngClass]="{'Width--100': true, 'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(field.columnName)}">
+                              <input mdInput maxlength="200" autocomplete="off" [disabled]="field.displayType === 'ACTIVITY'"
+                              [ngModel]="getActivityAnswer(field, relative)" (change)="valueChanged($event, field, fieldSetting, relative.dataId)"
+                              placeholder="{{field.columnDisplay}}">
+                              </md-input-container>
+                            </ng-container>
+                
+                            <ng-container *ngIf="field.displayType === 'RADIO'
+                            || ((field.displayType === 'ACTIVITY' || field.displayType === 'ACTIVITY_STAFF') && field.possibleValues != null && field.possibleValues[0] != null && field.possibleValues[0].type != null && field.possibleValues[0].type === 'RADIO')">
+                              <md-radio-group [disabled]="field.displayType === 'ACTIVITY'"
+                                [value]="getActivityAnswer(field, relative)" (change)="valueChanged($event, field, fieldSetting, relative.dataId)">
+                                <div *ngFor="let radio of getOptions(field)">
+                                  <ng-container *ngIf="radio.name !== undefined">
+                                    <md-radio-button color="primary" disableRipple
+                                    value="{{radio.value}}">{{radio.name}}</md-radio-button>
+                                  </ng-container>
+                                  <ng-container *ngIf="radio.name === undefined && radio.value !== undefined">
+                                    <md-radio-button color="primary" disableRipple
+                                    value="{{radio.value}}">{{radio.value}}</md-radio-button>
+                                  </ng-container>
+                                  <ng-container *ngIf="radio.name === undefined && radio.value === undefined">
+                                    <md-radio-button color="primary" disableRipple
+                                    value="{{radio}}">{{radio}}</md-radio-button>
+                                  </ng-container>
+                                </div>
+                              </md-radio-group>
+                            </ng-container>
+                
+                            <ng-container *ngIf="field.displayType === 'DATE'
+                              || ((field.displayType === 'ACTIVITY' || field.displayType === 'ACTIVITY_STAFF') && field.possibleValues != null && field.possibleValues[0] != null && field.possibleValues[0].type === 'DATE')">
+                              <app-field-datepicker [dateString]="getActivityAnswer(field, relative)" [addCheckboxEstimated]="false" [disabled]="field.displayType === 'ACTIVITY'"
+                                [showNAButton]="false" [showNotFoundButton]="false" [allowUnknownDay]="false"
+                                [colorDuringPatch]="isPatchedCurrently(field.columnName)"
+                                (dateChanged)="valueChanged($event, field, fieldSetting, relative.dataId)">
+                              </app-field-datepicker>
+                            </ng-container>
+                
+                            <ng-container *ngIf="field.displayType === 'SAMPLE'">
+                              <textarea maxlength="1000" placeholder="{{field.columnDisplay}}"
+                                [ngClass]="{'Width--50': true, 'Color--Field--Patched': isPatchedCurrently(field.columnName)}" [value]="getParticipantData(field, relative.dataId)"
+                                [readonly]="true"
+                              ></textarea>
+                            </ng-container>
+                        </td>
+                      </tr>
+                    </table>
+                    <hr *ngIf="fieldIndex !== settings[fieldSetting.columnName].length-1" style="border-color: lightgray">
+                  </ng-container>
+                </fieldset>
+              </div>
             </div>
-          </div>
+          </ng-container>
         </ng-container>
-      </ng-container>
+      </my-tab>
     </ng-container>
   </ng-container>
 </ng-container>
