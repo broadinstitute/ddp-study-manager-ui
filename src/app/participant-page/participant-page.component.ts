@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild, OnDestroy } from "@angular/core";
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild, OnDestroy, ChangeDetectorRef } from "@angular/core";
 import { MdDialog } from '@angular/material';
 import {TabDirective} from "ngx-bootstrap";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -112,11 +112,13 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   participantTabs: TabComponent[] = [];
 
+  currentActiveTab: string;
+
   doRender: boolean;
 
 
   constructor( private auth: Auth, private compService: ComponentService, private dsmService: DSMService, private router: Router,
-               private role: RoleService, private util: Utils, private route: ActivatedRoute, public dialog: MdDialog) {
+               private role: RoleService, private util: Utils, private route: ActivatedRoute, public dialog: MdDialog, private cdref: ChangeDetectorRef) {
     if (!auth.authenticated()) {
       auth.logout();
     }
@@ -161,21 +163,34 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     window.scrollTo( 0, 0 );
   }
 
-  activateRender() {
-    this.doRender = true;
+  ngAfterViewInit() {
+    this.cdref.detectChanges(); //To avoid ExpressionChangedAfterItHasBeenCheckedError 
   }
-
+  
   ngOnDestroy() {
-
     clearInterval(this.checkParticipantStatusInterval);
-
+    
   }
-
+  
+  activateRender(tabName: string) {
+    this.doRender = true;
+    this.currentActiveTab = tabName;
+  }
   putTab(tab: TabComponent) {
-    this.participantTabs.push(tab);
+    let existingTabIndex = this.participantTabs.findIndex(t => t.title === tab.title);
+    if (existingTabIndex > 0) {
+      if (this.participantTabs[existingTabIndex].active) {
+        tab.active = true;
+      }
+      this.participantTabs[existingTabIndex] = tab;
+    } else {
+      this.participantTabs.push(tab);
+    }
+    //sort to place disabled tabs at the end of tab list
     this.participantTabs.sort((a, b) => {
       if (!a.disabled && !b.disabled) {
-        if (a.title.includes("-") && b.title.includes("-") && a.title.startsWith("SELF")) {
+        //if it is dynamic form to place SELF/PROBAND on the first place
+        if (a.title.includes("-") && b.title.includes("-") && a.title.startsWith(Statics.PARTICIPANT_PROBAND)) {
           return -1;
         }
         return 0;
@@ -185,8 +200,9 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
         return 1;
       } 
     })
+    //To set one of the grandchild of TabsComponent as active and render dynamic form, if it does not have child or it is disabled
     if (this.participantTabs.length > 0 && this.participantTabs[0].isGrandChild) {
-      this.participantTabs[0].active = true;
+      this.participantTabs[0].active = true; 
       setTimeout(() => {
         this.doRender = true;
       }, 50);

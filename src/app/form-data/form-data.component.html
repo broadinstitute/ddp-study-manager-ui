@@ -1,10 +1,10 @@
 <ng-container *ngFor="let relative of participant.participantData" >
   <ng-container *ngFor="let tab of settings['null']">
     <ng-container *ngIf="displayTab(tab)">
-      <tabChild tabTitle="{{createRelativeTabHeading(relative.data)}}" (putTab)="formDataPutTab($event)" isGrandChild="true">
+      <tabChild tabTitle="{{createRelativeTabHeading(relative.data)}}" (putTab)="formDataPutTab($event)" [isGrandChild]="true">
         <br/>
-        <ng-container *ngIf="!doRender">Loading...</ng-container>
-        <ng-container *ngIf="doRender">
+        <!-- <ng-container *ngIf="!doRender || currentActiveTab === createRelativeTabHeading(relative.data)">Loading...</ng-container> -->
+        <ng-container *ngIf="doRender && currentActiveTab === createRelativeTabHeading(relative.data)">
           <ng-container *ngFor="let fieldSetting of settings[tab.columnName]; let settingIndex = index">
             <div class="Float--left Width--100">
               <div *ngIf="fieldSetting.displayType === 'GROUP'">

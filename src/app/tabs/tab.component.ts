@@ -24,12 +24,12 @@
  export class TabComponent {
    @Input('tabTitle') title: string;
    @Input() active = false;
-   @Input() isGrandChild = false;
+   @Input() isGrandChild : boolean = false;
    @Input() disabled = false;
    @Output() putTab = new EventEmitter();
 
    ngOnInit() {
-     this.putTab.emit(this);
+    this.putTab.emit(this);
    }
 
  }

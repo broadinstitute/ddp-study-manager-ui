@@ -13,7 +13,9 @@
   ViewContainerRef,
   EventEmitter,
   Input,
-  Output
+  Output,
+  ChangeDetectorRef, 
+  AfterContentChecked
 } from '@angular/core';
 import { FormDataComponent } from '../form-data/form-data.component';
 
@@ -47,14 +49,10 @@ import { TabComponent } from './tab.component';
 })
 export class TabsComponent{
   
-  @ContentChildren(TabComponent) tabs: QueryList<TabComponent>;
-  // @ContentChildren(FormDataComponent) formdatas: QueryList<FormDataComponent>;
-
-
   @Input() participantTabs: TabComponent[];
 
-  @Output() activateDoRender = new EventEmitter<void>(true);
-
+  @Output() activateDoRender = new EventEmitter(true);
+  
   ngOnChanges() {
     setTimeout(() => {
     })
@@ -71,7 +69,7 @@ export class TabsComponent{
   
   selectTab(tab: TabComponent){
     this.activateTab(tab);
-    this.activateDoRender.emit();
+    this.activateDoRender.emit(tab.title);
   }
 
   activateTab(tab: TabComponent) {

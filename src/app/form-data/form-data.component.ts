@@ -28,16 +28,17 @@ export class FormDataComponent implements OnInit {
   @Input() doRender: boolean;
   @Input() participant: Participant;
   @Input() activityDefinitions: Array<ActivityDefinition>;
+  @Input() currentActiveTab: String;
   @Output() putTab = new EventEmitter();
 
-  defaultValuesToSave: FieldSettings[] = [];
-
   currentPatchField: string;
-
 
   constructor(private dsmService: DSMService, private router: Router, private role: RoleService) { }
 
   ngOnInit() {
+  }
+
+  ngOnChanges() {
   }
 
   formDataPutTab(tab: TabComponent) {
@@ -45,29 +46,17 @@ export class FormDataComponent implements OnInit {
   }
 
   getActivityAnswer(fieldSetting: FieldSettings, participantData: ParticipantData) {
-    let pData = this.getParticipantData(fieldSetting, participantData);
+    let parsedParticipantData = this.getParticipantData(fieldSetting, participantData);
     if (fieldSetting.displayType !== 'ACTIVITY')  {
       //get data from dsm db if it is not type activity
       if (fieldSetting.displayType !== 'ACTIVITY_STAFF') {
         //return savedAnswer if it is not type activity_staff
-        if (pData) {
-          return pData;
-        }
-        if (fieldSetting.possibleValues != null) {
-          let value = "";
-          fieldSetting.possibleValues.forEach(v => {
-            if (v['default']) {
-              value = v.value;
-              this.defaultValuesToSave.push(fieldSetting);
-            };
-          });
-          return value;
-        }
+        return parsedParticipantData;
       }
       else {
         //if it is type activity_staff only return if it is not empty, otherwise return answer from the activity
-        if (pData != null && pData !== '') {
-          return pData;
+        if (parsedParticipantData != null && parsedParticipantData !== '') {
+          return parsedParticipantData;
         }
       }
     }
