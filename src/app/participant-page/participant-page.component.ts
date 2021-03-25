@@ -55,7 +55,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   @Input() oncHistoryId: string;
   @Input() mrId: string;
   @Input() isAddFamilyMember: boolean;
-  @Input() showTabFields: boolean;
+  @Input() showGroupFields: boolean;
   @Output() leaveParticipant = new EventEmitter();
   @Output('ngModelChange') update = new EventEmitter();
 
@@ -1106,12 +1106,9 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   getParticipantData(fieldSetting: FieldSettings, personsParticipantData: ParticipantData) {
     if (this.participant && this.participant.participantData && personsParticipantData && fieldSetting.columnName) {
-      if (fieldSetting.displayType === 'SAMPLE') {
-        let sample: Sample = this.participant.kits.find(kit => kit.bspCollaboratorSampleId === personsParticipantData.data[fieldSetting.columnName]);
-        if (sample && this.kitFieldsDict[fieldSetting.columnName] && sample[this.kitFieldsDict[fieldSetting.columnName]]) {
-          return sample[this.kitFieldsDict[fieldSetting.columnName]];
-        } else {
-          return "";
+      if (fieldSetting.actions && fieldSetting.actions[0].type && fieldSetting.actions[0].type === 'SAMPLE') {
+        if (fieldSetting.actions[0].type2 === 'MAP_TO_KIT') {
+          return this.getSampleFieldValue(fieldSetting, personsParticipantData);
         }
       } else if (personsParticipantData && personsParticipantData.data) {
         if (personsParticipantData.data[fieldSetting.columnName]) {
@@ -1351,7 +1348,19 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     return "";
   }
 
-  countYears(startDate: string) {
+  getSampleFieldValue(fieldSetting: FieldSettings, personsParticipantData: ParticipantData) {
+    let sample: Sample = this.participant.kits.find(kit => kit.bspCollaboratorSampleId === personsParticipantData.data['COLLABORATOR_PARTICIPANT_ID']);
+    if (sample && fieldSetting.actions[0].value && sample[fieldSetting.actions[0].value]) {
+      if (fieldSetting.displayType && fieldSetting.displayType === 'DATE') {
+        return new Date(sample[fieldSetting.actions[0].value]).toISOString().split('T')[0];
+      }
+      return sample[fieldSetting.actions[0].value];
+    } else {
+      return "";
+    }
+  }
+
+  countYears(startDate: string): number {
     let diff = Date.now() - Date.parse(startDate);
     let diffDate = new Date(diff);
     return Math.abs(diffDate.getUTCFullYear() - 1970);

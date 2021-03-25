@@ -104,7 +104,7 @@ export class ParticipantListComponent implements OnInit {
   preferredLanguages: PreferredLanguage[] = [];
   savedSelectedColumns = {};
   isAddFamilyMember: boolean = false;
-  showTabFields: boolean = false;
+  showGroupFields: boolean = false;
 
   constructor( private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
                private router: Router, private auth: Auth, private route: ActivatedRoute, private util: Utils ) {
@@ -484,10 +484,10 @@ export class ParticipantListComponent implements OnInit {
         } else {
           this.isAddFamilyMember = false;
         }
-        if (jsonData.showTabFields === true) {
-          this.showTabFields = true;
+        if (jsonData.showGroupFields === true) {
+          this.showGroupFields = true;
         } else {
-          this.showTabFields = false;
+          this.showGroupFields = false;
         }
         this.orderColumns();
         this.getData();
