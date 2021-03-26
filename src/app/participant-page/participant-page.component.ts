@@ -110,9 +110,6 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   private payload = {};
 
-  readonly kitFieldsDict = {'DATE_KIT_RECEIVED': 'receiveDate', 'DATE_KIT_SENT': 'scanDate', 'KIT_TYPE_TO_REQUEST': 'kitType'};
-
-
   constructor( private auth: Auth, private compService: ComponentService, private dsmService: DSMService, private router: Router,
                private role: RoleService, private util: Utils, private route: ActivatedRoute, public dialog: MdDialog) {
     if (!auth.authenticated()) {
@@ -1106,16 +1103,15 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   getParticipantData(fieldSetting: FieldSettings, personsParticipantData: ParticipantData) {
     if (this.participant && this.participant.participantData && personsParticipantData && fieldSetting.columnName) {
-      if (fieldSetting.actions && fieldSetting.actions[0].type && fieldSetting.actions[0].type === 'SAMPLE') {
-        if (fieldSetting.actions[0].type2 === 'MAP_TO_KIT') {
-          return this.getSampleFieldValue(fieldSetting, personsParticipantData);
-        }
-      } else if (personsParticipantData && personsParticipantData.data) {
+      if (personsParticipantData && personsParticipantData.data) {
         if (personsParticipantData.data[fieldSetting.columnName]) {
           return personsParticipantData.data[fieldSetting.columnName];
-        } else if (fieldSetting.actions && fieldSetting.actions[0].type && fieldSetting.actions[0].type === 'CALC' && 
-                    fieldSetting.actions[0].value && personsParticipantData.data[fieldSetting.actions[0].value]) {
-          return this.countYears(personsParticipantData.data[fieldSetting.actions[0].value]);
+        } else if (fieldSetting.actions && fieldSetting.actions[0]) {
+          if (fieldSetting.actions[0].type === 'CALC' && fieldSetting.actions[0].value && personsParticipantData.data[fieldSetting.actions[0].value]) {
+            return this.countYears(personsParticipantData.data[fieldSetting.actions[0].value]);
+          } else if (fieldSetting.actions[0].type === 'SAMPLE' && fieldSetting.actions[0].type2 === 'MAP_TO_KIT') {
+            return this.getSampleFieldValue(fieldSetting, personsParticipantData);
+          }
         }
       }
     }
@@ -1348,16 +1344,15 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     return "";
   }
 
-  getSampleFieldValue(fieldSetting: FieldSettings, personsParticipantData: ParticipantData) {
+  getSampleFieldValue(fieldSetting: FieldSettings, personsParticipantData: ParticipantData): string {
     let sample: Sample = this.participant.kits.find(kit => kit.bspCollaboratorSampleId === personsParticipantData.data['COLLABORATOR_PARTICIPANT_ID']);
-    if (sample && fieldSetting.actions[0].value && sample[fieldSetting.actions[0].value]) {
-      if (fieldSetting.displayType && fieldSetting.displayType === 'DATE') {
+    if (sample && fieldSetting.actions[0].value && sample[fieldSetting.actions[0].value] && fieldSetting.displayType) {
+      if (fieldSetting.displayType === 'DATE') {
         return new Date(sample[fieldSetting.actions[0].value]).toISOString().split('T')[0];
       }
       return sample[fieldSetting.actions[0].value];
-    } else {
-      return "";
     }
+    return "";
   }
 
   countYears(startDate: string): number {
