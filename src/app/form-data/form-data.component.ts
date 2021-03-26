@@ -1,6 +1,5 @@
-import {Component, ContentChildren, EventEmitter, Input, OnInit, Output, QueryList, ViewChild} from "@angular/core";
+import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import { Router } from "@angular/router";
-import { TabDirective } from "ngx-bootstrap";
 import { ActivityData } from "../activity-data/activity-data.model";
 import { ActivityDefinition } from "../activity-data/models/activity-definition.model";
 import { FieldSettings } from "../field-settings/field-settings.model";
@@ -61,9 +60,7 @@ export class FormDataComponent implements OnInit {
       }
     }
     return this.getActivityData(fieldSetting);
-  }
-
-  
+  }  
 
   displayTab( fieldSetting: FieldSettings ): boolean {
     if (fieldSetting != null && fieldSetting.possibleValues != null) {
@@ -324,7 +321,6 @@ export class FormDataComponent implements OnInit {
     }
     return [];
   }
-
 
   getOptions(fieldSetting: FieldSettings) {
     if (fieldSetting.displayType !== 'ACTIVITY' && fieldSetting.displayType !== 'ACTIVITY_STAFF') {

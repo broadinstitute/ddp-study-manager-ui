@@ -111,9 +111,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   private payload = {};
 
   participantTabs: TabComponent[] = [];
-
   currentActiveTab: string;
-
   doRender: boolean;
 
 
@@ -177,6 +175,8 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     this.currentActiveTab = tabName;
   }
 
+  //tab collector method, used for all tabChild declaration as @Output() EventEmiter
+  //collects all child tabs and grandchild tabs
   putTab(tab: TabComponent) {
     //checks if tab already exists or not to avoid duplicate tabs
     let existingTabIndex = this.participantTabs.findIndex(t => t.title === tab.title);
