@@ -176,7 +176,9 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     this.doRender = true;
     this.currentActiveTab = tabName;
   }
+
   putTab(tab: TabComponent) {
+    //checks if tab already exists or not to avoid duplicate tabs
     let existingTabIndex = this.participantTabs.findIndex(t => t.title === tab.title);
     if (existingTabIndex > 0) {
       if (this.participantTabs[existingTabIndex].active) {
@@ -202,7 +204,16 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     })
     //To set one of the grandchild of TabsComponent as active and render dynamic form, if it does not have child or it is disabled
     if (this.participantTabs.length > 0 && this.participantTabs[0].isGrandChild) {
-      this.participantTabs[0].active = true; 
+      let tab = this.participantTabs[0];
+      let isSelf = tab.title.startsWith(Statics.PARTICIPANT_PROBAND);
+      if (isSelf) {
+        this.participantTabs.forEach(tab => tab.active = false);
+        tab.active = true;
+        this.currentActiveTab = tab.title;
+      } else {
+        tab.active = true; 
+        this.currentActiveTab = tab.title;
+      }
       setTimeout(() => {
         this.doRender = true;
       }, 50);

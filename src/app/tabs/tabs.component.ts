@@ -5,19 +5,10 @@
 
  import {
   Component,
-  ContentChildren,
-  QueryList,
-  AfterContentInit,
-  ViewChild,
-  ComponentFactoryResolver,
-  ViewContainerRef,
   EventEmitter,
   Input,
   Output,
-  ChangeDetectorRef, 
-  AfterContentChecked
 } from '@angular/core';
-import { FormDataComponent } from '../form-data/form-data.component';
 
 import { TabComponent } from './tab.component';
 
@@ -62,7 +53,8 @@ export class TabsComponent{
   ngAfterContentInit() {
     let activeTabs = this.participantTabs.filter((tab)=>tab.active);
     // if there is no active tab set, activate the first
-    if(activeTabs.length === 0 && !this.participantTabs[0].disabled) {
+    let firstTab = this.participantTabs[0];
+    if(activeTabs.length === 0 && firstTab != null && !firstTab.disabled) {
       this.activateTab(this.participantTabs[0]);
     }
   }
