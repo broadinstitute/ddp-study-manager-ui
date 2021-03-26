@@ -485,11 +485,14 @@ participant.data.dsm['diagnosisYear'] != null">
 
       <div class="Float--left Width--100">
           <!--tab order is not working when tabs have ngIf, will just put them at the end of static tabs. therefore ngIf=true is added to static tabs-->
-          <tabset>
-            <tab
+          
+          <tabFamily [participantTabs]="participantTabs" (activateDoRender)="activateRender($event)"> 
+
+            <tabChild
               *ngIf="participant != null && participant.data != null && participant.data.activities != null && participant.data.activities.length > 0
                 && activityDefinitions != null"
-              heading="Survey Data" [active]="tabActive('Survey Data')" (select)="onSelect($event, 'Survey Data')">
+              tabTitle="Survey Data"
+              (putTab)="putTab($event)">
               <br/><br/>
               <div class="Float--left Width--100">
                 <div class="Float--left Width--100"
@@ -521,10 +524,10 @@ participant.data.dsm['diagnosisYear'] != null">
                   </ng-container>
                 </div>
               </div>
-            </tab>
+            </tabChild>
 
             <!--sample information-->
-            <tab *ngIf="participant.kits != null && participant.kits.length > 0" heading="Sample Information">
+            <tabChild *ngIf="participant.kits != null && participant.kits.length > 0" tabTitle="Sample Information" (putTab)="putTab($event)">
               <ng-container *ngFor="let sample of participant.kits; let i = index">
                 <fieldset style="border: 1px black solid">
                   <legend class="Group--Title" id="{{sample.kitType}}_{{i}}">Sample Type: {{sample.kitType}}</legend>
@@ -633,11 +636,11 @@ participant.data.dsm['diagnosisYear'] != null">
                   </div>
                 </fieldset>
               </ng-container>
-            </tab>
+            </tabChild>
 
-            <tab heading="Medical Records"
+            <tabChild tabTitle="Medical Records"
                  *ngIf="participant.medicalRecords != null && participant.medicalRecords.length > 0"
-                 [active]="tabActive('Medical Records')" (select)="onSelect($event, 'Medical Records')">
+                 (putTab)="putTab($event)">
               <br/><br/><br/>
 
               <table class="table table-striped Width--100" [mfData]="participant.medicalRecords" #mf="mfDataTable"
@@ -706,11 +709,11 @@ participant.data.dsm['diagnosisYear'] != null">
                 </tr>
                 </tfoot>
               </table>
-            </tab>
+            </tabChild>
 
-            <tab heading="Onc History"
+            <tabChild tabTitle="Onc History"
                  *ngIf="participant.oncHistoryDetails != null && participant.oncHistoryDetails.length > 0"
-                 [active]="tabActive('Onc History')" (select)="onSelect($event, 'Onc History')">
+                 (putTab)="putTab($event)">
               <br/><br/><br/>
 
               <ng-container *ngIf="getTissueConsent() == null || !getTissueConsent()">
@@ -755,15 +758,16 @@ participant.data.dsm['diagnosisYear'] != null">
                   </div>
                 </div>
               </ng-container>
-            </tab>
+            </tabChild>
 
-            <tab heading="First Medical Record Abstraction" [active]="tabActive('abstraction')"
-                 (select)="onSelect($event, 'abstraction'); getFileList(participant.abstraction)"
+            <tabChild tabTitle="First Medical Record Abstraction" 
                  *ngIf="(participant.abstraction != null && abstractionFields != null
                  && (participant.abstraction.aStatus === 'in_progress' || participant.abstraction.aStatus === 'done'))
                  && participant.finalA != null && participant.finalA.aStatus !== 'done'
                  && (hasRole().isAbstractionAdmin() || hasRole().isAbstracter() || hasRole().isQC())"
-                 [disabled]="participant.abstraction.user !== hasRole().getUserName()">
+                 (putTab)="putTab($event)"
+                 [disabled]="participant.abstraction.user !== hasRole().getUserName()"> 
+                
               <br/>
               <div class="Float--left Width--100">
                 <md-input-container class="Input--Bigger-WIDTH">
@@ -806,13 +810,14 @@ participant.data.dsm['diagnosisYear'] != null">
                         (click)="submitParticipant(participant.abstraction)">Submit MR Abstraction
                 </button>
               </div>
-            </tab>
+            </tabChild>
 
-            <tab heading="Second Medical Record Abstraction" [active]="tabActive('review')"
-                 (select)="onSelect($event, 'review'); getFileList(participant.review)"
+            <tabChild tabTitle="Second Medical Record Abstraction" 
                  *ngIf="(participant.review != null && reviewFields != null && (participant.review.aStatus === 'in_progress' || participant.review.aStatus === 'done')) && participant.finalA != null && participant.finalA.aStatus !== 'done' &&
                     (hasRole().isAbstractionAdmin() || hasRole().isAbstracter() || hasRole().isQC())"
-                 [disabled]="participant.review.user !== hasRole().getUserName()">
+                  (putTab)="putTab($event)"
+                  [disabled]="participant.review.user !== hasRole().getUserName()"> 
+              
               <br/>
               <div class="Float--left Width--100">
                 <md-input-container
@@ -854,12 +859,14 @@ participant.data.dsm['diagnosisYear'] != null">
                         (click)="submitParticipant(participant.review)">Submit MR Abstraction
                 </button>
               </div>
-            </tab>
+            </tabChild>
 
-            <tab heading="QC" [active]="tabActive('qc')" (select)="onSelect($event, 'qc'); getFileList(participant.qc)"
+            <tabChild tabTitle="QC"
                  *ngIf="(participant.qc != null && qcFields != null && (participant.qc.aStatus === 'in_progress' || participant.qc.aStatus === 'done')) && participant.finalA != null && participant.finalA.aStatus !== 'done' &&
                     (hasRole().isAbstractionAdmin() || hasRole().isAbstracter() || hasRole().isQC())"
-                 [disabled]="participant.qc.user !== hasRole().getUserName()">
+                  (putTab)="putTab($event)"
+                  [disabled]="participant.qc.user !== hasRole().getUserName()"> 
+                
               <br/>
               <div class="Float--left Width--100">
                 <md-input-container
@@ -901,10 +908,11 @@ participant.data.dsm['diagnosisYear'] != null">
                         (click)="submitParticipant(participant.qc)">Submit QC
                 </button>
               </div>
-            </tab>
+            </tabChild>
 
-            <tab heading="Final Abstraction Values" [active]="tabActive('final')" (select)="onSelect($event, 'final')"
-                 *ngIf="participant.finalA != null && finalFields != null && participant.finalA.aStatus === 'done'">
+            <tabChild tabTitle="Final Abstraction Values"
+                 *ngIf="participant.finalA != null && finalFields != null && participant.finalA.aStatus === 'done'"
+                 (putTab)="putTab($event)">
               <br/>
               <div class="Float--left Width--100">
                 <b class="Group--Title">Jump to:</b>
@@ -928,58 +936,15 @@ participant.data.dsm['diagnosisYear'] != null">
                                                 [fileList]="fileListUsed" [participant]="participant">
                 </app-medical-record-abstraction>
               </div>
-            </tab>
-            
-            <ng-container *ngFor="let relative of participant.participantData; trackBy: trackById">
-              <!--            tabs from fieldSettings-->
-              <ng-container *ngFor="let tab of settings['null']">
-                <ng-container *ngIf="displayTab(tab)">
-                  <tab heading="{{createRelativeTabHeading(relative.data)}}" [active]="tabActive(relative.dataId)" (select)="onSelect($event, relative.dataId)" >
-                  <br/>
+            </tabChild>
 
-  <!--                  <div class="Float&#45;&#45;left Width&#45;&#45;100">-->
-  <!--                    <b class="Group&#45;&#45;Title">Jump to:</b>-->
-  <!--                  </div>-->
-  <!--                  <ng-container *ngFor="let setting of settings[tab.columnName]; let settingIndex = index">-->
-  <!--                    <div class="Float&#45;&#45;left" *ngIf="setting.displayType === 'GROUP'">-->
-  <!--                      <a class="Abstraction&#45;&#45;Jump&#45;&#45;Group" pageScroll href="{{setting.columnName}}">{{setting.columnDisplay}}</a>-->
-  <!--                    </div>-->
-  <!--                    <ng-container *ngIf="settingIndex < settings[tab.columnName].length - 1">-->
-  <!--                      <div class="Float&#45;&#45;left Vertical&#45;&#45;line"></div>-->
-  <!--                    </ng-container>-->
-  <!--                  </ng-container>-->
-  <!--                  <div class="Float&#45;&#45;left Width&#45;&#45;100">-->
-  <!--                    <hr style="border-color: black">-->
-  <!--                  </div>-->
-                    <ng-container *ngIf="tabActive(relative.dataId)">
-                      <ng-container *ngFor="let setting of settings[tab.columnName]; let settingIndex = index">
-                        <div class="Float--left Width--100">
-                          <div *ngIf="setting.displayType === 'GROUP'">
-                            <fieldset style="border: 1px black solid">
-                              <legend class="Group--Title" id="{{setting.columnName}}">{{setting.columnDisplay}}</legend>
-                              <ng-container *ngFor="let field of settings[setting.columnName]; let fieldIndex = index">
-                                <app-form-data [fieldSetting]="field" [participantData]="getParticipantData(field, relative)"
-                                              [activityData]="getActivityData(field)" [activityOptions]="getActivityOptions(field)"
-                                              (patchData)="formPatch($event, field, setting, relative.dataId)"></app-form-data>    
-                                <hr *ngIf="fieldIndex !== settings[setting.columnName].length-1" style="border-color: lightgray">
-                              </ng-container>
-                            </fieldset>
-                          </div>
-                          <ng-container *ngIf="setting.displayType !== 'GROUP'">
-                            <app-form-data [fieldSetting]="setting" [participantData]="getParticipantData(setting, relative.dataId)"
-                                          [activityData]="getActivityData(setting)" [activityOptions]="getActivityOptions(setting)"
-                                          (patchData)="formPatch($event, setting, null, relative.dataId)"></app-form-data>
-                            <hr *ngIf="settingIndex !== settings[tab.columnName].length-1" style="border-color: lightgray">
-                          </ng-container>
-                        </div>
-                      </ng-container>
-                    </ng-container>  
-                  </tab>
-                </ng-container>
-              </ng-container>
-            </ng-container>
-
-          </tabset>
+            <app-form-data [settings]="settings" [participant]="participant"
+                        [activityDefinitions]="activityDefinitions"
+                        [doRender]="doRender"
+                        (putTab)="putTab($event, tabName)"
+                        [currentActiveTab]="currentActiveTab"
+                        ></app-form-data>  
+          </tabFamily>
       </div>
     </div>
   </div>
