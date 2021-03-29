@@ -96,4 +96,5 @@ export class Statics {
 
   public static PARTICIPANT_PROBAND = "SELF";
 
+  public static PARTICIPANT_RELATIONSHIP_ID = "COLLABORATOR_PARTICIPANT_ID";
 }
