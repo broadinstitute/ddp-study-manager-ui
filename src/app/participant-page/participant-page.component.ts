@@ -1119,6 +1119,16 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     return "";
   }
 
+  getParticipantDataAT(fieldSetting: FieldSettings, fieldTypeId: string) {
+    if (this.participant != null && this.participant.participantData != null && fieldTypeId != null && fieldSetting.columnName != null) {
+      let participantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === fieldTypeId);
+      if (participantData != null && participantData.data != null && participantData.data[fieldSetting.columnName] != null) {
+        return participantData.data[fieldSetting.columnName];
+      }
+    }
+    return "";
+  }
+
   getDisplayName(displayName: string, columnName: string) {
     if (displayName.indexOf('#') > -1) {
       let replacements: string[] = displayName.split('#');
@@ -1246,6 +1256,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   }
 
   formPatch(value: any, fieldSetting: FieldSettings, groupSetting: FieldSettings, dataId?: string) {
+    debugger
     if (fieldSetting == null || fieldSetting.fieldType == null) {
       this.errorMessage = "Didn't save change";
       return;
