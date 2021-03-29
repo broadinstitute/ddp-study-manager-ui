@@ -154,7 +154,6 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     }, 5000);
     this.loadInstitutions();
     window.scrollTo( 0, 0 );
-    debugger
   }
 
   ngOnDestroy() {
@@ -1119,7 +1118,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     return "";
   }
 
-  getParticipantDataAT(fieldSetting: FieldSettings, fieldTypeId: string) {
+  getParticipantDataForAT(fieldSetting: FieldSettings, fieldTypeId: string) {
     if (this.participant != null && this.participant.participantData != null && fieldTypeId != null && fieldSetting.columnName != null) {
       let participantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === fieldTypeId);
       if (participantData != null && participantData.data != null && participantData.data[fieldSetting.columnName] != null) {
@@ -1127,6 +1126,10 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
       }
     }
     return "";
+  }
+
+  dynamicFormType(settings: FieldSettings[]): boolean {
+    return settings['null'].length == 1 && !settings['null'][0].columnName.startsWith('AT');
   }
 
   getDisplayName(displayName: string, columnName: string) {
@@ -1256,7 +1259,6 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   }
 
   formPatch(value: any, fieldSetting: FieldSettings, groupSetting: FieldSettings, dataId?: string) {
-    debugger
     if (fieldSetting == null || fieldSetting.fieldType == null) {
       this.errorMessage = "Didn't save change";
       return;
@@ -1371,5 +1373,10 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     let diff = Date.now() - Date.parse(startDate);
     let diffDate = new Date(diff);
     return Math.abs(diffDate.getUTCFullYear() - 1970);
+  }
+
+  findDataIdByFieldType(setting: FieldSettings): string {
+    let currentData = this.participant.participantData.find(currentParticipantData => setting.fieldType === currentParticipantData.fieldTypeId );
+    return currentData.dataId;
   }
 }
