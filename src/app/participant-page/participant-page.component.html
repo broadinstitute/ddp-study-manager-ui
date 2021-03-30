@@ -930,7 +930,7 @@ participant.data.dsm['diagnosisYear'] != null">
               </div>
             </tab>
             
-            <ng-container *ngIf="dynamicFormType(settings); else tabsForAT">
+            <ng-container *ngIf="dynamicFormType(settings); else groupForm">
               <ng-container *ngFor="let relative of participant.participantData">
                 <!--RGP tabs from fieldSettings-->
                 <ng-container *ngFor="let tab of settings['null']">
@@ -964,7 +964,7 @@ participant.data.dsm['diagnosisYear'] != null">
             </ng-container>
 
             <!--AT tabs from fieldSettings-->
-            <ng-template #tabsForAT>
+            <ng-template #groupForm>
               <ng-container *ngFor="let tab of settings['null']">
                 <ng-container *ngIf="displayTab(tab)">
                   <tab heading="{{getDisplayName(tab.columnDisplay, tab.columnName)}}" [active]="tabActive(tab.columnDisplay)" (select)="onSelect($event, tab.columnDisplay)" >
