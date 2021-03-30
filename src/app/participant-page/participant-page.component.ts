@@ -1129,7 +1129,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   }
 
   dynamicFormType(settings: FieldSettings[]): boolean {
-    return settings['null'].length == 1;
+    return settings['TAB'];
   }
 
   getDisplayName(displayName: string, columnName: string) {
