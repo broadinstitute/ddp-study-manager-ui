@@ -988,7 +988,7 @@ participant.data.dsm['diagnosisYear'] != null">
                       <ng-container *ngIf="tabActive(tab.columnDisplay)">
                         <div class="Float--left Width--100">
                           <ng-container *ngIf="setting.displayType !== 'GROUP'">
-                            <app-form-data [fieldSetting]="setting" [participantData]="getParticipantDataForAT(setting, tab.columnName)"
+                            <app-form-data [fieldSetting]="setting" [participantData]="getParticipantDataUsingFieldTypeId(setting, tab.columnName)"
                                           [activityData]="getActivityData(setting)" [activityOptions]="getActivityOptions(setting)"
                                           (patchData)="formPatch($event, setting, null, findDataIdByFieldType(setting))"></app-form-data>
                             <hr *ngIf="settingIndex !== settings[tab.columnName].length-1" style="border-color: lightgray">

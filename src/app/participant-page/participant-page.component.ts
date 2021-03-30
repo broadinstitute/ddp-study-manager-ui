@@ -1118,7 +1118,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     return "";
   }
 
-  getParticipantDataForAT(fieldSetting: FieldSettings, fieldTypeId: string) {
+  getParticipantDataUsingFieldTypeId(fieldSetting: FieldSettings, fieldTypeId: string) {
     if (this.participant != null && this.participant.participantData != null && fieldTypeId != null && fieldSetting.columnName != null) {
       let participantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === fieldTypeId);
       if (participantData != null && participantData.data != null && participantData.data[fieldSetting.columnName] != null) {
