@@ -1340,7 +1340,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   createRelativeTabHeading(data: any): string {
     if (data) {
-      return data.MEMBER_TYPE + " - " + data.DATSTAT_FIRSTNAME + " " + data.DATSTAT_LASTNAME;
+      return Statics.RELATIONS[data.MEMBER_TYPE] + " - " + data.DATSTAT_FIRSTNAME + " " + data.DATSTAT_LASTNAME;
     }
     return "";
   }
