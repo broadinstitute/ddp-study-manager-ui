@@ -105,7 +105,7 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                     </ng-container>
                   </ng-container>
                   <ng-container *ngIf="qDef.selectMode === 'SINGLE'">
-                    <ng-container *ngIf="questionAnswer.answer[0] != null"><b class="TD--Padding-Left-Bigger">{{getUtil().getOptionText(qDef.options,
+                    <ng-container *ngIf="questionAnswer.answer[0] != null && questionAnswer.optionDetails != null"><b class="TD--Padding-Left-Bigger">{{getUtil().getOptionText(qDef.options,
                       questionAnswer.answer[0])}}</b>
                       <ng-container *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, questionAnswer.answer[0]) as oDetail">
                         <div>{{oDetail.details}}
