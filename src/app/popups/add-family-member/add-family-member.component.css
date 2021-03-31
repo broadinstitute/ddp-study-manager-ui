@@ -17,3 +17,12 @@
 .subject-id-info.active {
     color:red;
 }
+
+.subject-id-exists {
+    display: none;
+}
+
+.subject-id-exists.active {
+    display: block;
+    color:red;
+}
