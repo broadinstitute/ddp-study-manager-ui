@@ -965,7 +965,7 @@ participant.data.dsm['diagnosisYear'] != null">
 
             <!--AT tabs from fieldSettings-->
             <ng-template #groupForm>
-              <ng-container *ngFor="let tab of settings['null']">
+              <ng-container *ngFor="let tab of settings['TAB_GROUPED']">
                 <ng-container *ngIf="displayTab(tab)">
                   <tab heading="{{getDisplayName(tab.columnDisplay, tab.columnName)}}" [active]="tabActive(tab.columnDisplay)" (select)="onSelect($event, tab.columnDisplay)" >
   <!--                  <br/>-->
