@@ -27,6 +27,7 @@ import {AssigneeParticipant} from "./models/assignee-participant.model";
 import {PreferredLanguage} from "./models/preferred-languages.model";
 import {Participant} from "./participant-list.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
+import { debug } from "console";
 
 @Component( {
   selector: "app-participant-list",
@@ -103,6 +104,7 @@ export class ParticipantListComponent implements OnInit {
   rowsPerPage: number;
   preferredLanguages: PreferredLanguage[] = [];
   savedSelectedColumns = {};
+  studySpecificStatuses: NameValue[];
   isAddFamilyMember: boolean = false;
 
   constructor( private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
@@ -188,6 +190,7 @@ export class ParticipantListComponent implements OnInit {
         this.sourceColumns = {};
         this.selectedColumns = {};
         this.settings = {};
+        this.studySpecificStatuses = null;
         this.dataSources.forEach( ( value: string, key: string ) => {
           this.selectedColumns[ key ] = [];
           this.sourceColumns[ key ] = [];
@@ -478,13 +481,16 @@ export class ParticipantListComponent implements OnInit {
             })
           }
         }
+        if (jsonData.studySpecificStatuses) {
+          this.studySpecificStatuses = jsonData.studySpecificStatuses;
+        }
         if (jsonData.addFamilyMember === true) {
           this.isAddFamilyMember = true;
         } else {
           this.isAddFamilyMember = false;
         }
         this.orderColumns();
-        this.getData();
+        this.getData();        
         this.renewSelectedColumns();
       },
       err => {
@@ -579,6 +585,9 @@ export class ParticipantListComponent implements OnInit {
               this.selectedColumns[ key ] = [];
             } );
             this.selectedColumns[ "data" ] = this.defaultColumns;
+            if (this.studySpecificStatuses) {
+              this.addStudySpecificStatuses(this.studySpecificStatuses);
+            }
           },
           err => {
             if (err._body === Auth.AUTHENTICATION_ERROR) {
@@ -681,6 +690,9 @@ export class ParticipantListComponent implements OnInit {
                 this.selectedColumns[ key ] = [];
               } );
               this.selectedColumns[ "data" ] = this.defaultColumns;
+              if (this.studySpecificStatuses) {
+                this.addStudySpecificStatuses(this.studySpecificStatuses);
+              }
             }
           }
           let date = new Date();
@@ -1683,5 +1695,15 @@ export class ParticipantListComponent implements OnInit {
       }
     }
     return "";
+  }
+
+  addStudySpecificStatuses(statuses: NameValue[]) {
+    if (this.selectedColumns && this.selectedColumns[ "data" ] && statuses) {
+      debugger
+      let statusFilter: Filter = this.selectedColumns["data"].find( (filter: Filter) => filter.participantColumn.name === 'status');
+      if (statusFilter && statusFilter.options) {
+        statuses.forEach( ( status: NameValue ) => statusFilter.options.push(new NameValue(status.name, status.value)));
+      }
+    }
   }
 }
