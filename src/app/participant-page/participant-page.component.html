@@ -176,7 +176,7 @@ participant.data.dsm['diagnosisYear'] != null">
         <div *ngIf="isAddFamilyMember" class="Float--right Width--100">
           <div class="family-member-button">
             <button md-mini-fab color="primary" class="md-fab-bottom-left" (click)="showFamilyMemberPopUpOnClick()">
-              +
+              <i class="fas fa-plus fa-lg"></i>
             </button>
             <span>Add Family Member</span>
           </div>
@@ -935,7 +935,26 @@ participant.data.dsm['diagnosisYear'] != null">
               <ng-container *ngFor="let tab of settings['null']">
                 <ng-container *ngIf="displayTab(tab)">
                   <tab heading="{{createRelativeTabHeading(relative.data)}}" [active]="tabActive(relative.dataId)" (select)="onSelect($event, relative.dataId)" >
-                  <br/>
+                  <br/><br/>
+                  <div *ngIf="settings[tab.columnName].length > 0 && settings[tab.columnName][0].displayType === 'GROUP'">
+                    <div class="Float--left Width--100"
+                            *ngIf="settings[tab.columnName].length > 0">
+                        <b class="Group--Title">Jump to:</b>
+                    </div>
+                    <div class="Float--left Width--100"
+                        *ngIf="settings[tab.columnName].length > 0">
+                      <ng-container *ngFor="let activity of settings[tab.columnName]; let i = index">
+                        
+                        <div class="Float--left" *ngIf="true">
+                          <a class="Abstraction--Jump--Group" pageScroll href="{{getGroupHref(activity.columnName)}}"
+                            *ngIf="activity != null">{{activity.columnDisplay}}</a>
+                        </div>
+                        <ng-container *ngIf="i < settings[tab.columnName].length - 1">
+                          <div class="Float--left Vertical--line"></div>
+                        </ng-container>
+                      </ng-container>
+                    </div>
+                  </div>
 
   <!--                  <div class="Float&#45;&#45;left Width&#45;&#45;100">-->
   <!--                    <b class="Group&#45;&#45;Title">Jump to:</b>-->
@@ -955,6 +974,7 @@ participant.data.dsm['diagnosisYear'] != null">
                       <ng-container *ngFor="let setting of settings[tab.columnName]; let settingIndex = index">
                         <div class="Float--left Width--100">
                           <div *ngIf="setting.displayType === 'GROUP'">
+                            <hr style="border-color: black">
                             <fieldset style="border: 1px black solid">
                               <legend class="Group--Title" id="{{setting.columnName}}">{{setting.columnDisplay}}</legend>
                               <ng-container *ngFor="let field of settings[setting.columnName]; let fieldIndex = index">
