@@ -109,4 +109,16 @@ export class AddFamilyMemberComponent implements OnInit {
     }
     return ddpParticipantDataId;
   }
+
+  isRelationshipIdExists() {
+    let relationshipIds: Array<String> = this.data.participant.participantData.map(pData => {
+      let familyMemberData = pData.data;
+      if (familyMemberData.hasOwnProperty(Statics.PARTICIPANT_RELATIONSHIP_ID)) {
+        let firstUnderScore = familyMemberData[Statics.PARTICIPANT_RELATIONSHIP_ID].indexOf("_");
+        return familyMemberData[Statics.PARTICIPANT_RELATIONSHIP_ID].substring(firstUnderScore + 1);
+      }
+      return "";
+    });
+    return relationshipIds.includes(this.familyMemberSubjectId);
+  }
 }
