@@ -2,6 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MD_DIALOG_DATA, MdDialog, MdDialogRef } from '@angular/material';
 
 import { ParticipantUpdateResultDialogComponent } from "../../dialogs/participant-update-result-dialog.component";
+import { ParticipantData } from '../../participant-list/models/participant-data.model';
 
 import {ComponentService} from "../../services/component.service";
 import {DSMService} from "../../services/dsm.service";
@@ -20,8 +21,9 @@ export class AddFamilyMemberComponent implements OnInit {
   familyMemberSubjectId: string;
   chosenRelation: string;
   isCopyProbandInfo: boolean = false;
-  probandDataId: number = this.getProbandDataId();
-  isParticipantProbandEmpty: boolean = this.getProbandDataId() == null;
+  probandDataId: number = this.getProbandDataId(this.data.participant.participantData);
+  isParticipantProbandEmpty: boolean = this.getProbandDataId(this.data.participant.participantData) == null;
+  staticRelations = Statics.RELATIONS;
 
   constructor(@Inject(MD_DIALOG_DATA) public data: {participant: any}, private dsmService: DSMService, 
               private compService: ComponentService, private role: RoleService, public dialog: MdDialog,
@@ -31,10 +33,10 @@ export class AddFamilyMemberComponent implements OnInit {
     this.dsmService.getParticipantDsmData(this.compService.getRealm(), this.data.participant.data.profile["guid"]).subscribe(
       data => {
         if (data != null) {
-          this.data.participant.participantData = data;
-          this.isParticipantProbandEmpty = this.getProbandDataId() == null;
+          let participantData = data;
+          this.isParticipantProbandEmpty = this.getProbandDataId(participantData) == null;
           if (!this.isParticipantProbandEmpty) {
-            this.probandDataId = this.getProbandDataId();
+            this.probandDataId = this.getProbandDataId(participantData);
           }
         }
       }
@@ -65,6 +67,7 @@ export class AddFamilyMemberComponent implements OnInit {
       data => {
         this.openResultDialog("Successfully added family member");
         this.close();
+        this.data.participant.participantData = data;
       },
       err => {
         if (err.status === 400) {
@@ -89,21 +92,33 @@ export class AddFamilyMemberComponent implements OnInit {
   }
 
   getRelations() {
-    let relations = Statics.RELATIONS;
+    let relations = Object.keys(Statics.RELATIONS);
     if (!this.isParticipantProbandEmpty) {
-      relations = relations.filter(rel => rel.value !== Statics.PARTICIPANT_PROBAND)
+      relations = relations.filter(rel => rel !== Statics.PARTICIPANT_PROBAND);
     }
     return relations;
   }
 
-  getProbandDataId() : number {
+  getProbandDataId(pData: Array<ParticipantData>) : number {
     let ddpParticipantDataId;
-    let probandData = this.data.participant.participantData
-          .filter(p => p.data.MEMBER_TYPE === Statics.PARTICIPANT_PROBAND)
+    let probandData = pData
+          .filter(p => p.data['MEMBER_TYPE'] === Statics.PARTICIPANT_PROBAND)
           .shift();
     if (probandData != null && probandData.hasOwnProperty("dataId")) {
       ddpParticipantDataId = probandData["dataId"]
     }
     return ddpParticipantDataId;
+  }
+
+  isRelationshipIdExists() {
+    let relationshipIds: Array<String> = this.data.participant.participantData.map(pData => {
+      let familyMemberData = pData.data;
+      if (familyMemberData.hasOwnProperty(Statics.PARTICIPANT_RELATIONSHIP_ID)) {
+        let firstUnderScore = familyMemberData[Statics.PARTICIPANT_RELATIONSHIP_ID].indexOf("_");
+        return familyMemberData[Statics.PARTICIPANT_RELATIONSHIP_ID].substring(firstUnderScore + 1);
+      }
+      return "";
+    });
+    return relationshipIds.includes(this.familyMemberSubjectId);
   }
 }

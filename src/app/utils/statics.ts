@@ -71,29 +71,30 @@ export class Statics {
   public static EXITED = "EXITED";
   public static CONSENT_SUSPENDED = "CONSENT_SUSPENDED";
   
-  public static RELATIONS = [
-    {key: "Brother", value: "BROTHER"},
-    {key: "Daughter", value: "DAUGHTER"},
-    {key: "Father", value: "FATHER"},
-    {key: "Half Sibling (Maternal)", value: "HALF_SIBLING_MATERNAL"},
-    {key: "Half Sibling (Paternal)", value: "HALF_SIBLING_PATERNAL"},
-    {key: "Maternal Aunt", value: "MATERNAL AUNT"},
-    {key: "Maternal First Cousin", value: "MATERNAL_FIRST_COUSIN"},
-    {key: "Maternal Grandfather", value: "MATERNAL_GRANDFATHER"},
-    {key: "Maternal Grandmother", value: "MATERNAL_GRANDMOTHER"},
-    {key: "Maternal Uncle", value: "MATERNAL_UNCLE"},
-    {key: "Mother", value: "MOTHER"},
-    {key: "Other", value: "OTHER"},
-    {key: "Paternal Aunt", value: "PATERNAL_AUNT"},
-    {key: "Paternal First Cousin", value: "PATERNAL_FIRST_COUSIN"},
-    {key: "Paternal Grandfather", value: "PATERNAL_GRANDFATHER"},
-    {key: "Paternal Grandmother", value: "PATERNAL_GRANDMOTHER"},
-    {key: "Paternal Uncle", value: "PATERNAL_UNCLE"},
-    {key: "Self", value: "SELF"},
-    {key: "Sister", value: "SISTER"},
-    {key: "Son", value: "SON"}
-  ]
+  public static RELATIONS = {
+    "BROTHER": "Brother",
+    "DAUGHTER": "Daughter",
+    "FATHER": "Father",
+    "HALF_SIBLING_MATERNAL": "Half Sibling (Maternal)",
+    "HALF_SIBLING_PATERNAL": "Half Sibling (Paternal)",
+    "MATERNAL_AUNT": "Maternal Aunt",
+    "MATERNAL_FIRST_COUSIN": "Maternal First Cousin",
+    "MATERNAL_GRANDFATHER": "Maternal Grandfather",
+    "MATERNAL_GRANDMOTHER": "Maternal Grandmother",
+    "MATERNAL_UNCLE": "Maternal Uncle",
+    "MOTHER": "Mother",
+    "OTHER": "Other",
+    "PATERNAL_AUNT": "Paternal Aunt",
+    "PATERNAL_FIRST_COUSIN": "Paternal First Cousin",
+    "PATERNAL_GRANDFATHER": "Paternal Grandfather",
+    "PATERNAL_GRANDMOTHER": "Paternal Grandmother",
+    "PATERNAL_UNCLE": "Paternal Uncle",
+    "SELF": "Self",
+    "SISTER": "Sister",
+    "SON": "Son"
+  }
 
   public static PARTICIPANT_PROBAND = "SELF";
 
+  public static PARTICIPANT_RELATIONSHIP_ID = "COLLABORATOR_PARTICIPANT_ID";
 }
