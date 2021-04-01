@@ -55,6 +55,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   @Input() oncHistoryId: string;
   @Input() mrId: string;
   @Input() isAddFamilyMember: boolean;
+  @Input() showGroupFields: boolean;
   @Output() leaveParticipant = new EventEmitter();
   @Output('ngModelChange') update = new EventEmitter();
 
@@ -1100,23 +1101,35 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  getParticipantData(fieldSetting: FieldSettings, relative: ParticipantData) {
-    if (this.participant != null && this.participant.participantData != null && relative.dataId != null && fieldSetting.columnName != null) {
-      let kitFieldsDict = {'DATE_KIT_RECEIVED': 'receiveDate', 'DATE_KIT_SENT': 'scanDate', 'KIT_TYPE_TO_REQUEST': 'kitType'};
-      if (fieldSetting.displayType === 'SAMPLE') {
-        let sample: Sample = this.participant.kits.find(kit => kit.bspCollaboratorSampleId === relative.data[fieldSetting.columnName]);
-        if (sample && kitFieldsDict[fieldSetting.columnName] && sample[kitFieldsDict[fieldSetting.columnName]]) {
-          return sample[kitFieldsDict[fieldSetting.columnName]];
-        } else {
-          return "";
+  getParticipantData(fieldSetting: FieldSettings, personsParticipantData: ParticipantData) {
+    if (this.participant && this.participant.participantData && personsParticipantData && fieldSetting.columnName) {
+      if (personsParticipantData && personsParticipantData.data) {
+        if (personsParticipantData.data[fieldSetting.columnName]) {
+          return personsParticipantData.data[fieldSetting.columnName];
+        } else if (fieldSetting.actions && fieldSetting.actions[0]) {
+          if (fieldSetting.actions[0].type === 'CALC' && fieldSetting.actions[0].value && personsParticipantData.data[fieldSetting.actions[0].value]) {
+            return this.countYears(personsParticipantData.data[fieldSetting.actions[0].value]);
+          } else if (fieldSetting.actions[0].type === 'SAMPLE' && fieldSetting.actions[0].type2 === 'MAP_TO_KIT') {
+            return this.getSampleFieldValue(fieldSetting, personsParticipantData);
+          }
         }
       }
-      let participantData = this.participant.participantData.find(participantData => participantData.dataId === relative.dataId);
+    }
+    return "";
+  }
+
+  getParticipantDataUsingFieldTypeId(fieldSetting: FieldSettings, fieldTypeId: string) {
+    if (this.participant != null && this.participant.participantData != null && fieldTypeId != null && fieldSetting.columnName != null) {
+      let participantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === fieldTypeId);
       if (participantData != null && participantData.data != null && participantData.data[fieldSetting.columnName] != null) {
         return participantData.data[fieldSetting.columnName];
       }
     }
     return "";
+  }
+
+  dynamicFormType(settings: FieldSettings[]): boolean {
+    return settings['TAB_GROUPED'];
   }
 
   getDisplayName(displayName: string, columnName: string) {
@@ -1340,8 +1353,30 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   createRelativeTabHeading(data: any): string {
     if (data) {
-      return data.MEMBER_TYPE + " - " + data.DATSTAT_FIRSTNAME + " " + data.DATSTAT_LASTNAME;
+      return Statics.RELATIONS[data.MEMBER_TYPE] + " - " + data.DATSTAT_FIRSTNAME + " " + data.DATSTAT_LASTNAME;
     }
     return "";
+  }
+
+  getSampleFieldValue(fieldSetting: FieldSettings, personsParticipantData: ParticipantData): string {
+    let sample: Sample = this.participant.kits.find(kit => kit.bspCollaboratorSampleId === personsParticipantData.data['COLLABORATOR_PARTICIPANT_ID']);
+    if (sample && fieldSetting.actions[0].value && sample[fieldSetting.actions[0].value] && fieldSetting.displayType) {
+      if (fieldSetting.displayType === 'DATE') {
+        return new Date(sample[fieldSetting.actions[0].value]).toISOString().split('T')[0];
+      }
+      return sample[fieldSetting.actions[0].value];
+    }
+    return "";
+  }
+
+  countYears(startDate: string): number {
+    let diff = Date.now() - Date.parse(startDate);
+    let diffDate = new Date(diff);
+    return Math.abs(diffDate.getUTCFullYear() - 1970);
+  }
+
+  findDataIdByFieldType(setting: FieldSettings): string {
+    let currentData = this.participant.participantData.find(currentParticipantData => setting.fieldType === currentParticipantData.fieldTypeId );
+    return currentData.dataId;
   }
 }

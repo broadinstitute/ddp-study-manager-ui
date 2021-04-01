@@ -12,7 +12,8 @@ export class FieldSettings {
   spaceError: boolean = false;
 
   constructor(public fieldSettingId: string, public columnName: string, public columnDisplay: string, public fieldType: string,
-              public displayType: string, public possibleValues: Value[], public orderNumber: number, public actions: Value[]) {
+              public displayType: string, public possibleValues: Value[], public orderNumber: number, public actions: Value[],
+              public readonly: boolean) {
     this.fieldSettingId = fieldSettingId;
     this.columnName = columnName;
     this.columnDisplay = columnDisplay;
@@ -21,12 +22,13 @@ export class FieldSettings {
     this.possibleValues = possibleValues;
     this.orderNumber = orderNumber;
     this.actions = actions;
+    this.readonly = readonly;
   }
 
   static parse(json): FieldSettings {
     return new FieldSettings(json.fieldSettingId, json.columnName, json.columnDisplay, json.fieldType,
       json.displayType, json.hasOwnProperty("possibleValues") ? json.possibleValues : [], json.orderNumber,
-      json.hasOwnProperty("actions") ? json.actions : []);
+      json.hasOwnProperty("actions") ? json.actions : [], json.readonly);
   }
 
   static addSettingWithType(map: Map<string, Array<FieldSettings>>, setting: FieldSettings, type: FieldType) {

@@ -31,6 +31,7 @@
           <td><b>Relationship ID</b></td>
           <td>
             <span [ngClass]="{'subject-id-info': true, 'active': subjectId.errors?.pattern}">* Add relationship id as x or x_y</span>
+            <span [ngClass]="{'subject-id-exists': true, 'active': isRelationshipIdExists()}">Relationship ID already exists</span>
             <input 
             type="text"
             maxlength="10" 
@@ -47,8 +48,8 @@
           <td><b>Relation</b></td>
           <td>
             <md-select [(ngModel)]="chosenRelation">
-              <md-option *ngFor="let relation of getRelations()" [value]="relation.value">
-                {{relation.key}}
+              <md-option *ngFor="let key of getRelations()" [value]="key">
+                {{staticRelations[key]}}
               </md-option>
             </md-select>
           </td>
@@ -67,7 +68,7 @@
     
         <tr>
           <td>
-            <button class="btn btn-primary" [disabled]="isFamilyMemberFieldsEmpty() || subjectId.errors?.pattern" (click)="submitFamilyMember()">Submit</button>
+            <button class="btn btn-primary" [disabled]="isFamilyMemberFieldsEmpty() || subjectId.errors?.pattern || isRelationshipIdExists()" (click)="submitFamilyMember()">Submit</button>
           </td>
           <td></td>
         </tr>
