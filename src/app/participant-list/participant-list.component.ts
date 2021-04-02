@@ -103,7 +103,6 @@ export class ParticipantListComponent implements OnInit {
   rowsPerPage: number;
   preferredLanguages: PreferredLanguage[] = [];
   savedSelectedColumns = {};
-  studySpecificStatuses: NameValue[];
   isAddFamilyMember: boolean = false;
   showGroupFields: boolean = false;
 
@@ -170,7 +169,6 @@ export class ParticipantListComponent implements OnInit {
     let jsonData: any;
     this.dsmService.getSettings( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.parent ).subscribe(
       data => {
-        console.log('------------');
         this.assignees = [];
         this.drugs = [];
         this.cancers = [];
@@ -481,11 +479,7 @@ export class ParticipantListComponent implements OnInit {
             })
           }
         }
-        if (jsonData.studySpecificStatuses) {
-          this.studySpecificStatuses = jsonData.studySpecificStatuses;
-        } else {
-          this.studySpecificStatuses = null;
-        }
+        this.updateStudySpecificStatuses(jsonData.studySpecificStatuses);
         if (jsonData.addFamilyMember === true) {
           this.isAddFamilyMember = true;
         } else {
@@ -497,8 +491,8 @@ export class ParticipantListComponent implements OnInit {
           this.showGroupFields = false;
         }
         this.orderColumns();
-        this.getData();        
-        // this.renewSelectedColumns();
+        this.getData();
+        this.renewSelectedColumns();
       },
       err => {
         if (err._body === Auth.AUTHENTICATION_ERROR) {
@@ -591,10 +585,7 @@ export class ParticipantListComponent implements OnInit {
             this.dataSources.forEach( ( value: string, key: string ) => {
               this.selectedColumns[ key ] = [];
             } );
-            this.selectedColumns["data"] = JSON.parse(JSON.stringify(this.defaultColumns));
-            if (this.studySpecificStatuses) {
-              this.addStudySpecificStatuses(this.studySpecificStatuses);
-            }
+            this.selectedColumns[ "data" ] = this.defaultColumns;
           },
           err => {
             if (err._body === Auth.AUTHENTICATION_ERROR) {
@@ -628,7 +619,7 @@ export class ParticipantListComponent implements OnInit {
     }
     // console.log(viewFilter);
     this.dsmService.applyFilter( viewFilter, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.parent, null ).subscribe(
-      data => {        
+      data => {
         if (data != null) {
           if (viewFilter != null && viewFilter.filters != null) {
             for (let filter of viewFilter.filters) {
@@ -696,10 +687,7 @@ export class ParticipantListComponent implements OnInit {
               this.dataSources.forEach( ( value: string, key: string ) => {
                 this.selectedColumns[ key ] = [];
               } );
-              this.selectedColumns["data"] = JSON.parse(JSON.stringify(this.defaultColumns));
-              if (this.studySpecificStatuses) {
-                this.addStudySpecificStatuses(this.studySpecificStatuses);
-              }
+              this.selectedColumns[ "data" ] = this.defaultColumns;
             }
           }
           let date = new Date();
@@ -1284,14 +1272,14 @@ export class ParticipantListComponent implements OnInit {
                     sortedListStringA += this.findOptionValue(element.name, activityDataA.activityCode, questionAnswerA.stableId);
                   }
                 });
-                
+
                 let optionsB = this.selectedColumns[activityDataB.activityCode].find(f => f.participantColumn.name === questionAnswerB.stableId).options;
                 let sortedListStringB = "";
                 optionsB.forEach(element => {
                   if (questionAnswerB.answer.includes(element.name)) {
                     sortedListStringB += this.findOptionValue(element.name, activityDataB.activityCode, questionAnswerB.stableId);
                   }
-                });                
+                });
                 return this.sort( sortedListStringA, sortedListStringB, order );
               } else {
                 return this.sort( questionAnswerA.answer, questionAnswerB.answer, order );
@@ -1704,11 +1692,16 @@ export class ParticipantListComponent implements OnInit {
     return "";
   }
 
-  addStudySpecificStatuses(statuses: NameValue[]) {
-    if (this.selectedColumns && this.selectedColumns[ "data" ] && statuses) {
-      let statusFilter: Filter = this.selectedColumns["data"].find( (filter: Filter) => filter.participantColumn.name === 'status');
+  updateStudySpecificStatuses(statuses: NameValue[]) {
+    if (this.sourceColumns && this.sourceColumns[ "data" ]) {
+      let statusFilter: Filter = this.sourceColumns["data"].find( (filter: Filter) => filter.participantColumn.name === 'status');
       if (statusFilter && statusFilter.options) {
-        statuses.forEach( ( status: NameValue ) => statusFilter.options.push(new NameValue(status.name, status.value)));
+        if (statusFilter.options.length > 5) {
+          statusFilter.options = statusFilter.options.slice(0, 5);
+        }
+        if (statuses) {
+          statuses.forEach( ( status: NameValue ) => statusFilter.options.push(new NameValue(status.name, status.value)));
+        }
       }
     }
   }
