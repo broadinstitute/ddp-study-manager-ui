@@ -27,7 +27,6 @@ import {AssigneeParticipant} from "./models/assignee-participant.model";
 import {PreferredLanguage} from "./models/preferred-languages.model";
 import {Participant} from "./participant-list.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
-import { debug } from "console";
 
 @Component( {
   selector: "app-participant-list",
@@ -171,6 +170,7 @@ export class ParticipantListComponent implements OnInit {
     let jsonData: any;
     this.dsmService.getSettings( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.parent ).subscribe(
       data => {
+        console.log('------------');
         this.assignees = [];
         this.drugs = [];
         this.cancers = [];
@@ -191,7 +191,6 @@ export class ParticipantListComponent implements OnInit {
         this.sourceColumns = {};
         this.selectedColumns = {};
         this.settings = {};
-        this.studySpecificStatuses = null;
         this.dataSources.forEach( ( value: string, key: string ) => {
           this.selectedColumns[ key ] = [];
           this.sourceColumns[ key ] = [];
@@ -484,6 +483,8 @@ export class ParticipantListComponent implements OnInit {
         }
         if (jsonData.studySpecificStatuses) {
           this.studySpecificStatuses = jsonData.studySpecificStatuses;
+        } else {
+          this.studySpecificStatuses = null;
         }
         if (jsonData.addFamilyMember === true) {
           this.isAddFamilyMember = true;
@@ -497,7 +498,7 @@ export class ParticipantListComponent implements OnInit {
         }
         this.orderColumns();
         this.getData();        
-        this.renewSelectedColumns();
+        // this.renewSelectedColumns();
       },
       err => {
         if (err._body === Auth.AUTHENTICATION_ERROR) {
@@ -590,7 +591,7 @@ export class ParticipantListComponent implements OnInit {
             this.dataSources.forEach( ( value: string, key: string ) => {
               this.selectedColumns[ key ] = [];
             } );
-            this.selectedColumns[ "data" ] = this.defaultColumns;
+            this.selectedColumns["data"] = JSON.parse(JSON.stringify(this.defaultColumns));
             if (this.studySpecificStatuses) {
               this.addStudySpecificStatuses(this.studySpecificStatuses);
             }
@@ -627,7 +628,7 @@ export class ParticipantListComponent implements OnInit {
     }
     // console.log(viewFilter);
     this.dsmService.applyFilter( viewFilter, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.parent, null ).subscribe(
-      data => {
+      data => {        
         if (data != null) {
           if (viewFilter != null && viewFilter.filters != null) {
             for (let filter of viewFilter.filters) {
@@ -695,7 +696,7 @@ export class ParticipantListComponent implements OnInit {
               this.dataSources.forEach( ( value: string, key: string ) => {
                 this.selectedColumns[ key ] = [];
               } );
-              this.selectedColumns[ "data" ] = this.defaultColumns;
+              this.selectedColumns["data"] = JSON.parse(JSON.stringify(this.defaultColumns));
               if (this.studySpecificStatuses) {
                 this.addStudySpecificStatuses(this.studySpecificStatuses);
               }
@@ -1705,7 +1706,6 @@ export class ParticipantListComponent implements OnInit {
 
   addStudySpecificStatuses(statuses: NameValue[]) {
     if (this.selectedColumns && this.selectedColumns[ "data" ] && statuses) {
-      debugger
       let statusFilter: Filter = this.selectedColumns["data"].find( (filter: Filter) => filter.participantColumn.name === 'status');
       if (statusFilter && statusFilter.options) {
         statuses.forEach( ( status: NameValue ) => statusFilter.options.push(new NameValue(status.name, status.value)));
