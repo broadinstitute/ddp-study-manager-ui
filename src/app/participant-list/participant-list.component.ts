@@ -479,6 +479,7 @@ export class ParticipantListComponent implements OnInit {
             })
           }
         }
+        this.updateStudySpecificStatuses(jsonData.studySpecificStatuses);
         if (jsonData.addFamilyMember === true) {
           this.isAddFamilyMember = true;
         } else {
@@ -1271,14 +1272,14 @@ export class ParticipantListComponent implements OnInit {
                     sortedListStringA += this.findOptionValue(element.name, activityDataA.activityCode, questionAnswerA.stableId);
                   }
                 });
-                
+
                 let optionsB = this.selectedColumns[activityDataB.activityCode].find(f => f.participantColumn.name === questionAnswerB.stableId).options;
                 let sortedListStringB = "";
                 optionsB.forEach(element => {
                   if (questionAnswerB.answer.includes(element.name)) {
                     sortedListStringB += this.findOptionValue(element.name, activityDataB.activityCode, questionAnswerB.stableId);
                   }
-                });                
+                });
                 return this.sort( sortedListStringA, sortedListStringB, order );
               } else {
                 return this.sort( questionAnswerA.answer, questionAnswerB.answer, order );
@@ -1689,5 +1690,19 @@ export class ParticipantListComponent implements OnInit {
       }
     }
     return "";
+  }
+
+  updateStudySpecificStatuses(statuses: NameValue[]) {
+    if (this.sourceColumns && this.sourceColumns[ "data" ]) {
+      let statusFilter: Filter = this.sourceColumns["data"].find( (filter: Filter) => filter.participantColumn.name === 'status');
+      if (statusFilter && statusFilter.options) {
+        if (statusFilter.options.length > 1) {
+          statusFilter.options = statusFilter.options.slice(0, 1);
+        }
+        if (statuses) {
+          statuses.forEach( ( status: NameValue ) => statusFilter.options.push(new NameValue(status.name, status.value)));
+        }
+      }
+    }
   }
 }
