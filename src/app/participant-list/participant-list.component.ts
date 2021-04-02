@@ -1696,8 +1696,8 @@ export class ParticipantListComponent implements OnInit {
     if (this.sourceColumns && this.sourceColumns[ "data" ]) {
       let statusFilter: Filter = this.sourceColumns["data"].find( (filter: Filter) => filter.participantColumn.name === 'status');
       if (statusFilter && statusFilter.options) {
-        if (statusFilter.options.length > 5) {
-          statusFilter.options = statusFilter.options.slice(0, 5);
+        if (statusFilter.options.length > 1) {
+          statusFilter.options = statusFilter.options.slice(0, 1);
         }
         if (statuses) {
           statuses.forEach( ( status: NameValue ) => statusFilter.options.push(new NameValue(status.name, status.value)));
