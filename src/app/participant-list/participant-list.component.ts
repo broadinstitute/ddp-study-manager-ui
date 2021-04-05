@@ -466,6 +466,7 @@ export class ParticipantListComponent implements OnInit {
             })
           }
         }
+        this.updateStudySpecificStatuses(jsonData.studySpecificStatuses);
         this.orderColumns();
         this.getData();
       },
@@ -1603,5 +1604,19 @@ export class ParticipantListComponent implements OnInit {
 
   formatInvitation(invitationCode: string): string{
     return invitationCode == undefined ? "" : invitationCode.match(/.{1,4}/g).join('-');
+  }
+
+  updateStudySpecificStatuses(statuses: NameValue[]) {
+    if (this.sourceColumns && this.sourceColumns[ "data" ]) {
+      let statusFilter: Filter = this.sourceColumns["data"].find( (filter: Filter) => filter.participantColumn.name === 'status');
+      if (statusFilter && statusFilter.options) {
+        if (statusFilter.options.length > 1) {
+          statusFilter.options = statusFilter.options.slice(0, 1);
+        }
+        if (statuses) {
+          statuses.forEach( ( status: NameValue ) => statusFilter.options.push(new NameValue(status.name, status.value)));
+        }
+      }
+    }
   }
 }

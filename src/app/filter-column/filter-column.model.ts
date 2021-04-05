@@ -29,10 +29,6 @@ export class Filter {
   public static COUNTRY = new Filter( ParticipantColumn.COUNTRY, Filter.TEXT_TYPE );
   public static ENROLLMENT_STATUS = new Filter( ParticipantColumn.ENROLLMENT_STATUS, Filter.OPTION_TYPE, [
     new NameValue( "REGISTERED", "Registered" ),
-    new NameValue( "EXITED_BEFORE_ENROLLMENT", "Exited before Enrollment" ),
-    new NameValue( "EXITED_AFTER_ENROLLMENT", "Exited after Enrollment" ),
-    new NameValue( "ENROLLED", "Enrolled" ),
-    new NameValue( "CONSENT_SUSPENDED", "Lost to Followup" )
   ] );
   public static EMAIL = new Filter( ParticipantColumn.EMAIL, Filter.TEXT_TYPE );
   public static REGISTRATION_DATE = new Filter( ParticipantColumn.REGISTRATION_DATE, Filter.DATE_TYPE );
