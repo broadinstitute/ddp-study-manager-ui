@@ -109,7 +109,6 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   isEmailValid: boolean;
 
   accordionOpenedPanel: string = "";
-  accordionOpenedPanelCheck: string = "";
 
   private payload = {};
 
@@ -157,7 +156,6 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     }, 5000);
     this.loadInstitutions();
     window.scrollTo( 0, 0 );
-    debugger
   }
 
   ngOnDestroy() {
@@ -290,22 +288,18 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     return "#" + group;
   }
 
-  onOpenChangeAccordionPanel(columnName: string) {
-    debugger;
-    if (this.accordionOpenedPanel === columnName) {
+  onOpenChangeAccordionPanel(event: boolean) {
+    if (!event) {
       this.accordionOpenedPanel = "";
     }
   }
 
   openAccordionPanel(columnName: string) {
-    debugger
-    if (this.accordionOpenedPanelCheck === "") {
-      this.accordionOpenedPanel = columnName;
-    }
+    this.accordionOpenedPanel = columnName;
   }
 
   isAccordionPanelOpen(columnName: string) {
-    return this.showGroupFields || this.accordionOpenedPanel === columnName || this.accordionOpenedPanelCheck !== "";
+    return this.showGroupFields || this.accordionOpenedPanel === columnName;
   }
 
   private loadInstitutions() {
