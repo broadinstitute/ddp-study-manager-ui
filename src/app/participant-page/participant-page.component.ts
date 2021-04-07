@@ -108,6 +108,8 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   private checkParticipantStatusInterval: any;
   isEmailValid: boolean;
 
+  accordionOpenedPanel: string = "";
+
   private payload = {};
 
   constructor( private auth: Auth, private compService: ComponentService, private dsmService: DSMService, private router: Router,
@@ -284,6 +286,20 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   getGroupHref( group: string ): string {
     return "#" + group;
+  }
+
+  onOpenChangeAccordionPanel(event: boolean) {
+    if (!event) {
+      this.accordionOpenedPanel = "";
+    }
+  }
+
+  openAccordionPanel(columnName: string) {
+    this.accordionOpenedPanel = columnName;
+  }
+
+  isAccordionPanelOpen(columnName: string) {
+    return this.showGroupFields || this.accordionOpenedPanel === columnName;
   }
 
   private loadInstitutions() {

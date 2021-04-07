@@ -947,7 +947,7 @@ participant.data.dsm['diagnosisYear'] != null">
                           <ng-container *ngFor="let activity of settings[tab.columnName]; let i = index">
 
                             <div class="Float--left" *ngIf="true">
-                              <a class="Abstraction--Jump--Group" pageScroll href="{{getGroupHref(activity.columnName)}}"
+                              <a class="Abstraction--Jump--Group" (click)="openAccordionPanel(activity.columnName)" pageScroll href="{{getGroupHref(activity.columnName)}}"                                  
                                  *ngIf="activity != null">{{activity.columnDisplay}}</a>
                             </div>
                             <ng-container *ngIf="i < settings[tab.columnName].length - 1">
@@ -959,7 +959,8 @@ participant.data.dsm['diagnosisYear'] != null">
                       <ng-container *ngIf="tabActive(relative.dataId)">
                         <accordion>
                           <accordion-group *ngFor="let setting of settings[tab.columnName]; let settingIndex = index"
-                            [heading]="setting.columnDisplay" [isOpen]="showGroupFields">
+                            [heading]="setting.columnDisplay" [isOpen]="isAccordionPanelOpen(setting.columnName)" [isDisabled]="showGroupFields"
+                            (isOpenChange)="onOpenChangeAccordionPanel($event)">
                             <div class="Float--left Width--100">
                               <div *ngIf="setting.displayType === 'GROUP'">
                                 <hr style="border-color: black">
