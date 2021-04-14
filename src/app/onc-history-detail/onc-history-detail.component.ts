@@ -92,11 +92,12 @@ export class OncHistoryDetailComponent implements OnInit {
       }
     }
     if (v != null) {
+      let realm: string = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
       let patch1 = new PatchUtil( this.oncHistory[ index ].oncHistoryDetailId, this.role.userMail(),
         {
           name: parameterName,
           value: v
-        }, null, "participantId", this.participant.participant.participantId, Statics.ONCDETAIL_ALIAS );
+        }, null, "participantId", this.participant.participant.participantId, Statics.ONCDETAIL_ALIAS, null, realm );
       let patch = patch1.getPatch();
       this.patchFinished = false;
       this.currentPatchField = parameterName;
