@@ -143,8 +143,10 @@ export class MedicalRecordComponent implements OnInit {
       }
     }
     if (v !== null) {
+      let participantId: string = this.getParticipantId();
+      let realm: string = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
       let patch1 = new PatchUtil( this.medicalRecord.medicalRecordId, this.role.userMail(),
-        { name: parameterName, value: v }, null, null, null, Statics.MR_ALIAS );
+        { name: parameterName, value: v }, null, null, participantId, Statics.MR_ALIAS, null, realm );
       let patch = patch1.getPatch();
       this.patchFinished = false;
       if (parameterName != "followUps") {
@@ -515,5 +517,16 @@ export class MedicalRecordComponent implements OnInit {
       }
     }
     return null;
+  }
+
+  getParticipantId(): string {
+    if (!this.participant.data) {
+      return null;
+    }
+    let participantId = this.participant.data.profile[ "guid" ];
+    if (this.participant.data.profile[ "legacyAltPid" ]) {
+      participantId = this.participant.data.profile[ "legacyAltPid" ];
+    }
+    return participantId;
   }
 }

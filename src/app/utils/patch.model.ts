@@ -1,7 +1,7 @@
 export class PatchUtil {
 
   constructor( public id: string, public user: string, public nameValue: {}, public nameValues: any[],
-               public parent: string, public parentId: string, public tableAlias?: string, public isUnique?: Boolean ) {
+               public parent: string, public parentId: string, public tableAlias?: string, public isUnique?: Boolean, public realm?: string ) {
     this.id = id;
     this.user = user;
     this.nameValue = nameValue;
@@ -10,6 +10,7 @@ export class PatchUtil {
     this.parentId = parentId;
     this.tableAlias = tableAlias;
     this.isUnique = isUnique == undefined ? false : isUnique;
+    this.realm = realm;
   }
 
   public getPatch() {
@@ -38,6 +39,9 @@ export class PatchUtil {
     }
     else {
       patch[ "isUnique" ] = false;
+    }
+    if (this.getPatch) {
+      patch[ "realm" ] = this.realm;
     }
     return patch;
   }
