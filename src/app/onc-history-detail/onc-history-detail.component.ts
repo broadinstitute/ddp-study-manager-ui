@@ -97,7 +97,7 @@ export class OncHistoryDetailComponent implements OnInit {
         {
           name: parameterName,
           value: v
-        }, null, "participantId", this.participant.participant.participantId, Statics.ONCDETAIL_ALIAS, null, realm );
+        }, null, "participantId", this.participant.participant.participantId, Statics.ONCDETAIL_ALIAS );
       let patch = patch1.getPatch();
       this.patchFinished = false;
       this.currentPatchField = parameterName;
