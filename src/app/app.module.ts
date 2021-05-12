@@ -116,6 +116,17 @@ import { FormDataComponent } from './form-data/form-data.component';
 import { AddFamilyMemberComponent } from './popups/add-family-member/add-family-member.component';
 import { DynamicDashboardComponent } from './dynamic-dashboard/dynamic-dashboard.component';
 
+//fusion charts
+import { FusionChartsModule } from 'angular-fusioncharts';
+import * as PowerCharts from 'fusioncharts/fusioncharts.powercharts';
+import * as FusionCharts from 'fusioncharts';
+import * as Charts from 'fusioncharts/fusioncharts.charts';
+import * as FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
+
+// const fusionChartModule = FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme);
+FusionChartsModule.fcRoot(FusionCharts, PowerCharts, Charts, FusionTheme);
+
+
 @NgModule( {
   declarations: [
     AppComponent,
@@ -227,7 +238,9 @@ import { DynamicDashboardComponent } from './dynamic-dashboard/dynamic-dashboard
     CookieModule.forRoot(),
     AccordionModule.forRoot(),
     TypeaheadModule.forRoot(),
-    DragulaModule
+    DragulaModule,
+
+    FusionChartsModule,
   ],
   providers: [
     Auth,

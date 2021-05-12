@@ -1,26 +1,26 @@
-<div class="container">
-  <div class="main-box">
-    <b>Enrolled Participants</b>
-    <p></p>
-    <p>{{enrolledParticipants}}</p>
-    <p>{{calculatePercentage(enrolledParticipants)}}%</p>
-  </div>
-  
-  <div class="main-box">
-    <b>Registered, Not Enrolled Participants</b>
-    <p></p>
-    <p>{{registeredParticipants}}</p>
-    <p>{{calculatePercentage(registeredParticipants)}}%</p>
-  </div>
-  
-  <div class="main-box">
-    <b>Kits Sent Out</b>
-    <p>73</p>
-  </div>
+<h1>
+  {{title}}
+</h1>
+<fusioncharts
+  *ngIf="dataLoaded"
+  width="100%"
+  height="700"
+  type="heatmap"
+  [dataSource]="dataSource"
+  (dataLabelClick)="clickRow($event)"
+>
+</fusioncharts>
 
-  <div>
-    <button md-mini-fab color="warn" class="md-fab-bottom-left" >
-      <i class="fas fa-plus fa-lg"></i>
-    </button>
-  </div>
-</div>
+
+
+<button md-raised-button color="primary"
+    *ngIf="dataLoaded"
+    (click)="previousRow()"
+    [disabled]="false">Previous
+</button>
+
+<button md-raised-button color="primary"
+    *ngIf="dataLoaded"
+    (click)="nextRow()"
+    [disabled]="false">Next
+</button>
