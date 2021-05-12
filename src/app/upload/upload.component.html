@@ -87,9 +87,11 @@
       <ul>
         <li>Tab delimited ".txt" file</li>
         <li>Following columns are required
-          <table class="table table-bordered"
-                 *ngIf="getCompService().getRealm().toLowerCase() !== 'promise'">
+          <table class="table table-bordered">
             <tr>
+              <ng-container *ngIf="getCompService().getRealm().toLowerCase() === 'rgp'">
+                <td>participantId</td>
+              </ng-container>
               <td>shortId</td>
               <td>firstName</td>
               <td>lastName</td>
@@ -99,18 +101,11 @@
               <td>postalCode</td>
               <td>state</td>
               <td>country</td>
-              <ng-container *ngIf="this.realmNameStoredForFile==='testboston'">
+              <ng-container *ngIf="getCompService().getRealm().toLowerCase() === 'testboston'">
                 <td>phoneNumber</td>
               </ng-container>
             </tr>
           </table>
-        </li>
-        <li
-          *ngIf="getCompService().getRealm().toLowerCase() !== 'promise' && getCompService().getRealm().toLowerCase() !== 'mmrf'">
-          shortId = shortId for Gen2 DDPs and shortId = legacy_shortid for Gen3 (Pepper) DDPs
-        </li>
-        <li *ngIf="getCompService().getRealm().toLowerCase() === 'promise'">orderNumber = Mayo order number AND
-          participantId = redCap participant ID
         </li>
         <li>Afterwards kits can be found under <u>'Kits without Labels'</u>. GP will trigger label creation.</li>
       </ul>

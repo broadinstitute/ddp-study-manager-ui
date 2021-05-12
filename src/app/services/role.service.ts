@@ -45,6 +45,7 @@ export class RoleService {
       var obj: any = this.sessionService.getDSMClaims(token);
       let accessRoles: string = obj.USER_ACCESS_ROLE;
       if (accessRoles != null) {
+        console.log(accessRoles);
         let roles: string[] = JSON.parse(accessRoles);
         for (let entry of roles) {
           // only special kit_shipping_xxx rights should get added here, not the overall only kit_shipping_view

@@ -252,7 +252,7 @@ export class UploadComponent implements OnInit {
   downloadFailed() {
     if (this.failedParticipants != null && this.failedParticipants.length > 0 && this.realmNameStoredForFile != null &&
       this.kitType != null && this.kitType.name != null) {
-      var fields = [ "altPID", "shortId", "firstName", "lastName", "street1", "street2",
+      var fields = [ "participantId", "shortId", "firstName", "lastName", "street1", "street2",
         "city", "postalCode", "state", "country" ];
       var date = new Date();
       Utils.createCSV( fields, this.failedParticipants, "Upload " + this.realmNameStoredForFile + " " + this.kitType.name + " Failed " + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION );
