@@ -123,9 +123,7 @@ import * as FusionCharts from 'fusioncharts';
 import * as Charts from 'fusioncharts/fusioncharts.charts';
 import * as FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
 
-// const fusionChartModule = FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme);
 FusionChartsModule.fcRoot(FusionCharts, PowerCharts, Charts, FusionTheme);
-
 
 @NgModule( {
   declarations: [
@@ -239,8 +237,7 @@ FusionChartsModule.fcRoot(FusionCharts, PowerCharts, Charts, FusionTheme);
     AccordionModule.forRoot(),
     TypeaheadModule.forRoot(),
     DragulaModule,
-
-    FusionChartsModule,
+    FusionChartsModule
   ],
   providers: [
     Auth,

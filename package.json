@@ -28,7 +28,7 @@
     "@angular/platform-browser-dynamic": "4.3.4",
     "@angular/router": "4.3.4",
     "@types/node": "8.0.22",
-    "angular-fusioncharts": "^3.1.0",
+    "angular-fusioncharts": "^3.0.4",
     "angular2-datatable": "0.6.0",
     "angular2-jwt": "0.2.3",
     "bootstrap": "3.4.1",
