@@ -30,10 +30,11 @@ export class AddFamilyMemberComponent implements OnInit {
               private dialogRef: MdDialogRef<AddFamilyMemberComponent>) { }
 
   ngOnInit() {
-    this.dsmService.getParticipantDsmData(this.compService.getRealm(), this.data.participant.data.profile["guid"]).subscribe(
+    this.dsmService.getParticipantDsmData(this.compService.getRealm(), this.getAltPidElseGuid()).subscribe(
       data => {
         if (data != null) {
           let participantData = data;
+          debugger;
           this.isParticipantProbandEmpty = this.getProbandDataId(participantData) == null;
           if (!this.isParticipantProbandEmpty) {
             this.probandDataId = this.getProbandDataId(participantData);
@@ -50,7 +51,7 @@ export class AddFamilyMemberComponent implements OnInit {
   submitFamilyMember() {
     let shortId = this.data.participant.data.profile["hruid"];
     let payload = {
-      participantGuid: this.data.participant.data.profile["guid"],
+      participantGuid: this.getAltPidElseGuid(),
       realm: this.compService.getRealm(),
       data: {
         firstName: this.familyMemberFirstName,
@@ -120,5 +121,13 @@ export class AddFamilyMemberComponent implements OnInit {
       return "";
     });
     return relationshipIds.includes(this.familyMemberSubjectId);
+  }
+
+  getAltPidElseGuid() {
+    let participantId = this.data.participant.data.profile["legacyAltPid"];
+    if (!participantId) {
+      participantId = this.data.participant.data.profile["guid"];
+    }
+    return participantId;
   }
 }
