@@ -14,137 +14,22 @@ export class DynamicDashboardComponent implements OnInit {
   enrolledParticipants: number;
   registeredParticipants: number;
   statistics: Array<any>;
-  
-  showParticipantInformation: boolean = false;
-
-  //date range filter
-  dateFrom: String;
-  dateTo: String;
-
-  //fusion charts
-  title: String;
-  dataSource: Object;
-  dataSet = [];
-  rowsDictionary = {};
-  rows = [];
-  columns = {};
-  colorRange = {};
-  dataLoaded: boolean;
-  defaultRowLength = DynamicDashboardComponent.HEATMAP_ROWS_LENGTH;
-  numberOfParticipants: number;
 
   constructor(private dsmService: DSMService) {
     
   }
 
   ngOnInit() {
-    this.dsmService.getNumberOfParticipants(localStorage.getItem( ComponentService.MENU_SELECTED_REALM )).subscribe(
-      data => {
-        this.numberOfParticipants = data;
-      },
-      err => {
-
-      }
-    );
-    this.fetchStatistic(0, DynamicDashboardComponent.HEATMAP_ROWS_LENGTH, "");
+    this.fetchStatistic(0, DynamicDashboardComponent.HEATMAP_ROWS_LENGTH, 0);
   }
 
-  nextRow(): void {
-    let previousRowLength = this.defaultRowLength;
-    if (this.numberOfParticipants - previousRowLength == 0) return;
-    if (((this.numberOfParticipants - previousRowLength) / 25) >= 1) {
-      this.defaultRowLength += 25;
-    } else {
-      this.defaultRowLength += this.numberOfParticipants - previousRowLength;
-    }
-    this.fetchStatistic(previousRowLength, this.defaultRowLength, "");
-  }
-
-  previousRow(): void {
-    let currentRowLength = this.defaultRowLength;
-    let from = currentRowLength - 50;
-    let to = currentRowLength - 25;
-    if (from < 0) return;
-    if ((this.defaultRowLength % 25) != 0) {
-      this.defaultRowLength -= this.defaultRowLength % 25;
-      from = this.defaultRowLength - ((this.defaultRowLength % 25) + 25);
-      to = this.defaultRowLength - (this.defaultRowLength % 25);
-    } else {
-      this.defaultRowLength -= 25;
-    }
-    this.fetchStatistic(from, to, "");
-  }
-
-  private fetchStatistic(from: number, to: number, displayType: String) {
-    this.dsmService.getStatistics(localStorage.getItem(ComponentService.MENU_SELECTED_REALM), from, to, displayType).subscribe(
+  private fetchStatistic(from: number, to: number, dashboardSettingId: number) {
+    this.dsmService.getStatistics(localStorage.getItem(ComponentService.MENU_SELECTED_REALM), from, to, dashboardSettingId).subscribe(
       data => {
         if (data != undefined && data != null) {
-          if (data.find(st => st.displayType === "GRAPH_HEATMAP")) {
-            let heatmapGraphData = data.find(st => st.displayType === "GRAPH_HEATMAP");
-            this.dataSet.push({ "data": heatmapGraphData.data });
-            this.rows = heatmapGraphData.rows;
-            this.rowsDictionary["row"] = this.rows.slice(0, this.defaultRowLength);
-            this.columns["column"] = heatmapGraphData.columns;
-            this.colorRange["colorrange"] = heatmapGraphData.colorRange;
-            this.dataLoaded = true;
-            this.title = heatmapGraphData.displayText;
-            this.updateGraph();
-          }
+          this.statistics = data;
         }
       }
     );
   }
-
-  private updateGraph() {
-    this.dataSource = {
-      "chart": {
-        "theme": "fusion",
-        "caption": "",
-        "subcaption": "",
-        "xAxisName": "Kits",
-        "yAxisName": "Participants",
-        "showPlotBorder": "1",
-        "showValues": "1",
-        "mapByCategory": "1"
-      },
-      "rows": this.rowsDictionary,
-      "columns": this.columns,
-      "dataset": this.dataSet,
-      "colorrange": this.colorRange["colorrange"]
-    };
-  }
-
-  isUpdateDisabled(): boolean {
-    return this.defaultRowLength > this.rows.length;
-  }
-
-  clickRow(event: any) {
-    this.showParticipantInformation = true;
-    let row = this.rows.find(row => row.id === event.eventObj.data.text);
-    if (row !== undefined) {
-      let participantGuid = row.guid;
-      this.dsmService.getParticipantData(localStorage.getItem(ComponentService.MENU_SELECTED_REALM), participantGuid, "").subscribe(
-        data => {
-          this.dataSource = {};
-          console.log(data);
-        }, 
-        err => {
-          
-        }
-      );
-    }
-  }
-
-  dateFromHandler(date: String) {
-    this.dateFrom = date;
-  }
-
-  dateToHandler(date: String) {
-    this.dateTo = date;
-  }
-
-  filterByDate() {
-    this.fetchStatistic(0, DynamicDashboardComponent.HEATMAP_ROWS_LENGTH, "GRAPH_HEATMAP");
-  }
-
 }

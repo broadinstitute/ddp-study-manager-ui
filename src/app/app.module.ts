@@ -115,6 +115,7 @@ import { ParticipantUpdateResultDialogComponent } from './dialogs/participant-up
 import { FormDataComponent } from './form-data/form-data.component';
 import { AddFamilyMemberComponent } from './popups/add-family-member/add-family-member.component';
 import { DynamicDashboardComponent } from './dynamic-dashboard/dynamic-dashboard.component';
+import { HeatmapgraphComponent } from './dynamic-dashboard/graph/heatmapgraph/heatmapgraph.component';
 
 //fusion charts
 import { FusionChartsModule } from 'angular-fusioncharts';
@@ -203,7 +204,8 @@ FusionChartsModule.fcRoot(FusionCharts, PowerCharts, Charts, FusionTheme);
     ParticipantUpdateResultDialogComponent,
     FormDataComponent,
     AddFamilyMemberComponent,
-    DynamicDashboardComponent
+    DynamicDashboardComponent,
+    HeatmapgraphComponent
   ],
   entryComponents: [ParticipantUpdateResultDialogComponent, AddFamilyMemberComponent],
   imports: [
