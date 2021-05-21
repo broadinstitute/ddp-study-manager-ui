@@ -1,5 +1,5 @@
 <h1>
-  {{title}}
+  {{title}} {{showParticipantInformation}}
 </h1>
 <fusioncharts
   *ngIf="dataLoaded"
@@ -11,6 +11,16 @@
 >
 </fusioncharts>
 
+<p>
+  Date from: 
+  <app-field-datepicker (dateChanged)=dateFromHandler($event)></app-field-datepicker>
+  Date to: 
+  <app-field-datepicker (dateChanged)=dateToHandler($event)></app-field-datepicker>
+  <button md-raised-button color="primary"
+                      [disabled]="!dateFrom && !dateTo"
+                      (click)="filterByDate()">Filter
+              </button>
+</p>
 
 
 <button md-raised-button color="primary"

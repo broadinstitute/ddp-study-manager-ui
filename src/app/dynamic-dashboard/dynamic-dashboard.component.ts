@@ -17,6 +17,10 @@ export class DynamicDashboardComponent implements OnInit {
   
   showParticipantInformation: boolean = false;
 
+  //date range filter
+  dateFrom: String;
+  dateTo: String;
+
   //fusion charts
   title: String;
   dataSource: Object;
@@ -42,7 +46,7 @@ export class DynamicDashboardComponent implements OnInit {
 
       }
     );
-    this.fetchStatistic(0, DynamicDashboardComponent.HEATMAP_ROWS_LENGTH);
+    this.fetchStatistic(0, DynamicDashboardComponent.HEATMAP_ROWS_LENGTH, "");
   }
 
   nextRow(): void {
@@ -53,7 +57,7 @@ export class DynamicDashboardComponent implements OnInit {
     } else {
       this.defaultRowLength += this.numberOfParticipants - previousRowLength;
     }
-    this.fetchStatistic(previousRowLength, this.defaultRowLength);
+    this.fetchStatistic(previousRowLength, this.defaultRowLength, "");
   }
 
   previousRow(): void {
@@ -68,11 +72,11 @@ export class DynamicDashboardComponent implements OnInit {
     } else {
       this.defaultRowLength -= 25;
     }
-    this.fetchStatistic(from, to);
+    this.fetchStatistic(from, to, "");
   }
 
-  private fetchStatistic(from: number, to: number) {
-    this.dsmService.getStatistics(localStorage.getItem(ComponentService.MENU_SELECTED_REALM), from, to).subscribe(
+  private fetchStatistic(from: number, to: number, displayType: String) {
+    this.dsmService.getStatistics(localStorage.getItem(ComponentService.MENU_SELECTED_REALM), from, to, displayType).subscribe(
       data => {
         if (data != undefined && data != null) {
           if (data.find(st => st.displayType === "GRAPH_HEATMAP")) {
@@ -115,19 +119,32 @@ export class DynamicDashboardComponent implements OnInit {
   }
 
   clickRow(event: any) {
+    this.showParticipantInformation = true;
     let row = this.rows.find(row => row.id === event.eventObj.data.text);
     if (row !== undefined) {
       let participantGuid = row.guid;
       this.dsmService.getParticipantData(localStorage.getItem(ComponentService.MENU_SELECTED_REALM), participantGuid, "").subscribe(
         data => {
+          this.dataSource = {};
           console.log(data);
-          this.showParticipantInformation = true;
         }, 
         err => {
           
         }
       );
     }
+  }
+
+  dateFromHandler(date: String) {
+    this.dateFrom = date;
+  }
+
+  dateToHandler(date: String) {
+    this.dateTo = date;
+  }
+
+  filterByDate() {
+    this.fetchStatistic(0, DynamicDashboardComponent.HEATMAP_ROWS_LENGTH, "GRAPH_HEATMAP");
   }
 
 }
