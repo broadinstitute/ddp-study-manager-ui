@@ -147,9 +147,10 @@ export class PdfDownloadComponent implements OnInit {
     }
   }
 
-  downloadPDFs( configName: string ) {
+  downloadPDF( configName: string ) {
     this.loading = true;
-    this.dsmService.downloadPDF( this.participantId, this.compService.getRealm(), configName ).subscribe(
+    this.dsmService.downloadPDF( this.participantId, null,null,null, null, this.compService.getRealm(),
+      configName, null, null ).subscribe(
       data => {
         console.info( data );
         this.downloadFile( data, "_" + configName );
@@ -160,53 +161,6 @@ export class PdfDownloadComponent implements OnInit {
           this.router.navigate( [ Statics.HOME_URL ] );
         }
         this.additionalMessage = "Error - Downloading consent pdf file\nPlease contact your DSM developer";
-        this.loading = false;
-      }
-    );
-  }
-
-  downloadPDF() {
-    this.errorMessage = null;
-    this.additionalMessage = null;
-    if (this.selectedPDF != null && this.selectedPDF !== "") {
-      this.loading = true;
-      if (this.selectedPDF === "consent") {
-        this.downloadConsentPDFs();
-      }
-      else if (this.selectedPDF === "release") {
-        this.downloadReleasePDFs();
-      }
-    }
-  }
-
-  downloadConsentPDFs() {
-    this.dsmService.downloadConsentPDFs( this.participantId, this.realm ).subscribe(
-      data => {
-        console.info( data );
-        this.downloadFile( data, "_Consent" );
-        this.loading = false;
-      },
-      err => {
-        if (err._body === Auth.AUTHENTICATION_ERROR) {
-          this.router.navigate( [ Statics.HOME_URL ] );
-        }
-        this.additionalMessage = "Error - Downloading consent pdf file\nPlease contact your DSM developer";
-        this.loading = false;
-      }
-    );
-  }
-
-  downloadReleasePDFs() {
-    this.dsmService.downloadReleasePDFs( this.participantId, this.realm ).subscribe(
-      data => {
-        this.downloadFile( data, "_Release" );
-        this.loading = false;
-      },
-      err => {
-        if (err._body === Auth.AUTHENTICATION_ERROR) {
-          this.router.navigate( [ Statics.HOME_URL ] );
-        }
-        this.additionalMessage = "Error - Downloading release pdf file\nPlease contact your DSM developer";
         this.loading = false;
       }
     );
