@@ -34,7 +34,6 @@ export class AddFamilyMemberComponent implements OnInit {
       data => {
         if (data != null) {
           let participantData = data;
-          debugger;
           this.isParticipantProbandEmpty = this.getProbandDataId(participantData) == null;
           if (!this.isParticipantProbandEmpty) {
             this.probandDataId = this.getProbandDataId(participantData);
@@ -49,7 +48,6 @@ export class AddFamilyMemberComponent implements OnInit {
   }
   
   submitFamilyMember() {
-    let shortId = this.data.participant.data.profile["hruid"];
     let payload = {
       participantGuid: this.getAltPidElseGuid(),
       realm: this.compService.getRealm(),
@@ -57,8 +55,8 @@ export class AddFamilyMemberComponent implements OnInit {
         firstName: this.familyMemberFirstName,
         lastName: this.familyMemberLastName,
         memberType: this.chosenRelation,
-        familyId: shortId,
-        collaboratorParticipantId: shortId + "_" + this.familyMemberSubjectId
+        familyId: this.getFamilyId(),
+        collaboratorParticipantId: this.getFamilyId() + "_" + this.familyMemberSubjectId
       },
       copyProbandInfo: this.isCopyProbandInfo,
       probandDataId: this.probandDataId,
@@ -129,5 +127,16 @@ export class AddFamilyMemberComponent implements OnInit {
       participantId = this.data.participant.data.profile["guid"];
     }
     return participantId;
+  }
+
+  getFamilyId() {
+    var familyId = Array.from(this.data.participant.participantData)
+        .filter(pData => String(pData["fieldTypeId"]).includes("PARTICIPANTS") && pData["data"]["MEMBER_TYPE"] === "SELF")
+        .map(pDAta => pDAta["data"]["FAMILY_ID"])
+        .find(fId => fId);
+    if (!familyId) {
+      familyId = this.data.participant.data.profile["hruid"];
+    }  
+    return familyId;    
   }
 }
