@@ -506,12 +506,18 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
         data => {
           let result = Result.parse( data );
           if (result.code === 200 && result.body != null) {
-            let jsonData: any[] = JSON.parse( result.body );
-            console.log(jsonData);
-            jsonData.forEach( ( val ) => {
-              let nameValue = NameValue.parse( val );
-              this.participant.participant[ nameValue.name ] = nameValue.value;
-            } );
+            let jsonData: any | any[] = JSON.parse( result.body );
+            if (jsonData instanceof Array) {
+              jsonData.forEach( ( val ) => {
+                let nameValue = NameValue.parse( val );
+                this.participant.participant[ nameValue.name ] = nameValue.value;
+              } );
+            }
+            else {
+              if (jsonData.participantId != null && jsonData.participantId != undefined) {
+                this.participant.participant.participantId = jsonData.participantId;
+              }
+            }
           }
           this.currentPatchField = null;
           this.patchFinished = true;
