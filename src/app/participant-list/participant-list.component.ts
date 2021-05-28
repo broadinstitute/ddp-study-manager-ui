@@ -27,6 +27,7 @@ import {AssigneeParticipant} from "./models/assignee-participant.model";
 import {PreferredLanguage} from "./models/preferred-languages.model";
 import {Participant} from "./participant-list.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
+import { ParticipantData } from "./models/participant-data.model";
 
 @Component( {
   selector: "app-participant-list",
@@ -311,6 +312,12 @@ export class ParticipantListComponent implements OnInit {
             }
             this.activityDefinitionList.push( activityDefinition );
           } );
+        }
+        if (this.settings && this.settings["TAB_GROUPED"]) {
+          this.addTabGroupedColumns();          
+        }
+        if (this.settings && this.settings["TAB"]) {
+          this.addTabColumns();          
         }
         this.getSourceColumnsFromFilterClass();
         if (jsonData.abstractionFields != null && jsonData.abstractionFields.length > 0) {
@@ -920,6 +927,7 @@ export class ParticipantListComponent implements OnInit {
   }
 
   public doFilter() {
+    debugger
     let json = [];
     this.dataSources.forEach( ( value: string, key: string ) => {
         this.createFilterJson( json, key );
@@ -943,6 +951,7 @@ export class ParticipantListComponent implements OnInit {
       this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), jsonPatch, this.parent, null ).subscribe(
         data => {
           if (data != undefined && data != null && data !== "") {
+            debugger
             let jsonData: any[];
             this.participantList = [];
             this.additionalMessage = "";
@@ -1704,5 +1713,73 @@ export class ParticipantListComponent implements OnInit {
         }
       }
     }
+  }
+
+  getPersonField(personData: ParticipantData, column: Filter): string {
+    let name: string
+    if (column && column.participantColumn) {
+      name = column.participantColumn.name;
+    }
+    if (personData && personData.data && name) {
+      let currentKey = Object.keys(personData.data).find(key => key === name);
+      let field = personData.data[currentKey];
+      if (field) {
+        if (column.options && column.options[0] && column.options[0].name) {
+          let fieldToShow = column.options.find(nameValue => nameValue.value == field);
+          return fieldToShow.name;
+        }
+        return field;
+      }
+    }
+    return null;
+  }
+
+  getPersonType(personData: ParticipantData): string {
+    let memberType = personData.data["MEMBER_TYPE"];
+    return Statics.RELATIONS[memberType];
+  }
+
+  addTabGroupedColumns() {
+    let possibleColumns: Array<Filter> = [];
+    for (let tab of this.settings['TAB_GROUPED']) {
+      for (let setting of this.settings[tab.columnName]) {
+        this.dataSources.set(setting.columnName, setting.columnDisplay);
+        for (let field of this.settings[setting.columnName]) {
+          let filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, null, null, false),
+           "COMPOSITE", field.possibleValues);
+          possibleColumns.push(filter);
+        }
+        this.sourceColumns[setting.columnName] = possibleColumns;
+        possibleColumns = [];
+      }
+    }
+  }
+
+  addTabColumns() {
+    debugger
+    let possibleColumns: Array<Filter> = [];
+    for (let tab of this.settings['TAB']) {
+      this.dataSources.set(tab.columnName, tab.columnDisplay);
+      for (let setting of this.settings[tab.columnName]) {
+        let filter = new Filter(new ParticipantColumn(setting.columnDisplay.replace('*', ''), setting.columnName, null, null, false),
+         "COMPOSITE", setting.possibleValues);
+        possibleColumns.push(filter);
+      }
+      this.sourceColumns[tab.columnName] = possibleColumns;
+      possibleColumns = [];
+    }
+  }
+
+  checkIfColumnIsTabGrouped(alias: string): boolean {
+    if (this.settings && this.settings['TAB_GROUPED']) {
+      for (let tab of this.settings['TAB_GROUPED']) {
+        for (let setting of this.settings[tab.columnName]) {
+          if (setting.columnName === alias) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
   }
 }

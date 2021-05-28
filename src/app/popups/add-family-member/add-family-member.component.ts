@@ -34,7 +34,6 @@ export class AddFamilyMemberComponent implements OnInit {
       data => {
         if (data != null) {
           let participantData = data;
-          debugger;
           this.isParticipantProbandEmpty = this.getProbandDataId(participantData) == null;
           if (!this.isParticipantProbandEmpty) {
             this.probandDataId = this.getProbandDataId(participantData);
