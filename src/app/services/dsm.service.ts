@@ -12,6 +12,8 @@ import {Value} from "../utils/value.model";
 import {ComponentService} from "./component.service";
 import {RoleService} from "./role.service";
 import {SessionService} from "./session.service";
+import {PDFModel} from "../pdf-download/pdf-download.model";
+import {OncHistoryDetail} from "../onc-history-detail/onc-history-detail.model";
 
 declare var DDP_ENV: any;
 
