@@ -435,15 +435,6 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                     </ng-container>
                   </div>
 
-
-                  <div *ngIf="settings[ alias ] != null && settings [alias] != undefined && pt.participantData != null">
-                    <ng-container>
-                      {{getParticipantData(pt, col.participantColumn.name, alias)}}
-                    </ng-container>
-                  </div>
-
-
-
                   <div *ngIf="alias === 'p' && pt.participant != null">
                     <ng-container
                       *ngIf="pt.participant[col.participantColumn.name] != null && col.type !== 'ADDITIONALVALUE' && col.type !== 'DATE' && col.type !== 'CHECKBOX'">
@@ -670,12 +661,19 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                       </ul>
                     </ng-container>
                   </div>
+
+                  <div *ngIf="checkIfColumnIsTabbed(alias)">
+                    <ng-container>
+                      {{getPersonField(pt.participantData[0], col)}}
+                    </ng-container>
+                  </div>
+
                   <div *ngIf="checkIfColumnIsTabGrouped(alias)">                    
                     <ul class="NO-PADDING-START">
                       <li class="LIST-SEPARATOR">
                         <div *ngFor="let personData of pt.participantData; let i = index">
                           <div *ngIf="this.getPersonField(personData, col) != null">
-                            {{this.getPersonType(personData)}}: {{this.getPersonField(personData, col)}}
+                            {{getPersonType(personData)}}: {{getPersonField(personData, col)}}
                             <hr *ngIf="i != pt.participantData.length - 1" style="border-color: lightgray">                            
                           </div>
                         </div>                        

@@ -927,7 +927,6 @@ export class ParticipantListComponent implements OnInit {
   }
 
   public doFilter() {
-    debugger
     let json = [];
     this.dataSources.forEach( ( value: string, key: string ) => {
         this.createFilterJson( json, key );
@@ -951,7 +950,6 @@ export class ParticipantListComponent implements OnInit {
       this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), jsonPatch, this.parent, null ).subscribe(
         data => {
           if (data != undefined && data != null && data !== "") {
-            debugger
             let jsonData: any[];
             this.participantList = [];
             this.additionalMessage = "";
@@ -1174,11 +1172,11 @@ export class ParticipantListComponent implements OnInit {
     this.sortDir = this.sortField === col.participantColumn.name ? ( this.sortDir === "asc" ? "desc" : "asc" ) : "asc";
     this.sortField = col.participantColumn.name;
     this.sortParent = sortParent;
-    let colType = col.type;
-    this.doSort( col.participantColumn.object, colType );
+    this.doSort( col.participantColumn.object, col );
   }
 
-  private doSort( object: string, colType: string ) {
+  private doSort( object: string, col: Filter ) {
+    let colType = col.type;
     let order = this.sortDir === "asc" ? 1 : -1;
     if (this.sortParent === "data" && object != null) {
       this.participantList.sort( ( a, b ) => {
@@ -1242,7 +1240,24 @@ export class ParticipantListComponent implements OnInit {
           return this.sort(a.kits[0][this.sortField], b.kits[0][this.sortField], order, undefined, colType );
         }
       } );
-    } else {
+    } else if (this.checkIfColumnIsTabGrouped(this.sortParent) || this.checkIfColumnIsTabbed(this.sortParent)) {
+      this.participantList.forEach(participant => {
+        if (participant.participantData.length > 1) {
+          participant.participantData.sort((n, m) => this.sort(this.getPersonField(n, col), this.getPersonField(m, col), order)); 
+        }
+      })
+      this.participantList.sort((a, b) => {
+        if (a.participantData && !a.participantData[0] == null || this.getPersonField(a.participantData[0], col) == null) {
+          return 1;
+        } else if (!b.participantData && !b.participantData[0] == null || !this.getPersonField(b.participantData[0], col) == null) {
+          return 0;
+        } else {
+          return this.sort(this.getPersonField(a.participantData[0], col),
+            this.getPersonField(b.participantData[0], col), order, undefined, colType);
+        }
+      })
+    }
+    else {
       //activity data
       this.participantList.map( participant => {
         let activityData = participant.data.getActivityDataByCode( this.sortParent );
@@ -1746,7 +1761,7 @@ export class ParticipantListComponent implements OnInit {
         this.dataSources.set(setting.columnName, setting.columnDisplay);
         for (let field of this.settings[setting.columnName]) {
           let filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, null, null, false),
-           "COMPOSITE", field.possibleValues);
+          field.displayType, field.possibleValues);
           possibleColumns.push(filter);
         }
         this.sourceColumns[setting.columnName] = possibleColumns;
@@ -1756,13 +1771,12 @@ export class ParticipantListComponent implements OnInit {
   }
 
   addTabColumns() {
-    debugger
     let possibleColumns: Array<Filter> = [];
     for (let tab of this.settings['TAB']) {
       this.dataSources.set(tab.columnName, tab.columnDisplay);
       for (let setting of this.settings[tab.columnName]) {
         let filter = new Filter(new ParticipantColumn(setting.columnDisplay.replace('*', ''), setting.columnName, null, null, false),
-         "COMPOSITE", setting.possibleValues);
+        setting.displayType, setting.possibleValues);
         possibleColumns.push(filter);
       }
       this.sourceColumns[tab.columnName] = possibleColumns;
@@ -1777,6 +1791,17 @@ export class ParticipantListComponent implements OnInit {
           if (setting.columnName === alias) {
             return true;
           }
+        }
+      }
+    }
+    return false;
+  }
+
+  checkIfColumnIsTabbed(alias: string): boolean {
+    if (this.settings && this.settings['TAB']) {
+      for (let tab of this.settings['TAB']) {
+        if (tab.columnName === alias) {
+          return true;
         }
       }
     }
