@@ -1,0 +1,27 @@
+<h1 *ngIf="rollOvered" [ngClass]="{'active': rollOvered}" [ngStyle]="{'left': clientX, 'top': clientY}">
+  <p>{{labelRollOverTooltipData.participantFirstName}}</p>
+  <p>{{labelRollOverTooltipData.participantLastName}}</p>
+  <p>{{labelRollOverTooltipData.participantGuid}}</p>
+</h1>
+<h1 *ngIf="dataPlotClicked && dataPlotTooltipDataArray.length > 0" [ngClass]="{'active': dataPlotClicked}" [ngStyle]="{'left': clientX, 'top': clientY}">
+  <table class="table table-striped Table--Hover Table--Foot Width--100">
+    <thead>
+      <th [ngClass]="{'Table--Sticky': true}">City</th>
+      <th [ngClass]="{'Table--Sticky': true}">State/Province</th>
+      <th [ngClass]="{'Table--Sticky': true}">Postal Code</th>
+      <th [ngClass]="{'Table--Sticky': true}">Description</th>
+      <th [ngClass]="{'Table--Sticky': true}">Date</th>
+      <th [ngClass]="{'Table--Sticky': true}">Time</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let d of dataPlotTooltipDataArray">
+        <td>{{d.city}}</td>
+        <td>{{d.stateProvince}}</td>
+        <td>{{d.postalCode}}</td>
+        <td>{{d.description}}</td>
+        <td>{{d.date}}</td>
+        <td>{{d.time}}</td>
+      </tr>
+    </tbody>
+  </table>
+</h1>

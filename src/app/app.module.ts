@@ -116,6 +116,8 @@ import { FormDataComponent } from './form-data/form-data.component';
 import { AddFamilyMemberComponent } from './popups/add-family-member/add-family-member.component';
 import { DynamicDashboardComponent } from './dynamic-dashboard/dynamic-dashboard.component';
 import { HeatmapgraphComponent } from './dynamic-dashboard/graph/heatmapgraph/heatmapgraph.component';
+import { HeatmaptooltipComponent } from './tooltips/heatmaptooltip/heatmaptooltip.component';
+import { HeatmaptooltipserviceService } from "./tooltips/heatmaptooltip/heatmaptooltipservice.service";
 
 //fusion charts
 import { FusionChartsModule } from 'angular-fusioncharts';
@@ -205,7 +207,8 @@ FusionChartsModule.fcRoot(FusionCharts, PowerCharts, Charts, FusionTheme);
     FormDataComponent,
     AddFamilyMemberComponent,
     DynamicDashboardComponent,
-    HeatmapgraphComponent
+    HeatmapgraphComponent,
+    HeatmaptooltipComponent
   ],
   entryComponents: [ParticipantUpdateResultDialogComponent, AddFamilyMemberComponent],
   imports: [
@@ -250,7 +253,8 @@ FusionChartsModule.fcRoot(FusionCharts, PowerCharts, Charts, FusionTheme);
     SessionService,
     Utils,
     Statics,
-    Language
+    Language,
+    HeatmaptooltipserviceService
   ],
   bootstrap: [ AppComponent ]
 } )

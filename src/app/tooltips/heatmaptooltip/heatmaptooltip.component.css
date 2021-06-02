@@ -1,0 +1,16 @@
+.active{
+    display: block;
+    position: absolute;
+    /* color: white; */
+    /* background: #DDDDDF; */
+    /* border: solid 1px #ddd; */
+    text-align: center;
+    width: auto;
+    z-index: 9999;
+    padding: 12px 0;
+    border-radius: 3px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    font-size: 16px;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}

@@ -81,6 +81,13 @@ export class DSMService {
     return this.http.get( url, this.buildQueryHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError );
   }
 
+  public getKitTrackingHistory(kitRequestId: string) {
+    let url = this.baseUrl + DSMService.UI + "upsTrackingHistory";
+    let map: { name: string, value: any }[] = [];
+    map.push( {name: "kitRequestId", value: kitRequestId} );
+    return this.http.get( url, this.buildQueryHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError );
+  }
+
   public getFiltersForUserForRealm( realm: string, parent: string ): Observable<any> {
     let url = this.baseUrl + DSMService.UI + "getFilters";
     let map: { name: string, value: any }[] = [];
@@ -192,7 +199,7 @@ export class DSMService {
     return this.http.get( url, this.buildQueryHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError );
   }
 
-  public getStatistics( realm: string, from: number, to: number, dashboardSettingId: number): Observable<any> {
+  public getStatistics( realm: string, from: number, to: number, dashboardSettingId: number, sortOrder: String): Observable<any> {
     let url = this.baseUrl + DSMService.UI + "getStatistics";
     let map: { name: string, value: any }[] = [];
     let userId = this.role.userID();
@@ -201,6 +208,7 @@ export class DSMService {
     map.push( {name: "from", value: from} );
     map.push( {name: "to", value: to} );
     map.push( {name: "dashboardSettingId", value: dashboardSettingId} );
+    map.push( {name: "sortOrder", value: sortOrder} );
     return this.http.get( url, this.buildQueryHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError );
   }
 

@@ -1,16 +1,35 @@
-<h1>
-  {{title}} {{showParticipantInformation}}
-</h1>
-<fusioncharts
-  width="100%"
-  height="700"
-  type="heatmap"
-  [dataSource]="dataSource"
-  (dataLabelClick)="clickRow($event)"
->
-</fusioncharts>
+<span *ngIf="!dataLoaded" class="Width--100">
+  <div align="center" class="Width--100 Height--100">
+    <i class="fas fa-spinner fa-spin fa-5x Color--primary"></i>
+  </div>
+</span>
+<ng-container *ngIf="dataLoaded">
+  <app-heatmaptooltip></app-heatmaptooltip>
+  <h1>
+    {{title}}
+  </h1>
+  <button md-raised-button color="primary"
+      (click)="sortAscending()"
+      [disabled]="sortOrder === 'ASC'">Ascending
+  </button>
+  
+  <button md-raised-button color="primary"
+      (click)="sortDescending()"
+      [disabled]="sortOrder === 'DESC'">Descending
+  </button>
+  
+  <fusioncharts
+    width="100%"
+    [height]="heatmapHeight"
+    type="heatmap"
+    [dataSource]="dataSource"
+    [events]="events"
+  >
+  </fusioncharts>
+</ng-container>
 
-<p>
+
+<!-- <p>
   Date from: 
   <app-field-datepicker (dateChanged)=dateFromHandler($event)></app-field-datepicker>
   Date to: 
@@ -29,4 +48,4 @@
 <button md-raised-button color="primary"
     (click)="nextRow()"
     [disabled]="false">Next
-</button>
+</button> -->
