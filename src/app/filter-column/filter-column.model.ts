@@ -502,10 +502,15 @@ export class Filter {
       }
     }
     else if (filter.type === Filter.OPTION_TYPE || filter.type === Filter.RADIO_TYPE) {
+      debugger
       let selected = [];
       for (let [ key, value ] of Object.entries( filter.selectedOptions )) {
         if (value) {
-          selected.push( filter.options[ key ].name );
+          if (filter.participantColumn && filter.participantColumn.tableAlias && filter.participantColumn.tableAlias === "participantData") {
+            selected.push( filter.options[ key ].value );
+          } else {
+            selected.push( filter.options[ key ].name );
+          }
         }
       }
       if (selected.length > 0 || filter.empty || filter.notEmpty) {
