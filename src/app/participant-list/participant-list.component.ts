@@ -28,6 +28,7 @@ import {PreferredLanguage} from "./models/preferred-languages.model";
 import {Participant} from "./participant-list.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
 import { ParticipantData } from "./models/participant-data.model";
+import { FilterBrand } from "@angular/cdk";
 
 @Component( {
   selector: "app-participant-list",
@@ -1760,8 +1761,7 @@ export class ParticipantListComponent implements OnInit {
       for (let setting of this.settings[tab.columnName]) {
         this.dataSources.set(setting.columnName, setting.columnDisplay);
         for (let field of this.settings[setting.columnName]) {
-          let filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, null, null, false),
-          field.displayType, field.possibleValues);
+          let filter = this.createFilter(field);
           possibleColumns.push(filter);
         }
         this.sourceColumns[setting.columnName] = possibleColumns;
@@ -1770,13 +1770,23 @@ export class ParticipantListComponent implements OnInit {
     }
   }
 
+  private createFilter(field: any): Filter {
+    let showType = field.displayType;
+    let filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
+      showType, field.possibleValues); 
+    if (showType == Filter.RADIO_TYPE) {
+      filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
+      showType, field.possibleValues, null, null, null, null, null, null, null, null, null, null, true); 
+    }       
+    return filter;
+  }
+
   addTabColumns() {
     let possibleColumns: Array<Filter> = [];
     for (let tab of this.settings['TAB']) {
       this.dataSources.set(tab.columnName, tab.columnDisplay);
       for (let setting of this.settings[tab.columnName]) {
-        let filter = new Filter(new ParticipantColumn(setting.columnDisplay.replace('*', ''), setting.columnName, null, null, false),
-        setting.displayType, setting.possibleValues);
+        let filter = this.createFilter(setting);
         possibleColumns.push(filter);
       }
       this.sourceColumns[tab.columnName] = possibleColumns;

@@ -17,6 +17,7 @@ export class Filter {
   public static ADDITIONAL_VALUE_TYPE = "ADDITIONALVALUE";
   public static JSON_ARRAY_TYPE = "JSONARRAY";
   public static COMPOSITE_TYPE = "COMPOSITE";// ES dynamic filters
+  public static RADIO_TYPE = "RADIO";
 
   //ES data
   public static REALM = new Filter( ParticipantColumn.REALM, Filter.TEXT_TYPE );
@@ -500,7 +501,7 @@ export class Filter {
         return null;
       }
     }
-    else if (filter.type === Filter.OPTION_TYPE) {
+    else if (filter.type === Filter.OPTION_TYPE || filter.type === Filter.RADIO_TYPE) {
       let selected = [];
       for (let [ key, value ] of Object.entries( filter.selectedOptions )) {
         if (value) {
