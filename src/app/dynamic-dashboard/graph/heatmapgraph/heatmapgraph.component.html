@@ -26,6 +26,15 @@
     [events]="events"
   >
   </fusioncharts>
+  <button md-raised-button color="primary"
+      (click)="previousPage()"
+      [disabled]="currentPage === 1">Previous
+  </button>
+  
+  <button md-raised-button color="primary"
+      (click)="nextPage()"
+      [disabled]="currentPage === numberOfPages">Next
+  </button>
 </ng-container>
 
 
@@ -39,13 +48,5 @@
                       (click)="filterByDate()">Filter
               </button>
 </p>
+-->
 
-<button md-raised-button color="primary"
-    (click)="previousRow()"
-    [disabled]="false">Previous
-</button>
-
-<button md-raised-button color="primary"
-    (click)="nextRow()"
-    [disabled]="false">Next
-</button> -->

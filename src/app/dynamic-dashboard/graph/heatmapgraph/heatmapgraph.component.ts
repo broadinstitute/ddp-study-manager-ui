@@ -12,7 +12,7 @@ import { RoolOverTooltipdata, DataPlotTooltipData } from '../../../tooltips/heat
 })
 export class HeatmapgraphComponent implements OnInit {
 
-  static HEATMAP_ROWS_LENGTH = 200;
+  static HEATMAP_ROWS_LENGTH = 1000;
   static HEATMAP_HEIGHT = 10000;
   static HEATMAP_CELL_HEIGHT = 22.5;
 
@@ -26,19 +26,32 @@ export class HeatmapgraphComponent implements OnInit {
 
   //fusion charts
   title: String;
-  dataSource: Object;
+  dataSource: Object = {
+    "chart": {
+      "theme": "fusion",
+      "caption": "",
+      "subcaption": "",
+      "xAxisName": "Kits",
+      "yAxisName": "Participants",
+      "showPlotBorder": "1",
+      "showValues": "1",
+      "showToolTip": "0",
+      "mapByCategory": "1",
+    }
+  };
   dataSet = [];
   rowsDictionary = {};
   rows = [];
   columns = {};
   colorRange = {};
   dataLoaded: boolean = false;
-  defaultRowLength = HeatmapgraphComponent.HEATMAP_ROWS_LENGTH;
   numberOfParticipants: number;
   // heatmapHeight = HeatmapgraphComponent.HEATMAP_ROWS_LENGTH * HeatmapgraphComponent.HEATMAP_CELL_HEIGHT;
-  heatmapHeight = HeatmapgraphComponent.HEATMAP_HEIGHT;
+  heatmapHeight = HeatmapgraphComponent.HEATMAP_ROWS_LENGTH * HeatmapgraphComponent.HEATMAP_CELL_HEIGHT;
   sortOrder = "ASC";
   events: any;
+  numberOfPages: number = 0;
+  currentPage: number = 1;
 
   //interval for fetching
   fetchInterval: any;
@@ -48,9 +61,6 @@ export class HeatmapgraphComponent implements OnInit {
     this.events = {
       dataPlotClick: e => {
         this.dataPlotClick(e);
-      },
-      dataLabelClick: e => {
-        this.clickRow(e);
       },
       dataLabelRollOver: e => {
         this.labelRollOver(e);
@@ -66,14 +76,8 @@ export class HeatmapgraphComponent implements OnInit {
     
   ngOnInit() {
     this.setInitialValues();
-    this.title = this.heatmapGraph.displayText;
-    this.dataSet.push({"data": this.heatmapGraph.data})
-    this.rows = this.heatmapGraph.rows;
-    this.rowsDictionary["row"] = this.rows.slice(0, this.defaultRowLength);
-    this.columns["column"] = this.heatmapGraph.columns;
-    this.colorRange["colorrange"] = this.heatmapGraph.colorRange;
     this.updateGraph(); 
-    this.fetchInterval = this.runInterval(); 
+    this.dataLoaded = true;
   }
 
   private fetchStatistic(from: number, to: number, dashboardSettingId: number) {
@@ -89,120 +93,66 @@ export class HeatmapgraphComponent implements OnInit {
             this.colorRange["colorrange"] = heatmapGraphData.colorRange;
             this.title = heatmapGraphData.displayText;
             this.updateGraph();
+            this.dataLoaded = true;
           }
         }
       }
     );
   }
 
-  private updateData(from: number, to: number) {
-    this.isResponseReturned = false;
-    this.dsmService.getStatistics(localStorage.getItem(ComponentService.MENU_SELECTED_REALM), from, to, 0, this.sortOrder).subscribe(
-      data => {
-        if (data != undefined && data != null) {
-          if (data.find(st => st.displayType === "GRAPH_HEATMAP")) {
-            let heatmapGraphData = data.find(st => st.displayType === "GRAPH_HEATMAP");
-            this.dataSet[0].data.push(...heatmapGraphData.data);
-            this.rowsDictionary["row"].push(...heatmapGraphData.rows);
-            this.dataLoaded = true;
-            this.isResponseReturned = true;
-          }
-        }
-     }
-    );
+  nextPage(): void {
+    this.currentPage += 1;
+    this.dataLoaded = false;
+    this.loadList();
+  }
+
+  previousPage(): void {
+    this.currentPage -= 1;
+    this.dataLoaded = false;
+    this.loadList();
+  }
+
+  loadList(): void {
+    let from = ((this.currentPage - 1) * HeatmapgraphComponent.HEATMAP_ROWS_LENGTH);
+    let to = from + HeatmapgraphComponent.HEATMAP_ROWS_LENGTH;
+    this.fetchStatistic(from, to, 0);
   }
 
   private updateGraph() {
-    this.dataSource = {
-      "chart": {
-        "theme": "fusion",
-        "caption": "",
-        "subcaption": "",
-        "xAxisName": "Kits",
-        "yAxisName": "Participants",
-        "showPlotBorder": "1",
-        "showValues": "1",
-        "showToolTip": "0",
-        "mapByCategory": "1",
-        "plottooltext": "<div id='nameDiv' style='font-size: 12px; border-bottom: 1px dashed #666666; font-weight:bold; padding-bottom: 3px; margin-bottom: 5px; display: inline-block; color: #888888;' >$rowLabel :</div>{br}Rating : <b>$dataValue</b>{br}$columnLabel : <b>$tlLabel</b>{br}<b>$trLabel</b>",
-      },
-      "rows": this.rowsDictionary,
-      "columns": this.columns,
-      "dataset": this.dataSet,
-      "colorrange": this.colorRange["colorrange"]
-    };
-    this.dataLoaded = true;
-  }
-
-
-  clickRow(event: any) {
-    // let row = this.rows.find(row => row.id === event.eventObj.data.text);
-    // if (row !== undefined) {
-    //   let participantGuid = row.guid;
-    //   this.dsmService.getParticipantData(localStorage.getItem(ComponentService.MENU_SELECTED_REALM), participantGuid, "").subscribe(
-    //     data => {
-    //       this.dataSource = {};
-    //       console.log(data);
-    //     }, 
-    //     err => {
-          
-    //     }
-    //   );
-    // }
+    this.dataSource['rows'] = this.rowsDictionary;
+    this.dataSource['columns'] = this.columns;
+    this.dataSource['dataset'] = this.dataSet;
+    this.dataSource['colorrange'] = this.colorRange['colorrange'];
+    this.heatmapHeight = this.rows.length * HeatmapgraphComponent.HEATMAP_CELL_HEIGHT;
   }
 
   sortAscending() {
     this.sortOrder = "ASC";
     this.dataLoaded = false;
-    this.setInitialValues();
-    this.fetchStatistic(0, HeatmapgraphComponent.HEATMAP_ROWS_LENGTH, 0);
-    clearInterval(this.fetchInterval);
-    this.fetchInterval = this.runInterval();
+    this.loadList();
   }
 
   sortDescending() {
     this.dataLoaded = false;
     this.sortOrder = "DESC";
-    this.setInitialValues();
-    this.fetchStatistic(0, HeatmapgraphComponent.HEATMAP_ROWS_LENGTH, 0);
-    clearInterval(this.fetchInterval);
-    this.fetchInterval = this.runInterval();
-  }
-
-  private runInterval() {
-    setInterval(() => {
-      debugger;
-      if (!this.isResponseReturned) {
-        // clearInterval(this.fetchInterval);
-        return this.fetchInterval;
-      };
-      let previousRowLength = this.defaultRowLength;
-      if (this.numberOfParticipants - previousRowLength <= 0) {
-        this.isResponseReturned = false;
-        clearInterval(this.fetchInterval);
-        return;
-      }
-      if (((this.numberOfParticipants - previousRowLength) / HeatmapgraphComponent.HEATMAP_ROWS_LENGTH) >= 1) {
-        this.defaultRowLength += HeatmapgraphComponent.HEATMAP_ROWS_LENGTH;
-      } else {
-        this.defaultRowLength += this.numberOfParticipants - previousRowLength;
-      }
-      console.log(previousRowLength, this.defaultRowLength);
-      if (this.isResponseReturned) this.updateData(previousRowLength, this.defaultRowLength);
-    }, 500);
+    this.loadList();
   }
 
   private setInitialValues() {
     this.dsmService.getNumberOfParticipants(localStorage.getItem( ComponentService.MENU_SELECTED_REALM )).subscribe(
       data => {
         this.numberOfParticipants = data;
-        this.heatmapHeight = this.numberOfParticipants * HeatmapgraphComponent.HEATMAP_CELL_HEIGHT;
+        this.numberOfPages = Math.ceil(data / HeatmapgraphComponent.HEATMAP_ROWS_LENGTH);
       },
       err => {
       }
-      );
-    this.isResponseReturned = true;
-    this.defaultRowLength = HeatmapgraphComponent.HEATMAP_ROWS_LENGTH;
+    );
+    this.title = this.heatmapGraph.displayText;
+    this.dataSet.push({"data": this.heatmapGraph.data})
+    this.rows = this.heatmapGraph.rows;
+    this.rowsDictionary["row"] = this.heatmapGraph.rows;
+    this.columns["column"] = this.heatmapGraph.columns;
+    this.colorRange["colorrange"] = this.heatmapGraph.colorRange;
   }
 
 
@@ -267,5 +217,4 @@ export class HeatmapgraphComponent implements OnInit {
   dataplotRollOut(event: any) {
     this.tooltipService.dataPlotRollOut.emit();
   }
-
 }

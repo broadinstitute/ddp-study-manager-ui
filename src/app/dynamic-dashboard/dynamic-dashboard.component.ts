@@ -15,6 +15,7 @@ export class DynamicDashboardComponent implements OnInit {
   enrolledParticipants: number;
   registeredParticipants: number;
   statistics: Array<any>;
+  dataLoaded: boolean = false;
 
   constructor(private dsmService: DSMService) {
     
@@ -29,6 +30,7 @@ export class DynamicDashboardComponent implements OnInit {
       data => {
         if (data != undefined && data != null) {
           this.statistics = data;
+          this.dataLoaded = true;
         }
       }
     );

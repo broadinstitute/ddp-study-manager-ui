@@ -1,4 +1,10 @@
-<ng-container>
+<span *ngIf="!dataLoaded" class="Width--100">
+  <div align="center" class="Width--100 Height--100">
+    <i class="fas fa-spinner fa-spin fa-5x Color--primary"></i>
+  </div>
+</span>
+
+<ng-container *ngIf="dataLoaded">
 
   <ng-container *ngFor="let statistic of statistics">
     <ng-container *ngIf="statistic.displayType === 'GRAPH_HEATMAP'">

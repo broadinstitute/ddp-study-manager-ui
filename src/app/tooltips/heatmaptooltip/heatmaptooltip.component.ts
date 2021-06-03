@@ -41,9 +41,13 @@ export class HeatmaptooltipComponent implements OnInit {
     );
     this.tooltipService.dataPlotClick.subscribe(
       (dataPlotTooltipData: DataPlotTooltipData[]) => {
-        this.dataPlotTooltipDataArray = dataPlotTooltipData;
-        this.dataPlotClicked = true;
-        this.cd.detectChanges();
+        if (dataPlotTooltipData.length > 0) {
+          this.dataPlotTooltipDataArray = dataPlotTooltipData;
+          this.dataPlotClicked = true;
+          if (!this.cd['destroyed']) {
+            this.cd.detectChanges();
+          }
+        }
       }
     );
     this.tooltipService.dataPlotRollOut.subscribe(
