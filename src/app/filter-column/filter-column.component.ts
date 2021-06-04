@@ -86,5 +86,7 @@ export class FilterColumnComponent implements OnInit {
     this.dataFilter.selectedOptions[ event.value ] = true;
   }
 
-
+  isDynamicField(dataFilter: Filter): boolean {
+    return dataFilter && dataFilter.participantColumn && (dataFilter.participantColumn.tableAlias == 'participantData');
+  }
 }

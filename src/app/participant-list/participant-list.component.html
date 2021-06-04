@@ -241,8 +241,7 @@
           </ng-container>
           </thead>
           <tbody>
-          <tr
-            *ngFor="let pt of participantList | paginate: { itemsPerPage: rowsPerPage, currentPage: activePage }">
+          <tr *ngFor="let pt of participantList | paginate: { itemsPerPage: rowsPerPage, currentPage: activePage }">
             <!--checkbox to assign or trigger blood kits-->
             <td>
               <md-checkbox color="primary" disableRipple *ngIf="pt.participant != null"
@@ -435,15 +434,6 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                       {{getLanguageName(pt.data[col.participantColumn.object][col.participantColumn.name])}}
                     </ng-container>
                   </div>
-
-
-                  <div *ngIf="settings[ alias ] != null && settings [alias] != undefined && pt.participantData != null">
-                    <ng-container>
-                      {{getParticipantData(pt, col.participantColumn.name, alias)}}
-                    </ng-container>
-                  </div>
-
-
 
                   <div *ngIf="alias === 'p' && pt.participant != null">
                     <ng-container
@@ -670,6 +660,25 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                         </li>
                       </ul>
                     </ng-container>
+                  </div>
+
+                  <div *ngIf="checkIfColumnIsTabbed(alias)">
+                    <ng-container>
+                      {{getPersonField(pt.participantData[0], col)}}
+                    </ng-container>
+                  </div>
+
+                  <div *ngIf="checkIfColumnIsTabGrouped(alias)">                    
+                    <ul class="NO-PADDING-START">
+                      <li class="LIST-SEPARATOR">
+                        <div *ngFor="let personData of pt.participantData; let i = index">
+                          <div *ngIf="this.getPersonField(personData, col) != null">
+                            {{getPersonType(personData)}}: {{getPersonField(personData, col)}}
+                            <hr *ngIf="i != pt.participantData.length - 1" style="border-color: lightgray">                            
+                          </div>
+                        </div>                        
+                      </li>
+                    </ul>                    
                   </div>
                 </ng-container>
               </td>

@@ -1134,12 +1134,13 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     return "";
   }
 
-  getParticipantDataUsingFieldTypeId(fieldSetting: FieldSettings, fieldTypeId: string) {
-    if (this.participant != null && this.participant.participantData != null && fieldTypeId != null && fieldSetting.columnName != null) {
-      let participantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === fieldTypeId);
-      if (participantData != null && participantData.data != null && participantData.data[fieldSetting.columnName] != null) {
-        return participantData.data[fieldSetting.columnName];
-      }
+  getParticipantDataFromSingleParticipant(fieldSetting: FieldSettings) {
+    if (this.participant && this.participant.participantData && fieldSetting.columnName) {
+      for (let participantData of this.participant.participantData) {
+        if (participantData != null && participantData.data != null && participantData.data[fieldSetting.columnName] != null) {
+          return participantData.data[fieldSetting.columnName];
+        }
+      }      
     }
     return "";
   }
@@ -1391,8 +1392,10 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     return Math.abs(diffDate.getUTCFullYear() - 1970);
   }
 
-  findDataIdByFieldType(setting: FieldSettings): string {
-    let currentData = this.participant.participantData.find(currentParticipantData => setting.fieldType === currentParticipantData.fieldTypeId );
-    return currentData.dataId;
+  findDataId(): string {
+    if (this.participant && this.participant.participantData && this.participant.participantData[0]) {
+      return this.participant.participantData[0].dataId;      
+    }
+    return "";
   }
 }
