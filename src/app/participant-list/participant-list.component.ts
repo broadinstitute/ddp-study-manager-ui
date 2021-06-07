@@ -1737,11 +1737,17 @@ export class ParticipantListComponent implements OnInit {
       name = column.participantColumn.name;
     }
     if (personData && personData.data && name) {
+      debugger
       let currentKey = Object.keys(personData.data).find(key => key === name);
       let field = personData.data[currentKey];
       if (field) {
         if (column.options && column.options[0] && column.options[0].name) {
-          let fieldToShow = column.options.find(nameValue => nameValue.value == field);
+          let fieldToShow = null;
+          if (column.additionalType === Filter.ACTIVITY_STAFF_TYPE) {
+            fieldToShow = column.options.find(nameValue => nameValue.name == field);
+          } else {
+            fieldToShow = column.options.find(nameValue => nameValue.value == field);
+          }
           return fieldToShow.name;
         }
         return field;
@@ -1772,12 +1778,32 @@ export class ParticipantListComponent implements OnInit {
 
   private createFilter(field: any): Filter {
     let showType = field.displayType;
-    let filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
-      showType, field.possibleValues); 
-    if (showType == Filter.RADIO_TYPE) {
+    let filter: Filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
+    showType, field.possibleValues);    
+    if (showType == Filter.TEXTAREA_TYPE) {
+      showType = Filter.TEXT_TYPE
       filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
-      showType, field.possibleValues, null, null, null, null, null, null, null, null, null, null, true); 
-    }       
+      showType, field.possibleValues); 
+    } else if (showType == Filter.ACTIVITY_STAFF_TYPE) {
+      debugger
+      if (field.possibleValues && field.possibleValues[0].type) {
+        debugger
+        showType = field.possibleValues[0].type;
+      }
+      filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
+      showType, field.possibleValues); 
+      if (showType == Filter.RADIO_TYPE) {
+        debugger
+        let options: NameValue[] = [];        
+        options.push(new NameValue("Yes", "1"));
+        options.push(new NameValue("No", "0"));
+        filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
+          showType, options, null, null, null, null, null, null, null, null, null, null, true, Filter.ACTIVITY_STAFF_TYPE);    
+      }
+    } else if (showType == Filter.RADIO_TYPE) {
+      filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
+      showType, field.possibleValues, null, null, null, null, null, null, null, null, null, null, true);  
+    }  
     return filter;
   }
 

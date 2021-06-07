@@ -18,6 +18,8 @@ export class Filter {
   public static JSON_ARRAY_TYPE = "JSONARRAY";
   public static COMPOSITE_TYPE = "COMPOSITE";// ES dynamic filters
   public static RADIO_TYPE = "RADIO";
+  public static TEXTAREA_TYPE = "TEXTAREA";
+  public static ACTIVITY_STAFF_TYPE = "ACTIVITY_STAFF";
 
   //ES data
   public static REALM = new Filter( ParticipantColumn.REALM, Filter.TEXT_TYPE );
@@ -506,7 +508,8 @@ export class Filter {
       let selected = [];
       for (let [ key, value ] of Object.entries( filter.selectedOptions )) {
         if (value) {
-          if (filter.participantColumn && filter.participantColumn.tableAlias && filter.participantColumn.tableAlias === "participantData") {
+          if (filter.participantColumn && filter.participantColumn.tableAlias && filter.participantColumn.tableAlias === "participantData"
+              && filter.additionalType != Filter.ACTIVITY_STAFF_TYPE) {
             selected.push( filter.options[ key ].value );
           } else {
             selected.push( filter.options[ key ].name );

@@ -1,5 +1,5 @@
 <div
-  *ngIf="dataFilter.type === 'DATE' || dataFilter.type === 'EPOCHDATE' || dataFilter.type === 'DATE_SHORT' || dataFilter.type === 'OPTIONS' || dataFilter.type === 'BOOLEAN' || dataFilter.type === 'CHECKBOX' || dataFilter.type === 'JSONARRAY'
+  *ngIf="dataFilter.type === 'DATE' || dataFilter.type === 'EPOCHDATE' || dataFilter.type === 'DATE_SHORT' || dataFilter.type === 'OPTIONS' || dataFilter.type == 'RADIO' || dataFilter.type === 'BOOLEAN' || dataFilter.type === 'CHECKBOX' || dataFilter.type === 'JSONARRAY'
   || (dataFilter.type === 'ADDITIONALVALUE' && (dataFilter.additionalType !== 'TEXT' && dataFilter.additionalType !== 'text' && dataFilter.additionalType !== 'TEXTAREA'))">
   <b>{{dataFilter.participantColumn.display}}</b>
 </div>
@@ -43,7 +43,8 @@
   </md-input-container>
 </ng-container>
 <ng-container
-  *ngIf="(dataFilter.type === 'OPTIONS'  || (dataFilter.type === 'ADDITIONALVALUE' && dataFilter.additionalType === 'OPTIONS')) && dataFilter != null && dataFilter.options != null && !isDynamicField(dataFilter)">
+  *ngIf="(dataFilter.type === 'OPTIONS'  || (dataFilter.type === 'ADDITIONALVALUE' && dataFilter.additionalType === 'OPTIONS'))
+   && dataFilter != null && dataFilter.options != null && !isDynamicField(dataFilter)">
   <div *ngIf="dataFilter.singleOption" class="TD--Padding-Left">
     <md-radio-group [(ngModel)]="selected">
       <div *ngFor="let option of dataFilter.options; let i=index">
@@ -64,36 +65,14 @@
   </ng-container>
 </ng-container>
 <ng-container
-  *ngIf="dataFilter && dataFilter.type === 'RADIO'">
-  <md-radio-group [(ngModel)]="selected">
-    <div *ngFor="let option of dataFilter.options; let i=index">
-      <md-radio-button color="primary" disableRipple [checked]="selected === i"
-                        [value]="i" [disabled]="!editable || dataFilter.empty || dataFilter.notEmpty" (change)="radioChange($event)">
-        <span tooltip="{{option.name}}">{{option.name}}</span>
-      </md-radio-button>
-    </div>
-  </md-radio-group>
-</ng-container>
-<ng-container
-  *ngIf="(dataFilter.type === 'OPTIONS'  || (dataFilter.type === 'ADDITIONALVALUE' && dataFilter.additionalType === 'OPTIONS')) && dataFilter != null && dataFilter.options != null && isDynamicField(dataFilter)">
-  <div *ngIf="dataFilter.singleOption" class="TD--Padding-Left">
-    <md-radio-group [(ngModel)]="selected">
-      <div *ngFor="let option of dataFilter.options; let i=index">
-        <md-radio-button color="primary" disableRipple [checked]="selected === i"
-                         [value]="i" [disabled]="!editable || dataFilter.empty || dataFilter.notEmpty" (change)="radioChange($event)">
-          <span tooltip="{{option.name}}">{{option.name}}</span>
-        </md-radio-button>
-      </div>
-    </md-radio-group>
-  </div>
-  <ng-container *ngIf="!dataFilter.singleOption">
+  *ngIf="(dataFilter.type === 'OPTIONS' || dataFilter.type == 'RADIO' || (dataFilter.type === 'ADDITIONALVALUE' && dataFilter.additionalType === 'OPTIONS'))
+   && dataFilter != null && dataFilter.options != null && isDynamicField(dataFilter)">
     <div *ngFor="let option of dataFilter.options; let i=index" class="TD--Padding-Left">
       <md-checkbox [checked]="dataFilter.selectedOptions[i]" color="primary" disableRipple
                    [(ngModel)]="dataFilter.selectedOptions[i]" [disabled]="!editable || dataFilter.empty || dataFilter.notEmpty">
         <span tooltip="{{option.name}}">{{option.name}}</span>
       </md-checkbox>
     </div>
-  </ng-container>
 </ng-container>
 <ng-container
   *ngIf="dataFilter.type !== 'BOOLEAN' && dataFilter.type !== 'CHECKBOX' && !(dataFilter.type === 'ADDITIONALVALUE' && dataFilter.additionalType === 'CHECKBOX')">
