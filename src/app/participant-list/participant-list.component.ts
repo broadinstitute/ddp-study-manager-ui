@@ -27,6 +27,8 @@ import {AssigneeParticipant} from "./models/assignee-participant.model";
 import {PreferredLanguage} from "./models/preferred-languages.model";
 import {Participant} from "./participant-list.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
+import { ParticipantData } from "./models/participant-data.model";
+import { FilterBrand } from "@angular/cdk";
 
 @Component( {
   selector: "app-participant-list",
@@ -311,6 +313,12 @@ export class ParticipantListComponent implements OnInit {
             }
             this.activityDefinitionList.push( activityDefinition );
           } );
+        }
+        if (this.settings && this.settings["TAB_GROUPED"]) {
+          this.addTabGroupedColumns();          
+        }
+        if (this.settings && this.settings["TAB"]) {
+          this.addTabColumns();          
         }
         this.getSourceColumnsFromFilterClass();
         if (jsonData.abstractionFields != null && jsonData.abstractionFields.length > 0) {
@@ -1165,11 +1173,11 @@ export class ParticipantListComponent implements OnInit {
     this.sortDir = this.sortField === col.participantColumn.name ? ( this.sortDir === "asc" ? "desc" : "asc" ) : "asc";
     this.sortField = col.participantColumn.name;
     this.sortParent = sortParent;
-    let colType = col.type;
-    this.doSort( col.participantColumn.object, colType );
+    this.doSort( col.participantColumn.object, col );
   }
 
-  private doSort( object: string, colType: string ) {
+  private doSort( object: string, col: Filter ) {
+    let colType = col.type;
     let order = this.sortDir === "asc" ? 1 : -1;
     if (this.sortParent === "data" && object != null) {
       this.participantList.sort( ( a, b ) => {
@@ -1233,7 +1241,24 @@ export class ParticipantListComponent implements OnInit {
           return this.sort(a.kits[0][this.sortField], b.kits[0][this.sortField], order, undefined, colType );
         }
       } );
-    } else {
+    } else if (this.checkIfColumnIsTabGrouped(this.sortParent) || this.checkIfColumnIsTabbed(this.sortParent)) {
+      this.participantList.forEach(participant => {
+        if (participant.participantData.length > 1) {
+          participant.participantData.sort((n, m) => this.sort(this.getPersonField(n, col), this.getPersonField(m, col), order)); 
+        }
+      })
+      this.participantList.sort((a, b) => {
+        if (a.participantData && !a.participantData[0] == null || this.getPersonField(a.participantData[0], col) == null) {
+          return 1;
+        } else if (!b.participantData && !b.participantData[0] == null || !this.getPersonField(b.participantData[0], col) == null) {
+          return 0;
+        } else {
+          return this.sort(this.getPersonField(a.participantData[0], col),
+            this.getPersonField(b.participantData[0], col), order, undefined, colType);
+        }
+      })
+    }
+    else {
       //activity data
       this.participantList.map( participant => {
         let activityData = participant.data.getActivityDataByCode( this.sortParent );
@@ -1704,5 +1729,92 @@ export class ParticipantListComponent implements OnInit {
         }
       }
     }
+  }
+
+  getPersonField(personData: ParticipantData, column: Filter): string {
+    let name: string
+    if (column && column.participantColumn) {
+      name = column.participantColumn.name;
+    }
+    if (personData && personData.data && name) {
+      let currentKey = Object.keys(personData.data).find(key => key === name);
+      let field = personData.data[currentKey];
+      if (field) {
+        if (column.options && column.options[0] && column.options[0].name) {
+          let fieldToShow = column.options.find(nameValue => nameValue.value == field);
+          return fieldToShow.name;
+        }
+        return field;
+      }
+    }
+    return null;
+  }
+
+  getPersonType(personData: ParticipantData): string {
+    let memberType = personData.data["MEMBER_TYPE"];
+    return Statics.RELATIONS[memberType];
+  }
+
+  addTabGroupedColumns() {
+    let possibleColumns: Array<Filter> = [];
+    for (let tab of this.settings['TAB_GROUPED']) {
+      for (let setting of this.settings[tab.columnName]) {
+        this.dataSources.set(setting.columnName, setting.columnDisplay);
+        for (let field of this.settings[setting.columnName]) {
+          let filter = this.createFilter(field);
+          possibleColumns.push(filter);
+        }
+        this.sourceColumns[setting.columnName] = possibleColumns;
+        possibleColumns = [];
+      }
+    }
+  }
+
+  private createFilter(field: any): Filter {
+    let showType = field.displayType;
+    let filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
+      showType, field.possibleValues); 
+    if (showType == Filter.RADIO_TYPE) {
+      filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
+      showType, field.possibleValues, null, null, null, null, null, null, null, null, null, null, true); 
+    }       
+    return filter;
+  }
+
+  addTabColumns() {
+    let possibleColumns: Array<Filter> = [];
+    for (let tab of this.settings['TAB']) {
+      this.dataSources.set(tab.columnName, tab.columnDisplay);
+      for (let setting of this.settings[tab.columnName]) {
+        let filter = this.createFilter(setting);
+        possibleColumns.push(filter);
+      }
+      this.sourceColumns[tab.columnName] = possibleColumns;
+      possibleColumns = [];
+    }
+  }
+
+  checkIfColumnIsTabGrouped(alias: string): boolean {
+    if (this.settings && this.settings['TAB_GROUPED']) {
+      for (let tab of this.settings['TAB_GROUPED']) {
+        for (let setting of this.settings[tab.columnName]) {
+          if (setting.columnName === alias) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  checkIfColumnIsTabbed(alias: string): boolean {
+    if (this.settings && this.settings['TAB']) {
+      for (let tab of this.settings['TAB']) {
+        if (tab.columnName === alias) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }
