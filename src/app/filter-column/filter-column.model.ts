@@ -504,7 +504,6 @@ export class Filter {
       }
     }
     else if (filter.type === Filter.OPTION_TYPE || filter.type === Filter.RADIO_TYPE) {
-      debugger
       let selected = [];
       for (let [ key, value ] of Object.entries( filter.selectedOptions )) {
         if (value) {

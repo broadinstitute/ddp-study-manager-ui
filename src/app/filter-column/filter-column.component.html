@@ -1,5 +1,5 @@
 <div
-  *ngIf="dataFilter.type === 'DATE' || dataFilter.type === 'EPOCHDATE' || dataFilter.type === 'DATE_SHORT' || dataFilter.type === 'OPTIONS' || dataFilter.type == 'RADIO' || dataFilter.type === 'BOOLEAN' || dataFilter.type === 'CHECKBOX' || dataFilter.type === 'JSONARRAY'
+  *ngIf="dataFilter.type === 'DATE' || dataFilter.type === 'EPOCHDATE' || dataFilter.type === 'DATE_SHORT' || dataFilter.type === 'OPTIONS' || dataFilter.type === 'RADIO' || dataFilter.type === 'BOOLEAN' || dataFilter.type === 'CHECKBOX' || dataFilter.type === 'JSONARRAY'
   || (dataFilter.type === 'ADDITIONALVALUE' && (dataFilter.additionalType !== 'TEXT' && dataFilter.additionalType !== 'text' && dataFilter.additionalType !== 'TEXTAREA'))">
   <b>{{dataFilter.participantColumn.display}}</b>
 </div>
@@ -65,7 +65,7 @@
   </ng-container>
 </ng-container>
 <ng-container
-  *ngIf="(dataFilter.type === 'OPTIONS' || dataFilter.type == 'RADIO' || (dataFilter.type === 'ADDITIONALVALUE' && dataFilter.additionalType === 'OPTIONS'))
+  *ngIf="(dataFilter.type === 'OPTIONS' || dataFilter.type === 'RADIO' || (dataFilter.type === 'ADDITIONALVALUE' && dataFilter.additionalType === 'OPTIONS'))
    && dataFilter != null && dataFilter.options != null && isDynamicField(dataFilter)">
     <div *ngFor="let option of dataFilter.options; let i=index" class="TD--Padding-Left">
       <md-checkbox [checked]="dataFilter.selectedOptions[i]" color="primary" disableRipple
