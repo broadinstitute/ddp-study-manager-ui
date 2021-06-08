@@ -124,6 +124,14 @@
             </md-select>
           </td>
           <td>
+            <button md-raised-button color="primary"
+                    [disabled]="medicalRecord.name == null || medicalRecord.name === '' || downloading"
+                    (click)="downloadPDF(null)">Download PDF Bundle
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td>
             <div *ngIf="(medicalRecord.name == null || medicalRecord.name === '')"><b>* Institution name is needed for download</b></div>
             <button md-raised-button color="primary"
                     [disabled]="selectedPDF == null || selectedPDF === '' || downloading || ((medicalRecord.name == null || medicalRecord.name === '') && selectedPDF === 'cover')"
@@ -132,6 +140,7 @@
           </td>
         </tr>
         <tr>
+
           <td>
             <a href="#" (click)="doNothing('cover')" *ngIf="!downloading" class="Router--Outlet"><b> Change request settings </b></a>
           <br/>
@@ -141,14 +150,6 @@
           <td>
             <a href="#" (click)="doNothing('bundle')" *ngIf="!downloading" class="Router--Outlet"><b> Change order/files in Bundle</b></a>
             <br/>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <button md-raised-button color="primary"
-                    [disabled]="medicalRecord.name == null || medicalRecord.name === '' || downloading"
-                    (click)="downloadPDF(null)">Download PDF Bundle
-            </button>
           </td>
         </tr>
       </div>
