@@ -73,7 +73,7 @@ export class FieldDatepickerComponent implements OnInit, OnChanges {
           this._dateString = dateString;
         }
         else if (dateString.includes('T')) {           
-            this._dateString = Utils.getDateFormatted( Utils.getDate( dateString.split('T')[0] ), this.dateFormat );;
+            this._dateString = Utils.getDateFormatted( Utils.getDate( dateString.split('T')[0] ), this.dateFormat );
         } else {
           this._dateString = Utils.getDateFormatted( this.datePicker, this.dateFormat );
         }
