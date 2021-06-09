@@ -61,6 +61,7 @@ export class FieldDatepickerComponent implements OnInit, OnChanges {
   }
 
   private handleInput( dateString: string ) {
+    debugger
     if (dateString !== "N/A" && dateString !== "Not Found") {
       if (dateString != null) {
         let tmpDate: string = dateString;
@@ -72,9 +73,11 @@ export class FieldDatepickerComponent implements OnInit, OnChanges {
           tmpDate = tmpDate + "-01-01";
           this._dateString = dateString;
         }
-        else {
+        else if (dateString.includes('T')) {           
+            this._dateString = Utils.getDateFormatted( Utils.getDate( dateString.split('T')[0] ), this.dateFormat );;
+        } else {
           this._dateString = Utils.getDateFormatted( this.datePicker, this.dateFormat );
-        }
+        }        
         this.datePicker = Utils.getDate( tmpDate );
       }
     }
