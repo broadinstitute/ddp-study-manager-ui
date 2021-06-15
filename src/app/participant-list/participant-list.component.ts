@@ -315,10 +315,10 @@ export class ParticipantListComponent implements OnInit {
           } );
         }
         if (this.settings && this.settings["TAB_GROUPED"]) {
-          this.addTabGroupedColumns();          
+          this.addTabGroupedColumns();
         }
         if (this.settings && this.settings["TAB"]) {
-          this.addTabColumns();          
+          this.addTabColumns();
         }
         this.getSourceColumnsFromFilterClass();
         if (jsonData.abstractionFields != null && jsonData.abstractionFields.length > 0) {
@@ -1244,7 +1244,7 @@ export class ParticipantListComponent implements OnInit {
     } else if (this.checkIfColumnIsTabGrouped(this.sortParent) || this.checkIfColumnIsTabbed(this.sortParent)) {
       this.participantList.forEach(participant => {
         if (participant.participantData.length > 1) {
-          participant.participantData.sort((n, m) => this.sort(this.getPersonField(n, col), this.getPersonField(m, col), order)); 
+          participant.participantData.sort((n, m) => this.sort(this.getPersonField(n, col), this.getPersonField(m, col), order));
         }
       })
       this.participantList.sort((a, b) => {
@@ -1741,7 +1741,12 @@ export class ParticipantListComponent implements OnInit {
       let field = personData.data[currentKey];
       if (field) {
         if (column.options && column.options[0] && column.options[0].name) {
-          let fieldToShow = column.options.find(nameValue => nameValue.value == field);
+          let fieldToShow = null;
+          if (column.additionalType === Filter.ACTIVITY_STAFF_TYPE) {
+            fieldToShow = column.options.find(nameValue => nameValue.name === field);
+          } else {
+            fieldToShow = column.options.find(nameValue => nameValue.value === field);
+          }
           return fieldToShow.name;
         }
         return field;
@@ -1772,12 +1777,29 @@ export class ParticipantListComponent implements OnInit {
 
   private createFilter(field: any): Filter {
     let showType = field.displayType;
-    let filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
-      showType, field.possibleValues); 
-    if (showType == Filter.RADIO_TYPE) {
+    let filter: Filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
+    showType, field.possibleValues);
+    if (showType === Filter.TEXTAREA_TYPE) {
+      showType = Filter.TEXT_TYPE
       filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
-      showType, field.possibleValues, null, null, null, null, null, null, null, null, null, null, true); 
-    }       
+      showType, field.possibleValues);
+    } else if (showType == Filter.ACTIVITY_STAFF_TYPE) {
+      if (field.possibleValues && field.possibleValues[0].type) {
+        showType = field.possibleValues[0].type;
+      }
+      filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
+      showType, field.possibleValues);
+      if (showType === Filter.RADIO_TYPE) {
+        let options: NameValue[] = [];
+        options.push(new NameValue("Yes", "1"));
+        options.push(new NameValue("No", "0"));
+        filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
+          showType, options, null, null, null, null, null, null, null, null, null, null, true, Filter.ACTIVITY_STAFF_TYPE);
+      }
+    } else if (showType === Filter.RADIO_TYPE) {
+      filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
+      showType, field.possibleValues, null, null, null, null, null, null, null, null, null, null, true);
+    }
     return filter;
   }
 

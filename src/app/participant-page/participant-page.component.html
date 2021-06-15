@@ -443,7 +443,10 @@ participant.data.dsm['diagnosisYear'] != null">
               </md-checkbox>
             </td>
           </tr>
-          <ng-container *ngIf="settings['r'] != null">
+        </table>
+      </div>
+      <div class="Float--left Width--100" *ngIf="settings['r'] != null">
+        <table class="Width--100">
             <tr *ngFor="let fieldSetting of settings['r']">
               <td>{{fieldSetting.columnDisplay}}</td>
               <td>
@@ -489,7 +492,6 @@ participant.data.dsm['diagnosisYear'] != null">
                                       (dateChanged)="onAdditionalValueChange($event, fieldSetting.columnName)"></app-field-datepicker>
               </td>
             </tr>
-          </ng-container>
         </table>
       </div>
 

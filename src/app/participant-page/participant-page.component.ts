@@ -30,6 +30,7 @@ import {PatchUtil} from "../utils/patch.model";
 import { ParticipantUpdateResultDialogComponent } from "../dialogs/participant-update-result-dialog.component";
 import { AddFamilyMemberComponent } from "../popups/add-family-member/add-family-member.component";
 import { Sample } from "../participant-list/models/sample.model";
+import { ParticipantDSMInformation } from "../participant-list/models/participant.model";
 
 var fileSaver = require( "file-saver/FileSaver.js" );
 
@@ -163,9 +164,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-
     clearInterval(this.checkParticipantStatusInterval);
-
   }
 
   showFamilyMemberPopUpOnClick() {
@@ -505,8 +504,13 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     }
     if (v !== null) {
       let participantId = this.participant.participant.participantId;
+      let ddpParticipantId = this.participant.data.profile[ "guid" ];
+      if (this.participant.data.profile[ "legacyAltPid" ] != null && this.participant.data.profile[ "legacyAltPid" ] != undefined && this.participant.data.profile[ "legacyAltPid" ] !== '') {
+        ddpParticipantId = this.participant.data.profile[ "legacyAltPid" ];
+      }
       let patch1 = new PatchUtil( participantId, this.role.userMail(),
-        {name: parameterName, value: v}, null, null, null, tableAlias );
+        {name: parameterName, value: v}, null, 'ddpParticipantId', ddpParticipantId, tableAlias );
+      patch1.realm = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
       let patch = patch1.getPatch();
       this.currentPatchField = parameterName;
       this.patchFinished = false;
@@ -515,11 +519,18 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
         data => {
           let result = Result.parse( data );
           if (result.code === 200 && result.body != null) {
-            let jsonData: any[] = JSON.parse( result.body );
-            jsonData.forEach( ( val ) => {
-              let nameValue = NameValue.parse( val );
-              this.participant.participant[ nameValue.name ] = nameValue.value;
-            } );
+            let jsonData: any | any[] = JSON.parse( result.body );
+            if (jsonData instanceof Array) {
+              jsonData.forEach( ( val ) => {
+                let nameValue = NameValue.parse( val );
+                this.participant.participant[ nameValue.name ] = nameValue.value;
+              } );
+            }
+            else {
+              if (jsonData.participantId != null && jsonData.participantId != undefined) {
+                this.participant.participant.participantId = jsonData.participantId;
+              }
+            }
           }
           this.currentPatchField = null;
           this.patchFinished = true;
@@ -1101,9 +1112,16 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
       }
     }
     if (v !== null) {
-      if (this.participant.participant.additionalValues != null) {
+      if (this.participant.participant != null && this.participant.participant.additionalValues != null) {
         this.participant.participant.additionalValues[ colName ] = v;
       } else {
+        let participantId = this.participant.data.profile[ "guid" ];
+        if (this.participant.data.profile[ "legacyAltPid" ] != null && this.participant.data.profile[ "legacyAltPid" ] != undefined && this.participant.data.profile[ "legacyAltPid" ] !== '') {
+          participantId = this.participant.data.profile[ "legacyAltPid" ];
+        }
+        this.participant.participant = new ParticipantDSMInformation(null, participantId, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ),
+          null, null, null, null, null, null, null,
+          false, false, false, false, 0, null);
         let addArray = {};
         addArray[ colName ] = v;
         this.participant.participant.additionalValues = addArray;
@@ -1114,12 +1132,12 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   //display additional value
   getAdditionalValue( colName: string ): string {
-    if (this.participant.participant.additionalValues != null) {
+    if (this.participant.participant != null && this.participant.participant.additionalValues != null) {
       if (this.participant.participant.additionalValues[ colName ] != undefined && this.participant.participant.additionalValues[ colName ] != null) {
         return this.participant.participant.additionalValues[ colName ];
       }
     }
-    return null;
+    return "";
   }
 
   downloadPDFs( configName: string ) {
@@ -1333,10 +1351,22 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
                   participantDataSec = new ParticipantData( null, action.type, data );
                 }
                 else {
-                  if (actionPatch === null) {
-                    actionPatch = [];
+                  //for RGP only if member_type = SELF
+                  if (localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) != null && localStorage.getItem( ComponentService.MENU_SELECTED_REALM ).toLowerCase() === "rgp") {
+                    if (participantData.data["MEMBER_TYPE"] != null && participantData.data["MEMBER_TYPE"] === "SELF") {
+                      if (actionPatch === null) {
+                        actionPatch = [];
+                      }
+                      actionPatch.push( action );
+                    }
                   }
-                  actionPatch.push(action);
+                  else {
+                    //all others studies we do the actions for everyone
+                    if (actionPatch === null) {
+                      actionPatch = [];
+                    }
+                    actionPatch.push( action );
+                  }
                 }
               }
               if (participantDataSec != null && participantDataSec.data != null) {
