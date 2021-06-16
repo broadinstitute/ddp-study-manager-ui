@@ -175,7 +175,7 @@ export class DSMService {
     return this.http.get( url, this.buildQueryHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError );
   }
 
-  public getParticipantDsmData( realm: string, ddpParticipantId: string): Observable<any> {
+  public getParticipantDsmData( realm: string, ddpParticipantId: string ): Observable<any> {
     let url = this.baseUrl + DSMService.UI + "getParticipantData";
     let map: { name: string, value: any }[] = [];
     let userId = this.role.userID();
@@ -245,31 +245,32 @@ export class DSMService {
       userId: this.role.userID()
     };
     if (startDate != null) {
-      json['startDate'] = startDate;
+      json[ "startDate" ] = startDate;
     }
     if (endDate != null) {
-      json['endDate'] = endDate;
+      json[ "endDate" ] = endDate;
     }
     if (configName != null) {
-      json['configName'] = configName;
+      json[ "configName" ] = configName;
     }
     if (medicalRecordId != null) {
-      json['medicalRecordId'] = medicalRecordId;
+      json[ "medicalRecordId" ] = medicalRecordId;
     }
     if (requestOncHistoryList != null) {
+      let listOfOncHistories = [];
       for (let onc of requestOncHistoryList) {
-        map.push( {name: "requestId", value: onc.oncHistoryDetailId} );
+        listOfOncHistories.push( onc.oncHistoryDetailId );
       }
+      json[ "requestId" ] = listOfOncHistories;
     }
     if (pdfs != null) {
-      json['pdfs'] = JSON.stringify( pdfs );
+      json[ "pdfs" ] = JSON.stringify( pdfs );
     }
     if (mrCoverPdfSettings != null) {
       for (let mrSetting of mrCoverPdfSettings) {
         json[ mrSetting.value ] = mrSetting.selected;
       }
     }
-    // console.log( json );
     return this.http.post( url, JSON.stringify( json ), this.buildQueryPDFHeader( map ) ).map( ( res: Response ) => res.blob() ).catch( this.handleError );
   }
 
@@ -413,7 +414,7 @@ export class DSMService {
     return this.http.get( url, this.buildQueryHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError );
   }
 
-  public uploadTxtFile( realm: string, kitType: string, file: File, reason: string, carrier:string ): Observable<any> {
+  public uploadTxtFile( realm: string, kitType: string, file: File, reason: string, carrier: string ): Observable<any> {
     let url = this.baseUrl + DSMService.UI + "kitUpload";
     let map: { name: string, value: any }[] = [];
     map.push( {name: DSMService.REALM, value: realm} );

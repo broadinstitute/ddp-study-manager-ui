@@ -548,6 +548,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   oncHistoryValueChanged( value: any, parameterName: string, oncHis: OncHistoryDetail ) {
     let v;
+    let realm: string = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
     if (typeof value === "string") {
       oncHis[ parameterName ] = value;
       v = value;
@@ -563,7 +564,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     if (v !== null) {
 
       let patch1 = new PatchUtil( oncHis.oncHistoryDetailId, this.role.userMail(),
-        {name: parameterName, value: v}, null, "participantId", oncHis.participantId, Statics.ONCDETAIL_ALIAS );
+        {name: parameterName, value: v}, null, "participantId", oncHis.participantId, Statics.ONCDETAIL_ALIAS,  null, realm);
       let patch = patch1.getPatch();
       this.patchFinished = false;
       this.currentPatchField = parameterName;
@@ -1181,7 +1182,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
         if (participantData != null && participantData.data != null && participantData.data[fieldSetting.columnName] != null) {
           return participantData.data[fieldSetting.columnName];
         }
-      }      
+      }
     }
     return "";
   }
@@ -1447,7 +1448,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   findDataId(): string {
     if (this.participant && this.participant.participantData && this.participant.participantData[0]) {
-      return this.participant.participantData[0].dataId;      
+      return this.participant.participantData[0].dataId;
     }
     return "";
   }
