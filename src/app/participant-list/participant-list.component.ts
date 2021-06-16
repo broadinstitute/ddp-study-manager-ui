@@ -180,6 +180,12 @@ export class ParticipantListComponent implements OnInit {
         this.mrCoverPdfSettings = [];
         this.assignees.push( new Assignee( "-1", "Remove Assignee", "" ) );
         jsonData = data;
+        if (data.defaultColumns) {
+          this.defaultColumns = [];
+          for (let defaultColumn of data.defaultColumns) {
+            this.defaultColumns.push(Filter[defaultColumn.value]);
+          }
+        }
         this.dataSources = new Map( [
           ["data", "Participant"],
           ["p", "Participant - DSM"],
