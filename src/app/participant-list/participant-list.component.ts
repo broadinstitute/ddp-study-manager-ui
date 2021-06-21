@@ -558,7 +558,7 @@ export class ParticipantListComponent implements OnInit {
   private getData() {
     //find viewFilter by filterName
     let defaultFilter: ViewFilter = null;
-    if (this.role.getUserSetting().defaultParticipantFilter != null) {
+    if (this.role.getUserSetting().defaultParticipantFilter) {
       defaultFilter = this.savedFilters.find( filter => {
         return filter.filterName === this.role.getUserSetting().defaultParticipantFilter;
       } );
