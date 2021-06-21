@@ -12,6 +12,8 @@ import {Value} from "../utils/value.model";
 import {ComponentService} from "./component.service";
 import {RoleService} from "./role.service";
 import {SessionService} from "./session.service";
+import {PDFModel} from "../pdf-download/pdf-download.model";
+import {OncHistoryDetail} from "../onc-history-detail/onc-history-detail.model";
 
 declare var DDP_ENV: any;
 
@@ -173,7 +175,7 @@ export class DSMService {
     return this.http.get( url, this.buildQueryHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError );
   }
 
-  public getParticipantDsmData( realm: string, ddpParticipantId: string): Observable<any> {
+  public getParticipantDsmData( realm: string, ddpParticipantId: string ): Observable<any> {
     let url = this.baseUrl + DSMService.UI + "getParticipantData";
     let map: { name: string, value: any }[] = [];
     let userId = this.role.userID();
@@ -232,65 +234,43 @@ export class DSMService {
     return this.http.patch( url, json, this.buildHeader() ).map( ( res: Response ) => res.json() ).catch( this.handleError );
   }
 
-  public downloadCoverPDFs( ddpParticipantId: string, medicalRecordId: string, startDate: string, endDate: string, mrCoverPdfSettings: Value[],
-                            realm: string ) {
-    let url = this.baseUrl + DSMService.UI + "downloadPDF/cover/" + medicalRecordId;
+  public downloadPDF( ddpParticipantId: string, medicalRecordId: string, startDate: string, endDate: string, mrCoverPdfSettings: Value[],
+                            realm: string, configName: string, pdfs: PDFModel[], requestOncHistoryList: Array<OncHistoryDetail> ) {
+    let url = this.baseUrl + DSMService.UI + "downloadPDF/pdf";
     let map: { name: string, value: any }[] = [];
     map.push( {name: DSMService.REALM, value: realm} );
     let json: { [ k: string ]: any } = {};
     json = {
       ddpParticipantId: ddpParticipantId,
-      startDate: startDate,
-      endDate: endDate,
       userId: this.role.userID()
     };
-    for (let mrSetting of mrCoverPdfSettings) {
-      json[ mrSetting.value ] = mrSetting.selected;
+    if (startDate != null) {
+      json[ "startDate" ] = startDate;
     }
-    // console.log( json );
-    return this.http.post( url, JSON.stringify( json ), this.buildQueryPDFHeader( map ) ).map( ( res: Response ) => res.blob() ).catch( this.handleError );
-  }
-
-  public downloadPDF( ddpParticipantId: string, realm: string, configName: string ) {
-    let url = this.baseUrl + DSMService.UI + "downloadPDF/pdf";
-    let map: { name: string, value: any }[] = [];
-    map.push( {name: DSMService.REALM, value: realm} );
-    let json = {
-      ddpParticipantId: ddpParticipantId,
-      configName: configName,
-      userId: this.role.userID()
-    };
-    return this.http.post( url, JSON.stringify( json ), this.buildQueryPDFHeader( map ) ).map( ( res: Response ) => res.blob() ).catch( this.handleError );
-  }
-
-  public downloadConsentPDFs( ddpParticipantId: string, realm: string ) {
-    let url = this.baseUrl + DSMService.UI + "downloadPDF/consentpdf";
-    let map: { name: string, value: any }[] = [];
-    map.push( {name: DSMService.REALM, value: realm} );
-    let json = {
-      ddpParticipantId: ddpParticipantId,
-      userId: this.role.userID()
-    };
-    return this.http.post( url, JSON.stringify( json ), this.buildQueryPDFHeader( map ) ).map( ( res: Response ) => res.blob() ).catch( this.handleError );
-  }
-
-  public downloadReleasePDFs( ddpParticipantId: string, realm: string ) {
-    let url = this.baseUrl + DSMService.UI + "downloadPDF/releasepdf";
-    let map: { name: string, value: any }[] = [];
-    map.push( {name: DSMService.REALM, value: realm} );
-    let json = {
-      ddpParticipantId: ddpParticipantId,
-      userId: this.role.userID()
-    };
-    return this.http.post( url, JSON.stringify( json ), this.buildQueryPDFHeader( map ) ).map( ( res: Response ) => res.blob() ).catch( this.handleError );
-  }
-
-  public downloadTissueRequestPDFs( ddpParticipantId: string, map: { name: string, value: any }[] ) {
-    let url = this.baseUrl + DSMService.UI + "downloadPDF/requestpdf";
-    let json = {
-      ddpParticipantId: ddpParticipantId,
-      userId: this.role.userID()
-    };
+    if (endDate != null) {
+      json[ "endDate" ] = endDate;
+    }
+    if (configName != null) {
+      json[ "configName" ] = configName;
+    }
+    if (medicalRecordId != null) {
+      json[ "medicalRecordId" ] = medicalRecordId;
+    }
+    if (requestOncHistoryList != null) {
+      let listOfOncHistories = [];
+      for (let onc of requestOncHistoryList) {
+        listOfOncHistories.push( onc.oncHistoryDetailId );
+      }
+      json[ "requestId" ] = listOfOncHistories;
+    }
+    if (pdfs != null) {
+      json[ "pdfs" ] = JSON.stringify( pdfs );
+    }
+    if (mrCoverPdfSettings != null) {
+      for (let mrSetting of mrCoverPdfSettings) {
+        json[ mrSetting.value ] = mrSetting.selected;
+      }
+    }
     return this.http.post( url, JSON.stringify( json ), this.buildQueryPDFHeader( map ) ).map( ( res: Response ) => res.blob() ).catch( this.handleError );
   }
 
@@ -434,7 +414,7 @@ export class DSMService {
     return this.http.get( url, this.buildQueryHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError );
   }
 
-  public uploadTxtFile( realm: string, kitType: string, file: File, reason: string, carrier:string ): Observable<any> {
+  public uploadTxtFile( realm: string, kitType: string, file: File, reason: string, carrier: string ): Observable<any> {
     let url = this.baseUrl + DSMService.UI + "kitUpload";
     let map: { name: string, value: any }[] = [];
     map.push( {name: DSMService.REALM, value: realm} );
