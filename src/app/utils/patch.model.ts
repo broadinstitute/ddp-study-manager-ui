@@ -1,7 +1,7 @@
 export class PatchUtil {
 
   constructor( public id: string, public user: string, public nameValue: {}, public nameValues: any[],
-               public parent: string, public parentId: string, public tableAlias?: string, public isUnique?: Boolean, public realm?: string ) {
+               public parent: string, public parentId: string, public tableAlias: string, public isUnique: Boolean, public realm: string ) {
     this.id = id;
     this.user = user;
     this.nameValue = nameValue;

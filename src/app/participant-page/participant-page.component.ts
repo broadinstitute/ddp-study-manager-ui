@@ -317,12 +317,16 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
       if (this.participant.data != null && this.participant.data.dsm != null && this.participant.data.dsm[ "pdfs" ] != null && this.participant.data.dsm[ "pdfs" ].length > 0) {
         let tmp = this.participant.data.dsm[ "pdfs" ];
         if (tmp != null && tmp.length > 0) {
-          this.pdfs.push(new PDFModel('cover','Cover PDF', 1));
+          let pos = 1;
+          if (this.participant.medicalRecords != null && this.participant.medicalRecords.length > 0) {
+            this.pdfs.push( new PDFModel( 'cover', 'Cover PDF', pos ) );
+            pos += 1;
+          }
           tmp.forEach( (pdf, index) => {
-            pdf.order = index + 2;// +2 because 1 is cover pdf
+            pdf.order = index + pos;// +2 because 1 is cover pdf
             this.pdfs.push(pdf);
           })
-          this.pdfs.push(new PDFModel('irb','IRB Letter', tmp.length + 2));
+          this.pdfs.push(new PDFModel('irb','IRB Letter', tmp.length + pos));
         }
       }
       //if surveys is null then it is a gen2 participant > go and get institution information
@@ -509,7 +513,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
         ddpParticipantId = this.participant.data.profile[ "legacyAltPid" ];
       }
       let patch1 = new PatchUtil( participantId, this.role.userMail(),
-        {name: parameterName, value: v}, null, 'ddpParticipantId', ddpParticipantId, tableAlias );
+        {name: parameterName, value: v}, null, 'ddpParticipantId', ddpParticipantId, tableAlias, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) );
       patch1.realm = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
       let patch = patch1.getPatch();
       this.currentPatchField = parameterName;
@@ -697,7 +701,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   saveNote() {
     let patch1 = new PatchUtil( this.noteMedicalRecord.medicalRecordId, this.role.userMail(),
-      {name: "mrNotes", value: this.noteMedicalRecord.mrNotes}, null, null, null, Statics.MR_ALIAS );
+      {name: "mrNotes", value: this.noteMedicalRecord.mrNotes}, null, null, null, Statics.MR_ALIAS,  null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) );
     let patch = patch1.getPatch();
 
 
