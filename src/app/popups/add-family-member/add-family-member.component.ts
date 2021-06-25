@@ -49,7 +49,7 @@ export class AddFamilyMemberComponent implements OnInit {
   
   submitFamilyMember() {
     let payload = {
-      participantGuid: this.getAltPidElseGuid(),
+      participantId: this.getAltPidElseGuid(),
       realm: this.compService.getRealm(),
       data: {
         firstName: this.familyMemberFirstName,
