@@ -1,31 +1,31 @@
 import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
-import {ActivatedRoute, Router} from "@angular/router";
 import {Response} from "@angular/http";
+import {ActivatedRoute, Router} from "@angular/router";
+import {FollowUp} from "../follow-up/follow-up.model";
+import {Lookup} from "../lookup/lookup.model";
+import {ModalComponent} from "../modal/modal.component";
+import {OncHistoryDetailComponent} from "../onc-history-detail/onc-history-detail.component";
 import {Participant} from "../participant-list/participant-list.model";
+import {PDFModel} from "../pdf-download/pdf-download.model";
 
 import {Auth} from "../services/auth.service";
 import {ComponentService} from "../services/component.service";
 import {DSMService} from "../services/dsm.service";
 import {RoleService} from "../services/role.service";
-import {MedicalRecordLog} from "./model/medical-record-log.model";
-import {Utils} from "../utils/utils";
-import {Lookup} from "../lookup/lookup.model";
-import {Statics} from "../utils/statics";
-import {OncHistoryDetailComponent} from "../onc-history-detail/onc-history-detail.component";
-import {ModalComponent} from "../modal/modal.component";
-import {Result} from "../utils/result.model";
 import {NameValue} from "../utils/name-value.model";
-import {FollowUp} from "../follow-up/follow-up.model";
 import {PatchUtil} from "../utils/patch.model";
+import {Result} from "../utils/result.model";
+import {Statics} from "../utils/statics";
+import {Utils} from "../utils/utils";
 import {MedicalRecord} from "./medical-record.model";
-import {PDFModel} from "../pdf-download/pdf-download.model";
+import {MedicalRecordLog} from "./model/medical-record-log.model";
 
 var fileSaver = require( "file-saver/FileSaver.js" );
 
 @Component( {
   selector: "app-medical-record",
   templateUrl: "./medical-record.component.html",
-  styleUrls: [ "./medical-record.component.css" ],
+  styleUrls: [ "./medical-record.component.css" ]
 } )
 export class MedicalRecordComponent implements OnInit {
 
@@ -90,16 +90,16 @@ export class MedicalRecordComponent implements OnInit {
         this.participantExited = false;
       }
       this.pdfs = new Array<PDFModel>();
-      this.pdfs.push(new PDFModel('cover','Cover PDF', 1));
+        this.pdfs.push( new PDFModel( "cover", "Cover PDF", 1 ) );
       if (this.participant.data != null && this.participant.data.dsm != null && this.participant.data.dsm[ "pdfs" ] != null) {
         let tmp = this.participant.data.dsm[ "pdfs" ];
         if (tmp != null && tmp.length > 0) {
-          tmp.forEach( (pdf, index) => {
+          tmp.forEach( ( pdf, index ) => {
             pdf.order = index + 2;// +2 because 1 is cover pdf
-            this.pdfs.push(pdf);
-          })
+            this.pdfs.push( pdf );
+          } );
         }
-        this.pdfs.push(new PDFModel('irb','IRB Letter', tmp.length + 2));
+        this.pdfs.push( new PDFModel( "irb", "IRB Letter", tmp.length + 2 ) );
       }
       this.startDate = this.participant.data.dsm[ "diagnosisMonth" ] + "/" + this.participant.data.dsm[ "diagnosisYear" ];
       this.endDate = Utils.getFormattedDate( new Date() );
@@ -156,7 +156,7 @@ export class MedicalRecordComponent implements OnInit {
       let participantId: string = this.getParticipantId();
       let realm: string = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
       let patch1 = new PatchUtil( this.medicalRecord.medicalRecordId, this.role.userMail(),
-        { name: parameterName, value: v }, null, null, participantId, Statics.MR_ALIAS, null, realm );
+        {name: parameterName, value: v}, null, null, participantId, Statics.MR_ALIAS, null, realm );
       let patch = patch1.getPatch();
       this.patchFinished = false;
       if (parameterName != "followUps") {
@@ -184,7 +184,7 @@ export class MedicalRecordComponent implements OnInit {
             this.router.navigate( [ Statics.HOME_URL ] );
           }
           this.additionalMessage = "Error - Saving changes \n" + err;
-        },
+        }
       );
     }
   }
@@ -216,7 +216,7 @@ export class MedicalRecordComponent implements OnInit {
           this.auth.logout();
         }
         this.errorMessage = "Error - Loading mr log\nPlease contact your DSM developer";
-      },
+      }
     );
   }
 
@@ -235,7 +235,7 @@ export class MedicalRecordComponent implements OnInit {
             this.router.navigate( [ Statics.HOME_URL ] );
           }
           this.additionalMessage = "Error - Saving log data\nPlease contact your DSM developer";
-        },
+        }
       );
     }
     else {
@@ -253,7 +253,7 @@ export class MedicalRecordComponent implements OnInit {
   }
 
   downloadPDF( configName: string ) {
-    if (configName === 'cover' && this.medicalRecord.name == null || this.medicalRecord.name === "") {
+    if (configName === "cover" && this.medicalRecord.name == null || this.medicalRecord.name === "") {
       this.additionalMessage = "Please add a 'Confirmed Institution Name'";
     }
     else {
@@ -268,22 +268,22 @@ export class MedicalRecordComponent implements OnInit {
           }
           this.downloadFile( data, "_" + tmp );
           this.downloading = false;
-          this.message = "Download finished."
+          this.message = "Download finished.";
         },
         err => {
           if (err._body === Auth.AUTHENTICATION_ERROR) {
-            this.router.navigate( [Statics.HOME_URL] );
+            this.router.navigate( [ Statics.HOME_URL ] );
           }
           this.message = "Failed to download pdf.";
           this.downloading = false;
-        },
+        }
       );
     }
     this.modal.hide();
   }
 
   downloadFile( data: Response, type: string ) {
-    var blob = new Blob( [ data ], { type: "application/pdf" } );
+    var blob = new Blob( [ data ], {type: "application/pdf"} );
     fileSaver.saveAs( blob, this.participant.data.profile[ "hruid" ] + type + Statics.PDF_FILE_EXTENSION );
   }
 
@@ -361,12 +361,12 @@ export class MedicalRecordComponent implements OnInit {
   }
 
   currentField( field: string ) {
-    if (field != null || (field == null && this.patchFinished)) {
+    if (field != null || ( field == null && this.patchFinished )) {
       this.currentPatchField = field;
     }
   }
 
-  doNothing(source: string) { //needed for the menu, otherwise page will refresh!
+  doNothing( source: string ) { //needed for the menu, otherwise page will refresh!
     this.source = source;
     this.modal.show();
     return false;
@@ -399,7 +399,7 @@ export class MedicalRecordComponent implements OnInit {
         return tmpId === ddpInstitutionId;
       } );
 
-      if( medicalProvider != null) {
+      if (medicalProvider != null) {
         let address: string = "";
         if (medicalProvider.physicianName) {
           address += medicalProvider.physicianName;

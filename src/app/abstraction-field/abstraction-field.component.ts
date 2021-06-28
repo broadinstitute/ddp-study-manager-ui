@@ -210,7 +210,8 @@ export class AbstractionFieldComponent implements OnInit {
             {name: this.activityOfField + "_valueCounter", value: field.fieldValue.valueCounter},
             {name: this.activityOfField + "_fileName", value: null},
             {name: this.activityOfField + "_filePage", value: null} ,
-            {name: this.activityOfField + "_matchPhrase", value: null} ]
+            {name: this.activityOfField + "_matchPhrase", value: null} ],
+          realm : localStorage.getItem( ComponentService.MENU_SELECTED_REALM )
         };
         field.fieldValue.value = null;
         field.fieldValue.fileName = null;
@@ -226,7 +227,8 @@ export class AbstractionFieldComponent implements OnInit {
             {name: this.activityOfField + "_value", value: null},
             {name: this.activityOfField + "_fileName", value: null},
             {name: this.activityOfField + "_filePage", value: null} ,
-            {name: this.activityOfField + "_matchPhrase", value: null}]
+            {name: this.activityOfField + "_matchPhrase", value: null}],
+          realm : localStorage.getItem( ComponentService.MENU_SELECTED_REALM )
         };
         field.fieldValue.value = null;
         field.fieldValue.fileName = null;
@@ -239,7 +241,8 @@ export class AbstractionFieldComponent implements OnInit {
           user: this.role.userMail(),
           fieldId: field.medicalRecordAbstractionFieldId,
           fieldName: field.displayName,
-          nameValues: [ {name: this.activityOfField + "_" + fieldName, value: v} ]
+          nameValues: [ {name: this.activityOfField + "_" + fieldName, value: v} ],
+          realm : localStorage.getItem( ComponentService.MENU_SELECTED_REALM )
         };
       }
       else if (fieldName === "note" || fieldName === "doubleCheck" || fieldName === "fileName") {
@@ -249,7 +252,8 @@ export class AbstractionFieldComponent implements OnInit {
           parent: "participantId",
           user: this.role.userMail(),
           fieldId: field.medicalRecordAbstractionFieldId,
-          nameValues: [ {name: this.activityOfField + "_" + fieldName, value: v} ]
+          nameValues: [ {name: this.activityOfField + "_" + fieldName, value: v} ],
+          realm : localStorage.getItem( ComponentService.MENU_SELECTED_REALM )
         };
       }
       // value of field changed
@@ -261,7 +265,8 @@ export class AbstractionFieldComponent implements OnInit {
           user: this.role.userMail(),
           fieldId: field.medicalRecordAbstractionFieldId,
           nameValues: [ {name: this.activityOfField + "_" + fieldName, value: v},
-            {name: this.activityOfField + "_valueCounter", value: field.fieldValue.valueCounter} ]
+            {name: this.activityOfField + "_valueCounter", value: field.fieldValue.valueCounter} ],
+          realm : localStorage.getItem( ComponentService.MENU_SELECTED_REALM )
         };
       }
       // value of field changed
@@ -272,7 +277,8 @@ export class AbstractionFieldComponent implements OnInit {
           parent: "participantId",
           user: this.role.userMail(),
           fieldId: field.medicalRecordAbstractionFieldId,
-          nameValues: [ {name: this.activityOfField + "_" + fieldName, value: v} ]
+          nameValues: [ {name: this.activityOfField + "_" + fieldName, value: v} ],
+          realm : localStorage.getItem( ComponentService.MENU_SELECTED_REALM )
         };
       }
       else if (fieldName === "filePage" && field.fieldValue.fileName != null && field.fieldValue.fileName !== "") {
@@ -283,7 +289,8 @@ export class AbstractionFieldComponent implements OnInit {
           user: this.role.userMail(),
           fieldId: field.medicalRecordAbstractionFieldId,
           nameValues: [ {name: this.activityOfField + "_" + fieldName, value: v},
-            {name: this.activityOfField + "_fileName", value: field.fieldValue.fileName} ]
+            {name: this.activityOfField + "_fileName", value: field.fieldValue.fileName} ],
+          realm : localStorage.getItem( ComponentService.MENU_SELECTED_REALM )
         };
       }
       if (fieldName !== "note" && fieldName !== "question") {
@@ -343,7 +350,8 @@ export class AbstractionFieldComponent implements OnInit {
         {name: "qc_valueCounter", value: field.fieldValue.valueCounter},
         {name: "qc_fileName", value: field.fieldValue.fileName},
         {name: "qc_filePage", value: field.fieldValue.filePage} ,
-        {name: "qc_matchPhrase", value: field.fieldValue.matchPhrase} ]
+        {name: "qc_matchPhrase", value: field.fieldValue.matchPhrase} ],
+      realm : localStorage.getItem( ComponentService.MENU_SELECTED_REALM )
     };
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
       data => {
