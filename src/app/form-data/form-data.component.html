@@ -57,7 +57,7 @@
       </ng-container>
 
       <ng-container *ngIf="fieldSetting.displayType === 'TEXTAREA'">
-        <textarea maxlength="1000" placeholder="{{fieldSetting.columnDisplay}}"
+        <textarea maxlength="10000" placeholder="{{fieldSetting.columnDisplay}}"
                   [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}" [value]="participantData"
                   [readonly] = "fieldSetting.readonly"
                   (change)="valueChanged($event)"></textarea>
