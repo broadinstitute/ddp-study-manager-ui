@@ -264,6 +264,10 @@ export class Utils {
       else {
         objects = data[ paths[ index ] ];
       }
+      // if (!objects && data['participantData']) {
+      //   objects = data['participantData'];
+      //   result = objects[]
+      // }
       if (objects != null) {
         for (let o of objects) {
           let oString = this.makeCSVString( o, columns[ paths[ index + 1 ] ], data );

@@ -1405,13 +1405,14 @@ export class ParticipantListComponent implements OnInit {
         paths.push(["abstractionSummary", source]);
       }  else if (source === "invitations") {
         paths.push(["invitations", source]);
+      }  else if (source === "GENOME_STUDY_COLUMNS") {
+        paths.push(["GENOME_STUDY_COLUMNS", source]);
       } else {
         paths.push([source, source]);
       }
     }
 
     Utils.downloadCurrentData( this.participantList, paths, columns, "Participants-"  + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION, false );
-
   }
 
   getOptionDisplay( options: NameValue[], key: string ) {
