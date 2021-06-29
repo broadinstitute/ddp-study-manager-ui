@@ -1355,23 +1355,12 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
                   data[ action.name ] = action.value;
                   participantDataSec = new ParticipantData( null, action.type, data );
                 }
-                else {
-                  //for RGP only if member_type = SELF
-                  if (localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) != null && localStorage.getItem( ComponentService.MENU_SELECTED_REALM ).toLowerCase() === "rgp") {
-                    if (participantData.data["MEMBER_TYPE"] != null && participantData.data["MEMBER_TYPE"] === "SELF") {
-                      if (actionPatch === null) {
-                        actionPatch = [];
-                      }
-                      actionPatch.push( action );
-                    }
+                else {                  
+                  //all others studies we do the actions for everyone
+                  if (actionPatch === null) {
+                    actionPatch = [];
                   }
-                  else {
-                    //all others studies we do the actions for everyone
-                    if (actionPatch === null) {
-                      actionPatch = [];
-                    }
-                    actionPatch.push( action );
-                  }
+                  actionPatch.push( action );
                 }
               }
               if (participantDataSec != null && participantDataSec.data != null) {
