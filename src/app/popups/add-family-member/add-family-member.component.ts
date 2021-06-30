@@ -49,7 +49,7 @@ export class AddFamilyMemberComponent implements OnInit {
   
   submitFamilyMember() {
     let payload = {
-      participantGuid: this.getAltPidElseGuid(),
+      participantId: this.getAltPidElseGuid(),
       realm: this.compService.getRealm(),
       data: {
         firstName: this.familyMemberFirstName,
@@ -114,7 +114,8 @@ export class AddFamilyMemberComponent implements OnInit {
       let familyMemberData = pData.data;
       if (familyMemberData.hasOwnProperty(Statics.PARTICIPANT_RELATIONSHIP_ID)) {
         let firstUnderScore = familyMemberData[Statics.PARTICIPANT_RELATIONSHIP_ID].indexOf("_");
-        return familyMemberData[Statics.PARTICIPANT_RELATIONSHIP_ID].substring(firstUnderScore + 1);
+        let secondUnderScore = familyMemberData[Statics.PARTICIPANT_RELATIONSHIP_ID].indexOf("_", firstUnderScore + 1);
+        return familyMemberData[Statics.PARTICIPANT_RELATIONSHIP_ID].substring(secondUnderScore + 1);
       }
       return "";
     });

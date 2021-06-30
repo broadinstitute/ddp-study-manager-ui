@@ -467,7 +467,7 @@ participant.data.dsm['diagnosisYear'] != null">
                          (change)="onAdditionalValueChange($event, fieldSetting.columnName)"
                          (blur)="currentField(null)" (focus)="currentField(fieldSetting.columnName)">
                 </md-input-container>
-                <textarea maxlength="1000" *ngIf="fieldSetting.displayType === 'TEXTAREA'"
+                <textarea maxlength="10000" *ngIf="fieldSetting.displayType === 'TEXTAREA'"
                           [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}"
                           (blur)="currentField(null)" (focus)="currentField(fieldSetting.columnName)"
                           [disabled]="participantExited"

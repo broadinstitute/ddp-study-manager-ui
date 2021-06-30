@@ -1,4 +1,5 @@
 import {Component, OnInit} from "@angular/core";
+import {ComponentService} from "../services/component.service";
 import {NameValue} from "../utils/name-value.model";
 import {PatchUtil} from "../utils/patch.model";
 import {Result} from "../utils/result.model";
@@ -121,7 +122,7 @@ export class DrugListComponent implements OnInit {
         {
           name: parameterName,
           value: v
-        }, null, null, null, Statics.DRUG_ALIAS );
+        }, null, null, null, Statics.DRUG_ALIAS,  null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) );
       let patch = patch1.getPatch();
       this.patchFinished = false;
       this.currentPatchField = parameterName;
