@@ -1420,10 +1420,10 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
       if (!data.FIRSTNAME) {
         data.FIRSTNAME = '';
       }
-      if (!data.LASTNAME) {
-        data.LASTNAME = '';
+      if (!data.COLLABORATOR_PARTICIPANT_ID) {
+        data.COLLABORATOR_PARTICIPANT_ID = '';
       }
-      return Statics.RELATIONS[data.MEMBER_TYPE] + " - " + data.FIRSTNAME + " " + data.LASTNAME;
+      return data.FIRSTNAME + " - " + data.COLLABORATOR_PARTICIPANT_ID;
     }
     return "";
   }
