@@ -24,6 +24,7 @@ export class AddFamilyMemberComponent implements OnInit {
   probandDataId: number = this.getProbandDataId(this.data.participant.participantData);
   isParticipantProbandEmpty: boolean = this.getProbandDataId(this.data.participant.participantData) == null;
   staticRelations = Statics.RELATIONS;
+  isDataLoading = false;
 
   constructor(@Inject(MD_DIALOG_DATA) public data: {participant: any}, private dsmService: DSMService, 
               private compService: ComponentService, private role: RoleService, public dialog: MdDialog,
@@ -62,6 +63,7 @@ export class AddFamilyMemberComponent implements OnInit {
       probandDataId: this.probandDataId,
       userId: this.role.userID()
     }
+    this.isDataLoading = true;
     this.dsmService.addFamilyMemberRequest(JSON.stringify(payload)).subscribe(
       data => {
         this.openResultDialog("Successfully added family member");
@@ -76,11 +78,12 @@ export class AddFamilyMemberComponent implements OnInit {
           this.openResultDialog("Error - Adding family member \nPlease contact your DSM Developer");
         }
         this.close();
-      }
+      },
     )
   }
 
   private openResultDialog(text: string) {
+    this.isDataLoading = false;
     this.dialog.open(ParticipantUpdateResultDialogComponent, {
       data: { message: text },
     });

@@ -1,4 +1,9 @@
-<md-dialog-content>
+<span [hidden]="!isDataLoading" class="Width--100">
+  <div align="center" class="Width--100 Height--100">
+    <i class="fas fa-spinner fa-spin fa-5x Color--primary"></i>
+  </div>
+</span>
+<md-dialog-content *ngIf=!isDataLoading>
   <div class="family-member-popup">
     <div (click)="close()" class="family-member-close">
       X
