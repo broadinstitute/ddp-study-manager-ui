@@ -28,6 +28,7 @@ import {TissuePageComponent} from "./tissue-page/tissue-page.component";
 import {MedicalRecordComponent} from "./medical-record/medical-record.component";
 import {ParticipantPageComponent} from "./participant-page/participant-page.component";
 import {FieldSettingsComponent} from "./field-settings/field-settings.component";
+import { DynamicDashboardComponent } from "./dynamic-dashboard/dynamic-dashboard.component";
 
 export const AppRoutes = [
 
@@ -58,6 +59,7 @@ export const AppRoutes = [
 
   //Study
   {path: Statics.MEDICALRECORD_DASHBOARD, component: DashboardComponent, canActivate: [ AuthGuard ]},
+  {path: "dynamicDashboard", component: DynamicDashboardComponent, canActivate: [ AuthGuard ]},
   {path: "participantList", component: ParticipantListComponent, canActivate: [ AuthGuard ]},
   {path: "tissueList", component: TissueListComponent, canActivate: [ AuthGuard ]},
 
