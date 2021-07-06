@@ -264,7 +264,7 @@ export class Utils {
       else {
         objects = data[ paths[ index ] ];
       }
-      if (!objects && data['participantData']) {
+      if (data['participantData'] && paths[0] in this.settings) {
         objects = data['participantData'];
         result.push("asdfsdfas");
       }
