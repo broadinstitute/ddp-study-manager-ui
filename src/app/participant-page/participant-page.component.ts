@@ -1359,7 +1359,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
                   data[ action.name ] = action.value;
                   participantDataSec = new ParticipantData( null, action.type, data );
                 }
-                else {                  
+                else {
                   //all others studies we do the actions for everyone
                   if (actionPatch === null) {
                     actionPatch = [];
