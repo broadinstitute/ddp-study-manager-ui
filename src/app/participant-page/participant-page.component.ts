@@ -318,8 +318,8 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
         let tmp = this.participant.data.dsm[ "pdfs" ];
         if (tmp != null && tmp.length > 0) {
           let pos = 1;
-          if (this.participant.medicalRecords != null && this.participant.medicalRecords.length > 0) {
-            this.pdfs.push( new PDFModel( 'cover', 'Cover PDF', pos ) );
+          if (this.participant.oncHistoryDetails != null && this.participant.oncHistoryDetails.length > 0) {
+            this.pdfs.push( new PDFModel( "request", "Tissue Request PDF", pos ) );
             pos += 1;
           }
           tmp.forEach( (pdf, index) => {
@@ -723,8 +723,12 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   downloadRequestPDF( requestOncHistoryList: Array<OncHistoryDetail>, bundle: boolean ) {
     this.downloading = true;
     this.message = "Downloading... This might take a while";
+    let configName = null;
+    if (!bundle) {
+      configName = "tissue";
+    }
     this.dsmService.downloadPDF( this.participant.participant.ddpParticipantId, null, null, null, null,
-      localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), "tissue", this.pdfs, requestOncHistoryList).subscribe(
+      localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), configName, this.pdfs, requestOncHistoryList).subscribe(
       data => {
         var date = new Date();
         this.downloadFile( data, "_TissueRequest_" + this.facilityName + "_" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) );
@@ -1355,7 +1359,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
                   data[ action.name ] = action.value;
                   participantDataSec = new ParticipantData( null, action.type, data );
                 }
-                else {                  
+                else {
                   //all others studies we do the actions for everyone
                   if (actionPatch === null) {
                     actionPatch = [];
