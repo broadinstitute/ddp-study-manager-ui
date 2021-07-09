@@ -728,7 +728,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
       configName = "tissue";
     }
     this.dsmService.downloadPDF( this.participant.participant.ddpParticipantId, null, null, null, null,
-      localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), "tissue", this.pdfs, requestOncHistoryList).subscribe(
+      localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), configName, this.pdfs, requestOncHistoryList).subscribe(
       data => {
         var date = new Date();
         this.downloadFile( data, "_TissueRequest_" + this.facilityName + "_" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) );
