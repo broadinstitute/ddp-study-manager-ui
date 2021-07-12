@@ -648,6 +648,8 @@ export class ParticipantListComponent implements OnInit {
                 t = "p";
               } else if (t === "inst") {
                 t = "m";
+              } else if (t === 'participantData') {
+                t = filter.participantColumn.object;
               }
               for (let f of this.sourceColumns[ t ]) {
                 if (f.participantColumn.name === filter.participantColumn.name) {
@@ -1789,27 +1791,27 @@ export class ParticipantListComponent implements OnInit {
 
   private createFilter(field: any): Filter {
     let showType = field.displayType;
-    let filter: Filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
+    let filter: Filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', field.fieldType, false),
     showType, field.possibleValues);
     if (showType === Filter.TEXTAREA_TYPE) {
       showType = Filter.TEXT_TYPE
-      filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
+      filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', field.fieldType, false),
       showType, field.possibleValues);
     } else if (showType == Filter.ACTIVITY_STAFF_TYPE) {
       if (field.possibleValues && field.possibleValues[0].type) {
         showType = field.possibleValues[0].type;
       }
-      filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
+      filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', field.fieldType, false),
       showType, field.possibleValues);
       if (showType === Filter.RADIO_TYPE) {
         let options: NameValue[] = [];
         options.push(new NameValue("Yes", "1"));
         options.push(new NameValue("No", "0"));
-        filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
+        filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', field.fieldType, false),
           showType, options, null, null, null, null, null, null, null, null, null, null, true, Filter.ACTIVITY_STAFF_TYPE);
       }
     } else if (showType === Filter.RADIO_TYPE) {
-      filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
+      filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', field.fieldType, false),
       showType, field.possibleValues, null, null, null, null, null, null, null, null, null, null, true);
     }
     return filter;
