@@ -107,6 +107,7 @@ export class ParticipantListComponent implements OnInit {
   savedSelectedColumns = {};
   isAddFamilyMember: boolean = false;
   showGroupFields: boolean = false;
+  hideSamplesTab: boolean = false;
 
   constructor( private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
                private router: Router, private auth: Auth, private route: ActivatedRoute, private util: Utils ) {
@@ -503,6 +504,11 @@ export class ParticipantListComponent implements OnInit {
           this.showGroupFields = true;
         } else {
           this.showGroupFields = false;
+        }
+        if (jsonData.hideSamplesTab === true) {
+          this.hideSamplesTab = true;
+        } else {
+          this.hideSamplesTab = false;
         }
         this.orderColumns();
         this.getData();
