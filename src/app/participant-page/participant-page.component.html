@@ -513,7 +513,7 @@ participant.data.dsm['diagnosisYear'] != null">
                   <ng-container *ngFor="let activity of participant.data.activities; let i = index">
                     <div class="Float--left" *ngIf="getActivityDefinition(activity.activityCode) as activityDef3">
                       <a class="Abstraction--Jump--Group" pageScroll href="{{getGroupHref(activity.activityCode)}}"
-                         *ngIf="activityDef3 != null">{{activityDef3.activityName}}</a>
+                         *ngIf="activityDef3 != null">{{activityDef3.activityName}} {{activityDef3.activityVersion}}</a>
                     </div>
                     <ng-container *ngIf="i < participant.data.activities.length - 1">
                       <div class="Float--left Vertical--line"></div>

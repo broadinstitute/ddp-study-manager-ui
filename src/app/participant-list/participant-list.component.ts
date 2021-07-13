@@ -264,13 +264,18 @@ export class ParticipantListComponent implements OnInit {
             this.hasESData = true;
             let activityDefinition: ActivityDefinition = ActivityDefinition.parse( jsonData.activityDefinitions[ key ] );
             let possibleColumns: Array<Filter> = [];
-            possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Created", "createdAt", activityDefinition.activityCode, null, true ), Filter.DATE_TYPE ) );
-            possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Completed", "completedAt", activityDefinition.activityCode, null, true ), Filter.DATE_TYPE ) );
-            possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Last Updated", "lastUpdatedAt", activityDefinition.activityCode, null, true ), Filter.DATE_TYPE ) );
-            possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Status", "status", activityDefinition.activityCode, null, true ), Filter.OPTION_TYPE, [
-              new NameValue( "COMPLETE", "Completed" ),
-              new NameValue( "CREATED", "Created" ),
-              new NameValue( "IN_PROGRESS", "In Progress" )] ) );
+            if (this.sourceColumns[activityDefinition.activityCode] != null) {
+              possibleColumns = this.sourceColumns[activityDefinition.activityCode];
+            }
+            else {
+              possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Created", "createdAt", activityDefinition.activityCode, null, true ), Filter.DATE_TYPE ) );
+              possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Completed", "completedAt", activityDefinition.activityCode, null, true ), Filter.DATE_TYPE ) );
+              possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Last Updated", "lastUpdatedAt", activityDefinition.activityCode, null, true ), Filter.DATE_TYPE ) );
+              possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Status", "status", activityDefinition.activityCode, null, true ), Filter.OPTION_TYPE, [
+                new NameValue( "COMPLETE", "Completed" ),
+                new NameValue( "CREATED", "Created" ),
+                new NameValue( "IN_PROGRESS", "In Progress" )] ) );
+            }
             if (activityDefinition != null && activityDefinition.questions != null) {
               for (let question of activityDefinition.questions) {
                 if (question.stableId != null) {
@@ -302,9 +307,13 @@ export class ParticipantListComponent implements OnInit {
                   } else if (question.questionType === "NUMERIC") {
                     type = Filter.NUMBER_TYPE;
                   }
-                  let displayName = this.getQuestionOrStableId( question );
-                  let filter = new Filter( new ParticipantColumn( displayName, question.stableId, activityDefinition.activityCode, null, true ), type, options );
-                  possibleColumns.push( filter );
+                  if (possibleColumns.find(filter => {
+                    return filter.participantColumn.name === question.stableId
+                  }) == null) {
+                    let displayName = this.getQuestionOrStableId( question );
+                    let filter = new Filter( new ParticipantColumn( displayName, question.stableId, activityDefinition.activityCode, null, true ), type, options );
+                    possibleColumns.push( filter );
+                  }
                 }
               }
               let name = activityDefinition.activityName == undefined || activityDefinition.activityName === "" ? activityDefinition.activityCode : activityDefinition.activityName;
