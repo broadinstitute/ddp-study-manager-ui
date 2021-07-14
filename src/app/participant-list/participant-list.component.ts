@@ -307,9 +307,10 @@ export class ParticipantListComponent implements OnInit {
                   } else if (question.questionType === "NUMERIC") {
                     type = Filter.NUMBER_TYPE;
                   }
-                  if (possibleColumns.find(filter => {
+                  let filterInPossibleColumns = possibleColumns.find(filter => {
                     return filter.participantColumn.name === question.stableId
-                  }) == null) {
+                  });
+                  if (filterInPossibleColumns == null) {
                     let displayName = this.getQuestionOrStableId( question );
                     let filter = new Filter( new ParticipantColumn( displayName, question.stableId, activityDefinition.activityCode, null, true ), type, options );
                     possibleColumns.push( filter );
