@@ -664,7 +664,7 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
 
                   <div *ngIf="checkIfColumnIsTabbed(alias)">
                     <ng-container>
-                      {{getPersonField(pt.participantData[0], col)}}
+                      {{getPersonFieldForMultipleRows(pt.participantData, col)}}
                     </ng-container>
                   </div>
 
