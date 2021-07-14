@@ -1744,23 +1744,45 @@ export class ParticipantListComponent implements OnInit {
     if (column && column.participantColumn) {
       name = column.participantColumn.name;
     }
-    if (personData && personData.data && name) {
-      let currentKey = Object.keys(personData.data).find(key => key === name);
-      let field = personData.data[currentKey];
-      if (field) {
-        if (column.options && column.options[0] && column.options[0].name) {
-          let fieldToShow = null;
-          if (column.additionalType === Filter.ACTIVITY_STAFF_TYPE) {
-            fieldToShow = column.options.find(nameValue => nameValue.name === field);
-          } else {
-            fieldToShow = column.options.find(nameValue => nameValue.value === field);
-          }
-          return fieldToShow.name;
-        }
-        return field;
-      }
+    let result: string;
+    result = this.getPersonFieldFromDataRow(personData, column, name);    
+    return result;
+  }
+
+  getPersonFieldFromDataRow(personData: ParticipantData, column: Filter, name: string): string {
+    if (!personData || !personData.data || !name) {
+      return null;
     }
-    return null;
+    let currentKey = Object.keys(personData.data).find(key => key === name);
+    let field = personData.data[currentKey];
+    if (field) {
+      if (column.options && column.options[0] && column.options[0].name) {
+        let fieldToShow = null;
+        if (column.additionalType === Filter.ACTIVITY_STAFF_TYPE) {
+          fieldToShow = column.options.find(nameValue => nameValue.name === field);
+        } else {
+          fieldToShow = column.options.find(nameValue => nameValue.value === field);
+        }
+        return fieldToShow.name;
+      }
+      return field;
+    }
+    return null;    
+  }
+
+  getPersonFieldForMultipleRows(personDatas: ParticipantData[], column: Filter): string {
+    let name: string
+    if (column && column.participantColumn) {
+      name = column.participantColumn.name;
+    }
+    let result: string;
+    for (let personData of personDatas) {
+      result = this.getPersonFieldFromDataRow(personData, column, name);
+      if (result) {
+        break;
+      }
+    } 
+    return result;
   }
 
   getPersonType(personData: ParticipantData): string {
