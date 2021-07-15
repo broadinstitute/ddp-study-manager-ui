@@ -1767,7 +1767,7 @@ export class ParticipantListComponent implements OnInit {
       }
       return field;
     }
-    return null;    
+    return "";    
   }
 
   getPersonFieldForMultipleRows(personDatas: ParticipantData[], column: Filter): string {
