@@ -536,7 +536,7 @@ participant.data.dsm['diagnosisYear'] != null">
             </tab>
 
             <!--sample information-->
-            <tab *ngIf="participant.kits != null && participant.kits.length > 0" heading="Sample Information">
+            <tab *ngIf="!hideSamplesTab && participant.kits != null && participant.kits.length > 0" heading="Sample Information">
               <ng-container *ngFor="let sample of participant.kits; let i = index">
                 <fieldset style="border: 1px black solid">
                   <legend class="Group--Title" id="{{sample.kitType}}_{{i}}">Sample Type: {{sample.kitType}}</legend>
