@@ -39,8 +39,9 @@
             <md-option value="other"> Other</md-option>
           </md-select>
 
-          <app-field-typeahead *ngIf="field.type2 === 'text'" [dataSource]="drugs" [drug]="multiTypes[field.value]" [disabled]="disabled" [fieldName]="field.value"
+          <app-field-typeahead *ngIf="field.type2 === 'text'" [dataSource]="drugs" [drug]="multiTypes[i][field.value]" [disabled]="disabled" [fieldName]="field.value"
                                (drugSelected)="multiTypeValueChanged($event, row, field.value, field, i)"></app-field-typeahead>
+
         </ng-container>
 
         <ng-container *ngIf="field.type === 'cancers'">
@@ -76,7 +77,7 @@
         </md-input-container>
 
         <app-field-datepicker *ngIf="field.type === 'date'" [dateString]="row[field.value]" [disabled]="disabled" [addCheckboxEstimated]="true"
-                              [showNAButton]="true" [showNotFoundButton]="true" [allowUnknownDay]="true"
+                              [showNAButton]="true" [showNotFoundButton]="true" [allowUnknownDay]="true" [showCalendarButton]="false"
                               [colorDuringPatch]="isPatchedCurrently(field.value, i)"
                               (dateChanged)="multiTypeValueChanged($event, row, field.value, field, i)"></app-field-datepicker>
 
