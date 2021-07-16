@@ -700,7 +700,14 @@ export class ParticipantListComponent implements OnInit {
             for (let key of Object.keys( viewFilter.columns )) {
               c[ key ] = [];
               for (let column of viewFilter.columns[ key ]) {
-                c[ key ].push( column.copy() );
+                if (key == 'participantData' && column.participantColumn && column.participantColumn.object) {
+                  if (!c[column.participantColumn.object]) {
+                    c[column.participantColumn.object] = [];
+                  }
+                  c[column.participantColumn.object].push(column.copy());
+                } else {                  
+                  c[ key ].push( column.copy() );
+                }
               }
             }
             this.selectedColumns = c;
