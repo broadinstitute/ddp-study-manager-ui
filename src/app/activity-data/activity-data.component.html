@@ -2,6 +2,7 @@
   <fieldset style="border: 1px black solid">
     <legend class="Group--Title" id="{{activity.activityCode}}">{{activityDefinition.activityName}}</legend>
     <div class="Router--Outlet">
+      <div>Survey Version: {{activity.activityVersion}}</div>
       <div>Created: {{activity.createdAt | date:'medium'}}</div>
       <div>Completed: {{activity.completedAt | date:'medium'}}</div>
       <div>Last Updated: {{activity.lastUpdatedAt | date:'medium'}}</div>
