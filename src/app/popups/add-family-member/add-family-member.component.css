@@ -1,0 +1,32 @@
+.family-member-close {
+    float: right;
+    cursor: pointer;
+    font-size: 150%;
+}
+
+.family-member-form {
+    padding-top: 20px;
+    /* border-collapse: separate;  */
+    border-spacing: 1em;
+}
+
+.subject-id-info {
+    display: block;
+}
+
+.subject-id-info.active {
+    color:red;
+}
+
+.subject-id-exists {
+    display: none;
+}
+
+.subject-id-exists.active {
+    display: block;
+    color:red;
+}
+
+.mat-select {
+    display: block;
+}

@@ -28,6 +28,7 @@ export class RoleService {
   private _isAbstractionAdmin: boolean = false;
   private _canEditDrugList: boolean = false;
   private _isParticipantListView: boolean = false;
+  private _isParticipantEdit: boolean = false;
 
   private _userId: string;
   private _user: string;
@@ -44,6 +45,7 @@ export class RoleService {
       var obj: any = this.sessionService.getDSMClaims(token);
       let accessRoles: string = obj.USER_ACCESS_ROLE;
       if (accessRoles != null) {
+        console.log(accessRoles);
         let roles: string[] = JSON.parse(accessRoles);
         for (let entry of roles) {
           // only special kit_shipping_xxx rights should get added here, not the overall only kit_shipping_view
@@ -115,6 +117,9 @@ export class RoleService {
           }
           else if (entry === 'pt_list_view') {
             this._isParticipantListView = true;
+          }
+          else if (entry === 'participant_edit') {
+            this._isParticipantEdit = true;
           }
         }
       }
@@ -236,5 +241,9 @@ export class RoleService {
 
   public allowedParticipantListView() {
     return this._isParticipantListView;
+  }
+
+  public allowedToEditParticipant() {
+    return this._isParticipantEdit;
   }
 }

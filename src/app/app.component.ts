@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {MdMenuTrigger} from "@angular/material";
 import {DomSanitizer} from "@angular/platform-browser";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 import {Auth} from "./services/auth.service";
 import {RoleService} from "./services/role.service";
@@ -12,18 +12,33 @@ import {ComponentService} from "./services/component.service";
   templateUrl: "./app.component.html"
 } )
 export class AppComponent implements OnInit {
-
+  private realmFromUrl: string;
   @ViewChild( MdMenuTrigger ) trigger: MdMenuTrigger;
 
-  constructor( private router: Router, private auth: Auth, private sanitizer: DomSanitizer, private role: RoleService ) {
+  constructor( private router: Router, private auth: Auth, private sanitizer: DomSanitizer, private role: RoleService
+    , private route: ActivatedRoute ) {
   }
 
   ngOnInit() {
     window.scrollTo( 0, 0 );
+    this.route.queryParams
+      .filter(params => params.realm)
+      .subscribe(params => {
+        this.realmFromUrl = params.realm;
+    });
   }
 
   doNothing() { //needed for the menu, otherwise page will refresh!
     return false;
+  }
+
+  selectRealmAndDoNothing( newValue ) {
+    this.auth.selectRealm(newValue);
+    this.doNothing();
+  }
+
+  isRealmChosen( realm ) {
+    return this.realmFromUrl === realm;
   }
 
   doLogin() {
@@ -49,7 +64,8 @@ export class AppComponent implements OnInit {
     if (this.role.allowedToHandleSamples() || this.role.allowedToViewMedicalRecords() ||
       this.role.allowedToViewMailingList() || this.role.allowedToViewEELData() ||
       this.role.allowedToExitParticipant() || this.role.allowedToSkipParticipantEvents() ||
-      this.role.allowedToDiscardSamples() || this.role.allowToViewSampleLists()) {
+      this.role.allowedToDiscardSamples() || this.role.allowToViewSampleLists() ||
+      this.role.allowedParticipantListView()) {
       return true;
     }
     return false;

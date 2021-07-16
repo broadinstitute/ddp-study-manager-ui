@@ -2,6 +2,7 @@
   <fieldset style="border: 1px black solid">
     <legend class="Group--Title" id="{{activity.activityCode}}">{{activityDefinition.activityName}}</legend>
     <div class="Router--Outlet">
+      <div>Survey Version: {{activity.activityVersion}}</div>
       <div>Created: {{activity.createdAt | date:'medium'}}</div>
       <div>Completed: {{activity.completedAt | date:'medium'}}</div>
       <div>Last Updated: {{activity.lastUpdatedAt | date:'medium'}}</div>
@@ -69,17 +70,43 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                 </ng-container>
                 <ng-container *ngIf="qDef.questionType === 'PICKLIST' && questionAnswer.answer != null">
                   <ng-container *ngIf="qDef.selectMode === 'MULTIPLE'">
-                    <ul *ngFor="let o of qDef.options">
-                      <li *ngIf="getUtil().isOptionSelected(questionAnswer.answer, o.optionStableId)"><b>{{o.optionText}}</b>
-                        <ng-container *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, o.optionStableId) as oDetail">
-                          <div>{{oDetail.details}}
-                          </div>
-                        </ng-container>
-                      </li>
-                    </ul>
+                    <ng-container *ngIf="qDef.options !== null">
+                      <ul *ngFor="let o of qDef.options">
+                        <li *ngIf="getUtil().isOptionSelected(questionAnswer.answer, o.optionStableId)"><b>{{o.optionText}}</b>
+                          <ng-container *ngIf="questionAnswer.optionDetails != null">
+                            <ng-container *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, o.optionStableId) as oDetail">
+                              <div>{{oDetail.details}}
+                              </div>
+                            </ng-container>
+                          </ng-container>
+                          <ng-container *ngIf="questionAnswer.nestedOptions != null && questionAnswer.nestedOptions[o.optionStableId] !== null && o.nestedOptions !== null">
+                            <ul *ngFor="let nOption of questionAnswer.nestedOptions[o.optionStableId]">
+                              <li *ngIf="getUtil().getAnswerText(nOption, o.nestedOptions) as option"><b>{{option.optionText}}</b>
+                              </li>
+                            </ul>
+                          </ng-container>
+                        </li>
+                      </ul>
+                    </ng-container>
+                    <ng-container *ngIf="qDef.groups !== null && questionAnswer.answer !== null">
+                      <ul *ngFor="let group of qDef.groups">
+                        <li *ngIf="getUtil().isGroupSelected(questionAnswer.answer, group)"><b>{{group.groupText}}</b>
+                          <ng-container *ngIf="questionAnswer.groupedOptions[group.groupStableId] !== null">
+                            <ul *ngFor="let gAnswer of questionAnswer.groupedOptions[group.groupStableId]">
+                              <li *ngIf="getUtil().getAnswerText(gAnswer, group.options) as option"><b>{{option.optionText}}</b>
+                                <ng-container *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, gAnswer) as oDetail">
+                                  <div>{{oDetail.details}}
+                                  </div>
+                                </ng-container>
+                              </li>
+                            </ul>
+                          </ng-container>
+                        </li>
+                      </ul>
+                    </ng-container>
                   </ng-container>
                   <ng-container *ngIf="qDef.selectMode === 'SINGLE'">
-                    <ng-container *ngIf="questionAnswer.answer[0] != null"><b class="TD--Padding-Left-Bigger">{{getUtil().getOptionText(qDef.options,
+                    <ng-container *ngIf="questionAnswer.answer[0] != null && questionAnswer.optionDetails != null"><b class="TD--Padding-Left-Bigger">{{getUtil().getOptionText(qDef.options,
                       questionAnswer.answer[0])}}</b>
                       <ng-container *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, questionAnswer.answer[0]) as oDetail">
                         <div>{{oDetail.details}}

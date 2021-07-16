@@ -2,6 +2,7 @@ import {AbstractionGroup} from "../abstraction-group/abstraction-group.model";
 import {Abstraction} from "../medical-record-abstraction/medical-record-abstraction.model";
 import {MedicalRecord} from "../medical-record/medical-record.model";
 import {OncHistoryDetail} from "../onc-history-detail/onc-history-detail.model";
+import {ParticipantData} from "./models/participant-data.model";
 import {Sample} from "./models/sample.model";
 import {Data} from "./models/data.model";
 import {ParticipantDSMInformation} from "./models/participant.model";
@@ -12,8 +13,9 @@ export class Participant {
 
   constructor( public data: Data, public participant: ParticipantDSMInformation, public medicalRecords: Array<MedicalRecord>,
                public kits: Array<Sample>, public oncHistoryDetails: Array<OncHistoryDetail>, public abstractionActivities: Array<Abstraction>,
-               public abstractionSummary: Array<AbstractionGroup>,
-               public abstraction?: Abstraction, public review?: Abstraction, public qc?: Abstraction, public finalA?: Abstraction ) {
+               public abstractionSummary: Array<AbstractionGroup>, public participantData: Array<ParticipantData>,
+               public abstraction?: Abstraction, public review?: Abstraction, public qc?: Abstraction, public finalA?: Abstraction,
+               public proxyData?: Array<Data>) {
     this.data = data;
     this.participant = participant;
     this.medicalRecords = medicalRecords;
@@ -21,10 +23,12 @@ export class Participant {
     this.oncHistoryDetails = oncHistoryDetails;
     this.abstractionActivities = abstractionActivities;
     this.abstractionSummary = abstractionSummary;
+    this.participantData = participantData;
     this.abstraction = abstraction;
     this.review = review;
     this.qc = qc;
     this.finalA = finalA;
+    this.proxyData = proxyData;
   }
 
   getSampleStatus(): string {
@@ -143,6 +147,15 @@ export class Participant {
       data = Data.parse( json.data );
     }
 
+    let proxyData: Array<Data> = [];
+    jsonData = json.proxyData;
+    if (jsonData != null) {
+      jsonData.forEach( ( val ) => {
+        let proxy = Data.parse( val );
+        proxyData.push( proxy );
+      } );
+    }
+
     let abstraction: Abstraction = new Abstraction( null, null, null, "abstraction", "not_started", null, null, null );
     let review: Abstraction = new Abstraction( null, null, null, "review", "not_started", null, null, null );
     let qc: Abstraction = new Abstraction( null, null, null, "qc", "not_started", null, null, null );
@@ -173,6 +186,15 @@ export class Participant {
       participant = ParticipantDSMInformation.parse( jsonData );
     }
 
-    return new Participant( data, participant, medicalRecords, samples, oncHistoryDetails, json.abstractionActivities, abstractionSummary, abstraction, review, qc, finalA );
+    let participantData: Array<ParticipantData> = [];
+    jsonData = json.participantData;
+    if (jsonData != null) {
+      jsonData.forEach( ( val ) => {
+        let data = ParticipantData.parse( val );
+        participantData.push( data );
+      } );
+    }
+
+    return new Participant( data, participant, medicalRecords, samples, oncHistoryDetails, json.abstractionActivities, abstractionSummary, participantData, abstraction, review, qc, finalA, proxyData );
   }
 }

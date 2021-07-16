@@ -21,7 +21,8 @@ import {
   MdCheckboxModule,
   MdInputModule,
   MdRadioModule,
-  MdSelectModule
+  MdSelectModule,
+  MdDialogModule
 } from "@angular/material";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {CookieModule} from "ngx-cookie";
@@ -110,6 +111,9 @@ import {ActivityDataComponent} from "./activity-data/activity-data.component";
 import {SearchBarComponent} from "./search-bar/search-bar.component";
 import {FieldSettingsComponent} from "./field-settings/field-settings.component";
 import { InvitationDataComponent } from './invitation-data/invitation-data.component';
+import { ParticipantUpdateResultDialogComponent } from './dialogs/participant-update-result-dialog.component';
+import { FormDataComponent } from './form-data/form-data.component';
+import { AddFamilyMemberComponent } from './popups/add-family-member/add-family-member.component';
 import { FieldTableComponent } from './field-table/field-table.component';
 
 @NgModule( {
@@ -187,9 +191,13 @@ import { FieldTableComponent } from './field-table/field-table.component';
     ActivityDataComponent,
     SearchBarComponent,
     InvitationDataComponent,
+    ParticipantUpdateResultDialogComponent,
+    FormDataComponent,
+    AddFamilyMemberComponent,
     FieldTableComponent
 
   ],
+  entryComponents: [ParticipantUpdateResultDialogComponent, AddFamilyMemberComponent],
   imports: [
     BrowserModule,
     FormsModule,
@@ -206,6 +214,7 @@ import { FieldTableComponent } from './field-table/field-table.component';
     MdButtonToggleModule,
     NgxPageScrollModule,
     MdAutocompleteModule,
+    MdDialogModule,
 
     DataTableModule,
     NgxPaginationModule,

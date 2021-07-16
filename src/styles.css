@@ -560,6 +560,10 @@ input::-webkit-inner-spin-button {
   white-space: pre-line;
 }
 
+.tooltip-inner {
+  max-width: none;
+}
+
 .Vertical--line {
   border-left: 1px solid black;
   height: 24px;

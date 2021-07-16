@@ -1,31 +1,31 @@
 import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
-import {ActivatedRoute, Router} from "@angular/router";
 import {Response} from "@angular/http";
+import {ActivatedRoute, Router} from "@angular/router";
+import {FollowUp} from "../follow-up/follow-up.model";
+import {Lookup} from "../lookup/lookup.model";
+import {ModalComponent} from "../modal/modal.component";
+import {OncHistoryDetailComponent} from "../onc-history-detail/onc-history-detail.component";
 import {Participant} from "../participant-list/participant-list.model";
+import {PDFModel} from "../pdf-download/pdf-download.model";
 
 import {Auth} from "../services/auth.service";
 import {ComponentService} from "../services/component.service";
 import {DSMService} from "../services/dsm.service";
 import {RoleService} from "../services/role.service";
-import {MedicalRecordLog} from "./model/medical-record-log.model";
-import {Utils} from "../utils/utils";
-import {Lookup} from "../lookup/lookup.model";
-import {Statics} from "../utils/statics";
-import {OncHistoryDetailComponent} from "../onc-history-detail/onc-history-detail.component";
-import {ModalComponent} from "../modal/modal.component";
-import {Result} from "../utils/result.model";
 import {NameValue} from "../utils/name-value.model";
-import {FollowUp} from "../follow-up/follow-up.model";
 import {PatchUtil} from "../utils/patch.model";
+import {Result} from "../utils/result.model";
+import {Statics} from "../utils/statics";
+import {Utils} from "../utils/utils";
 import {MedicalRecord} from "./medical-record.model";
-import {PDFModel} from "../pdf-download/pdf-download.model";
+import {MedicalRecordLog} from "./model/medical-record-log.model";
 
 var fileSaver = require( "file-saver/FileSaver.js" );
 
 @Component( {
   selector: "app-medical-record",
   templateUrl: "./medical-record.component.html",
-  styleUrls: [ "./medical-record.component.css" ],
+  styleUrls: [ "./medical-record.component.css" ]
 } )
 export class MedicalRecordComponent implements OnInit {
 
@@ -51,11 +51,10 @@ export class MedicalRecordComponent implements OnInit {
 
   errorMessage: string;
   additionalMessage: string;
+  message: string = null;
   private isReviewDataChanged: boolean = false;
 
-  disableDownloadCover: boolean = false;
-  disableDownloadConsent: boolean = false;
-  disableDownloadRelease: boolean = false;
+  downloading: boolean = false;
 
   private readonly: boolean = false;
 
@@ -67,6 +66,7 @@ export class MedicalRecordComponent implements OnInit {
   showFollowUp: boolean = false;
   pdfs: Array<PDFModel> = [];
   selectedPDF: string;
+  source: string;
 
   constructor( private _changeDetectionRef: ChangeDetectorRef, private auth: Auth, private compService: ComponentService, private dsmService: DSMService, private router: Router,
                private role: RoleService, private util: Utils, private route: ActivatedRoute ) {
@@ -89,11 +89,21 @@ export class MedicalRecordComponent implements OnInit {
       if (this.participant.data == undefined || this.participant.data.status.indexOf( Statics.EXITED ) == -1) {
         this.participantExited = false;
       }
+      this.pdfs = new Array<PDFModel>();
+        this.pdfs.push( new PDFModel( "cover", "Cover PDF", 1 ) );
       if (this.participant.data != null && this.participant.data.dsm != null && this.participant.data.dsm[ "pdfs" ] != null) {
-        this.pdfs = this.participant.data.dsm[ "pdfs" ];
+        let tmp = this.participant.data.dsm[ "pdfs" ];
+        if (tmp != null && tmp.length > 0) {
+          tmp.forEach( ( pdf, index ) => {
+            pdf.order = index + 2;// +2 because 1 is cover pdf
+            this.pdfs.push( pdf );
+          } );
+        }
+        this.pdfs.push( new PDFModel( "irb", "IRB Letter", tmp.length + 2 ) );
       }
       this.startDate = this.participant.data.dsm[ "diagnosisMonth" ] + "/" + this.participant.data.dsm[ "diagnosisYear" ];
       this.endDate = Utils.getFormattedDate( new Date() );
+      this.message = null;
     }
     else {
       this.errorMessage = "Error - Information is missing";
@@ -143,8 +153,10 @@ export class MedicalRecordComponent implements OnInit {
       }
     }
     if (v !== null) {
+      let participantId: string = this.getParticipantId();
+      let realm: string = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
       let patch1 = new PatchUtil( this.medicalRecord.medicalRecordId, this.role.userMail(),
-        { name: parameterName, value: v }, null, null, null, Statics.MR_ALIAS );
+        {name: parameterName, value: v}, null, null, participantId, Statics.MR_ALIAS, null, realm );
       let patch = patch1.getPatch();
       this.patchFinished = false;
       if (parameterName != "followUps") {
@@ -172,7 +184,7 @@ export class MedicalRecordComponent implements OnInit {
             this.router.navigate( [ Statics.HOME_URL ] );
           }
           this.additionalMessage = "Error - Saving changes \n" + err;
-        },
+        }
       );
     }
   }
@@ -204,7 +216,7 @@ export class MedicalRecordComponent implements OnInit {
           this.auth.logout();
         }
         this.errorMessage = "Error - Loading mr log\nPlease contact your DSM developer";
-      },
+      }
     );
   }
 
@@ -223,39 +235,13 @@ export class MedicalRecordComponent implements OnInit {
             this.router.navigate( [ Statics.HOME_URL ] );
           }
           this.additionalMessage = "Error - Saving log data\nPlease contact your DSM developer";
-        },
+        }
       );
     }
     else {
       this.additionalMessage = "Both Date and Comment are required";
     }
     window.scrollTo( 0, 0 );
-  }
-
-  downloadCoverPDFs() {
-    if (this.medicalRecord.name == null || this.medicalRecord.name === "") {
-      this.additionalMessage = "Please add 'Confirmed Institution Name'";
-    }
-    else {
-      this.disableDownloadCover = true;
-      this.dsmService.downloadCoverPDFs( this.participant.participant.ddpParticipantId, this.medicalRecord.medicalRecordId,
-        this.startDate, this.endDate, this.mrCoverPdfSettings, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) ).subscribe(
-        data => {
-          // console.info(data);
-          this.downloadFile( data, "_MRRequest_" + this.medicalRecord.name );
-          this.disableDownloadCover = false;
-          this.additionalMessage = null;
-        },
-        err => {
-          if (err._body === Auth.AUTHENTICATION_ERROR) {
-            this.router.navigate( [ Statics.HOME_URL ] );
-          }
-          this.additionalMessage = "Error - Downloading cover pdf file\nPlease contact your DSM developer";
-          this.disableDownloadCover = false;
-        },
-      );
-    }
-    this.modal.hide();
   }
 
   replacer( key, value ) {
@@ -266,59 +252,38 @@ export class MedicalRecordComponent implements OnInit {
     return value;
   }
 
-  downloadPDFs( configName: string ) {
-    this.disableDownloadConsent = true;
-    this.dsmService.downloadPDF( this.participant.participant.ddpParticipantId, this.compService.getRealm(), configName ).subscribe(
-      data => {
-        this.downloadFile( data, "_" + configName );
-        this.disableDownloadConsent = false;
-      },
-      err => {
-        if (err._body === Auth.AUTHENTICATION_ERROR) {
-          this.router.navigate( [ Statics.HOME_URL ] );
+  downloadPDF( configName: string ) {
+    if (configName === "cover" && this.medicalRecord.name == null || this.medicalRecord.name === "") {
+      this.additionalMessage = "Please add a 'Confirmed Institution Name'";
+    }
+    else {
+      this.downloading = true;
+      this.message = "Downloading... This might take a while";
+      this.dsmService.downloadPDF( this.participant.participant.ddpParticipantId, this.medicalRecord.medicalRecordId,
+        this.startDate, this.endDate, this.mrCoverPdfSettings, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), configName, this.pdfs, null ).subscribe(
+        data => {
+          let tmp = configName;
+          if (tmp == null) {
+            tmp = "all";
+          }
+          this.downloadFile( data, "_" + tmp );
+          this.downloading = false;
+          this.message = "Download finished.";
+        },
+        err => {
+          if (err._body === Auth.AUTHENTICATION_ERROR) {
+            this.router.navigate( [ Statics.HOME_URL ] );
+          }
+          this.message = "Failed to download pdf.";
+          this.downloading = false;
         }
-        this.additionalMessage = "Error - Downloading consent pdf file\nPlease contact your DSM developer";
-        this.disableDownloadConsent = false;
-      },
-    );
-  }
-
-  downloadConsentPDFs() {
-    this.disableDownloadConsent = true;
-    this.dsmService.downloadConsentPDFs( this.participant.participant.ddpParticipantId, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) ).subscribe(
-      data => {
-        this.downloadFile( data, "_Consent" );
-        this.disableDownloadConsent = false;
-      },
-      err => {
-        if (err._body === Auth.AUTHENTICATION_ERROR) {
-          this.router.navigate( [ Statics.HOME_URL ] );
-        }
-        this.additionalMessage = "Error - Downloading consent pdf file\nPlease contact your DSM developer";
-        this.disableDownloadConsent = false;
-      },
-    );
-  }
-
-  downloadReleasePDFs() {
-    this.disableDownloadRelease = true;
-    this.dsmService.downloadReleasePDFs( this.participant.participant.ddpParticipantId, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) ).subscribe(
-      data => {
-        this.downloadFile( data, "_Release" );
-        this.disableDownloadRelease = false;
-      },
-      err => {
-        if (err._body === Auth.AUTHENTICATION_ERROR) {
-          this.router.navigate( [ Statics.HOME_URL ] );
-        }
-        this.additionalMessage = "Error - Downloading release pdf file\nPlease contact your DSM developer";
-        this.disableDownloadRelease = false;
-      },
-    );
+      );
+    }
+    this.modal.hide();
   }
 
   downloadFile( data: Response, type: string ) {
-    var blob = new Blob( [ data ], { type: "application/pdf" } );
+    var blob = new Blob( [ data ], {type: "application/pdf"} );
     fileSaver.saveAs( blob, this.participant.data.profile[ "hruid" ] + type + Statics.PDF_FILE_EXTENSION );
   }
 
@@ -396,13 +361,19 @@ export class MedicalRecordComponent implements OnInit {
   }
 
   currentField( field: string ) {
-    if (field != null || (field == null && this.patchFinished)) {
+    if (field != null || ( field == null && this.patchFinished )) {
       this.currentPatchField = field;
     }
   }
 
-  doNothing() { //needed for the menu, otherwise page will refresh!
+  doNothing( source: string ) { //needed for the menu, otherwise page will refresh!
+    this.source = source;
     this.modal.show();
+    return false;
+  }
+
+  close() {
+    this.modal.hide();
     return false;
   }
 
@@ -412,10 +383,6 @@ export class MedicalRecordComponent implements OnInit {
 
   endDateChanged( date: string ) {
     this.endDate = date;
-  }
-
-  isCoverDownloadDisabled() {
-    return !(this.medicalRecord.name != null && !this.disableDownloadCover);
   }
 
   deleteFollowUp( i: number ) {
@@ -432,7 +399,7 @@ export class MedicalRecordComponent implements OnInit {
         return tmpId === ddpInstitutionId;
       } );
 
-      if( medicalProvider != null) {
+      if (medicalProvider != null) {
         let address: string = "";
         if (medicalProvider.physicianName) {
           address += medicalProvider.physicianName;
@@ -515,5 +482,16 @@ export class MedicalRecordComponent implements OnInit {
       }
     }
     return null;
+  }
+
+  getParticipantId(): string {
+    if (!this.participant.data) {
+      return null;
+    }
+    let participantId = this.participant.data.profile[ "guid" ];
+    if (this.participant.data.profile[ "legacyAltPid" ]) {
+      participantId = this.participant.data.profile[ "legacyAltPid" ];
+    }
+    return participantId;
   }
 }

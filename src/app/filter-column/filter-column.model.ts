@@ -1,8 +1,8 @@
-import {ParticipantColumn} from "./models/column.model";
-import {NameValue} from "../utils/name-value.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
-import {Value} from "../utils/value.model";
+import {NameValue} from "../utils/name-value.model";
 import {Statics} from "../utils/statics";
+import {Value} from "../utils/value.model";
+import {ParticipantColumn} from "./models/column.model";
 
 export class Filter {
 
@@ -17,6 +17,9 @@ export class Filter {
   public static ADDITIONAL_VALUE_TYPE = "ADDITIONALVALUE";
   public static JSON_ARRAY_TYPE = "JSONARRAY";
   public static COMPOSITE_TYPE = "COMPOSITE";// ES dynamic filters
+  public static RADIO_TYPE = "RADIO";
+  public static TEXTAREA_TYPE = "TEXTAREA";
+  public static ACTIVITY_STAFF_TYPE = "ACTIVITY_STAFF";
 
   //ES data
   public static REALM = new Filter( ParticipantColumn.REALM, Filter.TEXT_TYPE );
@@ -29,10 +32,6 @@ export class Filter {
   public static COUNTRY = new Filter( ParticipantColumn.COUNTRY, Filter.TEXT_TYPE );
   public static ENROLLMENT_STATUS = new Filter( ParticipantColumn.ENROLLMENT_STATUS, Filter.OPTION_TYPE, [
     new NameValue( "REGISTERED", "Registered" ),
-    new NameValue( "EXITED_BEFORE_ENROLLMENT", "Exited before Enrollment" ),
-    new NameValue( "EXITED_AFTER_ENROLLMENT", "Exited after Enrollment" ),
-    new NameValue( "ENROLLED", "Enrolled" ),
-    new NameValue( "CONSENT_SUSPENDED", "Lost to Followup" ),
   ] );
   public static EMAIL = new Filter( ParticipantColumn.EMAIL, Filter.TEXT_TYPE );
   public static REGISTRATION_DATE = new Filter( ParticipantColumn.REGISTRATION_DATE, Filter.DATE_TYPE );
@@ -109,7 +108,7 @@ export class Filter {
     new NameValue( "unable To Obtain", "Unable To Obtain" ),
     new NameValue( "sent", "Sent" ),
     new NameValue( "received", "Received" ),
-    new NameValue( "returned", "Returned" ),
+    new NameValue( "returned", "Returned" )
   ] );
   public static TISSUE_FAX = new Filter( ParticipantColumn.TISSUE_FAX, Filter.DATE_TYPE );
   public static TISSUE_FAX_2 = new Filter( ParticipantColumn.TISSUE_FAX_2, Filter.DATE_TYPE );
@@ -165,7 +164,7 @@ export class Filter {
     new NameValue( "abandonedGP", "Abandoned at GP" ),
     new NameValue( "failedPurity", "Failed Purity" ),
     new NameValue( "externalPathFailed", "External Path Review Failed" ),
-    new NameValue( "success", "Success" ),
+    new NameValue( "success", "Success" )
   ] );
   public static SCROLLS_COUNT = new Filter( ParticipantColumn.SCROLLS_COUNT, Filter.NUMBER_TYPE );
   public static BLOCKS_COUNT = new Filter( ParticipantColumn.BLOCKS_COUNT, Filter.NUMBER_TYPE );
@@ -189,12 +188,12 @@ export class Filter {
   public static STATUS_OUT = new Filter( ParticipantColumn.STATUS_OUT, Filter.TEXT_TYPE );
   public static STATUS_IN = new Filter( ParticipantColumn.STATUS_IN, Filter.TEXT_TYPE );
   public static CARE_EVOLVE = new Filter( ParticipantColumn.CARE_EVOLVE, Filter.CHECKBOX_TYPE );
-  public static RESULT_TEST = new Filter(ParticipantColumn.RESULT_TEST, Filter.JSON_ARRAY_TYPE, null, new NameValue( ParticipantColumn.RESULT_TEST.name, null ),
-  false, true, null, null, null, null, false, false, false, false, Filter.TEXT_TYPE );
-  public static CORRECTED_TEST = new Filter(ParticipantColumn.CORRECTED_TEST, Filter.JSON_ARRAY_TYPE, null, new NameValue( ParticipantColumn.CORRECTED_TEST.name, null ),
-  false, true, null, null, null, null, false, false, false, false, Filter.CHECKBOX_TYPE );
-  public static TIME_TEST = new Filter(ParticipantColumn.TIME_TEST, Filter.JSON_ARRAY_TYPE, null, new NameValue( ParticipantColumn.TIME_TEST.name, null ),
-  false, true, null, null, null, null, false, false, false, false, Filter.DATE_TYPE );
+  public static RESULT_TEST = new Filter( ParticipantColumn.RESULT_TEST, Filter.JSON_ARRAY_TYPE, null, new NameValue( ParticipantColumn.RESULT_TEST.name, "'" ),
+    false, true, null, null, null, null, false, false, false, false, Filter.TEXT_TYPE );
+  public static CORRECTED_TEST = new Filter( ParticipantColumn.CORRECTED_TEST, Filter.JSON_ARRAY_TYPE, null, new NameValue( ParticipantColumn.CORRECTED_TEST.name, null ),
+    false, true, null, null, null, null, false, false, false, false, Filter.CHECKBOX_TYPE );
+  public static TIME_TEST = new Filter( ParticipantColumn.TIME_TEST, Filter.JSON_ARRAY_TYPE, null, new NameValue( ParticipantColumn.TIME_TEST.name, "'" ),
+    false, true, null, null, null, null, false, false, false, false, Filter.DATE_TYPE );
 
   //abstraction
   public static ABSTRACTION_STATUS = new Filter( ParticipantColumn.ABSTRACTION_STATUS, Filter.OPTION_TYPE, [
@@ -233,7 +232,7 @@ export class Filter {
     Filter.TISSUE_FIRST_SM_ID, Filter.TISSUE_SHL_NUMBER, Filter.TISSUE_TUMOR_PERCENT, Filter.TISSUE_SEQUENCE, Filter.SCROLLS_COUNT,
     Filter.USS_COUNT, Filter.H_E_COUNT, Filter.BLOCKS_COUNT,
     Filter.COLLABORATOR_SAMPLE, Filter.SAMPLE_SENT, Filter.SAMPLE_RECEIVED, Filter.SAMPLE_DEACTIVATION, Filter.SAMPLE_QUEUE,
-    Filter.TRACKING_TO_PARTICIPANT, Filter.TRACKING_RETURN, Filter.MF_BARCODE, Filter.STATUS_OUT, Filter.STATUS_IN, Filter.RESULT_TEST, Filter.CORRECTED_TEST, Filter.TIME_TEST,
+    Filter.TRACKING_TO_PARTICIPANT, Filter.TRACKING_RETURN, Filter.MF_BARCODE, Filter.STATUS_OUT, Filter.STATUS_IN, Filter.RESULT_TEST, Filter.CORRECTED_TEST, Filter.TIME_TEST, Filter.CARE_EVOLVE,
     Filter.ABSTRACTION_ACTIVITY, Filter.ABSTRACTION_STATUS, Filter.ABSTRACTION_USER ];
 
   constructor( public participantColumn: ParticipantColumn, public type: string, public options?: NameValue[], public filter2?: NameValue,
@@ -320,11 +319,11 @@ export class Filter {
               } );
               if (f != undefined) {
                 if (result[ tableName ] == null || result[ tableName ] == undefined) {
-                  result[ tableName ] = new Array();
+                  result[ tableName ] = [];
                 }
                 result[ tableName ].push( f );
                 found = true;
-                continue loop;
+                continue;
               }
             }
           }
@@ -366,7 +365,6 @@ export class Filter {
     if (json.filters == undefined) {
       return null;
     }
-    // console.log( json.filterName );
     let filters: Filter[] = [];
     for (let filter of json.filters) {
       if (allColumns[ filter.participantColumn.tableAlias ] != undefined) {
@@ -376,7 +374,7 @@ export class Filter {
         if (f != undefined) {
           filter.type = f.type;
           filter.participantColumn = f.participantColumn;
-          let selectedOptions = new Array();
+          let selectedOptions = [];
           if (filter.selectedOptions != null && f.options != undefined) {
             for (let o of f.options) {
               selectedOptions.push( filter.selectedOptions.includes( o.name ) );
@@ -388,10 +386,16 @@ export class Filter {
           if (filter.filter1.value != null) {
             filter.filter1 = new NameValue( f.participantColumn.name, this.replace( filter.filter1.value ) );
           }
+
           let newFilter = new Filter( filter.participantColumn, filter.type, f.options, filter.filter2, filter.range, filter.exactMatch, filter.filter1,
-            selectedOptions, (filter.filter1 == null || filter.filter1 == undefined) ? null : filter.filter1.value,
-            (filter.filter2 == null || filter.filter2 == undefined) ? null : filter.filter2.value, null, filter.empty,
-            filter.notEmpty, f.singleOption, f.additionalType );
+            selectedOptions, ( filter.filter1 == null || filter.filter1 == undefined ) ? null : filter.filter1.value,
+            ( filter.filter2 == null || filter.filter2 == undefined ) ? null : filter.filter2.value, null, filter.empty,
+            filter.notEmpty, f.singleOption, f.additionalType, filter.parentName !== undefined ? filter.parentName : null );
+          if (filter.type === Filter.JSON_ARRAY_TYPE) {
+            newFilter.filter1 = new NameValue( f.participantColumn.object, filter.filter1.value );
+            newFilter.parentName = f.participantColumn.tableAlias;
+            newFilter.filter2 = f.filter2;
+          }
           filters.push( newFilter );
         }
 
@@ -405,7 +409,7 @@ export class Filter {
             filter.type = f.type;
             filter.participantColumn = f.participantColumn;
             filter.parentName = f.participantColumn.object;
-            let selectedOptions = new Array();
+            let selectedOptions = [];
             if (filter.selectedOptions != null && f.options != undefined) {
               for (let o of f.options) {
                 selectedOptions.push( filter.selectedOptions.includes( o.name ) );
@@ -416,8 +420,8 @@ export class Filter {
             }
             filter.filter1.value = this.replace( filter.filter1.value );
             let newFilter = new Filter( filter.participantColumn, filter.type, f.options, filter.filter2, filter.range, filter.exactMatch, filter.filter1,
-              selectedOptions, (filter.filter1 == null || filter.filter1 == undefined) ? null : filter.filter1.value,
-              (filter.filter2 == null || filter.filter2 == undefined) ? null : filter.filter2.value, null,
+              selectedOptions, ( filter.filter1 == null || filter.filter1 == undefined ) ? null : filter.filter1.value,
+              ( filter.filter2 == null || filter.filter2 == undefined ) ? null : filter.filter2.value, null,
               filter.empty, filter.notEmpty, f.singleOption, f.additionalType );
             filters.push( newFilter );
             break;
@@ -427,12 +431,11 @@ export class Filter {
       }
     }
     for (let filter of filters) {
-      if (filter.participantColumn.object !== undefined && filter.participantColumn.object !== null && filter.participantColumn.object !== "") {
+      if (filter.type != Filter.JSON_ARRAY_TYPE && filter.participantColumn.object !== undefined && filter.participantColumn.object !== null && filter.participantColumn.object !== "") {
         filter.parentName = filter.participantColumn.object;
       }
 
     }
-    // console.log( filters );
     return filters;
   }
 
@@ -454,7 +457,12 @@ export class Filter {
     this.range = false;
     this.exactMatch = true;
     this.filter1 = new NameValue( null, null );
-    this.filter2 = new NameValue( this.filter2 == null ? null : this.filter2.name, null );
+    if (this.type === Filter.JSON_ARRAY_TYPE) {
+      this.filter2 = new NameValue( this.filter2 == null ? null : this.filter2.name, this.filter2 == null ? null : this.filter2.value );
+    }
+    else {
+      this.filter2 = new NameValue( this.filter2 == null ? null : this.filter2.name, null );
+    }
     this.value1 = null;
     this.value2 = null;
     this.sortAsc = true;
@@ -468,8 +476,8 @@ export class Filter {
     let filterText = {};
     if (filter.type === Filter.TEXT_TYPE || filter.type === Filter.NUMBER_TYPE || filter.type === Filter.DATE_TYPE || filter.type === Filter.EPOCH_DATE_TYPE
       || filter.type === Filter.COMPOSITE_TYPE || filter.type === Filter.SHORT_DATE_TYPE) {
-      if ((filter.value1 !== null && filter.value1 !== undefined && filter.value1 != "") ||
-        (filter.range && filter.value2 != null && filter.value2 != "" && filter.value2 !== undefined) || (filter.empty || filter.notEmpty)) {
+      if (( filter.value1 !== null && filter.value1 !== undefined && filter.value1 != "" ) ||
+        ( filter.range && filter.value2 != null && filter.value2 != "" && filter.value2 !== undefined ) || ( filter.empty || filter.notEmpty )) {
         if (filter.value2 != undefined && filter.value2 != null) {
           if (filter.filter2 != undefined && filter.filter2 != null) {
             filter.filter2.value = filter.value2;
@@ -495,11 +503,16 @@ export class Filter {
         return null;
       }
     }
-    else if (filter.type === Filter.OPTION_TYPE) {
+    else if (filter.type === Filter.OPTION_TYPE || filter.type === Filter.RADIO_TYPE) {
       let selected = [];
       for (let [ key, value ] of Object.entries( filter.selectedOptions )) {
         if (value) {
-          selected.push( filter.options[ key ].name );
+          if (filter.participantColumn && filter.participantColumn.tableAlias && filter.participantColumn.tableAlias === "participantData"
+              && filter.additionalType != Filter.ACTIVITY_STAFF_TYPE) {
+            selected.push( filter.options[ key ].value );
+          } else {
+            selected.push( filter.options[ key ].name );
+          }
         }
       }
       if (selected.length > 0 || filter.empty || filter.notEmpty) {
@@ -511,7 +524,7 @@ export class Filter {
       }
     }
     else if (filter.type === Filter.ADDITIONAL_VALUE_TYPE) {
-      if ((filter.value1 !== null && filter.value1 !== "" && filter.value1 !== undefined) || (filter.empty || filter.notEmpty)) {
+      if (( filter.value1 !== null && filter.value1 !== "" && filter.value1 !== undefined ) || ( filter.empty || filter.notEmpty )) {
         filterText = this.getFilterJson( parent,
           new NameValue( "additionalValues", filter.value1 ),
           filter.filter2, null,
@@ -522,7 +535,7 @@ export class Filter {
       }
     }
     else if (filter.type === Filter.JSON_ARRAY_TYPE) {
-      if ((filter.value1 !== null && filter.value1 !== "" && filter.value1 !== undefined) || (filter.empty || filter.notEmpty)) {
+      if (( filter.value1 !== null && filter.value1 !== "" && filter.value1 !== undefined ) || ( filter.empty || filter.notEmpty )) {
         filterText = this.getFilterJson( filter.participantColumn.tableAlias, //changing parent to tableAlias for type json because object is json name
           new NameValue( filter.participantColumn.object, filter.value1 ),
           filter.filter2, null,
@@ -533,13 +546,13 @@ export class Filter {
       }
     }
     else if (filter.type === Filter.BOOLEAN_TYPE || filter.type === Filter.CHECKBOX_TYPE) {
-      if ((filter.value1 !== null && filter.value1 == true)) {
+      if (( filter.value1 !== null && filter.value1 == true )) {
         filterText = this.getFilterJson( parent,
           new NameValue( filter.participantColumn.name, "true" ),
           filter.filter2, null,
           filter.exactMatch, filter.type, false, filter.empty, filter.notEmpty, filter.participantColumn );
       }
-      else if ((filter.value2 !== null && filter.value2 == true)) {
+      else if (( filter.value2 !== null && filter.value2 == true )) {
         filterText = this.getFilterJson( parent,
           new NameValue( filter.participantColumn.name, null ),
           new NameValue( filter.participantColumn.name, "true" ), null,
@@ -580,9 +593,8 @@ export class Filter {
       "range": range,
       "empty": empty,
       "notEmpty": notEmpty,
-      "participantColumn": participantColumn,
+      "participantColumn": participantColumn
     };
-    // console.log( filterText );
     return filterText;
   }
 
@@ -601,7 +613,7 @@ export class Filter {
 
     let f: Filter = new Filter( this.participantColumn, this.type, Object.assign( [], this.options ),
       filter2, this.range, this.exactMatch, filter1,
-      selectedOptions, this.value1 == null ? null : (" " + this.value1).slice( 1 ), this.value2 == null ? null : (" " + this.value2).slice( 1 ), this.sortAsc, this.empty, this.notEmpty, this.singleOption,
+      selectedOptions, this.value1 == null ? null : ( " " + this.value1 ).slice( 1 ), this.value2 == null ? null : ( " " + this.value2 ).slice( 1 ), this.sortAsc, this.empty, this.notEmpty, this.singleOption,
       this.additionalType, this.parentName );
 
     return f;

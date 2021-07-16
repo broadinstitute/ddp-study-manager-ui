@@ -9,6 +9,22 @@
   <h3 class="Color--warn Line--Break">{{additionalMessage}}</h3>
   <br/>
 </div>
+<div id="message" [collapse]="message == null" class="card card-block card-header Width--100">
+  <div class="well well-lg">
+    <div class="Float--right">
+      <a href="#" (click)="message = null; close()" [attr.aria-expanded]="message"
+         [attr.aria-controls]="message"><i class="fas fa-times fa-lg"></i></a>
+    </div>
+    <div class="Width--100">
+      <h4>{{message}}</h4>
+      <span [hidden]="!downloading" class="Width--100">
+    <div align="center" class="Width--100 Height--100">
+      <i class="fas fa-spinner fa-spin fa-5x Color--primary"></i>
+    </div>
+  </span>
+    </div>
+  </div>
+</div>
 
 <!--Information added by participant-->
 <div *ngIf="errorMessage == null">
@@ -98,39 +114,44 @@
       <br/>
     </div>
     <div class="Float--left Width--30" *ngIf="participant.participant != null && !participantExited">
-      <button md-raised-button color="primary"
-              [disabled]="isCoverDownloadDisabled()"
-              (click)="downloadCoverPDFs()">Download cover pdf
-      </button>
-      <a href="#" (click)="doNothing()" *ngIf="!isCoverDownloadDisabled()" class="Router--Outlet"><b> Change request
-        settings </b></a>
-      <div *ngIf="isCoverDownloadDisabled()"><b>* Institution name is needed for download</b></div>
-      <br/>
-      <br/>
       <div *ngIf="pdfs != null && pdfs.length != 0 && getRole().allowedToDownloadPDF()">
-        <md-select placeholder="Select PDF" class="Input--Abstraction" [(ngModel)]="selectedPDF">
-          <md-option *ngFor="let e of pdfs" [value]="e.configName">
-            {{e.displayName}}
-          </md-option>
-        </md-select>
-        <br/>
-        <br/>
-        <button md-raised-button color="primary"
-                [disabled]="selectedPDF == null || selectedPDF === '' || disableDownloadConsent"
-                (click)="downloadPDFs(selectedPDF)">Download selected PDF
-        </button>
-      </div>
-      <div *ngIf="participant.data.dsm['pdfs'] == null">
-        <button md-raised-button color="primary"
-                [disabled]="disableDownloadConsent"
-                (click)="downloadConsentPDFs()">Download consent pdf
-        </button>
-        <br/>
-        <br/>
-        <button md-raised-button color="primary"
-                [disabled]="disableDownloadRelease"
-                (click)="downloadReleasePDFs()">Download release pdf
-        </button>
+        <tr>
+          <td>
+            <md-select placeholder="Select PDF" class="Input--Abstraction" [(ngModel)]="selectedPDF">
+              <md-option *ngFor="let e of pdfs" [value]="e.configName">
+                {{e.displayName}}
+              </md-option>
+            </md-select>
+          </td>
+          <td>
+            <button md-raised-button color="primary"
+                    [disabled]="medicalRecord.name == null || medicalRecord.name === '' || downloading"
+                    (click)="downloadPDF(null)">Download PDF Bundle
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div *ngIf="(medicalRecord.name == null || medicalRecord.name === '')"><b>* Institution name is needed for download</b></div>
+            <button md-raised-button color="primary"
+                    [disabled]="selectedPDF == null || selectedPDF === '' || downloading || ((medicalRecord.name == null || medicalRecord.name === '') && selectedPDF === 'cover')"
+                    (click)="downloadPDF(selectedPDF)">Download selected single PDF
+            </button>
+          </td>
+        </tr>
+        <tr>
+
+          <td>
+            <a href="#" (click)="doNothing('cover')" *ngIf="!downloading" class="Router--Outlet"><b> Change request settings </b></a>
+          <br/>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="#" (click)="doNothing('bundle')" *ngIf="!downloading" class="Router--Outlet"><b> Change order/files in Bundle</b></a>
+            <br/>
+          </td>
+        </tr>
       </div>
     </div>
   </div>
@@ -492,10 +513,15 @@
 
 <app-modal>
   <div class="app-modal-header">
-    Change default settings in cover pdf
+    <ng-container *ngIf="source === 'cover'">
+      Change default settings in cover pdf
+    </ng-container>
+    <ng-container *ngIf="source === 'bundle'">
+      Change order of PDFs in bundle
+    </ng-container>
   </div>
   <div class="app-modal-body">
-
+    <ng-container *ngIf="source === 'cover'">
     <table class="table table-condensed">
       <tbody>
       <tr>
@@ -524,13 +550,45 @@
       </tr>
       </tbody>
     </table>
+    </ng-container>
+    <ng-container *ngIf="source === 'bundle'">
+      <table class="table table-condensed">
+        <tbody>
+        <tr *ngFor="let pdf of pdfs">
+          <td>
+            <md-select placeholder="Select PDF" [(ngModel)]="pdf.order">
+              <md-option *ngFor="let item of [].constructor(pdfs.length + 1); let i = index" [value]="i">
+                {{i}}
+              </md-option>
+            </md-select>
+          </td>
+          <td>
+            {{pdf.displayName}}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      Order = 0 will not add the pdf to the bundle
+    </ng-container>
   </div>
   <div class="app-modal-footer">
-    <button type="button" class="btn btn-default"
-            (click)="modal.hide()">Close
-    </button>
-    <button type="button" class="btn btn-primary" [disabled]="participantExited"
-            (click)="downloadCoverPDFs()">Download Cover PDF
-    </button>
+    <ng-container *ngIf="source === 'cover'">
+      <div *ngIf="(medicalRecord.name == null || medicalRecord.name === '')"><b>* Institution name is needed for download</b></div>
+      <button type="button" class="btn btn-default"
+              (click)="modal.hide()">Close
+      </button>
+      <button type="button" class="btn btn-primary" [disabled]="participantExited || medicalRecord.name == null || medicalRecord.name === ''"
+              (click)="downloadPDF('cover')">Download Cover PDF
+      </button>
+    </ng-container>
+    <ng-container *ngIf="source === 'bundle'">
+      <div *ngIf="(medicalRecord.name == null || medicalRecord.name === '')"><b>* Institution name is needed for download</b></div>
+      <button type="button" class="btn btn-default"
+              (click)="modal.hide()">Close
+      </button>
+      <button type="button" class="btn btn-primary" [disabled]="participantExited || medicalRecord.name == null || medicalRecord.name === ''"
+              (click)="downloadPDF(null)">Download PDF Bundle
+      </button>
+    </ng-container>
   </div>
 </app-modal>

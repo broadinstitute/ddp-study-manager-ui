@@ -23,6 +23,7 @@ export class Statics {
   public static UNSENT_OVERVIEW: string = "unsentOverview";
   public static SHIPPING_DASHBOARD: string = "shippingDashboard";
   public static MEDICALRECORD_DASHBOARD: string = "medicalRecordDashboard";
+  public static DYNAMIC_DASHBOARD: string = "dynamicDashboard";
 
   public static EMAIL_EVENT: string = "emailEvent";
   public static EMAIL_EVENT_FOLLOW_UP: string = "emailEventFollowUp";
@@ -69,5 +70,31 @@ export class Statics {
 
   public static EXITED = "EXITED";
   public static CONSENT_SUSPENDED = "CONSENT_SUSPENDED";
+  
+  public static RELATIONS = {
+    "BROTHER": "Brother",
+    "DAUGHTER": "Daughter",
+    "FATHER": "Father",
+    "HALF_SIBLING_MATERNAL": "Half Sibling (Maternal)",
+    "HALF_SIBLING_PATERNAL": "Half Sibling (Paternal)",
+    "MATERNAL_AUNT": "Maternal Aunt",
+    "MATERNAL_FIRST_COUSIN": "Maternal First Cousin",
+    "MATERNAL_GRANDFATHER": "Maternal Grandfather",
+    "MATERNAL_GRANDMOTHER": "Maternal Grandmother",
+    "MATERNAL_UNCLE": "Maternal Uncle",
+    "MOTHER": "Mother",
+    "OTHER": "Other",
+    "PATERNAL_AUNT": "Paternal Aunt",
+    "PATERNAL_FIRST_COUSIN": "Paternal First Cousin",
+    "PATERNAL_GRANDFATHER": "Paternal Grandfather",
+    "PATERNAL_GRANDMOTHER": "Paternal Grandmother",
+    "PATERNAL_UNCLE": "Paternal Uncle",
+    "SELF": "Self",
+    "SISTER": "Sister",
+    "SON": "Son"
+  }
 
+  public static PARTICIPANT_PROBAND = "SELF";
+
+  public static PARTICIPANT_RELATIONSHIP_ID = "COLLABORATOR_PARTICIPANT_ID";
 }

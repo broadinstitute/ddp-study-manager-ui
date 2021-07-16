@@ -92,11 +92,12 @@ export class OncHistoryDetailComponent implements OnInit {
       }
     }
     if (v != null) {
+      let realm: string = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
       let patch1 = new PatchUtil( this.oncHistory[ index ].oncHistoryDetailId, this.role.userMail(),
         {
           name: parameterName,
           value: v
-        }, null, "participantId", this.participant.participant.participantId, Statics.ONCDETAIL_ALIAS );
+        }, null, "participantId", this.participant.participant.participantId, Statics.ONCDETAIL_ALIAS, null, realm );
       let patch = patch1.getPatch();
       this.patchFinished = false;
       this.currentPatchField = parameterName;
@@ -251,11 +252,12 @@ export class OncHistoryDetailComponent implements OnInit {
 
   deleteOncHistory( index: number ) {
     this.oncHistory[ index ].deleted = true;
+    let realm: string = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
     let patch1 = new PatchUtil( this.oncHistory[ index ].oncHistoryDetailId, this.role.userMail(),
       {
         name: "deleted",
         value: true
-      }, null, "participantId", this.oncHistory[ index ].participantId, Statics.ONCDETAIL_ALIAS );
+      }, null, "participantId", this.oncHistory[ index ].participantId, Statics.ONCDETAIL_ALIAS,null, realm );
     let patch = patch1.getPatch();
     this.patchFinished = false;
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
@@ -305,6 +307,7 @@ export class OncHistoryDetailComponent implements OnInit {
   }
 
   setFacility( contact: any, index: number ) {
+    let realm: string = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
     if (contact != null) {
       if (event instanceof MouseEvent) {
         this.oncHistory[ index ].facility = contact.field1.value;
@@ -324,7 +327,7 @@ export class OncHistoryDetailComponent implements OnInit {
           name: "oD.fFax", value: contact.field4.value
         }, {name: "oD.destructionPolicy", value: contact.field5.value} ];
         let patch1 = new PatchUtil( this.oncHistory[ index ].oncHistoryDetailId, this.role.userMail(),
-          null, nameValues, "participantId", this.oncHistory[ index ].participantId, Statics.ONCDETAIL_ALIAS );
+          null, nameValues, "participantId", this.oncHistory[ index ].participantId, Statics.ONCDETAIL_ALIAS,null, realm );
         let patch = patch1.getPatch();
         this.multipleValueChanged( patch, index, "facility" );
       }
@@ -334,7 +337,7 @@ export class OncHistoryDetailComponent implements OnInit {
           {
             name: "facility",
             value: contact
-          }, null, "participantId", this.oncHistory[ index ].participantId, Statics.ONCDETAIL_ALIAS );
+          }, null, "participantId", this.oncHistory[ index ].participantId, Statics.ONCDETAIL_ALIAS, null, realm );
         let patch = patch1.getPatch();
         this.patchFinished = false;
         this.currentPatchField = "facility";
@@ -349,11 +352,12 @@ export class OncHistoryDetailComponent implements OnInit {
       if (event instanceof MouseEvent) {
         //slow save to make sure value is saved to right value
         this.oncHistory[ index ].typePX = object.field1.value;
+        let realm: string = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
         let patch1 = new PatchUtil( this.oncHistory[ index ].oncHistoryDetailId, this.role.userMail(),
           {
             name: "typePX",
             value: object.field1.value
-          }, null, "participantId", this.oncHistory[ index ].participantId, Statics.ONCDETAIL_ALIAS );
+          }, null, "participantId", this.oncHistory[ index ].participantId, Statics.ONCDETAIL_ALIAS, null, realm  );
         let patch = patch1.getPatch();
         this.multipleValueChanged( patch, index, "typePX" );
       }
@@ -369,11 +373,12 @@ export class OncHistoryDetailComponent implements OnInit {
       if (event instanceof MouseEvent) {
         //slow save to make sure value is saved to right value
         this.oncHistory[ index ].histology = object.field1.value;
+        let realm: string = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
         let patch1 = new PatchUtil( this.oncHistory[ index ].oncHistoryDetailId, this.role.userMail(),
           {
             name: "histology",
             value: object.field1.value
-          }, null, "participantId", this.oncHistory[ index ].participantId, Statics.ONCDETAIL_ALIAS );
+          }, null, "participantId", this.oncHistory[ index ].participantId, Statics.ONCDETAIL_ALIAS, null, realm );
         let patch = patch1.getPatch();
         this.multipleValueChanged( patch, index, "histology" );
       }

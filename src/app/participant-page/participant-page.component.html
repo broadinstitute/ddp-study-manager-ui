@@ -30,13 +30,22 @@
     <a href="#" (click)="leavePage()"><b> << back to 'List' </b></a>
     <br/><br/><br/>
 
-    <span [hidden]="!loadingParticipantPage" class="Width--100">
+    <span [hidden]="!loadingParticipantPage && !updatingParticipant" class="Width--100">
     <div align="center" class="Width--100 Height--100">
       <i class="fas fa-spinner fa-spin fa-5x Color--primary"></i>
     </div>
   </span>
+    <div class="Width--100">
+      <h4>{{message}}</h4>
+      <span [hidden]="!downloading" class="Width--100">
+    <div align="center" class="Width--100 Height--100">
+      <i class="fas fa-spinner fa-spin fa-5x Color--primary"></i>
+    </div>
+  </span>
+    </div>
 
-    <div *ngIf="!loadingParticipantPage" class="Width--100">
+
+    <div *ngIf="!loadingParticipantPage && !updatingParticipant" class="Width--100">
 
       <div *ngIf="participantExited">
         <h3 class="Color--warn Line--Break">Participant was withdrawn from the study!</h3>
@@ -77,12 +86,57 @@
             <td>{{participant.data.profile['legacyAltPid']}}</td>
           </tr>
           <tr>
-            <td>Name</td>
-            <td>{{participant.data.profile['firstName']}} {{participant.data.profile['lastName']}}</td>
+            <td>First Name</td>
+            <td *ngIf="hasRole().allowedToEditParticipant()">
+              <input mdInput type="text" maxlength="200" autocomplete="off" placeholder="First Name"
+                    [(ngModel)]="updatedFirstName"
+                    class="update-participant-input">
+              <button md-raised-button color="primary"
+                      (click)="updateFirstName()"
+                      [disabled]="updatedFirstName === participant.data.profile['firstName'] || updatedFirstName.length == 0"
+                      >Update
+              </button>
+            </td>
+            <td *ngIf="!hasRole().allowedToEditParticipant()">
+              {{participant.data.profile['firstName']}}
+            </td>
           </tr>
-          <tr *ngIf="participant.data.profile['email'] != null">
+          <tr>
+            <td>Last Name</td>
+            <td *ngIf="hasRole().allowedToEditParticipant()">
+              <input mdInput type="text" maxlength="200" autocomplete="off" placeholder="Last Name"
+                  [(ngModel)]="updatedLastName"
+                  class="update-participant-input">
+              <button md-raised-button color="primary"
+                      [disabled]="updatedLastName === participant.data.profile['lastName'] || updatedLastName.length == 0"
+                      (click)="updateLastName()">Update
+              </button>
+            </td>
+            <td *ngIf="!hasRole().allowedToEditParticipant()">
+              {{participant.data.profile['lastName']}}
+            </td>
+          </tr>
+          <tr>
             <td>E-Mail</td>
-            <td>{{participant.data.profile['email']}}</td>
+            <td *ngIf="hasRole().allowedToEditParticipant()">
+              <span *ngIf="isEmailValid == false" class="invalid-email">E-Mail is not valid</span>
+              <input mdInput type="email" maxlength="200" autocomplete="off" placeholder="Email"
+              [ngModel]="updatedEmail"
+              (ngModelChange)="validateEmailInput($event)"
+              email
+              class="update-participant-input">
+              <button md-raised-button color="primary"
+              [disabled]="updatedEmail === participant.data.profile['email'] || updatedEmail.length == 0 || isEmailValid == false"
+              (click)="updateEmail()">Update
+            </button>
+          </td>
+          <td *ngIf="!hasRole().allowedToEditParticipant()">
+            {{participant.data.profile['email']}}
+          </td>
+          </tr>
+          <tr>
+            <td>Do Not Contact</td>
+            <td>{{getUtil().getYesNo(participant.data.profile['doNotContact'])}}</td>
           </tr>
           <tr>
             <td>Date of Birth</td>
@@ -92,7 +146,8 @@
             <td>Date of Majority</td>
             <td>{{getUtil().getDateFormatted(participant.data.dsm['dateOfMajority'])}}</td>
           </tr>
-          <tr>
+          <tr *ngIf="participant.data.dsm != null && (participant.data.dsm['diagnosisMonth'] != null ||
+          participant.data.dsm['diagnosisYear'] != null)">
             <td>Date of Diagnosis</td>
             <td>
               <ng-container *ngIf="participant.data.dsm != null && participant.data.dsm['diagnosisMonth'] != null &&
@@ -127,6 +182,33 @@ participant.data.dsm['diagnosisYear'] != null">
           </tr>
           </tbody>
         </table>
+
+        <div *ngIf="isAddFamilyMember" class="Float--right Width--100">
+          <div class="family-member-button">
+            <button md-mini-fab color="primary" class="md-fab-bottom-left" (click)="showFamilyMemberPopUpOnClick()">
+              <i class="fas fa-plus fa-lg"></i>
+            </button>
+            <span>Add Family Member</span>
+          </div>
+        </div>
+
+        <ng-container *ngIf="participant.proxyData != null && participant.proxyData.length > 0">
+          <b>Proxy Data</b>
+          <table class="table table-condensed">
+            <tbody>
+              <ng-container *ngFor="let proxy of participant.proxyData">
+                <tr>
+                  <td>Name</td>
+                  <td>{{proxy.profile['firstName']}} {{proxy.profile['lastName']}}</td>
+                </tr>
+                <tr *ngIf="proxy.profile['email'] != null">
+                  <td>E-Mail</td>
+                  <td>{{proxy.profile['email']}}</td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </ng-container>
         <ng-container *ngIf="participant.data.invitations != null && participant.data.invitations.length > 0">
           <ng-container *ngFor="let invitation of participant.data.invitations">
             <app-invitation-data *ngIf="invitation != null" [invitation]="invitation"></app-invitation-data>
@@ -152,6 +234,7 @@ participant.data.dsm['diagnosisYear'] != null">
             </button>
           </ng-container>
         </ng-container>
+
         <!--Abstraction start buttons-->
         <div *ngIf="counterReceived > 0 && parentList === 'participantList'">
           <div class="Float--left TD--Padding">
@@ -286,7 +369,7 @@ participant.data.dsm['diagnosisYear'] != null">
       <br/>
       <div class="Float--left Width--100" *ngIf="participant.participant != null">
         <table class="Width--100">
-          <tr>
+          <tr *ngIf="participant.medicalRecords != null && participant.medicalRecords.length > 0">
             <td class="Width--20">Participant Notes</td>
             <td class="Width--80">
             <textarea maxlength="1000" [disabled]="participantExited"
@@ -297,7 +380,7 @@ participant.data.dsm['diagnosisYear'] != null">
             </td>
           </tr>
           <ng-container *ngIf="showParticipantRecord">
-            <tr>
+            <tr *ngIf="participant.medicalRecords != null && participant.medicalRecords.length > 0">
               <td>Paper C/R Sent</td>
               <td>
                 <div class="Float--left">
@@ -316,7 +399,7 @@ participant.data.dsm['diagnosisYear'] != null">
               </td>
             </tr>
           </ng-container>
-          <tr>
+          <tr *ngIf="participant.medicalRecords != null && participant.medicalRecords.length > 0">
             <td>Onc History Created</td>
             <td>
               <div class="Float--left">
@@ -334,7 +417,7 @@ participant.data.dsm['diagnosisYear'] != null">
               </div>
             </td>
           </tr>
-          <tr>
+          <tr *ngIf="participant.medicalRecords != null && participant.medicalRecords.length > 0">
             <td>
               Incomplete/Minimal Medical Records
             </td>
@@ -347,7 +430,7 @@ participant.data.dsm['diagnosisYear'] != null">
               </md-checkbox>
             </td>
           </tr>
-          <tr>
+          <tr *ngIf="participant.medicalRecords != null && participant.medicalRecords.length > 0">
             <td>
               Ready for Abstraction
             </td>
@@ -360,7 +443,10 @@ participant.data.dsm['diagnosisYear'] != null">
               </md-checkbox>
             </td>
           </tr>
-          <ng-container *ngIf="settings['r'] != null">
+        </table>
+      </div>
+      <div class="Float--left Width--100" *ngIf="settings['r'] != null">
+        <table class="Width--100">
             <tr *ngFor="let fieldSetting of settings['r']">
               <td>{{fieldSetting.columnDisplay}}</td>
               <td>
@@ -381,7 +467,7 @@ participant.data.dsm['diagnosisYear'] != null">
                          (change)="onAdditionalValueChange($event, fieldSetting.columnName)"
                          (blur)="currentField(null)" (focus)="currentField(fieldSetting.columnName)">
                 </md-input-container>
-                <textarea maxlength="1000" *ngIf="fieldSetting.displayType === 'TEXTAREA'"
+                <textarea maxlength="10000" *ngIf="fieldSetting.displayType === 'TEXTAREA'"
                           [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}"
                           (blur)="currentField(null)" (focus)="currentField(fieldSetting.columnName)"
                           [disabled]="participantExited"
@@ -406,44 +492,10 @@ participant.data.dsm['diagnosisYear'] != null">
                                       (dateChanged)="onAdditionalValueChange($event, fieldSetting.columnName)"></app-field-datepicker>
               </td>
             </tr>
-          </ng-container>
         </table>
       </div>
 
       <div class="Float--left Width--100">
-        <ng-container *ngIf="participant.participant == null && participant.kits == null">
-          <div class="Float--left Width--100">
-            <div class="Float--left Width--100"
-                 *ngIf="participant.data != null && participant.data.activities != null && participant.data.activities.length > 0">
-              <b class="Group--Title">Jump to:</b>
-            </div>
-            <div class="Float--left Width--100"
-                 *ngIf="participant.data != null && participant.data.activities != null && participant.data.activities.length > 0">
-              <ng-container *ngFor="let activity of participant.data.activities; let i = index">
-                <div class="Float--left" *ngIf="getActivityDefinition(activity.activityCode) as activityDef1">
-                  <a class="Abstraction--Jump--Group" pageScroll href="{{getGroupHref(activity.activityCode)}}"
-                     *ngIf="activityDef1 != null">{{activityDef1.activityName}}</a>
-                </div>
-                <ng-container *ngIf="i < participant.data.activities.length - 1">
-                  <div class="Float--left Vertical--line"></div>
-                </ng-container>
-              </ng-container>
-            </div>
-
-            <!--assumption for now is that activity will be different per ddp > dynamic-->
-            <div class="Float--left Width--100"
-                 *ngIf="participant.data != null && participant.data.activities != null && participant.data.activities.length > 0">
-              <hr style="border-color: black">
-              <ng-container *ngFor="let activity of participant.data.activities">
-                <ng-container *ngIf="getActivityDefinition(activity.activityCode) as activityDef2">
-                  <app-activity-data *ngIf="activityDef2 != null" [activityDefinition]="activityDef2"
-                                     [activity]="activity"></app-activity-data>
-                </ng-container>
-              </ng-container>
-            </div>
-          </div>
-        </ng-container>
-        <ng-container *ngIf="participant.participant != null || participant.kits != null">
           <!--tab order is not working when tabs have ngIf, will just put them at the end of static tabs. therefore ngIf=true is added to static tabs-->
           <tabset>
             <tab
@@ -461,7 +513,7 @@ participant.data.dsm['diagnosisYear'] != null">
                   <ng-container *ngFor="let activity of participant.data.activities; let i = index">
                     <div class="Float--left" *ngIf="getActivityDefinition(activity.activityCode) as activityDef3">
                       <a class="Abstraction--Jump--Group" pageScroll href="{{getGroupHref(activity.activityCode)}}"
-                         *ngIf="activityDef3 != null">{{activityDef3.activityName}}</a>
+                         *ngIf="activityDef3 != null">{{activityDef3.activityName}} {{activityDef3.activityVersion}}</a>
                     </div>
                     <ng-container *ngIf="i < participant.data.activities.length - 1">
                       <div class="Float--left Vertical--line"></div>
@@ -498,25 +550,48 @@ participant.data.dsm['diagnosisYear'] != null">
                       </tr>
                       <hr style="border-color: lightgray">
                       <tr>
+                        <td class="TD--Padding Width--50 Data-Display-Question">Kit Upload Type:</td>
+                      </tr>
+                      <tr>
+                        <td class="TD--Padding Width--50">{{sample.uploadReason}}</td>
+                      </tr>
+                      <hr style="border-color: lightgray">
+                      <tr>
                         <td class="TD--Padding Width--50 Data-Display-Question">MF Barcode:</td>
                       </tr>
                       <tr>
                         <td class="TD--Padding-Left Width--50">{{sample.kitLabel}}</td>
+                      </tr>
+                      <hr *ngIf="sample.externalOrderNumber != null && sample.externalOrderNumber != undefined" style="border-color: lightgray">
+                      <tr *ngIf="sample.externalOrderNumber != null && sample.externalOrderNumber != undefined">
+                        <td class="TD--Padding Width--50 Data-Display-Question">External Order Number:</td>
+                      </tr>
+                      <tr *ngIf="sample.externalOrderNumber != null && sample.externalOrderNumber != undefined">
+                        <td class="TD--Padding-Left Width--50">{{sample.externalOrderNumber}}</td>
                       </tr>
                       <hr style="border-color: lightgray">
                       <tr>
                         <td class="TD--Padding Width--50 Data-Display-Question">Sent:</td>
                       </tr>
                       <tr>
-                        <td class="TD--Padding-Left Width--50">{{sample.scanDate | date:'medium'}}</td>
+                        <td class="TD--Padding-Left Width--50">{{sample.scanDate === 0 ? "-" : sample.scanDate | date:'medium'}}</td>
                       </tr>
                       <hr style="border-color: lightgray">
                       <tr>
                         <td class="TD--Padding Width--50 Data-Display-Question">Received:</td>
                       </tr>
                       <tr>
-                        <td class="TD--Padding-Left Width--50">{{sample.receiveDate | date:'medium'}}</td>
+                        <td class="TD--Padding-Left Width--50">{{sample.receiveDate === 0 ? "-" : sample.receiveDate | date:'medium'}}</td>
                       </tr>
+                      <div *ngIf="sample.deactivatedDate !== 0">
+                        <hr style="border-color: lightgray">
+                        <tr>
+                          <td class="TD--Padding Width--50 Data-Display-Question">Deactivated:</td>
+                        </tr>
+                        <tr>
+                          <td class="TD--Padding-Left Width--50">{{sample.deactivatedDate | date:'medium'}}</td>
+                        </tr>
+                      </div>
                       <hr *ngIf="sample.trackingNumberTo != null"style="border-color: lightgray">
                       <tr *ngIf="sample.trackingNumberTo != null">
                         <td class="TD--Padding Width--50 Data-Display-Question">Tracking-out:</td>
@@ -685,10 +760,14 @@ participant.data.dsm['diagnosisYear'] != null">
 
                   <div
                     *ngIf="participant != null && participant.oncHistoryDetails.length > 0 && getTissueConsent() == null || getTissueConsent()">
-                    <button md-raised-button (click)="requestTissue()" color="primary" [disabled]="participantExited"
-                            [disabled]="disableTissueRequestButton || hasRole().prohibitedToRequestTissue()"> Download
-                      Request Documents
+                    <button md-raised-button (click)="requestTissue(false)" color="primary" [disabled]="participantExited"
+                            [disabled]="disableTissueRequestButton || hasRole().prohibitedToRequestTissue()"> Download Request Documents
                     </button>
+                    <button md-raised-button color="primary"
+                            [disabled]="downloading"
+                            (click)="requestTissue(true)">Download PDF Bundle
+                    </button>
+                    <a href="#" (click)="doNothing('bundle')" *ngIf="!downloading" class="Router--Outlet"><b> Change order/files in Bundle</b></a>
                   </div>
                 </div>
               </ng-container>
@@ -866,42 +945,160 @@ participant.data.dsm['diagnosisYear'] != null">
                 </app-medical-record-abstraction>
               </div>
             </tab>
+
+            <ng-container *ngIf="dynamicFormType(settings); else groupForm">
+              <ng-container *ngFor="let relative of participant.participantData">
+                <!--RGP tabs from fieldSettings-->
+                <ng-container *ngFor="let tab of settings['TAB_GROUPED']">
+                  <ng-container *ngIf="displayTab(tab)">
+                    <tab heading="{{createRelativeTabHeading(relative.data)}}" [active]="tabActive(relative.dataId)" (select)="onSelect($event, relative.dataId)" >
+                    <br/><br/>
+                      <div *ngIf="settings[tab.columnName].length > 0 && settings[tab.columnName][0].displayType === 'GROUP'">
+                        <div class="Float--left Width--100"
+                             *ngIf="settings[tab.columnName].length > 0">
+                          <b class="Group--Title">Jump to:</b>
+                        </div>
+                        <div class="Float--left Width--100"
+                             *ngIf="settings[tab.columnName].length > 0">
+                          <ng-container *ngFor="let activity of settings[tab.columnName]; let i = index">
+
+                            <div class="Float--left" *ngIf="true">
+                              <a class="Abstraction--Jump--Group" (click)="openAccordionPanel(activity.columnName)" pageScroll href="{{getGroupHref(activity.columnName)}}"
+                                 *ngIf="activity != null">{{activity.columnDisplay}}</a>
+                            </div>
+                            <ng-container *ngIf="i < settings[tab.columnName].length - 1">
+                              <div class="Float--left Vertical--line"></div>
+                            </ng-container>
+                          </ng-container>
+                        </div>
+                      </div><br/><br/><br/>
+                      <ng-container *ngIf="tabActive(relative.dataId)">
+                        <accordion>
+                          <accordion-group *ngFor="let setting of settings[tab.columnName]; let settingIndex = index"
+                            [heading]="setting.columnDisplay" [isOpen]="isAccordionPanelOpen(setting.columnName)" [isDisabled]="showGroupFields"
+                            (isOpenChange)="onOpenChangeAccordionPanel($event)">
+                            <div class="Float--left Width--100">
+                              <div *ngIf="setting.displayType === 'GROUP'">
+                                <hr style="border-color: black">
+                                <fieldset style="border: 1px black solid">
+                                  <legend class="Group--Title" id="{{setting.columnName}}"></legend>
+                                  <ng-container *ngFor="let field of settings[setting.columnName]; let fieldIndex = index">
+                                    <app-form-data [fieldSetting]="field" [participantData]="getParticipantData(field, relative)"
+                                                  [activityData]="getActivityData(field)" [activityOptions]="getActivityOptions(field)"
+                                                  (patchData)="formPatch($event, field, setting, relative.dataId)"></app-form-data>
+                                    <hr *ngIf="fieldIndex !== settings[setting.columnName].length-1" style="border-color: lightgray">
+                                  </ng-container>
+                                </fieldset>
+                              </div>
+                            </div>
+                          </accordion-group>
+                        </accordion>
+                      </ng-container>
+                    </tab>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+
+            <!--AT tabs from fieldSettings-->
+            <ng-template #groupForm>
+              <ng-container *ngFor="let tab of settings['TAB']">
+                <ng-container *ngIf="displayTab(tab)">
+                  <tab heading="{{getDisplayName(tab.columnDisplay, tab.columnName)}}" [active]="tabActive(tab.columnDisplay)" (select)="onSelect($event, tab.columnDisplay)" >
+  <!--                  <br/>-->
+
+  <!--                  <div class="Float&#45;&#45;left Width&#45;&#45;100">-->
+  <!--                    <b class="Group&#45;&#45;Title">Jump to:</b>-->
+  <!--                  </div>-->
+  <!--                  <ng-container *ngFor="let setting of settings[tab.columnName]; let settingIndex = index">-->
+  <!--                    <div class="Float&#45;&#45;left" *ngIf="setting.displayType === 'GROUP'">-->
+  <!--                      <a class="Abstraction&#45;&#45;Jump&#45;&#45;Group" pageScroll href="{{setting.columnName}}">{{setting.columnDisplay}}</a>-->
+  <!--                    </div>-->
+  <!--                    <ng-container *ngIf="settingIndex < settings[tab.columnName].length - 1">-->
+  <!--                      <div class="Float&#45;&#45;left Vertical&#45;&#45;line"></div>-->
+  <!--                    </ng-container>-->
+  <!--                  </ng-container>-->
+  <!--                  <div class="Float&#45;&#45;left Width&#45;&#45;100">-->
+  <!--                    <hr style="border-color: black">-->
+  <!--                  </div>-->
+                    <ng-container *ngFor="let setting of settings[tab.columnName]; let settingIndex = index">
+                      <ng-container *ngIf="tabActive(tab.columnDisplay)">
+                        <div class="Float--left Width--100">
+                          <ng-container *ngIf="setting.displayType !== 'GROUP'">
+                            <app-form-data [fieldSetting]="setting" [participantData]="getParticipantDataFromSingleParticipant(setting)"
+                                          [activityData]="getActivityData(setting)" [activityOptions]="getActivityOptions(setting)"
+                                          (patchData)="formPatch($event, setting, null, findDataId(setting))"></app-form-data>
+                            <hr *ngIf="settingIndex !== settings[tab.columnName].length-1" style="border-color: lightgray">
+                          </ng-container>
+                        </div>
+                      </ng-container>
+                    </ng-container>
+                  </tab>
+                </ng-container>
+              </ng-container>
+            </ng-template>
           </tabset>
-        </ng-container>
       </div>
     </div>
   </div>
 
   <app-modal>
     <div class="app-modal-header">
-      <ng-container *ngIf="!_showWarningModal">
+      <ng-container *ngIf="source === 'normal'">
         Note for medical record:
       </ng-container>
-      <ng-container *ngIf="_showWarningModal">
+      <ng-container *ngIf="source === 'warning'">
         Tissue Request Warning
+      </ng-container>
+      <ng-container *ngIf="source === 'bundle'">
+        Change order of PDFs in bundle
       </ng-container>
     </div>
     <div class="app-modal-body">
-      <ng-container *ngIf="!_showWarningModal">
+      <ng-container *ngIf="source === 'normal'">
       <textarea class="Width--100" maxlength="1000" [disabled]="participantExited"
                 *ngIf="noteMedicalRecord != null" [(ngModel)]="noteMedicalRecord.mrNotes"></textarea>
       </ng-container>
-      <ng-container *ngIf="_showWarningModal">
+      <ng-container *ngIf="source === 'warning'">
         {{warning}}
+      </ng-container>
+      <ng-container *ngIf="source === 'bundle'">
+        <table class="table table-condensed">
+          <tbody>
+          <tr *ngFor="let pdf of pdfs">
+            <td>
+              <md-select placeholder="Select PDF" [(ngModel)]="pdf.order">
+                <md-option *ngFor="let item of [].constructor(pdfs.length + 1); let i = index" [value]="i">
+                  {{i}}
+                </md-option>
+              </md-select>
+            </td>
+            <td>
+              {{pdf.displayName}}
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        Order = 0 will not add the pdf to the bundle
       </ng-container>
     </div>
     <div class="app-modal-footer">
       <button type="button" class="btn btn-default"
-              (click)="universalModal.hide()">Cancel
+              (click)="universalModal.hide()">Close
       </button>
-      <ng-container *ngIf="!_showWarningModal">
+      <ng-container *ngIf="source === 'normal'">
         <button type="button" class="btn btn-primary" [disabled]="participantExited"
                 (click)="saveNote()">Save & Close
         </button>
       </ng-container>
-      <ng-container *ngIf="_showWarningModal">
+      <ng-container *ngIf="source === 'warning'">
         <button type="button" class="btn btn-default" [disabled]="participantExited"
-                (click)="doRequest()">Request Anyway
+                (click)="doRequest(bundle)">Request Anyway
+        </button>
+      </ng-container>
+      <ng-container *ngIf="source === 'bundle'">
+        <button type="button" class="btn btn-primary" [disabled]="participantExited"
+                (click)="doRequest(true)">Download PDF Bundle
         </button>
       </ng-container>
     </div>

@@ -11,7 +11,7 @@
   <br/>
 </div>
 
-  <span [hidden]="!loading" class="Width--100">
+<span [hidden]="!loading" class="Width--100">
     <div align="center" class="Width--100 Height--100">
       <i class="fas fa-spinner fa-spin fa-5x Color--primary"></i>
       <br/>
@@ -23,21 +23,46 @@
   <br/>
   <br/>
   <div class="Width--60">
-    <div *ngIf="kitTypes != null && kitTypes.length > 0">
+    <div *ngIf="kitTypes != null && kitTypes.length > 1">
       <div *ngFor="let type of kitTypes">
-        <md-checkbox color="primary" [checked]="type.selected"
+        <md-checkbox color="primary" [checked]="type.selected || kitTypes.length == 1"
                      (change)="type.selected = $event.checked; typeChecked(type)"
                      disableRipple>{{type.displayName}}</md-checkbox>
       </div>
     </div>
   </div>
   <br/>
-  <div *ngIf="kitType != null" class="Width--80">
+  <div *ngIf="uploadReasons.length > 0">
+    <div>
+      <b>Select reason to upload this batch</b>
+    </div>
+    <div>
+      <md-select [(ngModel)]="this.selectedReason">
+        <md-option *ngFor="let uploadReason of this.uploadReasons" value="{{uploadReason}}">{{uploadReason}}</md-option>
+      </md-select>
+    </div>
+  </div>
+  <br>
+  <div *ngIf="carriers.length > 0">
+    <div>
+      <b>Select Shipping Carrier</b>
+    </div>
+    <div>
+      <md-select [(ngModel)]="this.selectedCarrier">
+        <md-option *ngFor="let carrier of this.carriers" value="{{carrier}}">{{carrier}}</md-option>
+      </md-select>
+    </div>
+  </div>
+  <br/>
+  <div *ngIf="allOptionesSelected()" class="Width--80">
     <app-filepicker [id]="'kitUploadFile'" [fileFormat]="'txt'" (fileSelected)="fileSelected($event)"></app-filepicker>
     <button type="button" md-raised-button color="primary"
             (click)="upload()"
             [disabled]="!(uploadPossible && file != null) || loading">Upload Kits
     </button>
+  </div>
+  <div>
+
   </div>
 
   <div *ngIf="failedParticipants != null && failedParticipants.length > 0">
@@ -62,10 +87,11 @@
       <ul>
         <li>Tab delimited ".txt" file</li>
         <li>Following columns are required
-          <table class="table table-bordered"
-                 *ngIf="getCompService().getRealm().toLowerCase() !== 'promise'">
+          <table class="table table-bordered">
             <tr>
-              <td>participantId</td>
+              <ng-container *ngIf="getCompService().getRealm().toLowerCase() === 'rgp'">
+                <td>participantId</td>
+              </ng-container>
               <td>shortId</td>
               <td>firstName</td>
               <td>lastName</td>
@@ -75,23 +101,11 @@
               <td>postalCode</td>
               <td>state</td>
               <td>country</td>
-              <ng-container *ngIf="this.realmNameStoredForFile==='testboston'">
+              <ng-container *ngIf="getCompService().getRealm().toLowerCase() === 'testboston'">
                 <td>phoneNumber</td>
               </ng-container>
             </tr>
           </table>
-        </li>
-        <li
-          *ngIf="getCompService().getRealm().toLowerCase() !== 'promise' && getCompService().getRealm().toLowerCase() !== 'mmrf'">
-          participantId = altPID for Gen2 DDPs and participantId = participant_guid for Gen3 (Pepper) DDPs <br/>
-          <b>If your participant is a migrated one and has a altPID please use that ID for the upload, otherwise use the
-            GUID</b></li>
-        <li
-          *ngIf="getCompService().getRealm().toLowerCase() !== 'promise' && getCompService().getRealm().toLowerCase() !== 'mmrf'">
-          shortId = shortId for Gen2 DDPs and shortId = legacy_shortid for Gen3 (Pepper) DDPs
-        </li>
-        <li *ngIf="getCompService().getRealm().toLowerCase() === 'promise'">orderNumber = Mayo order number AND
-          participantId = redCap participant ID
         </li>
         <li>Afterwards kits can be found under <u>'Kits without Labels'</u>. GP will trigger label creation.</li>
       </ul>

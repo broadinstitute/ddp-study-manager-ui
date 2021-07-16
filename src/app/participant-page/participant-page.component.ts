@@ -1,7 +1,11 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild, OnDestroy } from "@angular/core";
+import { MdDialog } from '@angular/material';
 import {TabDirective} from "ngx-bootstrap";
 import {ActivatedRoute, Router} from "@angular/router";
+import {ActivityData} from "../activity-data/activity-data.model";
 import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
+import {FieldSettings} from "../field-settings/field-settings.model";
+import {ParticipantData} from "../participant-list/models/participant-data.model";
 import {PreferredLanguage} from "../participant-list/models/preferred-languages.model";
 import {Participant} from "../participant-list/participant-list.model";
 import {PDFModel} from "../pdf-download/pdf-download.model";
@@ -11,8 +15,8 @@ import {Auth} from "../services/auth.service";
 import {DSMService} from "../services/dsm.service";
 import {MedicalRecord} from "../medical-record/medical-record.model";
 import {RoleService} from "../services/role.service";
-import {Utils} from "../utils/utils";
 import {Statics} from "../utils/statics";
+import {Utils} from "../utils/utils";
 import {OncHistoryDetail} from "../onc-history-detail/onc-history-detail.model";
 import {ModalComponent} from "../modal/modal.component";
 import {Tissue} from "../tissue/tissue.model";
@@ -23,6 +27,10 @@ import {NameValue} from "../utils/name-value.model";
 import {Abstraction} from "../medical-record-abstraction/medical-record-abstraction.model";
 import {AbstractionGroup, AbstractionWrapper} from "../abstraction-group/abstraction-group.model";
 import {PatchUtil} from "../utils/patch.model";
+import { ParticipantUpdateResultDialogComponent } from "../dialogs/participant-update-result-dialog.component";
+import { AddFamilyMemberComponent } from "../popups/add-family-member/add-family-member.component";
+import { Sample } from "../participant-list/models/sample.model";
+import { ParticipantDSMInformation } from "../participant-list/models/participant.model";
 
 var fileSaver = require( "file-saver/FileSaver.js" );
 
@@ -31,7 +39,7 @@ var fileSaver = require( "file-saver/FileSaver.js" );
   templateUrl: "./participant-page.component.html",
   styleUrls: [ "./participant-page.component.css" ]
 } )
-export class ParticipantPageComponent implements OnInit {
+export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   @ViewChild( ModalComponent )
   public universalModal: ModalComponent;
@@ -41,13 +49,17 @@ export class ParticipantPageComponent implements OnInit {
   @Input() drugs: string[];
   @Input() cancers: string[];
   @Input() preferredLanguage: Array<PreferredLanguage>;
+  @Input() hideMRTissueWorkflow: boolean;
   @Input() activeTab: string;
   @Input() activityDefinitions: Array<ActivityDefinition>;
   @Input() settings: {};
   @Input() mrCoverPdfSettings: Value[];
   @Input() oncHistoryId: string;
   @Input() mrId: string;
+  @Input() isAddFamilyMember: boolean;
+  @Input() showGroupFields: boolean;
   @Output() leaveParticipant = new EventEmitter();
+  @Output('ngModelChange') update = new EventEmitter();
 
   participantExited: boolean = true;
   participantNotConsented: boolean = true;
@@ -58,7 +70,7 @@ export class ParticipantPageComponent implements OnInit {
   errorMessage: string;
   additionalMessage: string;
 
-  _showWarningModal = false;
+  source = 'normal';
 
   loadingParticipantPage: boolean = false;
 
@@ -90,8 +102,23 @@ export class ParticipantPageComponent implements OnInit {
   selectedPDF: string;
   disableDownload: boolean = false;
 
+  updatedFirstName: string;
+  updatedLastName: string;
+  updatedEmail: string;
+  updatingParticipant: boolean = false;
+  private taskType: string;
+  private checkParticipantStatusInterval: any;
+  isEmailValid: boolean;
+
+  accordionOpenedPanel: string = "";
+
+  private payload = {};
+
+  downloading: boolean = false;
+  message: string = null;
+  bundle: boolean = false;
   constructor( private auth: Auth, private compService: ComponentService, private dsmService: DSMService, private router: Router,
-               private role: RoleService, private util: Utils, private route: ActivatedRoute) {
+               private role: RoleService, private util: Utils, private route: ActivatedRoute, public dialog: MdDialog) {
     if (!auth.authenticated()) {
       auth.logout();
     }
@@ -105,8 +132,82 @@ export class ParticipantPageComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.setDefaultProfileValues();
+    this.payload = {
+      participantGuid: this.participant.data.profile[ "guid" ],
+      instanceName: this.compService.getRealm(),
+      data: {}
+    };
+    this.checkParticipantStatusInterval = setInterval(() => {
+      if (this.updatingParticipant) {
+        this.dsmService.checkUpdatingParticipantStatus().subscribe(
+          data => {
+            let parsedData = JSON.parse(data.body);
+            if (parsedData[ "resultType" ] === "SUCCESS"
+                && this.isReturnedUserAndParticipantTheSame(parsedData)) {
+              this.updateParticipantObjectOnSuccess();
+              this.openResultDialog("Participant successfully updated");
+            }
+            else if (parsedData[ "resultType" ] === "ERROR"
+                && this.isReturnedUserAndParticipantTheSame(parsedData)){
+              this.openResultDialog(parsedData[ "errorMessage" ]);
+            }
+         },
+         err => {
+            this.openResultDialog("Error - Failed to update participant");
+         }
+        );
+      };
+    }, 5000);
     this.loadInstitutions();
     window.scrollTo( 0, 0 );
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.checkParticipantStatusInterval);
+  }
+
+  showFamilyMemberPopUpOnClick() {
+    this.dialog.open(AddFamilyMemberComponent, {
+      data: {participant : this.participant},
+      disableClose : true,
+    });
+  }
+
+  private setDefaultProfileValues() {
+    this.updatedFirstName = this.participant.data.profile[ "firstName" ];
+    this.updatedLastName = this.participant.data.profile[ "lastName" ];
+    this.updatedEmail = this.participant.data.profile[ "email" ];
+  }
+
+  private isReturnedUserAndParticipantTheSame(parsedData: any) {
+    return parsedData[ "participantGuid" ] === this.participant.data.profile[ "guid" ]
+    && parsedData[ "userId"] === this.role.userID();
+  }
+
+  private updateParticipantObjectOnSuccess() {
+    switch (this.taskType) {
+      case "UPDATE_FIRSTNAME": {
+        this.participant.data.profile[ "firstName" ] = this.updatedFirstName;
+        break;
+      }
+      case "UPDATE_LASTNAME": {
+        this.participant.data.profile[ "lastName" ] = this.updatedLastName;
+        break;
+      }
+      case "UPDATE_EMAIL": {
+        this.participant.data.profile[ "email" ] = this.updatedEmail;
+        break;
+      }
+    }
+    this.taskType = "";
+  }
+
+  private openResultDialog(text: string) {
+    this.updatingParticipant = false;
+    this.dialog.open(ParticipantUpdateResultDialogComponent, {
+      data: { message: text },
+    });
   }
 
   hasRole(): RoleService {
@@ -115,6 +216,63 @@ export class ParticipantPageComponent implements OnInit {
 
   getUtil(): Utils {
     return this.util;
+  }
+
+  updateFirstName() {
+    this.updatingParticipant = true;
+    this.taskType = "UPDATE_FIRSTNAME";
+    this.payload[ "data" ][ "firstName" ] = this.updatedFirstName;
+    this.dsmService.updateParticipant(JSON.stringify(this.payload)).subscribe(
+      data => {
+
+      },
+      err => {
+        this.openResultDialog("Error - Failed to update participant");
+      }
+    );
+    delete this.payload[ "data" ][ "firstName" ];
+  }
+
+  updateLastName() {
+    this.updatingParticipant = true;
+    this.taskType = "UPDATE_LASTNAME";
+    this.payload[ "data" ][ "lastName" ] = this.updatedLastName;
+    this.dsmService.updateParticipant(JSON.stringify(this.payload)).subscribe(
+      data => {
+
+      },
+      err => {
+        this.openResultDialog("Error - Failed to update participant");
+      }
+    );
+    delete this.payload[ "data" ][ "lastName" ];
+  }
+
+  updateEmail() {
+    this.updatingParticipant = true;
+    this.taskType = "UPDATE_EMAIL";
+    this.payload[ "data" ][ "email" ] = this.updatedEmail;
+    this.dsmService.updateParticipant(JSON.stringify(this.payload)).subscribe(
+      data => {
+
+      },
+      err => {
+        this.openResultDialog("Error - Failed to update participant");
+      }
+    );
+    delete this.payload[ "data" ][ "email" ];
+  }
+
+  validateEmailInput( changedValue ) {
+    const regexToValidateEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    let isValid = regexToValidateEmail.test(changedValue);
+    if (isValid) {
+      this.isEmailValid = true;
+      this.updatedEmail = changedValue;
+      this.update.emit(changedValue);
+    } else {
+      this.isEmailValid = false;
+    }
   }
 
   getLanguageName(languageCode: string): string {
@@ -133,6 +291,20 @@ export class ParticipantPageComponent implements OnInit {
     return "#" + group;
   }
 
+  onOpenChangeAccordionPanel(event: boolean) {
+    if (!event) {
+      this.accordionOpenedPanel = "";
+    }
+  }
+
+  openAccordionPanel(columnName: string) {
+    this.accordionOpenedPanel = columnName;
+  }
+
+  isAccordionPanelOpen(columnName: string) {
+    return this.showGroupFields || this.accordionOpenedPanel === columnName;
+  }
+
   private loadInstitutions() {
     if (this.participant.data != null) {
       if (this.participant.data.status === undefined || this.participant.data.status.indexOf( Statics.EXITED ) == -1) {
@@ -141,8 +313,21 @@ export class ParticipantPageComponent implements OnInit {
       if (this.participant.data.status === undefined || this.participant.data.status.indexOf( Statics.CONSENT_SUSPENDED ) == -1) {
         this.participantNotConsented = false;
       }
-      if (this.participant.data.dsm != null && this.participant.data.dsm[ "pdfs" ] != null) {
-        this.pdfs = this.participant.data.dsm[ "pdfs" ];
+      this.pdfs = new Array<PDFModel>();
+      if (this.participant.data != null && this.participant.data.dsm != null && this.participant.data.dsm[ "pdfs" ] != null && this.participant.data.dsm[ "pdfs" ].length > 0) {
+        let tmp = this.participant.data.dsm[ "pdfs" ];
+        if (tmp != null && tmp.length > 0) {
+          let pos = 1;
+          if (this.participant.oncHistoryDetails != null && this.participant.oncHistoryDetails.length > 0) {
+            this.pdfs.push( new PDFModel( "request", "Tissue Request PDF", pos ) );
+            pos += 1;
+          }
+          tmp.forEach( (pdf, index) => {
+            pdf.order = index + pos;// +2 because 1 is cover pdf
+            this.pdfs.push(pdf);
+          })
+          this.pdfs.push(new PDFModel('irb','IRB Letter', tmp.length + pos));
+        }
       }
       //if surveys is null then it is a gen2 participant > go and get institution information
       if (this.participant.data.activities == null) {
@@ -323,8 +508,13 @@ export class ParticipantPageComponent implements OnInit {
     }
     if (v !== null) {
       let participantId = this.participant.participant.participantId;
+      let ddpParticipantId = this.participant.data.profile[ "guid" ];
+      if (this.participant.data.profile[ "legacyAltPid" ] != null && this.participant.data.profile[ "legacyAltPid" ] != undefined && this.participant.data.profile[ "legacyAltPid" ] !== '') {
+        ddpParticipantId = this.participant.data.profile[ "legacyAltPid" ];
+      }
       let patch1 = new PatchUtil( participantId, this.role.userMail(),
-        {name: parameterName, value: v}, null, null, null, tableAlias );
+        {name: parameterName, value: v}, null, 'ddpParticipantId', ddpParticipantId, tableAlias, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) );
+      patch1.realm = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
       let patch = patch1.getPatch();
       this.currentPatchField = parameterName;
       this.patchFinished = false;
@@ -333,11 +523,18 @@ export class ParticipantPageComponent implements OnInit {
         data => {
           let result = Result.parse( data );
           if (result.code === 200 && result.body != null) {
-            let jsonData: any[] = JSON.parse( result.body );
-            jsonData.forEach( ( val ) => {
-              let nameValue = NameValue.parse( val );
-              this.participant.participant[ nameValue.name ] = nameValue.value;
-            } );
+            let jsonData: any | any[] = JSON.parse( result.body );
+            if (jsonData instanceof Array) {
+              jsonData.forEach( ( val ) => {
+                let nameValue = NameValue.parse( val );
+                this.participant.participant[ nameValue.name ] = nameValue.value;
+              } );
+            }
+            else {
+              if (jsonData.participantId != null && jsonData.participantId != undefined) {
+                this.participant.participant.participantId = jsonData.participantId;
+              }
+            }
           }
           this.currentPatchField = null;
           this.patchFinished = true;
@@ -355,6 +552,7 @@ export class ParticipantPageComponent implements OnInit {
 
   oncHistoryValueChanged( value: any, parameterName: string, oncHis: OncHistoryDetail ) {
     let v;
+    let realm: string = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
     if (typeof value === "string") {
       oncHis[ parameterName ] = value;
       v = value;
@@ -370,7 +568,7 @@ export class ParticipantPageComponent implements OnInit {
     if (v !== null) {
 
       let patch1 = new PatchUtil( oncHis.oncHistoryDetailId, this.role.userMail(),
-        {name: parameterName, value: v}, null, "participantId", oncHis.participantId, Statics.ONCDETAIL_ALIAS );
+        {name: parameterName, value: v}, null, "participantId", oncHis.participantId, Statics.ONCDETAIL_ALIAS,  null, realm);
       let patch = patch1.getPatch();
       this.patchFinished = false;
       this.currentPatchField = parameterName;
@@ -417,26 +615,28 @@ export class ParticipantPageComponent implements OnInit {
     this.isOncHistoryDetailChanged = true;
   }
 
-  doRequest() {
+  doRequest(bundle: boolean) {
     let requestOncHistoryList: Array<OncHistoryDetail> = [];
     for (let oncHis of this.participant.oncHistoryDetails) {
       if (oncHis.selected) {
         requestOncHistoryList.push( oncHis );
       }
     }
-    this.downloadRequestPDF( requestOncHistoryList );
+    this.downloadRequestPDF( requestOncHistoryList, bundle );
     this.disableTissueRequestButton = true;
-    this._showWarningModal = false;
+    this.source = 'normal';
     this.universalModal.hide();
   }
 
-  requestTissue() {
-    this._showWarningModal = true;
+  requestTissue(bundle: boolean) {
+    this.bundle = bundle;
     this.warning = null;
     let doIt: boolean = true;
+    let somethingSelected: boolean = false;
     let firstOncHis: OncHistoryDetail = null;
     for (let oncHis of this.participant.oncHistoryDetails) {
       if (oncHis.selected) {
+        somethingSelected = true;
         if (firstOncHis == null) {
           firstOncHis = oncHis;
           this.facilityName = firstOncHis.facility;
@@ -444,7 +644,8 @@ export class ParticipantPageComponent implements OnInit {
         if (typeof firstOncHis.facility === "undefined" || firstOncHis.facility == null) {
           this.warning = "Facility is empty";
           doIt = false;
-        } else if (this.participant.kits != null) {
+        }
+        else if (this.participant.kits != null) {
           //no samples for pt
           let kitReturned: boolean = false;
           for (let kit of this.participant.kits) {
@@ -457,7 +658,8 @@ export class ParticipantPageComponent implements OnInit {
             doIt = false;
             this.warning = "No samples returned for participant yet";
           }
-        } else {
+        }
+        else {
           if (firstOncHis.facility !== oncHis.facility ||
             firstOncHis.fPhone !== oncHis.fPhone ||
             firstOncHis.fFax !== oncHis.fFax) {
@@ -468,8 +670,13 @@ export class ParticipantPageComponent implements OnInit {
       }
     }
     if (doIt && this.facilityName != null) {
-      this.doRequest();
-    } else {
+      this.doRequest(bundle);
+    }
+    else {
+      this.source = 'warning';
+      if (!somethingSelected) {
+        this.warning = "No tissue selected for requesting";
+      }
       this.universalModal.show();
     }
   }
@@ -494,7 +701,7 @@ export class ParticipantPageComponent implements OnInit {
 
   saveNote() {
     let patch1 = new PatchUtil( this.noteMedicalRecord.medicalRecordId, this.role.userMail(),
-      {name: "mrNotes", value: this.noteMedicalRecord.mrNotes}, null, null, null, Statics.MR_ALIAS );
+      {name: "mrNotes", value: this.noteMedicalRecord.mrNotes}, null, null, null, Statics.MR_ALIAS,  null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) );
     let patch = patch1.getPatch();
 
 
@@ -513,14 +720,15 @@ export class ParticipantPageComponent implements OnInit {
     this.universalModal.hide();
   }
 
-  downloadRequestPDF( requestOncHistoryList: Array<OncHistoryDetail> ) {
-    let map: { name: string, value: any }[] = [];
-    map.push( {name: DSMService.REALM, value: localStorage.getItem( ComponentService.MENU_SELECTED_REALM )} );
-    for (let onc of requestOncHistoryList) {
-      map.push( {name: "requestId", value: onc.oncHistoryDetailId} );
+  downloadRequestPDF( requestOncHistoryList: Array<OncHistoryDetail>, bundle: boolean ) {
+    this.downloading = true;
+    this.message = "Downloading... This might take a while";
+    let configName = null;
+    if (!bundle) {
+      configName = "tissue";
     }
-    let ddpParticipantId = this.participant.participant.ddpParticipantId;
-    this.dsmService.downloadTissueRequestPDFs( ddpParticipantId, map ).subscribe(
+    this.dsmService.downloadPDF( this.participant.participant.ddpParticipantId, null, null, null, null,
+      localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), configName, this.pdfs, requestOncHistoryList).subscribe(
       data => {
         var date = new Date();
         this.downloadFile( data, "_TissueRequest_" + this.facilityName + "_" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) );
@@ -551,13 +759,16 @@ export class ParticipantPageComponent implements OnInit {
           }
           this.facilityName = null;
         }
+        this.downloading = false;
+        this.message = "Download finished."
       },
       err => {
         if (err._body === Auth.AUTHENTICATION_ERROR) {
           this.router.navigate( [Statics.HOME_URL] );
         }
         this.disableTissueRequestButton = false;
-        this.additionalMessage = "Error - Downloading pdf file\nPlease contact your DSM developer";
+        this.downloading = false;
+        this.message = "Failed to download pdf.";
       }
     );
     window.scrollTo( 0, 0 );
@@ -590,6 +801,24 @@ export class ParticipantPageComponent implements OnInit {
       return true;
     }
     return false;
+  }
+
+  displayTab( fieldSetting: FieldSettings ): boolean {
+    if (fieldSetting != null && fieldSetting.possibleValues != null) {
+      let value: Value[] = fieldSetting.possibleValues;
+      if (value.length == 1 && value[0] != null && value[0].value != null) {
+        if (this.participant != null && this.participant.data != null && this.participant.data.activities != null) {
+          let activity = this.participant.data.activities.find( x => x.activityCode === value[0].value );
+          if (activity != null) {
+            return true;
+          }
+          else {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
   }
 
   isPatchedCurrently( field: string ): boolean {
@@ -892,9 +1121,16 @@ export class ParticipantPageComponent implements OnInit {
       }
     }
     if (v !== null) {
-      if (this.participant.participant.additionalValues != null) {
+      if (this.participant.participant != null && this.participant.participant.additionalValues != null) {
         this.participant.participant.additionalValues[ colName ] = v;
       } else {
+        let participantId = this.participant.data.profile[ "guid" ];
+        if (this.participant.data.profile[ "legacyAltPid" ] != null && this.participant.data.profile[ "legacyAltPid" ] != undefined && this.participant.data.profile[ "legacyAltPid" ] !== '') {
+          participantId = this.participant.data.profile[ "legacyAltPid" ];
+        }
+        this.participant.participant = new ParticipantDSMInformation(null, participantId, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ),
+          null, null, null, null, null, null, null,
+          false, false, false, false, 0, null);
         let addArray = {};
         addArray[ colName ] = v;
         this.participant.participant.additionalValues = addArray;
@@ -905,17 +1141,18 @@ export class ParticipantPageComponent implements OnInit {
 
   //display additional value
   getAdditionalValue( colName: string ): string {
-    if (this.participant.participant.additionalValues != null) {
+    if (this.participant.participant != null && this.participant.participant.additionalValues != null) {
       if (this.participant.participant.additionalValues[ colName ] != undefined && this.participant.participant.additionalValues[ colName ] != null) {
         return this.participant.participant.additionalValues[ colName ];
       }
     }
-    return null;
+    return "";
   }
 
   downloadPDFs( configName: string ) {
     this.disableDownload = true;
-    this.dsmService.downloadPDF( this.participant.data.profile[ 'guid' ], this.compService.getRealm(), configName ).subscribe(
+    this.dsmService.downloadPDF( this.participant.data.profile[ 'guid' ], null, null, null,null,
+      this.compService.getRealm(), configName, null, null).subscribe(
       data => {
         this.downloadFile( data, "_" + configName );
         this.disableDownload = false;
@@ -928,5 +1165,300 @@ export class ParticipantPageComponent implements OnInit {
         this.disableDownload = false;
       },
     );
+  }
+
+  getParticipantData(fieldSetting: FieldSettings, personsParticipantData: ParticipantData) {
+    if (this.participant && this.participant.participantData && personsParticipantData && fieldSetting.columnName) {
+      if (personsParticipantData && personsParticipantData.data) {
+        if (personsParticipantData.data[fieldSetting.columnName]) {
+          return personsParticipantData.data[fieldSetting.columnName];
+        } else if (fieldSetting.actions && fieldSetting.actions[0]) {
+          if (fieldSetting.actions[0].type === 'CALC' && fieldSetting.actions[0].value && personsParticipantData.data[fieldSetting.actions[0].value]) {
+            return this.countYears(personsParticipantData.data[fieldSetting.actions[0].value]);
+          } else if (fieldSetting.actions[0].type === 'SAMPLE' && fieldSetting.actions[0].type2 === 'MAP_TO_KIT') {
+            return this.getSampleFieldValue(fieldSetting, personsParticipantData);
+          }
+        }
+      }
+    }
+    return "";
+  }
+
+  getParticipantDataFromSingleParticipant(fieldSetting: FieldSettings) {
+    if (this.participant && this.participant.participantData && fieldSetting.columnName) {
+      for (let participantData of this.participant.participantData) {
+        if (participantData != null && participantData.data != null && participantData.data[fieldSetting.columnName] != null) {
+          return participantData.data[fieldSetting.columnName];
+        }
+      }
+    }
+    return "";
+  }
+
+  dynamicFormType(settings: FieldSettings[]): boolean {
+    return settings['TAB_GROUPED'];
+  }
+
+  getDisplayName(displayName: string, columnName: string) {
+    if (displayName.indexOf('#') > -1) {
+      let replacements: string[] = displayName.split('#');
+      if (replacements != null && replacements.length > 0 && this.participant != null && this.participant.participantData != null) {
+        let tmp = displayName;
+        let participantData = this.participant.participantData.find(participantData => participantData.fieldTypeId === columnName);
+        if (participantData != null && participantData.data != null) {
+          replacements.forEach( replace => {
+            let value = participantData.data[ replace.trim() ];
+            if (value != null && value != undefined) {
+              tmp = tmp.replace( '#' + replace.trim(), value );
+            }
+          } )
+        }
+        return tmp;
+      }
+      return displayName;
+    }
+    else {
+      return displayName;
+    }
+  }
+
+  getActivityData(fieldSetting: FieldSettings) {
+    //type was activity or activity_staff and no saved staff answer. therefore lookup the activity answer
+    if (fieldSetting != null && fieldSetting.possibleValues != null && fieldSetting.possibleValues[0] != null && fieldSetting.possibleValues[0].value != null) {
+      let tmp: string[] = fieldSetting.possibleValues[ 0 ].value.split( '.' );
+      if (tmp != null && tmp.length > 1) {
+        if (tmp[ 0 ] === 'profile') {
+          return this.participant.data.profile[tmp[1]];
+        }
+        else {
+          if (this.participant != null && this.participant.data != null && this.participant.data.activities != null) {
+            let activity: ActivityData = this.participant.data.activities.find( activity => activity.activityCode === tmp[ 0 ] );
+            if (activity != null && activity.questionsAnswers != null) {
+              let questionAnswer = activity.questionsAnswers.find( questionAnswer => questionAnswer.stableId === tmp[ 1 ] );
+              if (questionAnswer != null) {
+                if (tmp.length == 2) {
+                  if (typeof questionAnswer.answer === "boolean") {
+                    if (questionAnswer.answer) {
+                      return "Yes";
+                    }
+                    return "No";
+                  }
+                  if (questionAnswer.answer instanceof Array) {
+                    return questionAnswer.answer[0];
+                  }
+                  return questionAnswer.answer;
+                }
+                else if (tmp.length === 3) {
+                  if (fieldSetting.possibleValues != null && fieldSetting.possibleValues[ 0 ] != null && fieldSetting.possibleValues[ 0 ].type != null && fieldSetting.possibleValues[ 0 ].type === "RADIO") {
+                    if (questionAnswer.answer != null) {
+                      let found = questionAnswer.answer.find( answer => answer === tmp[ 2 ] )
+                      if (found != null) {
+                        return "Yes";
+                      }
+                      return "No";
+                    }
+                  }
+                  else if (this.activityDefinitions != null) {
+                    let definition: ActivityDefinition = this.activityDefinitions.find( definition => definition.activityCode === tmp[ 0 ] );
+                    if (definition != null && definition.questions != null) {
+                      let question = definition.questions.find( question => question.stableId === tmp[ 1 ] );
+                      if (question != null && question.childQuestions != null) {
+                        for (let i = 0; i < question.childQuestions.length; i++) {
+                          if (question.childQuestions[ i ] != null && question.childQuestions[ i ].stableId === tmp[ 2 ] && questionAnswer.answer[ 0 ][ i ] != null) {
+                            return questionAnswer.answer[ 0 ][ i ];
+                          }
+                        }
+                      }
+                      else if (question != null && question.options != null) {
+
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return "";
+  }
+
+  getActivityOptions(fieldSetting: FieldSettings) {
+    if (fieldSetting.displayType === 'ACTIVITY' || fieldSetting.displayType === 'ACTIVITY_STAFF') {
+      if (fieldSetting.possibleValues != null && fieldSetting.possibleValues[0] != null && fieldSetting.possibleValues[0].value != null
+        && fieldSetting.possibleValues[0].type != null) {
+        let tmp: string[] = fieldSetting.possibleValues[ 0 ].value.split( '.' );
+        if (tmp != null && tmp.length > 1) {
+          if (tmp.length == 2) {
+            if (this.activityDefinitions != null) {
+              let definition: ActivityDefinition = this.activityDefinitions.find( definition => definition.activityCode === tmp[ 0 ] );
+              if (definition != null && definition.questions != null) {
+                let question = definition.questions.find( question => question.stableId === tmp[ 1 ] );
+                if (question != null) {// && question.options != null) {
+                  if (question.questionType !== 'BOOLEAN' && question.options != null) {
+                    let options: NameValue[] = [];
+                    for (let i = 0; i < question.options.length; i++) {
+                      options.push( new NameValue( question.options[ i ].optionText, question.options[ i ].optionStableId ));
+                    }
+                    return options;
+                  }
+                  else {
+                    let options: string[] = [];
+                    options.push( "Yes" );
+                    options.push( "No" );
+                    return options;
+                  }
+                }
+              }
+            }
+          }
+          else if (tmp.length === 3) {
+            let options: string[] = [];
+            options.push( "Yes" );
+            options.push( "No" );
+            return options;
+          }
+        }
+      }
+    }
+    return [];
+  }
+
+  formPatch(value: any, fieldSetting: FieldSettings, groupSetting: FieldSettings, dataId?: string) {
+    if (fieldSetting == null || fieldSetting.fieldType == null) {
+      this.errorMessage = "Didn't save change";
+      return;
+    }
+    let fieldTypeId = fieldSetting.fieldType;
+    if (groupSetting != null) {
+      fieldTypeId = groupSetting.fieldType;
+    }
+    if (this.participant != null && this.participant.participantData != null && fieldTypeId != null && fieldSetting.columnName != null && dataId != null) {
+      let participantData: ParticipantData = this.participant.participantData.find(participantData => participantData.dataId === dataId);
+      if (participantData == null) {
+        let data: { [ k: string ]: any } = {};
+        data[fieldSetting.columnName] = value;
+        participantData = new ParticipantData (null, fieldTypeId, data );
+        this.participant.participantData.push(participantData);
+      }
+      if (participantData != null && participantData.data != null) {
+        participantData.data[fieldSetting.columnName] = value;
+
+        let nameValue: { name: string, value: any }[] = [];
+        nameValue.push({name: "d.data", value: JSON.stringify(participantData.data)});
+        let participantDataSec: ParticipantData = null;
+        let actionPatch: Value[] = null;
+        if (fieldSetting.actions != null) {
+          fieldSetting.actions.forEach(( action ) => {
+            if (action != null && action.name != null && action.name != undefined && action.type != null && action.type != undefined) {
+              participantDataSec = this.participant.participantData.find(participantData => participantData.fieldTypeId === action.type);
+              if (participantDataSec == null) {
+                if (action.type !== 'ELASTIC_EXPORT.workflows') {
+                  let data: { [ k: string ]: any } = {};
+                  data[ action.name ] = action.value;
+                  participantDataSec = new ParticipantData( null, action.type, data );
+                }
+                else {
+                  //all others studies we do the actions for everyone
+                  if (actionPatch === null) {
+                    actionPatch = [];
+                  }
+                  actionPatch.push( action );
+                }
+              }
+              if (participantDataSec != null && participantDataSec.data != null) {
+                participantDataSec.data[ action.name ] = action.value;
+                nameValue.unshift({name: "d.data", value: JSON.stringify(participantDataSec.data)});
+              }
+            }
+          });
+        }
+        if (fieldSetting.fieldType === "RADIO" && fieldSetting.possibleValues != null) {
+          let possibleValues = fieldSetting.possibleValues;
+          let possibleValue = possibleValues.find(value => value.name === fieldSetting.columnName && value.values != null)
+        }
+
+        let participantId = this.participant.data.profile[ "guid" ];
+        if (this.participant.data.profile[ "legacyAltPid" ] != null && this.participant.data.profile[ "legacyAltPid" ] != undefined && this.participant.data.profile[ "legacyAltPid" ] !== '') {
+          participantId = this.participant.data.profile[ "legacyAltPid" ];
+        }
+        let patch = {
+          id: participantData.dataId,
+          parent: "participantDataId",
+          parentId: participantId,
+          user: this.role.userMail(),
+          fieldId: fieldTypeId,
+          realm:  localStorage.getItem( ComponentService.MENU_SELECTED_REALM ),
+          nameValues: nameValue,
+          actions: actionPatch,
+        };
+
+        this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
+          data => {
+            let result = Result.parse( data );
+            if (result.code === 200) {
+              if (result.body != null && result.body !== "") {
+                let jsonData: any | any[] = JSON.parse( result.body );
+                if (jsonData.participantDataId !== undefined && jsonData.participantDataId !== "") {
+                  if (participantData != null) {
+                    participantData.dataId = jsonData.participantDataId;
+                  }
+                }
+              }
+            }
+            this.patchFinished = true;
+          },
+          err => {
+            if (err._body === Auth.AUTHENTICATION_ERROR) {
+              this.router.navigate( [ Statics.HOME_URL ] );
+            }
+          }
+        );
+      }
+    }
+  }
+
+  createRelativeTabHeading(data: any): string {
+    if (data) {
+      if (!data.FIRSTNAME) {
+        data.FIRSTNAME = '';
+      }
+      if (!data.COLLABORATOR_PARTICIPANT_ID) {
+        data.COLLABORATOR_PARTICIPANT_ID = '';
+      }
+      return data.FIRSTNAME + " - " + data.COLLABORATOR_PARTICIPANT_ID;
+    }
+    return "";
+  }
+
+  getSampleFieldValue(fieldSetting: FieldSettings, personsParticipantData: ParticipantData): string {
+    let sample: Sample = this.participant.kits.find(kit => kit.bspCollaboratorSampleId === personsParticipantData.data['COLLABORATOR_PARTICIPANT_ID']);
+    if (sample && fieldSetting.actions[0].value && sample[fieldSetting.actions[0].value] && fieldSetting.displayType) {
+      if (fieldSetting.displayType === 'DATE') {
+        return new Date(sample[fieldSetting.actions[0].value]).toISOString().split('T')[0];
+      }
+      return sample[fieldSetting.actions[0].value];
+    }
+    return "";
+  }
+
+  countYears(startDate: string): number {
+    let diff = Date.now() - Date.parse(startDate);
+    let diffDate = new Date(diff);
+    return Math.abs(diffDate.getUTCFullYear() - 1970);
+  }
+
+  findDataId(): string {
+    if (this.participant && this.participant.participantData && this.participant.participantData[0]) {
+      return this.participant.participantData[0].dataId;
+    }
+    return "";
+  }
+
+  doNothing(source: string) { //needed for the menu, otherwise page will refresh!
+    this.source = source;
+    this.universalModal.show();
+    return false;
   }
 }

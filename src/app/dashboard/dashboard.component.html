@@ -50,11 +50,6 @@
 
   <div *ngIf="dashboardVersion != null && dashboardVersion === UNSENTOVERVIEW && ddp != null" class="Width--80">
     <h4>Unsent kits</h4>
-    <button class="Float--right" type="button" md-raised-button color="primary"
-            *ngIf="getRole().allowedToHandleSamples()"
-            [disabled]="!kitsNoLabel"
-            (click)="triggerLabelCreation(null, null)">Create ALL Labels
-    </button>
     <br/>
     <br/>
     <br/>
@@ -190,7 +185,7 @@
           </td>
           <td></td>
         </tr>
-        <tr>
+        <tr *ngIf="!hideMRTissueWorkflowCounter">
           <td>PT w/ Blood Consent</td>
           <td>
             <ng-container *ngIf="ddp.dashboardValues['bloodConsent'] !== null && ddp.dashboardValues['bloodConsent'] !== undefined">
@@ -199,7 +194,7 @@
           </td>
           <td></td>
         </tr>
-        <tr>
+        <tr *ngIf="!hideMRTissueWorkflowCounter">
           <td>PT w/ Tissue Consent</td>
           <td>
             <ng-container *ngIf="ddp.dashboardValues['tissueConsent'] !== null && ddp.dashboardValues['tissueConsent'] !== undefined">
