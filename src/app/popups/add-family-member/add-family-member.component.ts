@@ -67,7 +67,7 @@ export class AddFamilyMemberComponent implements OnInit {
       data => {
         this.openResultDialog("Successfully added family member");
         this.close();
-        this.data.participant.participantData = data;
+        this.data.participant.participantData.push(data);
       },
       err => {
         if (err.status === 400) {
