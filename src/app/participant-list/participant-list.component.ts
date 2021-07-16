@@ -264,13 +264,18 @@ export class ParticipantListComponent implements OnInit {
             this.hasESData = true;
             let activityDefinition: ActivityDefinition = ActivityDefinition.parse( jsonData.activityDefinitions[ key ] );
             let possibleColumns: Array<Filter> = [];
-            possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Created", "createdAt", activityDefinition.activityCode, null, true ), Filter.DATE_TYPE ) );
-            possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Completed", "completedAt", activityDefinition.activityCode, null, true ), Filter.DATE_TYPE ) );
-            possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Last Updated", "lastUpdatedAt", activityDefinition.activityCode, null, true ), Filter.DATE_TYPE ) );
-            possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Status", "status", activityDefinition.activityCode, null, true ), Filter.OPTION_TYPE, [
-              new NameValue( "COMPLETE", "Completed" ),
-              new NameValue( "CREATED", "Created" ),
-              new NameValue( "IN_PROGRESS", "In Progress" )] ) );
+            if (this.sourceColumns[activityDefinition.activityCode] != null) {
+              possibleColumns = this.sourceColumns[activityDefinition.activityCode];
+            }
+            else {
+              possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Created", "createdAt", activityDefinition.activityCode, null, true ), Filter.DATE_TYPE ) );
+              possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Completed", "completedAt", activityDefinition.activityCode, null, true ), Filter.DATE_TYPE ) );
+              possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Last Updated", "lastUpdatedAt", activityDefinition.activityCode, null, true ), Filter.DATE_TYPE ) );
+              possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Status", "status", activityDefinition.activityCode, null, true ), Filter.OPTION_TYPE, [
+                new NameValue( "COMPLETE", "Completed" ),
+                new NameValue( "CREATED", "Created" ),
+                new NameValue( "IN_PROGRESS", "In Progress" )] ) );
+            }
             if (activityDefinition != null && activityDefinition.questions != null) {
               for (let question of activityDefinition.questions) {
                 if (question.stableId != null) {
