@@ -1354,7 +1354,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
             if (action != null && action.name != null && action.name != undefined && action.type != null && action.type != undefined) {
               participantDataSec = this.participant.participantData.find(participantData => participantData.fieldTypeId === action.type);
               if (participantDataSec == null) {
-                if (action.type !== 'ELASTIC_EXPORT.workflows') {
+                if (action.type !== 'ELASTIC_EXPORT.workflows' && action.type !== "PARTICIPANT_EVENT") {
                   let data: { [ k: string ]: any } = {};
                   data[ action.name ] = action.value;
                   participantDataSec = new ParticipantData( null, action.type, data );
