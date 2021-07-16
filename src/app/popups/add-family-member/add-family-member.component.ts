@@ -56,8 +56,7 @@ export class AddFamilyMemberComponent implements OnInit {
         firstName: this.familyMemberFirstName,
         lastName: this.familyMemberLastName,
         memberType: this.chosenRelation,
-        familyId: this.getFamilyId(),
-        collaboratorParticipantId: this.getFamilyId() + "_" + this.familyMemberSubjectId
+        subjectId: this.familyMemberSubjectId
       },
       copyProbandInfo: this.isCopyProbandInfo,
       probandDataId: this.probandDataId,
@@ -131,16 +130,5 @@ export class AddFamilyMemberComponent implements OnInit {
       participantId = this.data.participant.data.profile["guid"];
     }
     return participantId;
-  }
-
-  getFamilyId() {
-    var familyId = Array.from(this.data.participant.participantData)
-        .filter(pData => String(pData["fieldTypeId"]).includes("PARTICIPANTS") && pData["data"]["MEMBER_TYPE"] === "SELF")
-        .map(pDAta => pDAta["data"]["FAMILY_ID"])
-        .find(fId => fId);
-    if (!familyId) {
-      familyId = this.data.participant.data.profile["hruid"];
-    }  
-    return familyId;    
   }
 }

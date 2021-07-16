@@ -302,9 +302,14 @@ export class ParticipantListComponent implements OnInit {
                   } else if (question.questionType === "NUMERIC") {
                     type = Filter.NUMBER_TYPE;
                   }
-                  let displayName = this.getQuestionOrStableId( question );
-                  let filter = new Filter( new ParticipantColumn( displayName, question.stableId, activityDefinition.activityCode, null, true ), type, options );
-                  possibleColumns.push( filter );
+                  let filterInPossibleColumns = possibleColumns.find(filter => {
+                    return filter.participantColumn.name === question.stableId
+                  });
+                  if (filterInPossibleColumns == null) {
+                    let displayName = this.getQuestionOrStableId( question );
+                    let filter = new Filter( new ParticipantColumn( displayName, question.stableId, activityDefinition.activityCode, null, true ), type, options );
+                    possibleColumns.push( filter );
+                  }
                 }
               }
               let name = activityDefinition.activityName == undefined || activityDefinition.activityName === "" ? activityDefinition.activityCode : activityDefinition.activityName;
@@ -1744,7 +1749,7 @@ export class ParticipantListComponent implements OnInit {
     if (column && column.participantColumn) {
       name = column.participantColumn.name;
     }
-    return this.getPersonFieldFromDataRow(personData, column, name);    
+    return this.getPersonFieldFromDataRow(personData, column, name);
   }
 
   getPersonFieldFromDataRow(personData: ParticipantData, column: Filter, name: string): string {
@@ -1765,7 +1770,7 @@ export class ParticipantListComponent implements OnInit {
       }
       return field;
     }
-    return "";    
+    return "";
   }
 
   getPersonFieldForMultipleRows(personDatas: ParticipantData[], column: Filter): string {
@@ -1773,13 +1778,13 @@ export class ParticipantListComponent implements OnInit {
     if (column && column.participantColumn) {
       name = column.participantColumn.name;
     }
-    let result: string;    
+    let result: string;
     for (let personData of personDatas) {
       result = this.getPersonFieldFromDataRow(personData, column, name);
       if (result) {
         break;
       }
-    } 
+    }
     return result;
   }
 
