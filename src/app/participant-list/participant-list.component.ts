@@ -1754,9 +1754,7 @@ export class ParticipantListComponent implements OnInit {
     if (column && column.participantColumn) {
       name = column.participantColumn.name;
     }
-    let result: string;
-    result = this.getPersonFieldFromDataRow(personData, column, name);    
-    return result;
+    return this.getPersonFieldFromDataRow(personData, column, name);
   }
 
   getPersonFieldFromDataRow(personData: ParticipantData, column: Filter, name: string): string {
@@ -1777,7 +1775,7 @@ export class ParticipantListComponent implements OnInit {
       }
       return field;
     }
-    return null;    
+    return "";
   }
 
   getPersonFieldForMultipleRows(personDatas: ParticipantData[], column: Filter): string {
@@ -1791,7 +1789,7 @@ export class ParticipantListComponent implements OnInit {
       if (result) {
         break;
       }
-    } 
+    }
     return result;
   }
 
