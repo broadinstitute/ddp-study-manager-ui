@@ -1744,7 +1744,6 @@ export class ParticipantListComponent implements OnInit {
     if (column && column.participantColumn) {
       name = column.participantColumn.name;
     }
-    let result: string;
     return this.getPersonFieldFromDataRow(personData, column, name);    
   }
 
