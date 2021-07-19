@@ -1,3 +1,5 @@
+import { FilterBrand } from "@angular/cdk";
+import { group } from "@angular/core/src/animation/dsl";
 import {FieldSettings} from "../field-settings/field-settings.model";
 import {NameValue} from "../utils/name-value.model";
 import {Statics} from "../utils/statics";
@@ -325,6 +327,16 @@ export class Filter {
                 found = true;
                 continue;
               }
+            } else if (tableName === 'participantData') {              
+              let foundColumn: Filter = Filter.findCorrespondingColumn(allColumns, tableName, cName);
+              if (foundColumn) {
+                if (!result[tableName]) {
+                  result[tableName] = [];
+                }
+                result[tableName].push(foundColumn);
+                found = true;
+                continue;
+              }
             }
           }
           else {
@@ -359,6 +371,19 @@ export class Filter {
       }
     }
     return result;
+  }
+
+  private static findCorrespondingColumn(allColumns: any, tableName: any, cName: any) {
+    let foundColumn: Filter
+    outer: for (let filterGroup of Object.keys(allColumns)) {
+      for (let filter of allColumns[filterGroup]) {
+        if (filter['participantColumn']['tableAlias'] === tableName && filter['participantColumn']['name'] === cName) {
+          foundColumn = filter as Filter;
+          break outer;
+        }
+      }
+    }
+    return foundColumn;
   }
 
   public static parseToCurrentFilterArray( json, allColumns ): Filter[] {
