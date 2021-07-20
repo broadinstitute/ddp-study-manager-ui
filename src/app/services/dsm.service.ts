@@ -132,14 +132,14 @@ export class DSMService {
       if (json != null && json.filters != null) {
         viewFilterCopy = json.copy();
         for (let filter of json.filters) {
-          if (filter.type === Filter.OPTION_TYPE) {
+          if (filter.type === Filter.OPTION_TYPE && filter.participantColumn.tableAlias !== 'participantData') {
             filter.selectedOptions = filter.getSelectedOptionsName();
           }
         }
       }
       if (viewFilterCopy != null && viewFilterCopy.filters != null) {
         for (let filter of viewFilterCopy.filters) {
-          if (filter.type === Filter.OPTION_TYPE) {
+          if (filter.type === Filter.OPTION_TYPE && filter.participantColumn.tableAlias !== 'participantData') {
             filter.selectedOptions = filter.getSelectedOptionsName();
             filter.options = null;
           }

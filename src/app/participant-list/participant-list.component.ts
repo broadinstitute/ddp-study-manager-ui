@@ -180,7 +180,7 @@ export class ParticipantListComponent implements OnInit {
         this.mrCoverPdfSettings = [];
         this.assignees.push( new Assignee( "-1", "Remove Assignee", "" ) );
         jsonData = data;
-        if (data.defaultColumns) {
+        if (data.defaultColumns && data.defaultColumns.length > 0) {
           this.defaultColumns = [];
           for (let defaultColumn of data.defaultColumns) {
             this.defaultColumns.push(Filter[defaultColumn.value]);
@@ -716,7 +716,8 @@ export class ParticipantListComponent implements OnInit {
             }
           } else {
             //if selected columns are not set, set to default columns
-            if (this.selectedColumns[ "data" ].length == 0) {
+            if ((this.selectedColumns[ "data" ] && this.selectedColumns[ "data" ].length == 0) 
+                || (!this.selectedColumns[ "data" ] && this.selectedColumnsNotEmpty())) {
               this.dataSources.forEach( ( value: string, key: string ) => {
                 this.selectedColumns[ key ] = [];
               } );
@@ -736,6 +737,9 @@ export class ParticipantListComponent implements OnInit {
         this.errorMessage = "Error - Loading Participant List, Please contact your DSM developer";
       }
     );
+  }
+  selectedColumnsNotEmpty(): boolean {
+    return Object.values(this.selectedColumns).find(value => value != null && value != []) !== null;
   }
 
   getColSpan() {
