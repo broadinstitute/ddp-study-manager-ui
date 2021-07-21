@@ -24,7 +24,7 @@ export class ViewFilter {
     let currentFilter = null;
     let parsedColumns: {} = Filter.parseToColumnArray( columns, allColumns );
     if (json.userId !== "System" && json.filters != undefined) {
-      currentFilter = Filter.parseToCurrentFilterArray(json, allColumns);
+      currentFilter = Filter.parseToCurrentFilterArray(json, allColumns, parsedColumns);
       let p = {};
       for (let key of Object.keys( parsedColumns )) {
         let tmp = new Array<Filter>();

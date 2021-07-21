@@ -327,7 +327,7 @@ export class Filter {
                 found = true;
                 continue;
               }
-            } else if (tableName === 'participantData') {              
+            } else if (tableName === 'participantData') {
               let foundColumn: Filter = Filter.findCorrespondingColumn(allColumns, tableName, cName);
               if (foundColumn) {
                 if (!result[tableName]) {
@@ -386,12 +386,18 @@ export class Filter {
     return foundColumn;
   }
 
-  public static parseToCurrentFilterArray( json, allColumns ): Filter[] {
+  public static parseToCurrentFilterArray( json, allColumns, parsedColumns ): Filter[] {
     if (json.filters == undefined) {
       return null;
     }
     let filters: Filter[] = [];
     for (let filter of json.filters) {
+      let f = this.isParticipantDataCorrespondingFilter(filter, parsedColumns);
+      if (f) {
+        let newFilter = Filter.createFilterFromJsonFilter(filter, f);
+        filters.push( newFilter );
+        continue;
+      }
       if (allColumns[ filter.participantColumn.tableAlias ] != undefined) {
         let f = allColumns[ filter.participantColumn.tableAlias ].find( f => {
           return f.participantColumn.tableAlias === filter.participantColumn.tableAlias && f.participantColumn.name === filter.participantColumn.name;
@@ -423,7 +429,6 @@ export class Filter {
           }
           filters.push( newFilter );
         }
-
       }
       else {
         for (let source of Object.keys( allColumns )) {
@@ -462,6 +467,40 @@ export class Filter {
 
     }
     return filters;
+  }
+
+  private static createFilterFromJsonFilter(filter: any, jsonFilter: any) {
+    filter.type = jsonFilter.type;
+    filter.participantColumn = jsonFilter.participantColumn;
+    filter.parentName = jsonFilter.participantColumn.object;
+    let selectedOptions = [];
+    if (filter.selectedOptions != null && jsonFilter.options != undefined) {
+      for (let value of Object.values( jsonFilter.options )) {
+        if (value['value'] && filter.selectedOptions.includes(value['value'])) {
+          selectedOptions.push(value['value']);
+        }
+      }
+    }
+    if (!filter.filter1) {
+      filter.filter1 = new NameValue(filter.participantColumn.name, null);
+    }
+    filter.filter1.value = this.replace(filter.filter1.value);
+    let newFilter = new Filter(filter.participantColumn, filter.type, jsonFilter.options, filter.filter2, filter.range, filter.exactMatch, filter.filter1,
+      selectedOptions, (!filter.filter1) ? null : filter.filter1.value,
+      (!filter.filter2) ? null : filter.filter2.value, null,
+      filter.empty, filter.notEmpty, jsonFilter.singleOption, jsonFilter.additionalType);
+    return newFilter;
+  }
+
+  private static isParticipantDataCorrespondingFilter(filter, parsedColumns: any) {
+    if (parsedColumns.participantData) {
+      for (let column of parsedColumns.participantData) {
+        if (filter.participantColumn && column.participantColumn && filter.participantColumn.name === column.participantColumn.name) {
+          return column;
+        }
+      }
+    }
+    return null;
   }
 
   private static replace( value: string ): string {
