@@ -739,7 +739,7 @@ export class ParticipantListComponent implements OnInit {
     );
   }
   isSelectedColumnsNotEmpty(): boolean {
-    return Object.values(this.selectedColumns).find(value => value != null && value != []) !== null;
+    return Object.values(this.selectedColumns).find(value => value != null && (value as Array<any>).length > 0) !== null;
   }
 
   getColSpan() {
