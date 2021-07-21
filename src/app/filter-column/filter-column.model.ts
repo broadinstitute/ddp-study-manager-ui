@@ -481,13 +481,13 @@ export class Filter {
         }
       }
     }
-    if (filter.filter1 == undefined || filter.filter1 == null) {
+    if (!filter.filter1) {
       filter.filter1 = new NameValue(filter.participantColumn.name, null);
     }
     filter.filter1.value = this.replace(filter.filter1.value);
     let newFilter = new Filter(filter.participantColumn, filter.type, jsonFilter.options, filter.filter2, filter.range, filter.exactMatch, filter.filter1,
-      selectedOptions, (filter.filter1 == null || filter.filter1 == undefined) ? null : filter.filter1.value,
-      (filter.filter2 == null || filter.filter2 == undefined) ? null : filter.filter2.value, null,
+      selectedOptions, (!filter.filter1) ? null : filter.filter1.value,
+      (!filter.filter2) ? null : filter.filter2.value, null,
       filter.empty, filter.notEmpty, jsonFilter.singleOption, jsonFilter.additionalType);
     return newFilter;
   }

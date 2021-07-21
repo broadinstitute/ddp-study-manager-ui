@@ -717,7 +717,7 @@ export class ParticipantListComponent implements OnInit {
           } else {
             //if selected columns are not set, set to default columns
             if ((this.selectedColumns[ "data" ] && this.selectedColumns[ "data" ].length == 0) 
-                || (!this.selectedColumns[ "data" ] && this.selectedColumnsNotEmpty())) {
+                || (!this.selectedColumns[ "data" ] && this.isSelectedColumnsNotEmpty())) {
               this.dataSources.forEach( ( value: string, key: string ) => {
                 this.selectedColumns[ key ] = [];
               } );
@@ -738,7 +738,7 @@ export class ParticipantListComponent implements OnInit {
       }
     );
   }
-  selectedColumnsNotEmpty(): boolean {
+  isSelectedColumnsNotEmpty(): boolean {
     return Object.values(this.selectedColumns).find(value => value != null && value != []) !== null;
   }
 
