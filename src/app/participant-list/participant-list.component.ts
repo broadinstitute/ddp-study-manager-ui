@@ -25,10 +25,10 @@ import {ViewFilter} from "../filter-column/models/view-filter.model";
 import {Value} from "../utils/value.model";
 import {AssigneeParticipant} from "./models/assignee-participant.model";
 import {PreferredLanguage} from "./models/preferred-languages.model";
+import {Sample} from "./models/sample.model";
 import {Participant} from "./participant-list.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
 import { ParticipantData } from "./models/participant-data.model";
-import { FilterBrand } from "@angular/cdk";
 
 @Component( {
   selector: "app-participant-list",
@@ -711,7 +711,7 @@ export class ParticipantListComponent implements OnInit {
                     c[column.participantColumn.object] = [];
                   }
                   c[column.participantColumn.object].push(column.copy());
-                } else {                  
+                } else {
                   c[ key ].push( column.copy() );
                 }
               }
@@ -722,7 +722,7 @@ export class ParticipantListComponent implements OnInit {
             }
           } else {
             //if selected columns are not set, set to default columns
-            if ((this.selectedColumns[ "data" ] && this.selectedColumns[ "data" ].length == 0) 
+            if ((this.selectedColumns[ "data" ] && this.selectedColumns[ "data" ].length == 0)
                 || (!this.selectedColumns[ "data" ] && this.isSelectedColumnsNotEmpty())) {
               this.dataSources.forEach( ( value: string, key: string ) => {
                 this.selectedColumns[ key ] = [];
@@ -1110,9 +1110,53 @@ export class ParticipantListComponent implements OnInit {
     else {
       filterText = Filter.getFilterText( filter, tmp );
     }
+    console.log (filterText);
     if (filterText != null) {
+      if (filterText.parentName === "RGP_SAMPLE_COLLECTION_GROUP") {
+        let additionalFilterText = JSON.parse(JSON.stringify(filterText));
+        if (filterText.participantColumn.name === "DATE_KIT_SENT") {
+          additionalFilterText.parentName = 'k';
+          additionalFilterText.participantColumn.name = "scanDate";
+          additionalFilterText.participantColumn.tableAlias = "k";
+          additionalFilterText.participantColumn.object = null;
+          if (additionalFilterText.filter1 != null) {
+            additionalFilterText.filter1.name = "scanDate";
+          }
+          if (additionalFilterText.filter2 != null) {
+            additionalFilterText.filter2.name = "scanDate";
+          }
+          json.push( additionalFilterText );
+        }
+        else if (filterText.participantColumn.name === "DATE_KIT_RECEIVED") {
+          additionalFilterText.parentName = 'k';
+          additionalFilterText.participantColumn.name = "receiveDate";
+          additionalFilterText.participantColumn.tableAlias = "k";
+          additionalFilterText.participantColumn.object = null;
+          if (additionalFilterText.filter1 != null) {
+            additionalFilterText.filter1.name = "receiveDate";
+          }
+          if (additionalFilterText.filter2 != null) {
+            additionalFilterText.filter2.name = "receiveDate";
+          }
+          json.push( additionalFilterText );
+        }
+        else if (filterText.participantColumn.name === "KIT_TYPE_TO_REQUEST") {
+          additionalFilterText.parentName = 'k';
+          additionalFilterText.participantColumn.name = "kitType";
+          additionalFilterText.participantColumn.tableAlias = "k";
+          additionalFilterText.participantColumn.object = null;
+          if (additionalFilterText.filter1 != null) {
+            additionalFilterText.filter1.name = "kitType";
+          }
+          if (additionalFilterText.filter2 != null) {
+            additionalFilterText.filter2.name = "kitType";
+          }
+          json.push( additionalFilterText );
+        }
+      }
       json.push( filterText );
     }
+    console.log(json);
   }
 
   hasRole(): RoleService {
@@ -1279,17 +1323,17 @@ export class ParticipantListComponent implements OnInit {
     } else if (this.checkIfColumnIsTabGrouped(this.sortParent) || this.checkIfColumnIsTabbed(this.sortParent)) {
       this.participantList.forEach(participant => {
         if (participant.participantData.length > 1) {
-          participant.participantData.sort((n, m) => this.sort(this.getPersonField(n, col), this.getPersonField(m, col), order));
+          participant.participantData.sort((n, m) => this.sort(this.getPersonField(n, col, null), this.getPersonField(m, col, null), order));
         }
       })
       this.participantList.sort((a, b) => {
-        if (a.participantData && !a.participantData[0] == null || this.getPersonField(a.participantData[0], col) == null) {
+        if (a.participantData && !a.participantData[0] == null || this.getPersonField(a.participantData[0], col, null) == null) {
           return 1;
-        } else if (!b.participantData && !b.participantData[0] == null || !this.getPersonField(b.participantData[0], col) == null) {
+        } else if (!b.participantData && !b.participantData[0] == null || !this.getPersonField(b.participantData[0], col, null) == null) {
           return 0;
         } else {
-          return this.sort(this.getPersonField(a.participantData[0], col),
-            this.getPersonField(b.participantData[0], col), order, undefined, colType);
+          return this.sort(this.getPersonField(a.participantData[0], col, null),
+            this.getPersonField(b.participantData[0], col, null), order, undefined, colType);
         }
       })
     }
@@ -1766,15 +1810,15 @@ export class ParticipantListComponent implements OnInit {
     }
   }
 
-  getPersonField(personData: ParticipantData, column: Filter): string {
+  getPersonField(personData: ParticipantData, column: Filter, participant: Participant): string {
     let name: string
     if (column && column.participantColumn) {
       name = column.participantColumn.name;
     }
-    return this.getPersonFieldFromDataRow(personData, column, name);
+    return this.getPersonFieldFromDataRow(personData, column, name, participant);
   }
 
-  getPersonFieldFromDataRow(personData: ParticipantData, column: Filter, name: string): string {
+  getPersonFieldFromDataRow(personData: ParticipantData, column: Filter, name: string, participant: Participant): any {
     if (!personData || !personData.data || !name) {
       return null;
     }
@@ -1792,17 +1836,52 @@ export class ParticipantListComponent implements OnInit {
       }
       return field;
     }
+    else {
+      let fieldSettings:FieldSettings[] = this.settings[column.participantColumn.object];
+      if (fieldSettings != null) {
+        let fieldSetting = fieldSettings.find( setting => setting.columnName === name)
+        if (fieldSetting != null) {
+          if (fieldSetting.actions && fieldSetting.actions[0]) {
+            if (fieldSetting.actions[0].type === 'CALC' && fieldSetting.actions[0].value && personData.data[fieldSetting.actions[0].value]) {
+              return this.countYears(personData.data[fieldSetting.actions[0].value]);
+            } else if (fieldSetting.actions[0].type === 'SAMPLE' && fieldSetting.actions[0].type2 === 'MAP_TO_KIT') {
+              return this.getSampleFieldValue(fieldSetting, personData, participant);
+            }
+          }
+        }
+      }
+    }
     return "";
   }
 
-  getPersonFieldForMultipleRows(personDatas: ParticipantData[], column: Filter): string {
+  getSampleFieldValue(fieldSetting: FieldSettings, personsParticipantData: ParticipantData, participant: Participant): string {
+    if (participant == null) {
+      return "";
+    }
+    let sample: Sample = participant.kits.find(kit => kit.bspCollaboratorSampleId === personsParticipantData.data['COLLABORATOR_PARTICIPANT_ID']);
+    if (sample && fieldSetting.actions[0].value && sample[fieldSetting.actions[0].value] && fieldSetting.displayType) {
+      if (fieldSetting.displayType === 'DATE') {
+        return new Date(sample[fieldSetting.actions[0].value]).toISOString().split('T')[0];
+      }
+      return sample[fieldSetting.actions[0].value];
+    }
+    return "";
+  }
+
+  countYears(startDate: string): number {
+    let diff = Date.now() - Date.parse(startDate);
+    let diffDate = new Date(diff);
+    return Math.abs(diffDate.getUTCFullYear() - 1970);
+  }
+
+  getPersonFieldForMultipleRows(personDatas: ParticipantData[], column: Filter, participant: Participant): string {
     let name: string
     if (column && column.participantColumn) {
       name = column.participantColumn.name;
     }
     let result: string;
     for (let personData of personDatas) {
-      result = this.getPersonFieldFromDataRow(personData, column, name);
+      result = this.getPersonFieldFromDataRow(personData, column, name, participant);
       if (result) {
         break;
       }

@@ -579,13 +579,13 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                         <p class="BIT-OF-MARGIN">
                           <ng-container *ngIf="col.participantColumn.object !== 'testResult'">
                             <ng-container
-                              *ngIf="col.type !== 'DATE' && col.type !== 'BOOLEAN' && col.type !== 'OPTIONS' && col.type !== 'CHECKBOX'">{{sample[col.participantColumn.name]}}
+                              *ngIf="col.type !== 'DATE' && col.type !== 'EPOCHDATE' && col.type !== 'BOOLEAN' && col.type !== 'OPTIONS' && col.type !== 'CHECKBOX'">{{sample[col.participantColumn.name]}}
                             </ng-container>
                             <ng-container
                               *ngIf="col.type === 'BOOLEAN' || col.type === 'CHECKBOX'">{{getUtil().getYesNo(sample[col.participantColumn.name])}}
                             </ng-container>
                             <ng-container
-                              *ngIf="col.type === 'DATE' && sample[col.participantColumn.name] != 0">{{sample[col.participantColumn.name] |
+                              *ngIf="(col.type === 'DATE' || col.type === 'EPOCHDATE') && sample[col.participantColumn.name] != 0">{{sample[col.participantColumn.name] |
                               date:'medium'}}
                             </ng-container>
                             <ng-container
@@ -665,21 +665,21 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
 
                   <div *ngIf="checkIfColumnIsTabbed(alias)">
                     <ng-container>
-                      {{getPersonFieldForMultipleRows(pt.participantData, col)}}
+                      {{getPersonFieldForMultipleRows(pt.participantData, col, pt)}}
                     </ng-container>
                   </div>
 
-                  <div *ngIf="checkIfColumnIsTabGrouped(alias)">                    
+                  <div *ngIf="checkIfColumnIsTabGrouped(alias)">
                     <ul class="NO-PADDING-START">
                       <li class="LIST-SEPARATOR">
                         <div *ngFor="let personData of pt.participantData; let i = index">
-                          <div *ngIf="this.getPersonField(personData, col) != null">
-                            {{getPersonType(personData)}}: {{getPersonField(personData, col)}}
-                            <hr *ngIf="i != pt.participantData.length - 1" style="border-color: lightgray">                            
+                          <div *ngIf="this.getPersonField(personData, col, pt) as text">
+                            {{getPersonType(personData)}}: {{text}}
+                            <hr *ngIf="i != pt.participantData.length - 1" style="border-color: lightgray">
                           </div>
-                        </div>                        
+                        </div>
                       </li>
-                    </ul>                    
+                    </ul>
                   </div>
                 </ng-container>
               </td>

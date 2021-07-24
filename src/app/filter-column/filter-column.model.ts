@@ -174,10 +174,10 @@ export class Filter {
   public static H_E_COUNT = new Filter( ParticipantColumn.H_E_COUNT, Filter.NUMBER_TYPE );
 
   //sample columns
-  public static SAMPLE_SENT = new Filter( ParticipantColumn.SAMPLE_SENT, Filter.DATE_TYPE );
+  public static SAMPLE_SENT = new Filter( ParticipantColumn.SAMPLE_SENT, Filter.EPOCH_DATE_TYPE );
   public static COLLABORATOR_SAMPLE = new Filter( ParticipantColumn.COLLABORATOR_SAMPLE, Filter.TEXT_TYPE );
-  public static SAMPLE_RECEIVED = new Filter( ParticipantColumn.SAMPLE_RECEIVED, Filter.DATE_TYPE );
-  public static SAMPLE_DEACTIVATION = new Filter( ParticipantColumn.SAMPLE_DEACTIVATION, Filter.DATE_TYPE );
+  public static SAMPLE_RECEIVED = new Filter( ParticipantColumn.SAMPLE_RECEIVED, Filter.EPOCH_DATE_TYPE );
+  public static SAMPLE_DEACTIVATION = new Filter( ParticipantColumn.SAMPLE_DEACTIVATION, Filter.EPOCH_DATE_TYPE );
   public static SAMPLE_QUEUE = new Filter( ParticipantColumn.SAMPLE_QUEUE, Filter.OPTION_TYPE, [
     new NameValue( "queue", "Waiting on GP" ),
     new NameValue( "error", "GP manual Label" ),
@@ -553,6 +553,7 @@ export class Filter {
         }
         let nv: NameValue;
         if (filter.type === Filter.EPOCH_DATE_TYPE) {
+          //todo needs to filter date as range from morning to evening
           let epoch = new Date( filter.value1 ).getTime();
           nv = new NameValue( filter.participantColumn.name, epoch + "" );
         }
