@@ -711,7 +711,7 @@ export class ParticipantListComponent implements OnInit {
                     c[column.participantColumn.object] = [];
                   }
                   c[column.participantColumn.object].push(column.copy());
-                } else {                  
+                } else {
                   c[ key ].push( column.copy() );
                 }
               }
@@ -722,7 +722,7 @@ export class ParticipantListComponent implements OnInit {
             }
           } else {
             //if selected columns are not set, set to default columns
-            if ((this.selectedColumns[ "data" ] && this.selectedColumns[ "data" ].length == 0) 
+            if ((this.selectedColumns[ "data" ] && this.selectedColumns[ "data" ].length == 0)
                 || (!this.selectedColumns[ "data" ] && this.isSelectedColumnsNotEmpty())) {
               this.dataSources.forEach( ( value: string, key: string ) => {
                 this.selectedColumns[ key ] = [];
@@ -1788,7 +1788,10 @@ export class ParticipantListComponent implements OnInit {
         } else {
           fieldToShow = column.options.find(nameValue => nameValue.value === field);
         }
-        return fieldToShow.name;
+        if (fieldToShow != null) {
+          return fieldToShow.name;
+        }
+        return "";
       }
       return field;
     }
