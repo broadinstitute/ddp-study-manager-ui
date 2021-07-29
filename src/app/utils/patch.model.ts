@@ -1,7 +1,7 @@
 export class PatchUtil {
 
   constructor( public id: string, public user: string, public nameValue: {}, public nameValues: any[],
-               public parent: string, public parentId: string, public tableAlias: string, public isUnique: Boolean, public realm: string ) {
+               public parent: string, public parentId: string, public tableAlias: string, public isUnique: Boolean, public realm: string, public ddpParticipantId: string ) {
     this.id = id;
     this.user = user;
     this.nameValue = nameValue;
@@ -11,6 +11,7 @@ export class PatchUtil {
     this.tableAlias = tableAlias;
     this.isUnique = isUnique == undefined ? false : isUnique;
     this.realm = realm;
+    this.ddpParticipantId = ddpParticipantId;
   }
 
   public getPatch() {
@@ -18,6 +19,7 @@ export class PatchUtil {
       id: this.id,
       user: this.user,
       nameValue: this.nameValue,
+      ddpParticipantId: this.ddpParticipantId,
     };
     if (this.parent !== null) {
       patch[ "parent" ] = this.parent;

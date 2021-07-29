@@ -28,7 +28,6 @@ import {PreferredLanguage} from "./models/preferred-languages.model";
 import {Participant} from "./participant-list.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
 import { ParticipantData } from "./models/participant-data.model";
-import { FilterBrand } from "@angular/cdk";
 
 @Component( {
   selector: "app-participant-list",
@@ -711,7 +710,7 @@ export class ParticipantListComponent implements OnInit {
                     c[column.participantColumn.object] = [];
                   }
                   c[column.participantColumn.object].push(column.copy());
-                } else {                  
+                } else {
                   c[ key ].push( column.copy() );
                 }
               }
@@ -722,7 +721,7 @@ export class ParticipantListComponent implements OnInit {
             }
           } else {
             //if selected columns are not set, set to default columns
-            if ((this.selectedColumns[ "data" ] && this.selectedColumns[ "data" ].length == 0) 
+            if ((this.selectedColumns[ "data" ] && this.selectedColumns[ "data" ].length == 0)
                 || (!this.selectedColumns[ "data" ] && this.isSelectedColumnsNotEmpty())) {
               this.dataSources.forEach( ( value: string, key: string ) => {
                 this.selectedColumns[ key ] = [];
@@ -1122,7 +1121,7 @@ export class ParticipantListComponent implements OnInit {
   public shareFilter( savedFilter: ViewFilter, i ) {
     let value = savedFilter.shared ? "0" : "1";
     let patch1 = new PatchUtil( savedFilter.id, this.role.userMail(),
-      {name: "shared", value: value}, null, this.parent, null, null, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) );
+      {name: "shared", value: value}, null, this.parent, null, null, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null );
     let patch = patch1.getPatch();
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe( data => {
       let result = Result.parse( data );
@@ -1136,7 +1135,7 @@ export class ParticipantListComponent implements OnInit {
 
   public deleteView( savedFilter: ViewFilter ) {
     let patch1 = new PatchUtil( savedFilter.id, this.role.userMail(),
-      {name: "fDeleted", value: "1"}, null, this.parent, null, null, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) );
+      {name: "fDeleted", value: "1"}, null, this.parent, null, null, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null );
     let patch = patch1.getPatch();
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe( data => {
       let result = Result.parse( data );

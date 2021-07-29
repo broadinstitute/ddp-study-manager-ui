@@ -759,7 +759,7 @@ export class TissueListComponent implements OnInit {
   public shareFilter( savedFilter: ViewFilter, i ) {
     let value = savedFilter.shared ? "0" : "1";
     let patch1 = new PatchUtil( savedFilter.id, this.role.userMail(),
-      { name: "shared", value: value }, null, this.parent, null, null, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) );
+      { name: "shared", value: value }, null, this.parent, null, null, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null );
     let patch = patch1.getPatch();
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe( data => {
       let result = Result.parse( data );
@@ -772,7 +772,7 @@ export class TissueListComponent implements OnInit {
 
   public deleteView( savedFilter ) {
     let patch1 = new PatchUtil( savedFilter.id, this.role.userMail(),
-      { name: "fDeleted", value: "1" }, null, this.parent, null, null, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) );
+      { name: "fDeleted", value: "1" }, null, this.parent, null, null, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null );
     let patch = patch1.getPatch();
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe( data => {
       let result = Result.parse( data );
@@ -994,7 +994,7 @@ export class TissueListComponent implements OnInit {
           name: parameterName,
           value: v,
         }, null, "participantId", this.tissueListWrappers[ index ].tissueList.oncHistoryDetails.participantId,
-        Statics.ONCDETAIL_ALIAS, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) );
+        Statics.ONCDETAIL_ALIAS, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.tissueListWrappers[ index ].tissueList.ddpParticipantId );
       let patch = patch1.getPatch();
       this.patch( patch, index );
     }

@@ -514,7 +514,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
         ddpParticipantId = this.participant.data.profile[ "legacyAltPid" ];
       }
       let patch1 = new PatchUtil( participantId, this.role.userMail(),
-        {name: parameterName, value: v}, null, 'ddpParticipantId', ddpParticipantId, tableAlias, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) );
+        {name: parameterName, value: v}, null, 'ddpParticipantId', ddpParticipantId, tableAlias, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.participant.participant.ddpParticipantId );
       patch1.realm = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
       let patch = patch1.getPatch();
       this.currentPatchField = parameterName;
@@ -569,7 +569,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     if (v !== null) {
 
       let patch1 = new PatchUtil( oncHis.oncHistoryDetailId, this.role.userMail(),
-        {name: parameterName, value: v}, null, "participantId", oncHis.participantId, Statics.ONCDETAIL_ALIAS,  null, realm);
+        {name: parameterName, value: v}, null, "participantId", oncHis.participantId, Statics.ONCDETAIL_ALIAS,  null, realm, this.participant.participant.ddpParticipantId);
       let patch = patch1.getPatch();
       this.patchFinished = false;
       this.currentPatchField = parameterName;
@@ -702,7 +702,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   saveNote() {
     let patch1 = new PatchUtil( this.noteMedicalRecord.medicalRecordId, this.role.userMail(),
-      {name: "mrNotes", value: this.noteMedicalRecord.mrNotes}, null, null, null, Statics.MR_ALIAS,  null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) );
+      {name: "mrNotes", value: this.noteMedicalRecord.mrNotes}, null, null, null, Statics.MR_ALIAS,  null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.participant.participant.ddpParticipantId );
     let patch = patch1.getPatch();
 
 
@@ -1355,7 +1355,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
             if (action != null && action.name != null && action.name != undefined && action.type != null && action.type != undefined) {
               participantDataSec = this.participant.participantData.find(participantData => participantData.fieldTypeId === action.type);
               if (participantDataSec == null) {
-                if (action.type !== 'ELASTIC_EXPORT.workflows') {
+                if (action.type !== 'ELASTIC_EXPORT.workflows' && action.type !== "PARTICIPANT_EVENT") {
                   let data: { [ k: string ]: any } = {};
                   data[ action.name ] = action.value;
                   participantDataSec = new ParticipantData( null, action.type, data );
