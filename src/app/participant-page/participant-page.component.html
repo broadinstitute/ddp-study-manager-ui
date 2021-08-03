@@ -513,7 +513,7 @@ participant.data.dsm['diagnosisYear'] != null">
                   <ng-container *ngFor="let activity of participant.data.activities; let i = index">
                     <div class="Float--left" *ngIf="getActivityDefinition(activity.activityCode) as activityDef3">
                       <a class="Abstraction--Jump--Group" pageScroll href="{{getGroupHref(activity.activityCode)}}"
-                         *ngIf="activityDef3 != null">{{activityDef3.activityName}}</a>
+                         *ngIf="activityDef3 != null">{{activityDef3.activityName}} {{activityDef3.activityVersion}}</a>
                     </div>
                     <ng-container *ngIf="i < participant.data.activities.length - 1">
                       <div class="Float--left Vertical--line"></div>
@@ -536,7 +536,7 @@ participant.data.dsm['diagnosisYear'] != null">
             </tab>
 
             <!--sample information-->
-            <tab *ngIf="participant.kits != null && participant.kits.length > 0" heading="Sample Information">
+            <tab *ngIf="!hideSamplesTab && participant.kits != null && participant.kits.length > 0" heading="Sample Information">
               <ng-container *ngFor="let sample of participant.kits; let i = index">
                 <fieldset style="border: 1px black solid">
                   <legend class="Group--Title" id="{{sample.kitType}}_{{i}}">Sample Type: {{sample.kitType}}</legend>

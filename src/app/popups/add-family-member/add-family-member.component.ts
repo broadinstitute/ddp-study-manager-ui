@@ -24,6 +24,7 @@ export class AddFamilyMemberComponent implements OnInit {
   probandDataId: number = this.getProbandDataId(this.data.participant.participantData);
   isParticipantProbandEmpty: boolean = this.getProbandDataId(this.data.participant.participantData) == null;
   staticRelations = Statics.RELATIONS;
+  isDataLoading = false;
 
   constructor(@Inject(MD_DIALOG_DATA) public data: {participant: any}, private dsmService: DSMService, 
               private compService: ComponentService, private role: RoleService, public dialog: MdDialog,
@@ -55,18 +56,18 @@ export class AddFamilyMemberComponent implements OnInit {
         firstName: this.familyMemberFirstName,
         lastName: this.familyMemberLastName,
         memberType: this.chosenRelation,
-        familyId: this.getFamilyId(),
-        collaboratorParticipantId: this.getFamilyId() + "_" + this.familyMemberSubjectId
+        subjectId: this.familyMemberSubjectId
       },
       copyProbandInfo: this.isCopyProbandInfo,
       probandDataId: this.probandDataId,
       userId: this.role.userID()
     }
+    this.isDataLoading = true;
     this.dsmService.addFamilyMemberRequest(JSON.stringify(payload)).subscribe(
       data => {
         this.openResultDialog("Successfully added family member");
         this.close();
-        this.data.participant.participantData = data;
+        this.data.participant.participantData.push(data);
       },
       err => {
         if (err.status === 400) {
@@ -76,11 +77,12 @@ export class AddFamilyMemberComponent implements OnInit {
           this.openResultDialog("Error - Adding family member \nPlease contact your DSM Developer");
         }
         this.close();
-      }
+      },
     )
   }
 
   private openResultDialog(text: string) {
+    this.isDataLoading = false;
     this.dialog.open(ParticipantUpdateResultDialogComponent, {
       data: { message: text },
     });
@@ -128,16 +130,5 @@ export class AddFamilyMemberComponent implements OnInit {
       participantId = this.data.participant.data.profile["guid"];
     }
     return participantId;
-  }
-
-  getFamilyId() {
-    var familyId = Array.from(this.data.participant.participantData)
-        .filter(pData => String(pData["fieldTypeId"]).includes("PARTICIPANTS") && pData["data"]["MEMBER_TYPE"] === "SELF")
-        .map(pDAta => pDAta["data"]["FAMILY_ID"])
-        .find(fId => fId);
-    if (!familyId) {
-      familyId = this.data.participant.data.profile["hruid"];
-    }  
-    return familyId;    
   }
 }

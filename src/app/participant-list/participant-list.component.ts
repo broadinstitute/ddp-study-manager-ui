@@ -107,6 +107,7 @@ export class ParticipantListComponent implements OnInit {
   savedSelectedColumns = {};
   isAddFamilyMember: boolean = false;
   showGroupFields: boolean = false;
+  hideSamplesTab: boolean = false;
 
   constructor( private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
                private router: Router, private auth: Auth, private route: ActivatedRoute, private util: Utils ) {
@@ -180,7 +181,7 @@ export class ParticipantListComponent implements OnInit {
         this.mrCoverPdfSettings = [];
         this.assignees.push( new Assignee( "-1", "Remove Assignee", "" ) );
         jsonData = data;
-        if (data.defaultColumns) {
+        if (data.defaultColumns && data.defaultColumns.length > 0) {
           this.defaultColumns = [];
           for (let defaultColumn of data.defaultColumns) {
             this.defaultColumns.push(Filter[defaultColumn.value]);
@@ -264,13 +265,18 @@ export class ParticipantListComponent implements OnInit {
             this.hasESData = true;
             let activityDefinition: ActivityDefinition = ActivityDefinition.parse( jsonData.activityDefinitions[ key ] );
             let possibleColumns: Array<Filter> = [];
-            possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Created", "createdAt", activityDefinition.activityCode, null, true ), Filter.DATE_TYPE ) );
-            possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Completed", "completedAt", activityDefinition.activityCode, null, true ), Filter.DATE_TYPE ) );
-            possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Last Updated", "lastUpdatedAt", activityDefinition.activityCode, null, true ), Filter.DATE_TYPE ) );
-            possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Status", "status", activityDefinition.activityCode, null, true ), Filter.OPTION_TYPE, [
-              new NameValue( "COMPLETE", "Completed" ),
-              new NameValue( "CREATED", "Created" ),
-              new NameValue( "IN_PROGRESS", "In Progress" )] ) );
+            if (this.sourceColumns[activityDefinition.activityCode] != null) {
+              possibleColumns = this.sourceColumns[activityDefinition.activityCode];
+            }
+            else {
+              possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Created", "createdAt", activityDefinition.activityCode, null, true ), Filter.DATE_TYPE ) );
+              possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Completed", "completedAt", activityDefinition.activityCode, null, true ), Filter.DATE_TYPE ) );
+              possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Last Updated", "lastUpdatedAt", activityDefinition.activityCode, null, true ), Filter.DATE_TYPE ) );
+              possibleColumns.push( new Filter( new ParticipantColumn( activityDefinition.activityCode + " Survey Status", "status", activityDefinition.activityCode, null, true ), Filter.OPTION_TYPE, [
+                new NameValue( "COMPLETE", "Completed" ),
+                new NameValue( "CREATED", "Created" ),
+                new NameValue( "IN_PROGRESS", "In Progress" )] ) );
+            }
             if (activityDefinition != null && activityDefinition.questions != null) {
               for (let question of activityDefinition.questions) {
                 if (question.stableId != null) {
@@ -302,9 +308,14 @@ export class ParticipantListComponent implements OnInit {
                   } else if (question.questionType === "NUMERIC") {
                     type = Filter.NUMBER_TYPE;
                   }
-                  let displayName = this.getQuestionOrStableId( question );
-                  let filter = new Filter( new ParticipantColumn( displayName, question.stableId, activityDefinition.activityCode, null, true ), type, options );
-                  possibleColumns.push( filter );
+                  let filterInPossibleColumns = possibleColumns.find(filter => {
+                    return filter.participantColumn.name === question.stableId
+                  });
+                  if (filterInPossibleColumns == null) {
+                    let displayName = this.getQuestionOrStableId( question );
+                    let filter = new Filter( new ParticipantColumn( displayName, question.stableId, activityDefinition.activityCode, null, true ), type, options );
+                    possibleColumns.push( filter );
+                  }
                 }
               }
               let name = activityDefinition.activityName == undefined || activityDefinition.activityName === "" ? activityDefinition.activityCode : activityDefinition.activityName;
@@ -504,6 +515,11 @@ export class ParticipantListComponent implements OnInit {
         } else {
           this.showGroupFields = false;
         }
+        if (jsonData.hideSamplesTab === true) {
+          this.hideSamplesTab = true;
+        } else {
+          this.hideSamplesTab = false;
+        }
         this.orderColumns();
         this.getData();
         this.renewSelectedColumns();
@@ -642,6 +658,8 @@ export class ParticipantListComponent implements OnInit {
                 t = "p";
               } else if (t === "inst") {
                 t = "m";
+              } else if (t === 'participantData') {
+                t = filter.participantColumn.object;
               }
               for (let f of this.sourceColumns[ t ]) {
                 if (f.participantColumn.name === filter.participantColumn.name) {
@@ -688,7 +706,14 @@ export class ParticipantListComponent implements OnInit {
             for (let key of Object.keys( viewFilter.columns )) {
               c[ key ] = [];
               for (let column of viewFilter.columns[ key ]) {
-                c[ key ].push( column.copy() );
+                if (key == 'participantData' && column.participantColumn && column.participantColumn.object) {
+                  if (!c[column.participantColumn.object]) {
+                    c[column.participantColumn.object] = [];
+                  }
+                  c[column.participantColumn.object].push(column.copy());
+                } else {                  
+                  c[ key ].push( column.copy() );
+                }
               }
             }
             this.selectedColumns = c;
@@ -697,7 +722,8 @@ export class ParticipantListComponent implements OnInit {
             }
           } else {
             //if selected columns are not set, set to default columns
-            if (this.selectedColumns[ "data" ].length == 0) {
+            if ((this.selectedColumns[ "data" ] && this.selectedColumns[ "data" ].length == 0) 
+                || (!this.selectedColumns[ "data" ] && this.isSelectedColumnsNotEmpty())) {
               this.dataSources.forEach( ( value: string, key: string ) => {
                 this.selectedColumns[ key ] = [];
               } );
@@ -717,6 +743,9 @@ export class ParticipantListComponent implements OnInit {
         this.errorMessage = "Error - Loading Participant List, Please contact your DSM developer";
       }
     );
+  }
+  isSelectedColumnsNotEmpty(): boolean {
+    return Object.values(this.selectedColumns).find(value => value != null && (value as Array<any>).length > 0) !== null;
   }
 
   getColSpan() {
@@ -1743,23 +1772,43 @@ export class ParticipantListComponent implements OnInit {
     if (column && column.participantColumn) {
       name = column.participantColumn.name;
     }
-    if (personData && personData.data && name) {
-      let currentKey = Object.keys(personData.data).find(key => key === name);
-      let field = personData.data[currentKey];
-      if (field) {
-        if (column.options && column.options[0] && column.options[0].name) {
-          let fieldToShow = null;
-          if (column.additionalType === Filter.ACTIVITY_STAFF_TYPE) {
-            fieldToShow = column.options.find(nameValue => nameValue.name === field);
-          } else {
-            fieldToShow = column.options.find(nameValue => nameValue.value === field);
-          }
-          return fieldToShow.name;
+    return this.getPersonFieldFromDataRow(personData, column, name);
+  }
+
+  getPersonFieldFromDataRow(personData: ParticipantData, column: Filter, name: string): string {
+    if (!personData || !personData.data || !name) {
+      return null;
+    }
+    let currentKey = Object.keys(personData.data).find(key => key === name);
+    let field = personData.data[currentKey];
+    if (field) {
+      if (column.options && column.options[0] && column.options[0].name) {
+        let fieldToShow = null;
+        if (column.additionalType === Filter.ACTIVITY_STAFF_TYPE) {
+          fieldToShow = column.options.find(nameValue => nameValue.name === field);
+        } else {
+          fieldToShow = column.options.find(nameValue => nameValue.value === field);
         }
-        return field;
+        return fieldToShow.name;
+      }
+      return field;
+    }
+    return "";
+  }
+
+  getPersonFieldForMultipleRows(personDatas: ParticipantData[], column: Filter): string {
+    let name: string
+    if (column && column.participantColumn) {
+      name = column.participantColumn.name;
+    }
+    let result: string;
+    for (let personData of personDatas) {
+      result = this.getPersonFieldFromDataRow(personData, column, name);
+      if (result) {
+        break;
       }
     }
-    return null;
+    return result;
   }
 
   getPersonType(personData: ParticipantData): string {
@@ -1784,27 +1833,27 @@ export class ParticipantListComponent implements OnInit {
 
   private createFilter(field: any): Filter {
     let showType = field.displayType;
-    let filter: Filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
+    let filter: Filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', field.fieldType, false),
     showType, field.possibleValues);
     if (showType === Filter.TEXTAREA_TYPE) {
       showType = Filter.TEXT_TYPE
-      filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
+      filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', field.fieldType, false),
       showType, field.possibleValues);
     } else if (showType == Filter.ACTIVITY_STAFF_TYPE) {
       if (field.possibleValues && field.possibleValues[0].type) {
         showType = field.possibleValues[0].type;
       }
-      filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
+      filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', field.fieldType, false),
       showType, field.possibleValues);
       if (showType === Filter.RADIO_TYPE) {
         let options: NameValue[] = [];
         options.push(new NameValue("Yes", "1"));
         options.push(new NameValue("No", "0"));
-        filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
+        filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', field.fieldType, false),
           showType, options, null, null, null, null, null, null, null, null, null, null, true, Filter.ACTIVITY_STAFF_TYPE);
       }
     } else if (showType === Filter.RADIO_TYPE) {
-      filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', null, false),
+      filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', field.fieldType, false),
       showType, field.possibleValues, null, null, null, null, null, null, null, null, null, null, true);
     }
     return filter;

@@ -5,6 +5,7 @@
                         [activityDefinitions]="activityDefinitionList"
                         [isAddFamilyMember]="isAddFamilyMember"
                         [showGroupFields]="showGroupFields"
+                        [hideSamplesTab]="hideSamplesTab"
                         (leaveParticipant)="updateParticipant($event)"></app-participant-page>
 
 </ng-container>
@@ -664,7 +665,7 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
 
                   <div *ngIf="checkIfColumnIsTabbed(alias)">
                     <ng-container>
-                      {{getPersonField(pt.participantData[0], col)}}
+                      {{getPersonFieldForMultipleRows(pt.participantData, col)}}
                     </ng-container>
                   </div>
 
