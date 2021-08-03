@@ -180,13 +180,7 @@ export class ParticipantListComponent implements OnInit {
         this.savedFilters = [];
         this.mrCoverPdfSettings = [];
         this.assignees.push( new Assignee( "-1", "Remove Assignee", "" ) );
-        jsonData = data;
-        if (data.defaultColumns && data.defaultColumns.length > 0) {
-          this.defaultColumns = [];
-          for (let defaultColumn of data.defaultColumns) {
-            this.defaultColumns.push(Filter[defaultColumn.value]);
-          }
-        }
+        jsonData = data;    
         this.dataSources = new Map( [
           ["data", "Participant"],
           ["p", "Participant - DSM"],
@@ -336,6 +330,17 @@ export class ParticipantListComponent implements OnInit {
         }
         if (this.settings && this.settings["TAB"]) {
           this.addTabColumns();
+        }
+        if (data.defaultColumns && data.defaultColumns.length > 0) {
+          this.defaultColumns = [];
+          for (let defaultColumn of data.defaultColumns) {
+            let filterToAdd: Filter = Filter[defaultColumn.value];
+            if (filterToAdd) {
+              this.defaultColumns.push(Filter[defaultColumn.value]);
+            } else {
+              this.addDynamicFieldDefaultColumns(defaultColumn);
+            }
+          }
         }
         this.getSourceColumnsFromFilterClass();
         if (jsonData.abstractionFields != null && jsonData.abstractionFields.length > 0) {
@@ -531,6 +536,21 @@ export class ParticipantListComponent implements OnInit {
         throw "Error - Loading display settings" + err;
       }
     );
+  }
+
+  private addDynamicFieldDefaultColumns(defaultColumn: any) {
+    outer: for (let sourceColumnGroup of Object.keys(this.sourceColumns)) {
+      for (let currentFilter of this.sourceColumns[sourceColumnGroup]) {
+        const isOurDefaultColumnTabGrouped = (currentFilter['participantColumn'] && currentFilter['participantColumn']['name']
+          && currentFilter['participantColumn']['name'] === defaultColumn.value
+          && currentFilter['participantColumn']['alias'] === 'participantData');
+        const isOurDefaultColumnTabbed = (currentFilter['columnName'] && currentFilter['columnName'] === defaultColumn.value);
+        if (isOurDefaultColumnTabGrouped || isOurDefaultColumnTabbed) {
+          this.defaultColumns.push(currentFilter);
+          break outer;
+        }
+      }
+    }
   }
 
   getQuestionOrStableId( question: QuestionDefinition ): string {
