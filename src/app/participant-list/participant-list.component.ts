@@ -1788,7 +1788,10 @@ export class ParticipantListComponent implements OnInit {
         } else {
           fieldToShow = column.options.find(nameValue => nameValue.value === field);
         }
-        return fieldToShow.name;
+        if (fieldToShow != null) {
+          return fieldToShow.name;
+        }
+        return "";
       }
       return field;
     }
