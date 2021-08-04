@@ -85,7 +85,7 @@ export class ParticipantListComponent implements OnInit {
   activityDefinitions = new Map();
 
   selectedColumns = {};
-  defaultColumns = [Filter.REALM, Filter.SHORT_ID, Filter.FIRST_NAME, Filter.LAST_NAME, Filter.ENROLLMENT_STATUS];
+  defaultColumns = [];
 
   selectedFilter: Filter = null;
   savedFilters: ViewFilter[] = [];
@@ -120,7 +120,8 @@ export class ParticipantListComponent implements OnInit {
         //        this.compService.realmMenu = realm;
         this.additionalMessage = null;
         this.checkRight();
-        this.saveSelectedColumns();
+        // this.saveSelectedColumns(); commented out, because we don't need it as
+        //                             we don't renew selected columns anymore, as we are going to have defaultColumns for each study
       }
     } );
   }
@@ -179,6 +180,7 @@ export class ParticipantListComponent implements OnInit {
         this.quickFilters = [];
         this.savedFilters = [];
         this.mrCoverPdfSettings = [];
+        this.defaultColumns = [Filter.REALM, Filter.SHORT_ID, Filter.FIRST_NAME, Filter.LAST_NAME, Filter.ENROLLMENT_STATUS];
         this.assignees.push( new Assignee( "-1", "Remove Assignee", "" ) );
         jsonData = data;    
         this.dataSources = new Map( [
@@ -526,8 +528,8 @@ export class ParticipantListComponent implements OnInit {
           this.hideSamplesTab = false;
         }
         this.orderColumns();
-        this.getData();
-        this.renewSelectedColumns();
+        this.getData();        
+        // this.renewSelectedColumns(); commented out becasue if we have defaultColumns for all the studies we won't need it anymore
       },
       err => {
         if (err._body === Auth.AUTHENTICATION_ERROR) {
@@ -551,16 +553,13 @@ export class ParticipantListComponent implements OnInit {
         const isOurDefaultColumnTabGrouped = (currentFilter['participantColumn'] && currentFilter['participantColumn']['name']
           && currentFilter['participantColumn']['name'] === defaultColumnName
           && currentFilter['participantColumn']['tableAlias'] === 'participantData');
-        const isOurDefaultColumnTabbed = currentFilter['columnName'] === defaultColumnName;
         if (isOurDefaultColumnTabGrouped) {
           let groupName = currentFilter['participantColumn']['object'];
           if (groupName) {            
             this.defaultColumns.push(currentFilter);
-            this.selectedColumns[groupName] = currentFilter;
             return;
           }
         }
-        // if (isOurDefaultColumnTabbed)
       }
     }
   }
@@ -647,7 +646,7 @@ export class ParticipantListComponent implements OnInit {
             this.dataSources.forEach( ( value: string, key: string ) => {
               this.selectedColumns[ key ] = [];
             } );
-            this.selectedColumns[ "data" ] = this.defaultColumns;
+            this.refillWithDefaultColumns();
           },
           err => {
             if (err._body === Auth.AUTHENTICATION_ERROR) {
@@ -660,6 +659,23 @@ export class ParticipantListComponent implements OnInit {
       }
     } else {
       this.selectFilter( null );
+    }
+  }
+
+  private refillWithDefaultColumns() {
+    this.selectedColumns["data"] = [];
+    for (let defaultColumn of this.defaultColumns) {
+      if (defaultColumn.participantColumn && defaultColumn.participantColumn.object && defaultColumn.participantColumn.tableAlias === 'participantData') {
+        if (!this.selectedColumns[defaultColumn.participantColumn.object]) {
+          this.selectedColumns[defaultColumn.participantColumn.object] = [];
+        }
+        this.selectedColumns[defaultColumn.participantColumn.object].push(defaultColumn);
+      } else if (defaultColumn.participantColumn.tableAlias) {
+        if (!this.selectedColumns[defaultColumn.participantColumn.tableAlias]) {
+          this.selectedColumns[defaultColumn.participantColumn.tableAlias] = [];
+        }
+        this.selectedColumns[defaultColumn.participantColumn.tableAlias].push(defaultColumn);
+      }
     }
   }
 
@@ -759,7 +775,7 @@ export class ParticipantListComponent implements OnInit {
               this.dataSources.forEach( ( value: string, key: string ) => {
                 this.selectedColumns[ key ] = [];
               } );
-              this.selectedColumns[ "data" ] = this.defaultColumns;
+              this.refillWithDefaultColumns()
             }
           }
           let date = new Date();
