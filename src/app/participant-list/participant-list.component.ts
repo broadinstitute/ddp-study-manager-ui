@@ -1849,8 +1849,7 @@ export class ParticipantListComponent implements OnInit {
   }
 
   getPersonType(personData: ParticipantData): string {
-    let memberType = personData.data["COLLABORATOR_PARTICIPANT_ID"];
-    return Statics.RELATIONS[memberType];
+    return personData.data["COLLABORATOR_PARTICIPANT_ID"];
   }
 
   addTabGroupedColumns() {
