@@ -128,7 +128,7 @@ export class TissueComponent implements OnInit {
         {
           name: parameterName,
           value: v,
-        }, null, "oncHistoryDetailId", this.tissue.oncHistoryDetailId, Statics.TISSUE_ALIAS, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ));
+        }, null, "oncHistoryDetailId", this.tissue.oncHistoryDetailId, Statics.TISSUE_ALIAS, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.participant.participant.ddpParticipantId);
       let patch = patch1.getPatch();
       this.patchFinished = false;
       this.currentPatchField = parameterName;

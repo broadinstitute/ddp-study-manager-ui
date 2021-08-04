@@ -146,7 +146,7 @@ export class TissuePageComponent implements OnInit {
         {
           name: parameterName,
           value: v,
-        }, null, "participantId", this.participant.participant.ddpParticipantId, Statics.ONCDETAIL_ALIAS,  null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) );
+        }, null, "participantId", this.participant.participant.ddpParticipantId, Statics.ONCDETAIL_ALIAS,  null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.participant.participant.ddpParticipantId );
       let patch = patch1.getPatch();
       this.patchFinished = false;
       this.currentPatchField = parameterName;

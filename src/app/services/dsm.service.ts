@@ -3,7 +3,6 @@ import {Headers, Http, RequestOptions, Response, ResponseContentType, URLSearchP
 import {Router} from "@angular/router";
 import {JwtHelper} from "angular2-jwt";
 import {Observable} from "rxjs";
-import { retry } from "rxjs/operator/retry";
 import {Filter} from "../filter-column/filter-column.model";
 import {ViewFilter} from "../filter-column/models/view-filter.model";
 import {Abstraction} from "../medical-record-abstraction/medical-record-abstraction.model";
