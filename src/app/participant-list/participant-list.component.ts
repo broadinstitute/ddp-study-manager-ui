@@ -539,16 +539,28 @@ export class ParticipantListComponent implements OnInit {
   }
 
   private addDynamicFieldDefaultColumns(defaultColumn: any) {
-    outer: for (let sourceColumnGroup of Object.values(this.sourceColumns)) {
+    let defaultColumnName: string;
+    if (defaultColumn.value.split('.').length === 2) {
+      defaultColumnName = defaultColumn.value.split('.')[1];
+    }
+    if (!defaultColumnName) {
+      return;
+    }
+    for (let sourceColumnGroup of Object.values(this.sourceColumns)) {
       for (let currentFilter of sourceColumnGroup as Array<Filter>) {
         const isOurDefaultColumnTabGrouped = (currentFilter['participantColumn'] && currentFilter['participantColumn']['name']
-          && currentFilter['participantColumn']['name'] === defaultColumn.value
-          && currentFilter['participantColumn']['alias'] === 'participantData');
-        const isOurDefaultColumnTabbed = currentFilter['columnName'] === defaultColumn.value;
-        if (isOurDefaultColumnTabGrouped || isOurDefaultColumnTabbed) {
-          this.defaultColumns.push(currentFilter);
-          break outer;
+          && currentFilter['participantColumn']['name'] === defaultColumnName
+          && currentFilter['participantColumn']['tableAlias'] === 'participantData');
+        const isOurDefaultColumnTabbed = currentFilter['columnName'] === defaultColumnName;
+        if (isOurDefaultColumnTabGrouped) {
+          let groupName = currentFilter['participantColumn']['object'];
+          if (groupName) {            
+            this.defaultColumns.push(currentFilter);
+            this.selectedColumns[groupName] = currentFilter;
+            return;
+          }
         }
+        // if (isOurDefaultColumnTabbed)
       }
     }
   }
