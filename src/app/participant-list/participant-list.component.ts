@@ -544,7 +544,7 @@ export class ParticipantListComponent implements OnInit {
         const isOurDefaultColumnTabGrouped = (currentFilter['participantColumn'] && currentFilter['participantColumn']['name']
           && currentFilter['participantColumn']['name'] === defaultColumn.value
           && currentFilter['participantColumn']['alias'] === 'participantData');
-        const isOurDefaultColumnTabbed = (currentFilter['columnName'] && currentFilter['columnName'] === defaultColumn.value);
+        const isOurDefaultColumnTabbed = currentFilter['columnName'] === defaultColumn.value;
         if (isOurDefaultColumnTabGrouped || isOurDefaultColumnTabbed) {
           this.defaultColumns.push(currentFilter);
           break outer;
