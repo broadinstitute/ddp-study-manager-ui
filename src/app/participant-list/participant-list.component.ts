@@ -539,8 +539,8 @@ export class ParticipantListComponent implements OnInit {
   }
 
   private addDynamicFieldDefaultColumns(defaultColumn: any) {
-    outer: for (let sourceColumnGroup of Object.keys(this.sourceColumns)) {
-      for (let currentFilter of this.sourceColumns[sourceColumnGroup]) {
+    outer: for (let sourceColumnGroup of Object.values(this.sourceColumns)) {
+      for (let currentFilter of sourceColumnGroup as Array<Filter>) {
         const isOurDefaultColumnTabGrouped = (currentFilter['participantColumn'] && currentFilter['participantColumn']['name']
           && currentFilter['participantColumn']['name'] === defaultColumn.value
           && currentFilter['participantColumn']['alias'] === 'participantData');
