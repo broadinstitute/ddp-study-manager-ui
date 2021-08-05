@@ -3,7 +3,6 @@ import {Headers, Http, RequestOptions, Response, ResponseContentType, URLSearchP
 import {Router} from "@angular/router";
 import {JwtHelper} from "angular2-jwt";
 import {Observable} from "rxjs";
-import { retry } from "rxjs/operator/retry";
 import {Filter} from "../filter-column/filter-column.model";
 import {ViewFilter} from "../filter-column/models/view-filter.model";
 import {Abstraction} from "../medical-record-abstraction/medical-record-abstraction.model";
@@ -132,14 +131,14 @@ export class DSMService {
       if (json != null && json.filters != null) {
         viewFilterCopy = json.copy();
         for (let filter of json.filters) {
-          if (filter.type === Filter.OPTION_TYPE) {
+          if (filter.type === Filter.OPTION_TYPE && filter.participantColumn.tableAlias !== 'participantData') {
             filter.selectedOptions = filter.getSelectedOptionsName();
           }
         }
       }
       if (viewFilterCopy != null && viewFilterCopy.filters != null) {
         for (let filter of viewFilterCopy.filters) {
-          if (filter.type === Filter.OPTION_TYPE) {
+          if (filter.type === Filter.OPTION_TYPE && filter.participantColumn.tableAlias !== 'participantData') {
             filter.selectedOptions = filter.getSelectedOptionsName();
             filter.options = null;
           }

@@ -25,10 +25,10 @@ import {ViewFilter} from "../filter-column/models/view-filter.model";
 import {Value} from "../utils/value.model";
 import {AssigneeParticipant} from "./models/assignee-participant.model";
 import {PreferredLanguage} from "./models/preferred-languages.model";
+import {Sample} from "./models/sample.model";
 import {Participant} from "./participant-list.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
 import { ParticipantData } from "./models/participant-data.model";
-import { FilterBrand } from "@angular/cdk";
 
 @Component( {
   selector: "app-participant-list",
@@ -85,7 +85,7 @@ export class ParticipantListComponent implements OnInit {
   activityDefinitions = new Map();
 
   selectedColumns = {};
-  defaultColumns = [Filter.REALM, Filter.SHORT_ID, Filter.FIRST_NAME, Filter.LAST_NAME, Filter.ENROLLMENT_STATUS];
+  defaultColumns = [];
 
   selectedFilter: Filter = null;
   savedFilters: ViewFilter[] = [];
@@ -107,6 +107,7 @@ export class ParticipantListComponent implements OnInit {
   savedSelectedColumns = {};
   isAddFamilyMember: boolean = false;
   showGroupFields: boolean = false;
+  hideSamplesTab: boolean = false;
 
   constructor( private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
                private router: Router, private auth: Auth, private route: ActivatedRoute, private util: Utils ) {
@@ -119,7 +120,8 @@ export class ParticipantListComponent implements OnInit {
         //        this.compService.realmMenu = realm;
         this.additionalMessage = null;
         this.checkRight();
-        this.saveSelectedColumns();
+        // this.saveSelectedColumns(); commented out, because we don't need it as
+        //                             we don't renew selected columns anymore, as we are going to have defaultColumns for each study
       }
     } );
   }
@@ -178,14 +180,9 @@ export class ParticipantListComponent implements OnInit {
         this.quickFilters = [];
         this.savedFilters = [];
         this.mrCoverPdfSettings = [];
+        this.defaultColumns = [Filter.REALM, Filter.SHORT_ID, Filter.FIRST_NAME, Filter.LAST_NAME, Filter.ENROLLMENT_STATUS];
         this.assignees.push( new Assignee( "-1", "Remove Assignee", "" ) );
-        jsonData = data;
-        if (data.defaultColumns) {
-          this.defaultColumns = [];
-          for (let defaultColumn of data.defaultColumns) {
-            this.defaultColumns.push(Filter[defaultColumn.value]);
-          }
-        }
+        jsonData = data;    
         this.dataSources = new Map( [
           ["data", "Participant"],
           ["p", "Participant - DSM"],
@@ -335,6 +332,17 @@ export class ParticipantListComponent implements OnInit {
         }
         if (this.settings && this.settings["TAB"]) {
           this.addTabColumns();
+        }
+        if (data.defaultColumns && data.defaultColumns.length > 0) {
+          this.defaultColumns = [];
+          for (let defaultColumn of data.defaultColumns) {
+            let filterToAdd: Filter = Filter[defaultColumn.value];
+            if (filterToAdd) {
+              this.defaultColumns.push(Filter[defaultColumn.value]);
+            } else {
+              this.addDynamicFieldDefaultColumns(defaultColumn);
+            }
+          }
         }
         this.getSourceColumnsFromFilterClass();
         if (jsonData.abstractionFields != null && jsonData.abstractionFields.length > 0) {
@@ -514,9 +522,14 @@ export class ParticipantListComponent implements OnInit {
         } else {
           this.showGroupFields = false;
         }
+        if (jsonData.hideSamplesTab === true) {
+          this.hideSamplesTab = true;
+        } else {
+          this.hideSamplesTab = false;
+        }
         this.orderColumns();
-        this.getData();
-        this.renewSelectedColumns();
+        this.getData();        
+        // this.renewSelectedColumns(); commented out becasue if we have defaultColumns for all the studies we won't need it anymore
       },
       err => {
         if (err._body === Auth.AUTHENTICATION_ERROR) {
@@ -525,6 +538,30 @@ export class ParticipantListComponent implements OnInit {
         throw "Error - Loading display settings" + err;
       }
     );
+  }
+
+  private addDynamicFieldDefaultColumns(defaultColumn: any) {
+    let defaultColumnName: string;
+    if (defaultColumn.value.split('.').length === 2) {
+      defaultColumnName = defaultColumn.value.split('.')[1];
+    }
+    if (!defaultColumnName) {
+      return;
+    }
+    for (let sourceColumnGroup of Object.values(this.sourceColumns)) {
+      for (let currentFilter of sourceColumnGroup as Array<Filter>) {
+        const isOurDefaultColumnTabGrouped = (currentFilter['participantColumn'] && currentFilter['participantColumn']['name']
+          && currentFilter['participantColumn']['name'] === defaultColumnName
+          && currentFilter['participantColumn']['tableAlias'] === 'participantData');
+        if (isOurDefaultColumnTabGrouped) {
+          let groupName = currentFilter['participantColumn']['object'];
+          if (groupName) {            
+            this.defaultColumns.push(currentFilter);
+            return;
+          }
+        }
+      }
+    }
   }
 
   getQuestionOrStableId( question: QuestionDefinition ): string {
@@ -609,7 +646,7 @@ export class ParticipantListComponent implements OnInit {
             this.dataSources.forEach( ( value: string, key: string ) => {
               this.selectedColumns[ key ] = [];
             } );
-            this.selectedColumns[ "data" ] = this.defaultColumns;
+            this.refillWithDefaultColumns();
           },
           err => {
             if (err._body === Auth.AUTHENTICATION_ERROR) {
@@ -622,6 +659,23 @@ export class ParticipantListComponent implements OnInit {
       }
     } else {
       this.selectFilter( null );
+    }
+  }
+
+  private refillWithDefaultColumns() {
+    this.selectedColumns["data"] = [];
+    for (let defaultColumn of this.defaultColumns) {
+      if (defaultColumn.participantColumn && defaultColumn.participantColumn.object && defaultColumn.participantColumn.tableAlias === 'participantData') {
+        if (!this.selectedColumns[defaultColumn.participantColumn.object]) {
+          this.selectedColumns[defaultColumn.participantColumn.object] = [];
+        }
+        this.selectedColumns[defaultColumn.participantColumn.object].push(defaultColumn);
+      } else if (defaultColumn.participantColumn.tableAlias) {
+        if (!this.selectedColumns[defaultColumn.participantColumn.tableAlias]) {
+          this.selectedColumns[defaultColumn.participantColumn.tableAlias] = [];
+        }
+        this.selectedColumns[defaultColumn.participantColumn.tableAlias].push(defaultColumn);
+      }
     }
   }
 
@@ -700,7 +754,14 @@ export class ParticipantListComponent implements OnInit {
             for (let key of Object.keys( viewFilter.columns )) {
               c[ key ] = [];
               for (let column of viewFilter.columns[ key ]) {
-                c[ key ].push( column.copy() );
+                if (key == 'participantData' && column.participantColumn && column.participantColumn.object) {
+                  if (!c[column.participantColumn.object]) {
+                    c[column.participantColumn.object] = [];
+                  }
+                  c[column.participantColumn.object].push(column.copy());
+                } else {
+                  c[ key ].push( column.copy() );
+                }
               }
             }
             this.selectedColumns = c;
@@ -709,11 +770,12 @@ export class ParticipantListComponent implements OnInit {
             }
           } else {
             //if selected columns are not set, set to default columns
-            if (this.selectedColumns[ "data" ].length == 0) {
+            if ((this.selectedColumns[ "data" ] && this.selectedColumns[ "data" ].length == 0)
+                || (!this.selectedColumns[ "data" ] && this.isSelectedColumnsNotEmpty())) {
               this.dataSources.forEach( ( value: string, key: string ) => {
                 this.selectedColumns[ key ] = [];
               } );
-              this.selectedColumns[ "data" ] = this.defaultColumns;
+              this.refillWithDefaultColumns()
             }
           }
           let date = new Date();
@@ -729,6 +791,9 @@ export class ParticipantListComponent implements OnInit {
         this.errorMessage = "Error - Loading Participant List, Please contact your DSM developer";
       }
     );
+  }
+  isSelectedColumnsNotEmpty(): boolean {
+    return Object.values(this.selectedColumns).find(value => value != null && (value as Array<any>).length > 0) !== null;
   }
 
   getColSpan() {
@@ -1105,7 +1170,7 @@ export class ParticipantListComponent implements OnInit {
   public shareFilter( savedFilter: ViewFilter, i ) {
     let value = savedFilter.shared ? "0" : "1";
     let patch1 = new PatchUtil( savedFilter.id, this.role.userMail(),
-      {name: "shared", value: value}, null, this.parent, null, null, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) );
+      {name: "shared", value: value}, null, this.parent, null, null, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null );
     let patch = patch1.getPatch();
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe( data => {
       let result = Result.parse( data );
@@ -1119,7 +1184,7 @@ export class ParticipantListComponent implements OnInit {
 
   public deleteView( savedFilter: ViewFilter ) {
     let patch1 = new PatchUtil( savedFilter.id, this.role.userMail(),
-      {name: "fDeleted", value: "1"}, null, this.parent, null, null, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) );
+      {name: "fDeleted", value: "1"}, null, this.parent, null, null, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null );
     let patch = patch1.getPatch();
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe( data => {
       let result = Result.parse( data );
@@ -1262,17 +1327,17 @@ export class ParticipantListComponent implements OnInit {
     } else if (this.checkIfColumnIsTabGrouped(this.sortParent) || this.checkIfColumnIsTabbed(this.sortParent)) {
       this.participantList.forEach(participant => {
         if (participant.participantData.length > 1) {
-          participant.participantData.sort((n, m) => this.sort(this.getPersonField(n, col), this.getPersonField(m, col), order));
+          participant.participantData.sort((n, m) => this.sort(this.getPersonField(n, col, null), this.getPersonField(m, col, null), order));
         }
       })
       this.participantList.sort((a, b) => {
-        if (a.participantData && !a.participantData[0] == null || this.getPersonField(a.participantData[0], col) == null) {
+        if (a.participantData && !a.participantData[0] == null || this.getPersonField(a.participantData[0], col, null) == null) {
           return 1;
-        } else if (!b.participantData && !b.participantData[0] == null || !this.getPersonField(b.participantData[0], col) == null) {
+        } else if (!b.participantData && !b.participantData[0] == null || !this.getPersonField(b.participantData[0], col, null) == null) {
           return 0;
         } else {
-          return this.sort(this.getPersonField(a.participantData[0], col),
-            this.getPersonField(b.participantData[0], col), order, undefined, colType);
+          return this.sort(this.getPersonField(a.participantData[0], col, null),
+            this.getPersonField(b.participantData[0], col, null), order, undefined, colType);
         }
       })
     }
@@ -1749,17 +1814,15 @@ export class ParticipantListComponent implements OnInit {
     }
   }
 
-  getPersonField(personData: ParticipantData, column: Filter): string {
+  getPersonField(personData: ParticipantData, column: Filter, participant: Participant): string {
     let name: string
     if (column && column.participantColumn) {
       name = column.participantColumn.name;
     }
-    let result: string;
-    result = this.getPersonFieldFromDataRow(personData, column, name);    
-    return result;
+    return this.getPersonFieldFromDataRow(personData, column, name, participant);
   }
 
-  getPersonFieldFromDataRow(personData: ParticipantData, column: Filter, name: string): string {
+  getPersonFieldFromDataRow(personData: ParticipantData, column: Filter, name: string, participant: Participant): any {
     if (!personData || !personData.data || !name) {
       return null;
     }
@@ -1773,31 +1836,68 @@ export class ParticipantListComponent implements OnInit {
         } else {
           fieldToShow = column.options.find(nameValue => nameValue.value === field);
         }
-        return fieldToShow.name;
+        if (fieldToShow != null) {
+          return fieldToShow.name;
+        }
+        return "";
       }
       return field;
     }
-    return null;    
+    else {
+      let fieldSettings:FieldSettings[] = this.settings[column.participantColumn.object];
+      if (fieldSettings != null) {
+        let fieldSetting = fieldSettings.find( setting => setting.columnName === name)
+        if (fieldSetting != null) {
+          if (fieldSetting.actions && fieldSetting.actions[0]) {
+            if (fieldSetting.actions[0].type === 'CALC' && fieldSetting.actions[0].value && personData.data[fieldSetting.actions[0].value]) {
+              return this.countYears(personData.data[fieldSetting.actions[0].value]);
+            } else if (fieldSetting.actions[0].type === 'SAMPLE' && fieldSetting.actions[0].type2 === 'MAP_TO_KIT') {
+              return this.getSampleFieldValue(fieldSetting, personData, participant);
+            }
+          }
+        }
+      }
+    }
+    return "";
   }
 
-  getPersonFieldForMultipleRows(personDatas: ParticipantData[], column: Filter): string {
+  getSampleFieldValue(fieldSetting: FieldSettings, personsParticipantData: ParticipantData, participant: Participant): string {
+    if (participant == null) {
+      return "";
+    }
+    let sample: Sample = participant.kits.find(kit => kit.bspCollaboratorSampleId === personsParticipantData.data['COLLABORATOR_PARTICIPANT_ID']);
+    if (sample && fieldSetting.actions[0].value && sample[fieldSetting.actions[0].value] && fieldSetting.displayType) {
+      if (fieldSetting.displayType === 'DATE') {
+        return new Date(sample[fieldSetting.actions[0].value]).toISOString().split('T')[0];
+      }
+      return sample[fieldSetting.actions[0].value];
+    }
+    return "";
+  }
+
+  countYears(startDate: string): number {
+    let diff = Date.now() - Date.parse(startDate);
+    let diffDate = new Date(diff);
+    return Math.abs(diffDate.getUTCFullYear() - 1970);
+  }
+
+  getPersonFieldForMultipleRows(personDatas: ParticipantData[], column: Filter, participant: Participant): string {
     let name: string
     if (column && column.participantColumn) {
       name = column.participantColumn.name;
     }
     let result: string;
     for (let personData of personDatas) {
-      result = this.getPersonFieldFromDataRow(personData, column, name);
+      result = this.getPersonFieldFromDataRow(personData, column, name, participant);
       if (result) {
         break;
       }
-    } 
+    }
     return result;
   }
 
   getPersonType(personData: ParticipantData): string {
-    let memberType = personData.data["MEMBER_TYPE"];
-    return Statics.RELATIONS[memberType];
+    return personData.data["COLLABORATOR_PARTICIPANT_ID"];
   }
 
   addTabGroupedColumns() {

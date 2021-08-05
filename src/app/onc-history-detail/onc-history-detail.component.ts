@@ -97,7 +97,7 @@ export class OncHistoryDetailComponent implements OnInit {
         {
           name: parameterName,
           value: v
-        }, null, "participantId", this.participant.participant.participantId, Statics.ONCDETAIL_ALIAS, null, realm );
+        }, null, "participantId", this.participant.participant.participantId, Statics.ONCDETAIL_ALIAS, null, realm, this.participant.participant.ddpParticipantId );
       let patch = patch1.getPatch();
       this.patchFinished = false;
       this.currentPatchField = parameterName;
@@ -257,7 +257,7 @@ export class OncHistoryDetailComponent implements OnInit {
       {
         name: "deleted",
         value: true
-      }, null, "participantId", this.oncHistory[ index ].participantId, Statics.ONCDETAIL_ALIAS,null, realm );
+      }, null, "participantId", this.oncHistory[ index ].participantId, Statics.ONCDETAIL_ALIAS,null, realm, this.participant.participant.ddpParticipantId );
     let patch = patch1.getPatch();
     this.patchFinished = false;
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
@@ -327,7 +327,7 @@ export class OncHistoryDetailComponent implements OnInit {
           name: "oD.fFax", value: contact.field4.value
         }, {name: "oD.destructionPolicy", value: contact.field5.value} ];
         let patch1 = new PatchUtil( this.oncHistory[ index ].oncHistoryDetailId, this.role.userMail(),
-          null, nameValues, "participantId", this.oncHistory[ index ].participantId, Statics.ONCDETAIL_ALIAS,null, realm );
+          null, nameValues, "participantId", this.oncHistory[ index ].participantId, Statics.ONCDETAIL_ALIAS,null, realm, this.participant.participant.ddpParticipantId );
         let patch = patch1.getPatch();
         this.multipleValueChanged( patch, index, "facility" );
       }
@@ -337,7 +337,7 @@ export class OncHistoryDetailComponent implements OnInit {
           {
             name: "facility",
             value: contact
-          }, null, "participantId", this.oncHistory[ index ].participantId, Statics.ONCDETAIL_ALIAS, null, realm );
+          }, null, "participantId", this.oncHistory[ index ].participantId, Statics.ONCDETAIL_ALIAS, null, realm, this.participant.participant.ddpParticipantId );
         let patch = patch1.getPatch();
         this.patchFinished = false;
         this.currentPatchField = "facility";
@@ -357,7 +357,7 @@ export class OncHistoryDetailComponent implements OnInit {
           {
             name: "typePX",
             value: object.field1.value
-          }, null, "participantId", this.oncHistory[ index ].participantId, Statics.ONCDETAIL_ALIAS, null, realm  );
+          }, null, "participantId", this.oncHistory[ index ].participantId, Statics.ONCDETAIL_ALIAS, null, realm, this.participant.participant.ddpParticipantId  );
         let patch = patch1.getPatch();
         this.multipleValueChanged( patch, index, "typePX" );
       }
@@ -378,7 +378,7 @@ export class OncHistoryDetailComponent implements OnInit {
           {
             name: "histology",
             value: object.field1.value
-          }, null, "participantId", this.oncHistory[ index ].participantId, Statics.ONCDETAIL_ALIAS, null, realm );
+          }, null, "participantId", this.oncHistory[ index ].participantId, Statics.ONCDETAIL_ALIAS, null, realm, this.participant.participant.ddpParticipantId );
         let patch = patch1.getPatch();
         this.multipleValueChanged( patch, index, "histology" );
       }
