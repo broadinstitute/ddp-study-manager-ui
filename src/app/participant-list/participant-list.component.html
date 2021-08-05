@@ -671,12 +671,14 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                   <div *ngIf="checkIfColumnIsTabGrouped(alias)">
                     <ul class="NO-PADDING-START">
                       <li class="LIST-SEPARATOR">
-                        <div *ngFor="let personData of pt.participantData; let i = index">
+                        <ng-container *ngFor="let personData of pt.participantData; let i = index">
                           <div *ngIf="this.getPersonField(personData, col, pt) as text">
-                            {{getPersonType(personData)}}: {{text}}
+                              <ng-container *ngIf="getPersonType(personData)">
+                                {{getPersonType(personData)}}:
+                              </ng-container>{{text}}
                             <hr *ngIf="i != pt.participantData.length - 1" style="border-color: lightgray">
                           </div>
-                        </div>
+                        </ng-container>
                       </li>
                     </ul>
                   </div>
