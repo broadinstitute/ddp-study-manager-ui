@@ -222,9 +222,8 @@
         </app-search-bar>
 
         <table class="table table-striped Table--Hover Table--Foot Width--100">
-          <!--#mf="mfDataTable" [mfRowsOnPage]="hasRole().getUserSetting().getRowsPerPage()"-->
           <thead>
-          <th></th> <!-- needed for the first column with checkbox -->
+          <th *ngIf="assignees != null && assignees.length > 0"></th> <!-- needed for the first column with checkbox -->
           <ng-container *ngFor="let alias of getKeys()">
             <th *ngFor="let col of selectedColumns[alias]" (click)="sortByColumnName(col, alias)"
                 tooltip="{{getTableAlias(col.participantColumn)}}.{{col.participantColumn.name}}"
@@ -244,7 +243,7 @@
           <tbody>
           <tr *ngFor="let pt of participantList | paginate: { itemsPerPage: rowsPerPage, currentPage: activePage }">
             <!--checkbox to assign or trigger blood kits-->
-            <td>
+            <td *ngIf="assignees != null && assignees.length > 0">
               <md-checkbox color="primary" disableRipple *ngIf="pt.participant != null"
                            [checked]="pt.isSelected"
                            (change)="pt.isSelected = $event.checked; checkboxChecked()"></md-checkbox>
@@ -710,7 +709,7 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
               <b># of participants: {{participantList.length}}</b>
             </td>
           </tr>
-          <tr>
+          <tr *ngIf="assignees != null && assignees.length > 0">
             <td [attr.colspan]="getColSpan()">
               <button md-raised-button color="primary"
                       (click)="openModal('assignParticipant')" [disabled]="isAssignButtonDisabled">Assign

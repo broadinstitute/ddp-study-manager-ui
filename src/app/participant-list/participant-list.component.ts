@@ -182,7 +182,7 @@ export class ParticipantListComponent implements OnInit {
         this.mrCoverPdfSettings = [];
         this.defaultColumns = [Filter.REALM, Filter.SHORT_ID, Filter.FIRST_NAME, Filter.LAST_NAME, Filter.ENROLLMENT_STATUS];
         this.assignees.push( new Assignee( "-1", "Remove Assignee", "" ) );
-        jsonData = data;    
+        jsonData = data;
         this.dataSources = new Map( [
           ["data", "Participant"],
           ["p", "Participant - DSM"],
@@ -453,6 +453,7 @@ export class ParticipantListComponent implements OnInit {
           this.removeColumnFromSourceColumns("p", Filter.ABSTRACTION_READY);
           this.removeColumnFromSourceColumns("p", Filter.ASSIGNEE_MR);
           this.removeColumnFromSourceColumns("p", Filter.ASSIGNEE_TISSUE);
+          this.assignees = null;
         }
         if (jsonData.hasInvitations != null) {
           this.dataSources.set( "invitations", "Invitation" );
@@ -524,11 +525,12 @@ export class ParticipantListComponent implements OnInit {
         }
         if (jsonData.hideSamplesTab === true) {
           this.hideSamplesTab = true;
+          this.dataSources.delete( "k" );
         } else {
           this.hideSamplesTab = false;
         }
         this.orderColumns();
-        this.getData();        
+        this.getData();
         // this.renewSelectedColumns(); commented out becasue if we have defaultColumns for all the studies we won't need it anymore
       },
       err => {
@@ -555,7 +557,7 @@ export class ParticipantListComponent implements OnInit {
           && currentFilter['participantColumn']['tableAlias'] === 'participantData');
         if (isOurDefaultColumnTabGrouped) {
           let groupName = currentFilter['participantColumn']['object'];
-          if (groupName) {            
+          if (groupName) {
             this.defaultColumns.push(currentFilter);
             return;
           }
@@ -956,7 +958,7 @@ export class ParticipantListComponent implements OnInit {
             if (data != null && data[ 0 ] != null) {
               let pt: Participant = Participant.parse( data[ 0 ] );
               if (pt == null || pt == undefined) {
-                this.errorMessage = "Participant  not found";
+                this.errorMessage = "Participant not found";
               } else {
                 if (pt.participant != null && pt.participant.ddpParticipantId != null
                   && pt.participant.ddpParticipantId === participant.participant.ddpParticipantId) {
