@@ -1917,6 +1917,10 @@ export class ParticipantListComponent implements OnInit {
     }
   }
 
+  hasAssignees() {
+    return Array.isArray(this.assignees) && this.assignees.length > 0;
+  }
+
   private createFilter(field: any): Filter {
     let showType = field.displayType;
     let filter: Filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', field.fieldType, false),
