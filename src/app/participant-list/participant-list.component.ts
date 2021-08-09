@@ -843,11 +843,13 @@ export class ParticipantListComponent implements OnInit {
 
   showFiltersTable() {
     let assigneesMap = [];
-    this.assignees.forEach( assignee => {
-      if (assignee.assigneeId !== "-1") {
-        assigneesMap.push( new NameValue( assignee.assigneeId, assignee.name ) );
-      }
-    } );
+    if (this.hasAssignees()) {
+      this.assignees.forEach( assignee => {
+        if (assignee.assigneeId !== "-1") {
+          assigneesMap.push( new NameValue( assignee.assigneeId, assignee.name ) );
+        }
+      } );
+    }
     //fixing assignee filters
     if (this.selectedColumns[ "p" ] != null) {
       this.selectedColumns[ "p" ].forEach( ( col, i ) => {
