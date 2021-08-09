@@ -29,6 +29,7 @@ import {Sample} from "./models/sample.model";
 import {Participant} from "./participant-list.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
 import { ParticipantData } from "./models/participant-data.model";
+import { error } from "console";
 
 @Component( {
   selector: "app-participant-list",
@@ -108,6 +109,11 @@ export class ParticipantListComponent implements OnInit {
   isAddFamilyMember: boolean = false;
   showGroupFields: boolean = false;
   hideSamplesTab: boolean = false;
+  participantsSize: number = 0;
+  from: number = 0;
+  to: number = this.role.getUserSetting().getRowsPerPage();
+  jsonPatch: any;
+  viewFilter: any;
 
   constructor( private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
                private router: Router, private auth: Auth, private route: ActivatedRoute, private util: Utils ) {
@@ -134,6 +140,91 @@ export class ParticipantListComponent implements OnInit {
       this.checkRight();
     }
     window.scrollTo( 0, 0 );
+  }
+
+  private getParticipantsSize() {
+    this.dsmService.getParticipantsSize(localStorage.getItem(ComponentService.MENU_SELECTED_REALM)).subscribe(
+      data => {
+        this.participantsSize = data;
+      },
+      err => {
+        console.error(err);
+      }
+    );
+  }
+
+  public getPaginationParticipantListSize(): number {
+    return this.participantList.length ? this.participantsSize : 0;
+  }
+
+  public pageChanged(event: any) {
+    this.loadingParticipants = true;
+    let rowsPerPage = this.role.getUserSetting().getRowsPerPage();
+    this.from = (event - 1) * rowsPerPage;
+    this.to = event * rowsPerPage;
+    if (this.viewFilter) {
+       this.applyFilter(this.viewFilter);
+    } else {
+      if (this.jsonPatch) {
+        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.jsonPatch, this.parent, null ).subscribe( data => {
+          this.participantList = [];
+          this.additionalMessage = "";
+          this.originalParticipantList = [];
+          this.copyParticipantList = [];
+          if (data != null) {
+            let jsonData: any[];
+            jsonData = data;
+            jsonData.forEach( ( val ) => {
+              let participant = Participant.parse( val );
+              this.participantList.push( participant );
+            } );
+            this.originalParticipantList = this.participantList;
+            let date = new Date();
+            this.loadedTimeStamp = Utils.getDateFormatted( date, Utils.DATE_STRING_IN_EVENT_CVS );
+            this.additionalMessage = null;
+          }
+          this.loadingParticipants = null;
+        }, err => {
+          this.participantList = [];
+          this.originalParticipantList = [];
+          this.copyParticipantList = [];
+          this.loadingParticipants = null;
+          this.additionalMessage = "Error - Filtering Participant List, Please contact your DSM developer";
+        } );
+
+      } else {
+        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null, this.parent, true, this.from, this.to ).subscribe(
+          data => {
+            if (data != null) {
+              this.additionalMessage = "";
+              this.participantList = [];
+              this.originalParticipantList = [];
+              this.copyParticipantList = [];
+              let jsonData: any[];
+              jsonData = data;
+              jsonData.forEach( ( val ) => {
+                let participant = Participant.parse( val );
+                this.participantList.push( participant );
+              } );
+              this.originalParticipantList = this.participantList;
+              let date = new Date();
+              this.loadedTimeStamp = Utils.getDateFormatted( date, Utils.DATE_STRING_IN_EVENT_CVS );
+            }
+            this.loadingParticipants = null;
+          },
+          err => {
+            if (err._body === Auth.AUTHENTICATION_ERROR) {
+              this.auth.logout();
+            }
+            this.loadingParticipants = null;
+            this.errorMessage = "Error - Loading Participant List, Please contact your DSM developer";
+          }
+        );
+      }
+    }
+
+
+    this.activePage = event;
   }
 
   private checkRight() {
@@ -171,6 +262,7 @@ export class ParticipantListComponent implements OnInit {
   loadSettings() {
     this.rowsPerPage = this.role.getUserSetting().getRowsPerPage();
     let jsonData: any;
+    this.getParticipantsSize();
     this.dsmService.getSettings( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.parent ).subscribe(
       data => {
         this.assignees = [];
@@ -625,7 +717,7 @@ export class ParticipantListComponent implements OnInit {
       } else if (this.role.getUserSetting().defaultParticipantFilter !== "" && this.role.getUserSetting().defaultParticipantFilter !== null && this.role.getUserSetting().defaultParticipantFilter !== undefined) {
         this.additionalMessage = "The default filter seems to be deleted, however it is still the default filter as long as not changed in the user settings.";
         this.loadingParticipants = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
-        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null, this.parent, true ).subscribe(
+        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null, this.parent, true, this.from, this.to ).subscribe(
           data => {
             if (data != null) {
               this.additionalMessage = "";
@@ -691,12 +783,17 @@ export class ParticipantListComponent implements OnInit {
     this.currentView = JSON.stringify( viewFilter );
     if (viewFilter != null) {
       this.filtered = true;
+      this.viewFilter = viewFilter;
       // console.log(viewFilter.filters);
     } else {
       this.filtered = false;
     }
     // console.log(viewFilter);
-    this.dsmService.applyFilter( viewFilter, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.parent, null ).subscribe(
+    this.applyFilter(viewFilter);
+  }
+
+  private applyFilter(viewFilter: ViewFilter) {
+    this.dsmService.applyFilter(viewFilter, localStorage.getItem(ComponentService.MENU_SELECTED_REALM), this.parent, null).subscribe(
       data => {
         if (data != null) {
           if (viewFilter != null && viewFilter.filters != null) {
@@ -709,12 +806,12 @@ export class ParticipantListComponent implements OnInit {
               } else if (t === 'participantData') {
                 t = filter.participantColumn.object;
               }
-              for (let f of this.sourceColumns[ t ]) {
+              for (let f of this.sourceColumns[t]) {
                 if (f.participantColumn.name === filter.participantColumn.name) {
-                  let index = this.sourceColumns[ t ].indexOf( f );
+                  let index = this.sourceColumns[t].indexOf(f);
                   if (index !== -1) {
-                    this.sourceColumns[ t ].splice( index, 1 );
-                    this.sourceColumns[ t ].push( filter );
+                    this.sourceColumns[t].splice(index, 1);
+                    this.sourceColumns[t].push(filter);
                     break;
                   }
                 }
@@ -727,10 +824,10 @@ export class ParticipantListComponent implements OnInit {
           this.copyParticipantList = [];
           let jsonData: any[];
           jsonData = data;
-          jsonData.forEach( ( val ) => {
-            let participant = Participant.parse( val );
-            this.participantList.push( participant );
-          } );
+          jsonData.forEach((val) => {
+            let participant = Participant.parse(val);
+            this.participantList.push(participant);
+          });
           this.originalParticipantList = this.participantList;
           if (viewFilter != null) {
             this.filterQuery = viewFilter.queryItems;
@@ -748,38 +845,38 @@ export class ParticipantListComponent implements OnInit {
               }
             }
             this.selectedFilterName = viewFilter.filterName;
-            this.filterQuery = viewFilter.queryItems.replace( ",", "" );
+            this.filterQuery = viewFilter.queryItems.replace(",", "");
             // this.selectedColumns = viewFilter.columns;
             let c = {};
-            for (let key of Object.keys( viewFilter.columns )) {
-              c[ key ] = [];
-              for (let column of viewFilter.columns[ key ]) {
+            for (let key of Object.keys(viewFilter.columns)) {
+              c[key] = [];
+              for (let column of viewFilter.columns[key]) {
                 if (key == 'participantData' && column.participantColumn && column.participantColumn.object) {
                   if (!c[column.participantColumn.object]) {
                     c[column.participantColumn.object] = [];
                   }
                   c[column.participantColumn.object].push(column.copy());
                 } else {
-                  c[ key ].push( column.copy() );
+                  c[key].push(column.copy());
                 }
               }
             }
             this.selectedColumns = c;
             if (!this.hasESData) {
-              this.filterClientSide( viewFilter );
+              this.filterClientSide(viewFilter);
             }
           } else {
             //if selected columns are not set, set to default columns
-            if ((this.selectedColumns[ "data" ] && this.selectedColumns[ "data" ].length == 0)
-                || (!this.selectedColumns[ "data" ] && this.isSelectedColumnsNotEmpty())) {
-              this.dataSources.forEach( ( value: string, key: string ) => {
-                this.selectedColumns[ key ] = [];
-              } );
-              this.refillWithDefaultColumns()
+            if ((this.selectedColumns["data"] && this.selectedColumns["data"].length == 0)
+              || (!this.selectedColumns["data"] && this.isSelectedColumnsNotEmpty())) {
+              this.dataSources.forEach((value: string, key: string) => {
+                this.selectedColumns[key] = [];
+              });
+              this.refillWithDefaultColumns();
             }
           }
           let date = new Date();
-          this.loadedTimeStamp = Utils.getDateFormatted( date, Utils.DATE_STRING_IN_EVENT_CVS );
+          this.loadedTimeStamp = Utils.getDateFormatted(date, Utils.DATE_STRING_IN_EVENT_CVS);
         }
         this.loadingParticipants = null;
       },
@@ -792,6 +889,7 @@ export class ParticipantListComponent implements OnInit {
       }
     );
   }
+
   isSelectedColumnsNotEmpty(): boolean {
     return Object.values(this.selectedColumns).find(value => value != null && (value as Array<any>).length > 0) !== null;
   }
@@ -1029,6 +1127,7 @@ export class ParticipantListComponent implements OnInit {
       let jsonPatch = JSON.stringify( data );
       this.currentFilter = json;
       this.currentView = jsonPatch;
+      this.jsonPatch = jsonPatch;
       this.filtered = true;
       this.loadingParticipants = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
       this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), jsonPatch, this.parent, null ).subscribe(
@@ -1613,6 +1712,7 @@ export class ParticipantListComponent implements OnInit {
     } else {
       this.filtered = false;
     }
+    this.jsonPatch = jsonPatch;
     this.loadingParticipants = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
     this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), jsonPatch, this.parent, null ).subscribe( data => {
       this.participantList = [];

@@ -242,7 +242,8 @@
           </ng-container>
           </thead>
           <tbody>
-          <tr *ngFor="let pt of participantList | paginate: { itemsPerPage: rowsPerPage, currentPage: activePage }">
+          <tr *ngFor="let pt of participantList | paginate: { id: 'participant_list', itemsPerPage: rowsPerPage, 
+                        currentPage: activePage, totalItems: getPaginationParticipantListSize() }">
             <!--checkbox to assign or trigger blood kits-->
             <td>
               <md-checkbox color="primary" disableRipple *ngIf="pt.participant != null"
@@ -705,9 +706,22 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
               </div>
             </td>
           </tr>
+          <pagination-controls  id="participant_list"
+                    (pageChange)="pageChanged($event)"
+                    (pageBoundsCorrection)="pageChanged($event)"
+                    maxSize="9"
+                    directionLinks="true"
+                    autoHide="true"
+                    responsive="true"
+                    previousLabel="Previous"
+                    nextLabel="Next"
+                    screenReaderPaginationLabel="Pagination"
+                    screenReaderPageLabel="page"
+                    screenReaderCurrentLabel="You're on page">
+          </pagination-controls>
           <tr>
             <td [attr.colspan]="getColSpan()">
-              <b># of participants: {{participantList.length}}</b>
+              <b># of participants: {{getPaginationParticipantListSize()}}</b>
             </td>
           </tr>
           <tr>
