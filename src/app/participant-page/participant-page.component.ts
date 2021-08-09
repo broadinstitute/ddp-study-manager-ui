@@ -434,6 +434,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
           this.addEmptyOncHistoryRow();
         }
       }
+
     }
   }
 
