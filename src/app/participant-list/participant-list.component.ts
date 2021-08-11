@@ -29,6 +29,7 @@ import {Sample} from "./models/sample.model";
 import {Participant} from "./participant-list.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
 import { ParticipantData } from "./models/participant-data.model";
+import { ParticipantPageComponent } from "../participant-page/participant-page.component";
 
 @Component( {
   selector: "app-participant-list",
@@ -39,6 +40,9 @@ export class ParticipantListComponent implements OnInit {
 
   @ViewChild( ModalComponent )
   public modal: ModalComponent;
+
+  @ViewChild( ParticipantPageComponent )
+  public participantPage: ParticipantPageComponent;
 
   modalAnchor: string;
   assignMR: boolean = false;
@@ -1893,7 +1897,31 @@ export class ParticipantListComponent implements OnInit {
         break;
       }
     }
+    if (!result && participant.data && participant.data.activities && participant.data.activities) {
+      let setting = this.findSettingByColumnName(name);
+      this.participantPage = new ParticipantPageComponent(this.auth, this.compService, this.dsmService, this.router, this.role, this.util, this.route, null);
+      this.participantPage.participant = participant;
+      this.participantPage.activityDefinitions = this.activityDefinitionList;
+      if (setting) {
+        result = this.participantPage.getActivityData(setting);
+      }      
+    }
     return result;
+  }
+
+  findSettingByColumnName(name: string): FieldSettings {
+    if (this.settings && this.settings['TAB']) {
+      for (let tab of this.settings['TAB']) {
+        for (let setting of this.settings[tab.columnName]) {
+          if (setting.displayType !== 'ACTIVITY' && setting.displayType !== 'ACTIVITY_STAFF') {
+            continue;
+          }
+          if (setting.columnName === name) {
+            return setting;
+          }
+        }
+      }
+    }
   }
 
   getPersonType(personData: ParticipantData): string {
