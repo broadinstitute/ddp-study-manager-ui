@@ -41,9 +41,6 @@ export class ParticipantListComponent implements OnInit {
   @ViewChild( ModalComponent )
   public modal: ModalComponent;
 
-  @ViewChild( ParticipantPageComponent )
-  public participantPage: ParticipantPageComponent;
-
   modalAnchor: string;
   assignMR: boolean = false;
   assignTissue: boolean = false;
@@ -1901,11 +1898,8 @@ export class ParticipantListComponent implements OnInit {
     }
     if (!result && participant.data && participant.data.activities && participant.data.activities) {
       let setting = this.findSettingByColumnName(name);
-      this.participantPage = new ParticipantPageComponent(this.auth, this.compService, this.dsmService, this.router, this.role, this.util, this.route, null);
-      this.participantPage.participant = participant;
-      this.participantPage.activityDefinitions = this.activityDefinitionList;
       if (setting) {
-        result = this.participantPage.getActivityData(setting);
+        result = Utils.getActivityDataValues(setting, participant, this.activityDefinitionList);
       }      
     }
     return result;
