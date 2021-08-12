@@ -29,6 +29,7 @@ import {Sample} from "./models/sample.model";
 import {Participant} from "./participant-list.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
 import { ParticipantData } from "./models/participant-data.model";
+import { ParticipantPageComponent } from "../participant-page/participant-page.component";
 
 @Component( {
   selector: "app-participant-list",
@@ -1895,7 +1896,28 @@ export class ParticipantListComponent implements OnInit {
         break;
       }
     }
+    if (!result && participant.data && participant.data.activities) {
+      let setting = this.findSettingByColumnName(name);
+      if (setting) {
+        result = Utils.getActivityDataValues(setting, participant, this.activityDefinitionList);
+      }      
+    }
     return result;
+  }
+
+  findSettingByColumnName(name: string): FieldSettings {
+    if (this.settings && this.settings['TAB']) {
+      for (let tab of this.settings['TAB']) {
+        for (let setting of this.settings[tab.columnName]) {
+          if (setting.displayType !== 'ACTIVITY' && setting.displayType !== 'ACTIVITY_STAFF') {
+            continue;
+          }
+          if (setting.columnName === name) {
+            return setting;
+          }
+        }
+      }
+    }
   }
 
   getPersonType(personData: ParticipantData): string {

@@ -3,11 +3,13 @@ import {Injectable} from "@angular/core";
 import {FormControl} from "@angular/forms";
 import {groupBy} from "rxjs/operator/groupBy";
 import {AbstractionGroup} from "../abstraction-group/abstraction-group.model";
+import { ActivityData } from "../activity-data/activity-data.model";
 import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
 import {Group} from "../activity-data/models/group.model";
 import {OptionDetail} from "../activity-data/models/option-detail.model";
 import {Option} from "../activity-data/models/option.model";
 import {QuestionAnswer} from "../activity-data/models/question-answer.model";
+import { FieldSettings } from "../field-settings/field-settings.model";
 import {Filter} from "../filter-column/filter-column.model";
 import {AbstractionField} from "../medical-record-abstraction/medical-record-abstraction-field.model";
 import {Participant} from "../participant-list/participant-list.model";
@@ -584,5 +586,66 @@ export class Utils {
       }
     }
     return null;
+  }
+
+  public static getActivityDataValues(fieldSetting: FieldSettings, participant: Participant, activityDefinitions: ActivityDefinition[]) {
+    if (fieldSetting != null && fieldSetting.possibleValues != null && fieldSetting.possibleValues[0] != null && fieldSetting.possibleValues[0].value != null) {
+      let tmp: string[] = fieldSetting.possibleValues[ 0 ].value.split( '.' );
+      if (tmp != null && tmp.length > 1) {
+        if (tmp[ 0 ] === 'profile') {
+          return participant.data.profile[tmp[1]];
+        }
+        else {
+          if (participant != null && participant.data != null && participant.data.activities != null) {
+            let activity: ActivityData = participant.data.activities.find( activity => activity.activityCode === tmp[ 0 ] );
+            if (activity != null && activity.questionsAnswers != null) {
+              let questionAnswer = activity.questionsAnswers.find( questionAnswer => questionAnswer.stableId === tmp[ 1 ] );
+              if (questionAnswer != null) {
+                if (tmp.length == 2) {
+                  if (typeof questionAnswer.answer === "boolean") {
+                    if (questionAnswer.answer) {
+                      return "Yes";
+                    }
+                    return "No";
+                  }
+                  if (questionAnswer.answer instanceof Array) {
+                    return questionAnswer.answer[0];
+                  }
+                  return questionAnswer.answer;
+                }
+                else if (tmp.length === 3) {
+                  if (fieldSetting.possibleValues != null && fieldSetting.possibleValues[ 0 ] != null && fieldSetting.possibleValues[ 0 ].type != null && fieldSetting.possibleValues[ 0 ].type === "RADIO") {
+                    if (questionAnswer.answer != null) {
+                      let found = questionAnswer.answer.find( answer => answer === tmp[ 2 ] )
+                      if (found != null) {
+                        return "Yes";
+                      }
+                      return "No";
+                    }
+                  }
+                  else if (activityDefinitions != null) {
+                    let definition: ActivityDefinition = activityDefinitions.find( definition => definition.activityCode === tmp[ 0 ] );
+                    if (definition != null && definition.questions != null) {
+                      let question = definition.questions.find( question => question.stableId === tmp[ 1 ] );
+                      if (question != null && question.childQuestions != null) {
+                        for (let i = 0; i < question.childQuestions.length; i++) {
+                          if (question.childQuestions[ i ] != null && question.childQuestions[ i ].stableId === tmp[ 2 ] && questionAnswer.answer[ 0 ][ i ] != null) {
+                            return questionAnswer.answer[ 0 ][ i ];
+                          }
+                        }
+                      }
+                      else if (question != null && question.options != null) {
+
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return "";
   }
 }
