@@ -154,7 +154,7 @@ export class ParticipantListComponent implements OnInit {
   }
 
   public getPaginationParticipantListSize(): number {
-    return this.participantList.length ? this.participantsSize : 0;
+    return this.participantsSize;
   }
 
   public pageChanged(event: any) {
@@ -166,7 +166,7 @@ export class ParticipantListComponent implements OnInit {
        this.applyFilter(this.viewFilter);
     } else {
       if (this.jsonPatch) {
-        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.jsonPatch, this.parent, null ).subscribe( data => {
+        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.jsonPatch, this.parent, null, this.from, this.to ).subscribe( data => {
           this.participantList = [];
           this.additionalMessage = "";
           this.originalParticipantList = [];
@@ -793,7 +793,7 @@ export class ParticipantListComponent implements OnInit {
   }
 
   private applyFilter(viewFilter: ViewFilter) {
-    this.dsmService.applyFilter(viewFilter, localStorage.getItem(ComponentService.MENU_SELECTED_REALM), this.parent, null).subscribe(
+    this.dsmService.applyFilter(viewFilter, localStorage.getItem(ComponentService.MENU_SELECTED_REALM), this.parent, null, this.from, this.to).subscribe(
       data => {
         if (data != null) {
           if (viewFilter != null && viewFilter.filters != null) {
@@ -1130,7 +1130,7 @@ export class ParticipantListComponent implements OnInit {
       this.jsonPatch = jsonPatch;
       this.filtered = true;
       this.loadingParticipants = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
-      this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), jsonPatch, this.parent, null ).subscribe(
+      this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), jsonPatch, this.parent, null, this.from, this.to ).subscribe(
         data => {
           if (data != undefined && data != null && data !== "") {
             let jsonData: any[];
@@ -1145,7 +1145,6 @@ export class ParticipantListComponent implements OnInit {
               this.participantList.push( participant );
             } );
             this.originalParticipantList = this.participantList;
-
             if (!this.hasESData) {
               this.filterClientSide( null );
             }
@@ -1714,7 +1713,7 @@ export class ParticipantListComponent implements OnInit {
     }
     this.jsonPatch = jsonPatch;
     this.loadingParticipants = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
-    this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), jsonPatch, this.parent, null ).subscribe( data => {
+    this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), jsonPatch, this.parent, null, this.from, this.to ).subscribe( data => {
       this.participantList = [];
       this.additionalMessage = "";
       this.originalParticipantList = [];

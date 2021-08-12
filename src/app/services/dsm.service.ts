@@ -104,7 +104,7 @@ export class DSMService {
   }
 
 
-  public filterData( realm: string, json: string, parent: string, defaultFilter: boolean, from: number = 0, to: number = 0 ): Observable<any> {
+  public filterData( realm: string, json: string, parent: string, defaultFilter: boolean, from: number = 0, to: number = this.role.getUserSetting().getRowsPerPage() ): Observable<any> {
     let url = this.baseUrl + DSMService.UI + "filterList";
     let map: { name: string, value: any }[] = [];
     map.push( {name: DSMService.REALM, value: realm} );
@@ -127,7 +127,7 @@ export class DSMService {
     return this.http.patch( url, json, this.buildQueryHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError );
   }
 
-  public applyFilter( json: ViewFilter, realm: string, parent: string, filterQuery: string, from: number = 0, to: number = 0 ): Observable<any> {
+  public applyFilter( json: ViewFilter, realm: string, parent: string, filterQuery: string, from: number = 0, to: number = this.role.getUserSetting().getRowsPerPage() ): Observable<any> {
     let viewFilterCopy = null;
     if (json != null) {
       if (json != null && json.filters != null) {
