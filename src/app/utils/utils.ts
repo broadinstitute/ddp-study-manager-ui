@@ -127,9 +127,12 @@ export class Utils {
     return optionDetails.find( x => x.option === stableId );
   }
 
-  getQuestionDefinition( activities: Array<ActivityDefinition>, activity: string, stableId: string ) {
-    let questions = activities.find( x => x.activityCode === activity ).questions;
-    return questions.find( x => x.stableId === stableId );
+  getQuestionDefinition( activities: Array<ActivityDefinition>, activity: string, stableId: string, version: string ) {
+    let questions = activities.find( x => x.activityCode === activity && x.activityVersion === version ).questions;
+    if (questions != null) {
+      return questions.find( x => x.stableId === stableId );
+    }
+    return "";
   }
 
   getAbstractionGroup( groups: Array<AbstractionGroup>, groupId: string ) {
