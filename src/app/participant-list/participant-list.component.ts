@@ -1896,7 +1896,7 @@ export class ParticipantListComponent implements OnInit {
         break;
       }
     }
-    if (!result && participant.data && participant.data.activities && participant.data.activities) {
+    if (!result && participant.data && participant.data.activities) {
       let setting = this.findSettingByColumnName(name);
       if (setting) {
         result = Utils.getActivityDataValues(setting, participant, this.activityDefinitionList);
