@@ -29,7 +29,6 @@ import {Sample} from "./models/sample.model";
 import {Participant} from "./participant-list.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
 import { ParticipantData } from "./models/participant-data.model";
-import { error } from "console";
 
 @Component( {
   selector: "app-participant-list",
@@ -251,7 +250,7 @@ export class ParticipantListComponent implements OnInit {
         this.mrCoverPdfSettings = [];
         this.defaultColumns = [Filter.REALM, Filter.SHORT_ID, Filter.FIRST_NAME, Filter.LAST_NAME, Filter.ENROLLMENT_STATUS];
         this.assignees.push( new Assignee( "-1", "Remove Assignee", "" ) );
-        jsonData = data;    
+        jsonData = data;
         this.dataSources = new Map( [
           ["data", "Participant"],
           ["p", "Participant - DSM"],
@@ -522,6 +521,7 @@ export class ParticipantListComponent implements OnInit {
           this.removeColumnFromSourceColumns("p", Filter.ABSTRACTION_READY);
           this.removeColumnFromSourceColumns("p", Filter.ASSIGNEE_MR);
           this.removeColumnFromSourceColumns("p", Filter.ASSIGNEE_TISSUE);
+          this.assignees = null;
         }
         if (jsonData.hasInvitations != null) {
           this.dataSources.set( "invitations", "Invitation" );
@@ -593,11 +593,12 @@ export class ParticipantListComponent implements OnInit {
         }
         if (jsonData.hideSamplesTab === true) {
           this.hideSamplesTab = true;
+          this.dataSources.delete( "k" );
         } else {
           this.hideSamplesTab = false;
         }
         this.orderColumns();
-        this.getData();        
+        this.getData();
         // this.renewSelectedColumns(); commented out becasue if we have defaultColumns for all the studies we won't need it anymore
       },
       err => {
@@ -624,7 +625,7 @@ export class ParticipantListComponent implements OnInit {
           && currentFilter['participantColumn']['tableAlias'] === 'participantData');
         if (isOurDefaultColumnTabGrouped) {
           let groupName = currentFilter['participantColumn']['object'];
-          if (groupName) {            
+          if (groupName) {
             this.defaultColumns.push(currentFilter);
             return;
           }
@@ -919,11 +920,13 @@ export class ParticipantListComponent implements OnInit {
 
   showFiltersTable() {
     let assigneesMap = [];
-    this.assignees.forEach( assignee => {
-      if (assignee.assigneeId !== "-1") {
-        assigneesMap.push( new NameValue( assignee.assigneeId, assignee.name ) );
-      }
-    } );
+    if (this.assignees) {
+      this.assignees.forEach( assignee => {
+        if (assignee.assigneeId !== "-1") {
+          assigneesMap.push( new NameValue( assignee.assigneeId, assignee.name ) );
+        }
+      } );
+    }
     //fixing assignee filters
     if (this.selectedColumns[ "p" ] != null) {
       this.selectedColumns[ "p" ].forEach( ( col, i ) => {
@@ -1042,7 +1045,7 @@ export class ParticipantListComponent implements OnInit {
             if (data != null && data[ 0 ] != null) {
               let pt: Participant = Participant.parse( data[ 0 ] );
               if (pt == null || pt == undefined) {
-                this.errorMessage = "Participant  not found";
+                this.errorMessage = "Participant not found";
               } else {
                 if (pt.participant != null && pt.participant.ddpParticipantId != null
                   && pt.participant.ddpParticipantId === participant.participant.ddpParticipantId) {
@@ -1984,7 +1987,28 @@ export class ParticipantListComponent implements OnInit {
         break;
       }
     }
+    if (!result && participant.data && participant.data.activities) {
+      let setting = this.findSettingByColumnName(name);
+      if (setting) {
+        result = Utils.getActivityDataValues(setting, participant, this.activityDefinitionList);
+      }
+    }
     return result;
+  }
+
+  findSettingByColumnName(name: string): FieldSettings {
+    if (this.settings && this.settings['TAB']) {
+      for (let tab of this.settings['TAB']) {
+        for (let setting of this.settings[tab.columnName]) {
+          if (setting.displayType !== 'ACTIVITY' && setting.displayType !== 'ACTIVITY_STAFF') {
+            continue;
+          }
+          if (setting.columnName === name) {
+            return setting;
+          }
+        }
+      }
+    }
   }
 
   getPersonType(personData: ParticipantData): string {
@@ -2006,6 +2030,10 @@ export class ParticipantListComponent implements OnInit {
     }
   }
 
+  hasAssignees() {
+    return Array.isArray(this.assignees) && this.assignees.length > 0;
+  }
+
   private createFilter(field: any): Filter {
     let showType = field.displayType;
     let filter: Filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', field.fieldType, false),
@@ -2017,6 +2045,8 @@ export class ParticipantListComponent implements OnInit {
     } else if (showType == Filter.ACTIVITY_STAFF_TYPE) {
       if (field.possibleValues && field.possibleValues[0].type) {
         showType = field.possibleValues[0].type;
+      } else {
+        showType = 'TEXT';
       }
       filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', field.fieldType, false),
       showType, field.possibleValues);
