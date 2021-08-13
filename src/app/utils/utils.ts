@@ -264,10 +264,9 @@ export class Utils {
       else {
         objects = data[ paths[ index ] ];
       }
-      if (data['participantData'] && paths[0] in this.settings) {
-        objects = data['participantData'];
-        result.push("asdfsdfas");
-      }
+      //Here we need to check that it's a dynamic field and add our value to 
+      //result instead of using the methods which are used in else if block below
+      
       else if (objects != null) {
         for (let o of objects) {
           let oString = this.makeCSVString( o, columns[ paths[ index + 1 ] ], data );

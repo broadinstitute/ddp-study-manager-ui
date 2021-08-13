@@ -1440,6 +1440,9 @@ export class ParticipantListComponent implements OnInit {
         paths.push(["abstractionSummary", source]);
       }  else if (source === "invitations") {
         paths.push(["invitations", source]);
+        //Here I added just genome study as an example, but probably we will need to change somehow that we add dynamic field source to paths
+        //so that we are able to use it afterwards in the method. Probably we will need to get here everything that will help us
+        //understand that it is dynamic field, because we will need to check it afterwards
       }  else if (source === "AT_GROUP_GENOME_STUDY") {
         paths.push(["AT_GROUP_GENOME_STUDY", source]);
       } else {
