@@ -843,7 +843,7 @@ export class ParticipantListComponent implements OnInit {
   }
 
   showFiltersTable() {
-    let assigneesMap = [];  
+    let assigneesMap = [];
     if (this.assignees) {
       this.assignees.forEach( assignee => {
         if (assignee.assigneeId !== "-1") {
@@ -1902,7 +1902,7 @@ export class ParticipantListComponent implements OnInit {
       let setting = this.findSettingByColumnName(name);
       if (setting) {
         result = Utils.getActivityDataValues(setting, participant, this.activityDefinitionList);
-      }      
+      }
     }
     return result;
   }

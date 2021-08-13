@@ -330,111 +330,33 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
           this.pdfs.push(new PDFModel('irb','IRB Letter', tmp.length + pos));
         }
       }
-      //if surveys is null then it is a gen2 participant > go and get institution information
-      if (this.participant.data.activities == null) {
-        if (this.participant.data.dsm == null) {
-          this.participant.data.dsm = {};
-        }
-        this.loadingParticipantPage = true;
-        let ddpParticipantId = this.participant.data.profile[ "guid" ];
-        this.dsmService.getMedicalRecordData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), ddpParticipantId ).subscribe(
-          data => {
-            let ddpInformation = DDPParticipantInformation.parse( data );
-            if (ddpInformation != null) {
-              this.participant.data.dsm[ "dateOfBirth" ] = ddpInformation.dob;
-              let tmp = ddpInformation.dateOfDiagnosis;
-              if (tmp != null && tmp.indexOf( "/" ) > -1) {
-                this.participant.data.dsm[ "diagnosisMonth" ] = tmp.split( "/" )[ 0 ];
-                this.participant.data.dsm[ "diagnosisYear" ] = tmp.split( "/" )[ 1 ];
-              }
-              this.participant.data.dsm[ "hasConsentedToBloodDraw" ] = false;
-              this.participant.data.dsm[ "hasConsentedToTissueSample" ] = false;
-              if (ddpInformation.drawBloodConsent === 1) {
-                this.participant.data.dsm[ "hasConsentedToBloodDraw" ] = true;
-              }
-              if (ddpInformation.tissueSampleConsent === 1) {
-                this.participant.data.dsm[ "hasConsentedToTissueSample" ] = true;
-              }
-
-              let medicalRecords = this.participant.medicalRecords;
-              for (let mr of medicalRecords) {
-                if (mr.mrDocumentFileNames != null) {
-                  let files = mr.mrDocumentFileNames.split( /[\s,|;]+/ );
-                  for (let file of files) {
-                    if (this.fileListUsed.indexOf( file ) == -1) {
-                      this.fileListUsed.push( file );
-                    }
-                  }
-                }
-                if (mr.crRequired) {
-                  this.showParticipantRecord = true;
-                }
-                for (let inst of ddpInformation.institutions) {
-                  if (inst.id === mr.ddpInstitutionId) {
-                    mr.type = inst.type;
-                    mr.institutionDDP = inst.institution;
-                    mr.nameDDP = inst.physician;
-                    mr.streetAddressDDP = inst.streetAddress;
-                    mr.cityDDP = inst.city;
-                    mr.stateDDP = inst.state;
-                    mr.isDeleted = false;
-                    break;
-                  }
-                }
-                //add that here in case a mr was received but participant object does not know it
-                if (mr.mrReceived != null && mr.mrReceived !== "") {
-                  this.counterReceived = this.counterReceived + 1;
-                }
-                if (this.counterReceived > 0) {
-                  if (this.hasRole().isAbstracter() || this.hasRole().isQC()) {
-                    this.loadAbstractionValues();
-                  }
-                }
-              }
-              this.addEmptyOncHistoryRow();
-            } else {
-              this.additionalMessage = "No additional information from the DDP was received";
-            }
-            this.loadingParticipantPage = false;
-          },
-          err => {
-            if (err._body === Auth.AUTHENTICATION_ERROR) {
-              this.auth.logout();
-            }
-            this.loadingParticipantPage = false;
-            this.additionalMessage = "Error - Loading participant institution information\nPlease contact your DSM developer";
-          }
-        );
-      } else {// don't need to load institution data
-        this.counterReceived = 0;
-        let medicalRecords = this.participant.medicalRecords;
-        for (let mr of medicalRecords) {
-          if (mr.mrDocumentFileNames != null) {
-            let files = mr.mrDocumentFileNames.split( /[\s,|;]+/ );
-            for (let file of files) {
-              if (this.fileListUsed.indexOf( file ) == -1) {
-                this.fileListUsed.push( file );
-              }
-            }
-          }
-          if (mr.crRequired) {
-            this.showParticipantRecord = true;
-          }
-          //add that here in case a mr was received but participant object does not know it
-          if (mr.mrReceived != null && mr.mrReceived !== "") {
-            this.counterReceived = this.counterReceived + 1;
-          }
-          if (this.counterReceived > 0) {
-            if (this.hasRole().isAbstracter() || this.hasRole().isQC()) {
-              this.loadAbstractionValues();
+      this.counterReceived = 0;
+      let medicalRecords = this.participant.medicalRecords;
+      for (let mr of medicalRecords) {
+        if (mr.mrDocumentFileNames != null) {
+          let files = mr.mrDocumentFileNames.split( /[\s,|;]+/ );
+          for (let file of files) {
+            if (this.fileListUsed.indexOf( file ) == -1) {
+              this.fileListUsed.push( file );
             }
           }
         }
-        if (this.participant.participant != null) {
-          this.addEmptyOncHistoryRow();
+        if (mr.crRequired) {
+          this.showParticipantRecord = true;
+        }
+        //add that here in case a mr was received but participant object does not know it
+        if (mr.mrReceived) {
+          this.counterReceived = this.counterReceived + 1;
+        }
+        if (this.counterReceived > 0) {
+          if (this.hasRole().isAbstracter() || this.hasRole().isQC()) {
+            this.loadAbstractionValues();
+          }
         }
       }
-
+      if (this.participant.participant != null) {
+        this.addEmptyOncHistoryRow();
+      }
     }
   }
 
@@ -1102,9 +1024,9 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  getActivityDefinition( code: string ) {
+  getActivityDefinition( code: string, version: string ) {
     if (this.activityDefinitions != null) {
-      return this.activityDefinitions.find( x => x.activityCode === code );
+      return this.activityDefinitions.find( x => x.activityCode === code && x.activityVersion === version );
     }
     return null;
   }
