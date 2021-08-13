@@ -690,7 +690,21 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
           <tfoot *ngIf="participantList != null">
           <tr>
             <td [attr.colspan]="getColSpan()-3">
-              <pagination-controls class="custom-pagination" (pageChange)="activePage = $event"></pagination-controls>
+              <pagination-controls  
+                    class="custom-pagination"
+                    id="participant_list"
+                    (pageChange)="pageChanged($event, rowsPerPage)"
+                    (pageBoundsCorrection)="pageChanged($event)"
+                    maxSize="9"
+                    directionLinks="true"
+                    autoHide="true"
+                    responsive="true"
+                    previousLabel="Previous"
+                    nextLabel="Next"
+                    screenReaderPaginationLabel="Pagination"
+                    screenReaderPageLabel="page"
+                    screenReaderCurrentLabel="You're on page">
+              </pagination-controls>
             </td>
             <td colspan="3">
               <div class="Float--right">
@@ -706,19 +720,6 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
               </div>
             </td>
           </tr>
-          <pagination-controls  id="participant_list"
-                    (pageChange)="pageChanged($event, rowsPerPage)"
-                    (pageBoundsCorrection)="pageChanged($event)"
-                    maxSize="9"
-                    directionLinks="true"
-                    autoHide="true"
-                    responsive="true"
-                    previousLabel="Previous"
-                    nextLabel="Next"
-                    screenReaderPaginationLabel="Pagination"
-                    screenReaderPageLabel="page"
-                    screenReaderCurrentLabel="You're on page">
-          </pagination-controls>
           <tr>
             <td [attr.colspan]="getColSpan()">
               <b># of participants: {{getPaginationParticipantListSize()}}</b>

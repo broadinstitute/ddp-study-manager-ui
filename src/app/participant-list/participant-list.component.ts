@@ -140,49 +140,22 @@ export class ParticipantListComponent implements OnInit {
     window.scrollTo( 0, 0 );
   }
 
-  private getParticipantsSize() {
-    this.dsmService.getParticipantsSize(localStorage.getItem(ComponentService.MENU_SELECTED_REALM)).subscribe(
-      data => {
-        this.participantsSize = data;
-      },
-      err => {
-        console.error(err);
-      }
-    );
-  }
-
   public getPaginationParticipantListSize(): number {
     return this.participantsSize;
   }
 
-  public pageChanged(event: any, rPerPage?: number) {
+  public pageChanged(pageNumber: number, rPerPage?: number) {
     this.loadingParticipants = true;
     let rowsPerPage = rPerPage ? rPerPage : this.role.getUserSetting().getRowsPerPage();
-    let from = (event - 1) * rowsPerPage;
-    let to = event * rowsPerPage;
+    let from = (pageNumber - 1) * rowsPerPage;
+    let to = pageNumber * rowsPerPage;
     if (this.viewFilter) {
        this.applyFilter(this.viewFilter, from, to);
     } else {
       if (this.jsonPatch) {
-        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.jsonPatch, this.parent, null, from, to ).subscribe( data => {
-          this.participantList = [];
-          this.additionalMessage = "";
-          this.originalParticipantList = [];
-          this.copyParticipantList = [];
-          if (data != null) {
-            let jsonData: {};
-            jsonData = data;
-            jsonData['participants'].forEach( ( val ) => {
-              let participant = Participant.parse( val );
-              this.participantList.push( participant );
-            } );
-            this.originalParticipantList = this.participantList;
-            this.participantsSize = jsonData['totalCount'];
-            let date = new Date();
-            this.loadedTimeStamp = Utils.getDateFormatted( date, Utils.DATE_STRING_IN_EVENT_CVS );
-            this.additionalMessage = null;
-          }
-          this.loadingParticipants = null;
+        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.jsonPatch, this.parent, null, from, to ).subscribe( 
+        data => {
+          this.setFilterDataOnSuccess(data);
         }, err => {
           this.participantList = [];
           this.originalParticipantList = [];
@@ -194,23 +167,7 @@ export class ParticipantListComponent implements OnInit {
       } else {
         this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null, this.parent, true, from, to ).subscribe(
           data => {
-            if (data != null) {
-              this.additionalMessage = "";
-              this.participantList = [];
-              this.originalParticipantList = [];
-              this.copyParticipantList = [];
-              let jsonData: {};
-              jsonData = data;
-              jsonData['participants'].forEach( ( val ) => {
-                let participant = Participant.parse( val );
-                this.participantList.push( participant );
-              } );
-              this.originalParticipantList = this.participantList;
-              this.participantsSize = jsonData['totalCount'];
-              let date = new Date();
-              this.loadedTimeStamp = Utils.getDateFormatted( date, Utils.DATE_STRING_IN_EVENT_CVS );
-            }
-            this.loadingParticipants = null;
+            this.setFilterDataOnSuccess(data);
           },
           err => {
             if (err._body === Auth.AUTHENTICATION_ERROR) {
@@ -224,7 +181,28 @@ export class ParticipantListComponent implements OnInit {
     }
 
 
-    this.activePage = event;
+    this.activePage = pageNumber;
+  }
+
+  private setFilterDataOnSuccess(data: any) {
+    this.participantList = [];
+    this.additionalMessage = "";
+    this.originalParticipantList = [];
+    this.copyParticipantList = [];
+    if (data != null) {
+      let jsonData: {};
+      jsonData = data;
+      jsonData['participants'].forEach((val) => {
+        let participant = Participant.parse(val);
+        this.participantList.push(participant);
+      });
+      this.originalParticipantList = this.participantList;
+      this.participantsSize = jsonData['totalCount'];
+      let date = new Date();
+      this.loadedTimeStamp = Utils.getDateFormatted(date, Utils.DATE_STRING_IN_EVENT_CVS);
+      this.additionalMessage = null;
+    }
+    this.loadingParticipants = null;
   }
 
   private checkRight() {
@@ -262,7 +240,6 @@ export class ParticipantListComponent implements OnInit {
   loadSettings() {
     this.rowsPerPage = this.role.getUserSetting().getRowsPerPage();
     let jsonData: any;
-    this.getParticipantsSize();
     this.dsmService.getSettings( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.parent ).subscribe(
       data => {
         this.assignees = [];
