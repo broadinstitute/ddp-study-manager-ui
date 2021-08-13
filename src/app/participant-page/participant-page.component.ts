@@ -345,7 +345,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
           this.showParticipantRecord = true;
         }
         //add that here in case a mr was received but participant object does not know it
-        if (mr.mrReceived != null && mr.mrReceived !== "") {
+        if (mr.mrReceived) {
           this.counterReceived = this.counterReceived + 1;
         }
         if (this.counterReceived > 0) {
