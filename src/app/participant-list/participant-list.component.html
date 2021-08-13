@@ -707,7 +707,7 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
             </td>
           </tr>
           <pagination-controls  id="participant_list"
-                    (pageChange)="pageChanged($event)"
+                    (pageChange)="pageChanged($event, rowsPerPage)"
                     (pageBoundsCorrection)="pageChanged($event)"
                     maxSize="9"
                     directionLinks="true"
