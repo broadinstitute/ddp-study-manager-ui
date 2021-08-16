@@ -156,7 +156,7 @@ export class MedicalRecordComponent implements OnInit {
       let participantId: string = this.getParticipantId();
       let realm: string = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
       let patch1 = new PatchUtil( this.medicalRecord.medicalRecordId, this.role.userMail(),
-        {name: parameterName, value: v}, null, null, participantId, Statics.MR_ALIAS, null, realm );
+        {name: parameterName, value: v}, null, null, participantId, Statics.MR_ALIAS, null, realm, this.participant.participant.ddpParticipantId );
       let patch = patch1.getPatch();
       this.patchFinished = false;
       if (parameterName != "followUps") {

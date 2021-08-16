@@ -58,6 +58,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   @Input() mrId: string;
   @Input() isAddFamilyMember: boolean;
   @Input() showGroupFields: boolean;
+  @Input() hideSamplesTab: boolean;
   @Output() leaveParticipant = new EventEmitter();
   @Output('ngModelChange') update = new EventEmitter();
 
@@ -329,109 +330,32 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
           this.pdfs.push(new PDFModel('irb','IRB Letter', tmp.length + pos));
         }
       }
-      //if surveys is null then it is a gen2 participant > go and get institution information
-      if (this.participant.data.activities == null) {
-        if (this.participant.data.dsm == null) {
-          this.participant.data.dsm = {};
-        }
-        this.loadingParticipantPage = true;
-        let ddpParticipantId = this.participant.data.profile[ "guid" ];
-        this.dsmService.getMedicalRecordData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), ddpParticipantId ).subscribe(
-          data => {
-            let ddpInformation = DDPParticipantInformation.parse( data );
-            if (ddpInformation != null) {
-              this.participant.data.dsm[ "dateOfBirth" ] = ddpInformation.dob;
-              let tmp = ddpInformation.dateOfDiagnosis;
-              if (tmp != null && tmp.indexOf( "/" ) > -1) {
-                this.participant.data.dsm[ "diagnosisMonth" ] = tmp.split( "/" )[ 0 ];
-                this.participant.data.dsm[ "diagnosisYear" ] = tmp.split( "/" )[ 1 ];
-              }
-              this.participant.data.dsm[ "hasConsentedToBloodDraw" ] = false;
-              this.participant.data.dsm[ "hasConsentedToTissueSample" ] = false;
-              if (ddpInformation.drawBloodConsent === 1) {
-                this.participant.data.dsm[ "hasConsentedToBloodDraw" ] = true;
-              }
-              if (ddpInformation.tissueSampleConsent === 1) {
-                this.participant.data.dsm[ "hasConsentedToTissueSample" ] = true;
-              }
-
-              let medicalRecords = this.participant.medicalRecords;
-              for (let mr of medicalRecords) {
-                if (mr.mrDocumentFileNames != null) {
-                  let files = mr.mrDocumentFileNames.split( /[\s,|;]+/ );
-                  for (let file of files) {
-                    if (this.fileListUsed.indexOf( file ) == -1) {
-                      this.fileListUsed.push( file );
-                    }
-                  }
-                }
-                if (mr.crRequired) {
-                  this.showParticipantRecord = true;
-                }
-                for (let inst of ddpInformation.institutions) {
-                  if (inst.id === mr.ddpInstitutionId) {
-                    mr.type = inst.type;
-                    mr.institutionDDP = inst.institution;
-                    mr.nameDDP = inst.physician;
-                    mr.streetAddressDDP = inst.streetAddress;
-                    mr.cityDDP = inst.city;
-                    mr.stateDDP = inst.state;
-                    mr.isDeleted = false;
-                    break;
-                  }
-                }
-                //add that here in case a mr was received but participant object does not know it
-                if (mr.mrReceived != null && mr.mrReceived !== "") {
-                  this.counterReceived = this.counterReceived + 1;
-                }
-                if (this.counterReceived > 0) {
-                  if (this.hasRole().isAbstracter() || this.hasRole().isQC()) {
-                    this.loadAbstractionValues();
-                  }
-                }
-              }
-              this.addEmptyOncHistoryRow();
-            } else {
-              this.additionalMessage = "No additional information from the DDP was received";
-            }
-            this.loadingParticipantPage = false;
-          },
-          err => {
-            if (err._body === Auth.AUTHENTICATION_ERROR) {
-              this.auth.logout();
-            }
-            this.loadingParticipantPage = false;
-            this.additionalMessage = "Error - Loading participant institution information\nPlease contact your DSM developer";
-          }
-        );
-      } else {// don't need to load institution data
-        this.counterReceived = 0;
-        let medicalRecords = this.participant.medicalRecords;
-        for (let mr of medicalRecords) {
-          if (mr.mrDocumentFileNames != null) {
-            let files = mr.mrDocumentFileNames.split( /[\s,|;]+/ );
-            for (let file of files) {
-              if (this.fileListUsed.indexOf( file ) == -1) {
-                this.fileListUsed.push( file );
-              }
-            }
-          }
-          if (mr.crRequired) {
-            this.showParticipantRecord = true;
-          }
-          //add that here in case a mr was received but participant object does not know it
-          if (mr.mrReceived != null && mr.mrReceived !== "") {
-            this.counterReceived = this.counterReceived + 1;
-          }
-          if (this.counterReceived > 0) {
-            if (this.hasRole().isAbstracter() || this.hasRole().isQC()) {
-              this.loadAbstractionValues();
+      this.counterReceived = 0;
+      let medicalRecords = this.participant.medicalRecords;
+      for (let mr of medicalRecords) {
+        if (mr.mrDocumentFileNames != null) {
+          let files = mr.mrDocumentFileNames.split( /[\s,|;]+/ );
+          for (let file of files) {
+            if (this.fileListUsed.indexOf( file ) == -1) {
+              this.fileListUsed.push( file );
             }
           }
         }
-        if (this.participant.participant != null) {
-          this.addEmptyOncHistoryRow();
+        if (mr.crRequired) {
+          this.showParticipantRecord = true;
         }
+        //add that here in case a mr was received but participant object does not know it
+        if (mr.mrReceived) {
+          this.counterReceived = this.counterReceived + 1;
+        }
+        if (this.counterReceived > 0) {
+          if (this.hasRole().isAbstracter() || this.hasRole().isQC()) {
+            this.loadAbstractionValues();
+          }
+        }
+      }
+      if (this.participant.participant != null) {
+        this.addEmptyOncHistoryRow();
       }
     }
   }
@@ -513,7 +437,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
         ddpParticipantId = this.participant.data.profile[ "legacyAltPid" ];
       }
       let patch1 = new PatchUtil( participantId, this.role.userMail(),
-        {name: parameterName, value: v}, null, 'ddpParticipantId', ddpParticipantId, tableAlias, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) );
+        {name: parameterName, value: v}, null, 'ddpParticipantId', ddpParticipantId, tableAlias, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.participant.participant.ddpParticipantId );
       patch1.realm = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
       let patch = patch1.getPatch();
       this.currentPatchField = parameterName;
@@ -568,7 +492,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     if (v !== null) {
 
       let patch1 = new PatchUtil( oncHis.oncHistoryDetailId, this.role.userMail(),
-        {name: parameterName, value: v}, null, "participantId", oncHis.participantId, Statics.ONCDETAIL_ALIAS,  null, realm);
+        {name: parameterName, value: v}, null, "participantId", oncHis.participantId, Statics.ONCDETAIL_ALIAS,  null, realm, this.participant.participant.ddpParticipantId);
       let patch = patch1.getPatch();
       this.patchFinished = false;
       this.currentPatchField = parameterName;
@@ -701,7 +625,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   saveNote() {
     let patch1 = new PatchUtil( this.noteMedicalRecord.medicalRecordId, this.role.userMail(),
-      {name: "mrNotes", value: this.noteMedicalRecord.mrNotes}, null, null, null, Statics.MR_ALIAS,  null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) );
+      {name: "mrNotes", value: this.noteMedicalRecord.mrNotes}, null, null, null, Statics.MR_ALIAS,  null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.participant.participant.ddpParticipantId );
     let patch = patch1.getPatch();
 
 
@@ -1100,9 +1024,9 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  getActivityDefinition( code: string ) {
+  getActivityDefinition( code: string, version: string ) {
     if (this.activityDefinitions != null) {
-      return this.activityDefinitions.find( x => x.activityCode === code );
+      return this.activityDefinitions.find( x => x.activityCode === code && x.activityVersion === version );
     }
     return null;
   }
@@ -1224,64 +1148,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   getActivityData(fieldSetting: FieldSettings) {
     //type was activity or activity_staff and no saved staff answer. therefore lookup the activity answer
-    if (fieldSetting != null && fieldSetting.possibleValues != null && fieldSetting.possibleValues[0] != null && fieldSetting.possibleValues[0].value != null) {
-      let tmp: string[] = fieldSetting.possibleValues[ 0 ].value.split( '.' );
-      if (tmp != null && tmp.length > 1) {
-        if (tmp[ 0 ] === 'profile') {
-          return this.participant.data.profile[tmp[1]];
-        }
-        else {
-          if (this.participant != null && this.participant.data != null && this.participant.data.activities != null) {
-            let activity: ActivityData = this.participant.data.activities.find( activity => activity.activityCode === tmp[ 0 ] );
-            if (activity != null && activity.questionsAnswers != null) {
-              let questionAnswer = activity.questionsAnswers.find( questionAnswer => questionAnswer.stableId === tmp[ 1 ] );
-              if (questionAnswer != null) {
-                if (tmp.length == 2) {
-                  if (typeof questionAnswer.answer === "boolean") {
-                    if (questionAnswer.answer) {
-                      return "Yes";
-                    }
-                    return "No";
-                  }
-                  if (questionAnswer.answer instanceof Array) {
-                    return questionAnswer.answer[0];
-                  }
-                  return questionAnswer.answer;
-                }
-                else if (tmp.length === 3) {
-                  if (fieldSetting.possibleValues != null && fieldSetting.possibleValues[ 0 ] != null && fieldSetting.possibleValues[ 0 ].type != null && fieldSetting.possibleValues[ 0 ].type === "RADIO") {
-                    if (questionAnswer.answer != null) {
-                      let found = questionAnswer.answer.find( answer => answer === tmp[ 2 ] )
-                      if (found != null) {
-                        return "Yes";
-                      }
-                      return "No";
-                    }
-                  }
-                  else if (this.activityDefinitions != null) {
-                    let definition: ActivityDefinition = this.activityDefinitions.find( definition => definition.activityCode === tmp[ 0 ] );
-                    if (definition != null && definition.questions != null) {
-                      let question = definition.questions.find( question => question.stableId === tmp[ 1 ] );
-                      if (question != null && question.childQuestions != null) {
-                        for (let i = 0; i < question.childQuestions.length; i++) {
-                          if (question.childQuestions[ i ] != null && question.childQuestions[ i ].stableId === tmp[ 2 ] && questionAnswer.answer[ 0 ][ i ] != null) {
-                            return questionAnswer.answer[ 0 ][ i ];
-                          }
-                        }
-                      }
-                      else if (question != null && question.options != null) {
-
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    return "";
+    return Utils.getActivityDataValues(fieldSetting, this.participant, this.activityDefinitions);
   }
 
   getActivityOptions(fieldSetting: FieldSettings) {
@@ -1392,6 +1259,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
           realm:  localStorage.getItem( ComponentService.MENU_SELECTED_REALM ),
           nameValues: nameValue,
           actions: actionPatch,
+          ddpParticipantId: this.participant.participant.ddpParticipantId
         };
 
         this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
