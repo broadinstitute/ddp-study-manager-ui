@@ -511,7 +511,7 @@ participant.data.dsm['diagnosisYear'] != null">
                 <div class="Float--left Width--100"
                      *ngIf="participant.data != null && participant.data.activities != null && participant.data.activities.length > 0">
                   <ng-container *ngFor="let activity of participant.data.activities; let i = index">
-                    <div class="Float--left" *ngIf="getActivityDefinition(activity.activityCode) as activityDef3">
+                    <div class="Float--left" *ngIf="getActivityDefinition(activity.activityCode, activity.activityVersion) as activityDef3">
                       <a class="Abstraction--Jump--Group" pageScroll href="{{getGroupHref(activity.activityCode)}}"
                          *ngIf="activityDef3 != null">{{activityDef3.activityName}} {{activityDef3.activityVersion}}</a>
                     </div>
@@ -526,7 +526,7 @@ participant.data.dsm['diagnosisYear'] != null">
                      *ngIf="participant.data != null && participant.data.activities != null && participant.data.activities.length > 0">
                   <hr style="border-color: black">
                   <ng-container *ngFor="let activity of participant.data.activities">
-                    <ng-container *ngIf="getActivityDefinition(activity.activityCode) as activityDef4">
+                    <ng-container *ngIf="getActivityDefinition(activity.activityCode, activity.activityVersion) as activityDef4">
                       <app-activity-data *ngIf="activityDef4 != null" [activityDefinition]="activityDef4"
                                          [activity]="activity"></app-activity-data>
                     </ng-container>

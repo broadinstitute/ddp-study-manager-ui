@@ -844,11 +844,13 @@ export class ParticipantListComponent implements OnInit {
 
   showFiltersTable() {
     let assigneesMap = [];
-    this.assignees.forEach( assignee => {
-      if (assignee.assigneeId !== "-1") {
-        assigneesMap.push( new NameValue( assignee.assigneeId, assignee.name ) );
-      }
-    } );
+    if (this.assignees) {
+      this.assignees.forEach( assignee => {
+        if (assignee.assigneeId !== "-1") {
+          assigneesMap.push( new NameValue( assignee.assigneeId, assignee.name ) );
+        }
+      } );
+    }
     //fixing assignee filters
     if (this.selectedColumns[ "p" ] != null) {
       this.selectedColumns[ "p" ].forEach( ( col, i ) => {
@@ -1900,7 +1902,7 @@ export class ParticipantListComponent implements OnInit {
       let setting = this.findSettingByColumnName(name);
       if (setting) {
         result = Utils.getActivityDataValues(setting, participant, this.activityDefinitionList);
-      }      
+      }
     }
     return result;
   }
@@ -1954,6 +1956,8 @@ export class ParticipantListComponent implements OnInit {
     } else if (showType == Filter.ACTIVITY_STAFF_TYPE) {
       if (field.possibleValues && field.possibleValues[0].type) {
         showType = field.possibleValues[0].type;
+      } else {
+        showType = 'TEXT';
       }
       filter = new Filter(new ParticipantColumn(field.columnDisplay.replace('*', ''), field.columnName, 'participantData', field.fieldType, false),
       showType, field.possibleValues);

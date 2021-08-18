@@ -344,7 +344,7 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                           <ng-container
                             *ngIf="questionAnswer.questionType === 'PICKLIST' && questionAnswer.answer != null">
                             <ng-container
-                              *ngIf="getUtil().getQuestionDefinition(activityDefinitionList, alias, questionAnswer.stableId) as qDef">
+                              *ngIf="getUtil().getQuestionDefinition(activityDefinitionList, alias, questionAnswer.stableId, activityData.activityVersion) as qDef">
                               <ng-container *ngIf="qDef.selectMode === 'MULTIPLE'">
                                 <ng-container *ngIf="qDef.options !== null">
                                   <ul *ngFor="let o of qDef.options">
