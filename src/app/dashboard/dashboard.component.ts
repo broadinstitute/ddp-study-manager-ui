@@ -515,7 +515,7 @@ export class DashboardComponent implements OnInit {
       data => {
         let jsonData: any[];
         this.participantList = [];
-        jsonData = data;
+        jsonData = data.participants;
         jsonData.forEach( ( val ) => {
           let participant = Participant.parse( val );
           this.participantList.push( participant );
