@@ -647,6 +647,46 @@ participant.data.dsm['diagnosisYear'] != null">
               </ng-container>
             </tab>
 
+           <tab *ngIf="showContactInformation" heading="Contact Information">
+            <hr *ngIf="street1HasValue" style="border-color: lightgray">
+            <tr *ngIf="street1HasValue">
+              <td class="TD--Padding-Left Width--50"> Street 1: {{participant.data.address.street1 }} </td>
+            </tr>
+            <hr *ngIf="street2HasValue" style="border-color: lightgray">
+            <tr *ngIf="street2HasValue">
+              <td class="TD--Padding-Left Width--50"> Street 2: {{ participant.data.address.street2 }} </td>
+            </tr>
+            <hr *ngIf="cityHasValue" style="border-color: lightgray">
+            <tr *ngIf="cityHasValue">              
+              <td class="TD--Padding-Left Width--50"> City: {{ participant.data.address.city }} </td>
+            </tr>
+            <hr *ngIf="postalCodeHasValue" style="border-color: lightgray">
+            <tr *ngIf="postalCodeHasValue">
+              <td class="TD--Padding-Left Width--50"> PostalCode: {{ participant.data.address.postalCode }} </td>
+            </tr>
+            <hr *ngIf="stateHasValue" style="border-color: lightgray">
+            <tr *ngIf="stateHasValue">
+              <td class="TD--Padding-Left Width--50"> State: {{ participant.data.address.state }} </td>
+            </tr>
+            <hr *ngIf="countryHasValue" style="border-color: lightgray">
+            <tr *ngIf="countryHasValue">
+              <td class="TD--Padding-Left Width--50"> Country: {{ participant.data.address.country }} </td>
+            </tr>
+            <hr *ngIf="mailToNameHasValue" style="border-color: lightgray">
+            <tr *ngIf="mailToNameHasValue">
+              <td class="TD--Padding-Left Width--50"> Mail To Name: {{ participant.data.address.mailToName }} </td>
+            </tr>
+            <hr *ngIf="zipHasValue" style="border-color: lightgray">
+            <tr *ngIf="zipHasValue">
+              <td class="TD--Padding-Left Width--50"> Zip: {{ participant.data.address.zip }} </td>
+            </tr>
+            <hr *ngIf="validHasValue" style="border-color: lightgray">
+            <tr *ngIf="validHasValue">
+              <td class="TD--Padding-Left Width--50"> Valid: {{ participant.data.address.valid }} </td>
+            </tr>
+            <hr *ngIf="validHasValue" style="border-color: lightgray">
+          </tab>
+
             <tab heading="Medical Records"
                  *ngIf="participant.medicalRecords != null && participant.medicalRecords.length > 0"
                  [active]="tabActive('Medical Records')" (select)="onSelect($event, 'Medical Records')">

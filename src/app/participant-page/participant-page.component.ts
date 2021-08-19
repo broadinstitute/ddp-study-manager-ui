@@ -31,6 +31,7 @@ import { ParticipantUpdateResultDialogComponent } from "../dialogs/participant-u
 import { AddFamilyMemberComponent } from "../popups/add-family-member/add-family-member.component";
 import { Sample } from "../participant-list/models/sample.model";
 import { ParticipantDSMInformation } from "../participant-list/models/participant.model";
+import { BoundCallbackObservable } from "rxjs/observable/BoundCallbackObservable";
 
 var fileSaver = require( "file-saver/FileSaver.js" );
 
@@ -59,6 +60,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   @Input() isAddFamilyMember: boolean;
   @Input() showGroupFields: boolean;
   @Input() hideSamplesTab: boolean;
+  @Input() showContactInformation: boolean;
   @Output() leaveParticipant = new EventEmitter();
   @Output('ngModelChange') update = new EventEmitter();
 
@@ -286,6 +288,10 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
       }
     }
     return "";
+  }
+
+  getParticipantAddress() {
+    return this.activityDefinitions;
   }
 
   getGroupHref( group: string ): string {
@@ -1329,4 +1335,45 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     this.universalModal.show();
     return false;
   }
+
+  isNotBlank(value: any): boolean {
+    return value != "" && value != null;
+  }
+
+  street1HasValue(): boolean {
+    return this.isNotBlank(this.participant.data.address.street1);
+  }
+
+  street2HasValue(): boolean {
+    return this.isNotBlank(this.participant.data.address.street2);
+  }
+
+  cityHasValue(): boolean {
+    return this.isNotBlank(this.participant.data.address.city);
+  }
+  
+  postalCodeHasValue(): boolean {
+    return this.isNotBlank(this.participant.data.address.postalCode);
+  }
+
+  stateHasValue(): boolean {
+    return this.isNotBlank(this.participant.data.address.state);
+  }
+
+  countryHasValue(): boolean {
+    return this.isNotBlank(this.participant.data.address.country);
+  }
+
+  mailToNameHasValue(): boolean {
+    return this.isNotBlank(this.participant.data.address.mailToName);
+  }
+
+  zipHasValue(): boolean {
+    return this.isNotBlank(this.participant.data.address.zip);
+  }
+
+  validHasValue(): boolean {
+    return this.isNotBlank(this.participant.data.address.valid);
+  }
+
 }

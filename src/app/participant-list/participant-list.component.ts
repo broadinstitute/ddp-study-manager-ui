@@ -109,6 +109,7 @@ export class ParticipantListComponent implements OnInit {
   isAddFamilyMember: boolean = false;
   showGroupFields: boolean = false;
   hideSamplesTab: boolean = false;
+  showContactInformation: boolean = false;
 
   constructor( private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
                private router: Router, private auth: Auth, private route: ActivatedRoute, private util: Utils ) {
@@ -530,10 +531,12 @@ export class ParticipantListComponent implements OnInit {
         } else {
           this.hideSamplesTab = false;
         }
+        this.showContactInformation = jsonData.hasAddressTab ? jsonData.hasAddressTab : false;
         this.orderColumns();
         this.getData();
         // this.renewSelectedColumns(); commented out becasue if we have defaultColumns for all the studies we won't need it anymore
       },
+    
       err => {
         if (err._body === Auth.AUTHENTICATION_ERROR) {
           this.auth.logout();
