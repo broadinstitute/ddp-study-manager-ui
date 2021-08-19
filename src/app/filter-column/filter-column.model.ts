@@ -627,7 +627,7 @@ export class Filter {
       }
     }
     if (filterText != null && filter.participantColumn.tableAlias === Statics.ES_ALIAS && filter.participantColumn.object !== undefined && filter.participantColumn.object !== null) {
-      filterText[ "exactMatch" ] = true;
+      // filterText[ "exactMatch" ] = true;
       filterText[ "parentName" ] = filter.participantColumn.object;
     }
     return filterText;
