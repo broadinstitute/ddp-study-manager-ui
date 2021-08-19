@@ -1,7 +1,6 @@
 import {DatePipe} from "@angular/common";
 import {Injectable} from "@angular/core";
 import {FormControl} from "@angular/forms";
-import {groupBy} from "rxjs/operator/groupBy";
 import {AbstractionGroup} from "../abstraction-group/abstraction-group.model";
 import { ActivityData } from "../activity-data/activity-data.model";
 import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
@@ -9,6 +8,7 @@ import {Group} from "../activity-data/models/group.model";
 import {OptionDetail} from "../activity-data/models/option-detail.model";
 import {Option} from "../activity-data/models/option.model";
 import {QuestionAnswer} from "../activity-data/models/question-answer.model";
+import {QuestionDefinition} from "../activity-data/models/question-definition.model";
 import { FieldSettings } from "../field-settings/field-settings.model";
 import {Filter} from "../filter-column/filter-column.model";
 import {AbstractionField} from "../medical-record-abstraction/medical-record-abstraction-field.model";
@@ -104,7 +104,7 @@ export class Utils {
     } );
   }
 
-  getAnswerText( groupAnswer: string, options: Array<Option> ): Option{
+  getAnswerText( groupAnswer: string, options: Array<Option> ): Option {
     return options.find( option => {
       if (option.optionStableId === groupAnswer) {
         return true;
@@ -117,10 +117,26 @@ export class Utils {
     return selected.find( x => x === optionStableId );
   }
 
-  getOptionText( options: Array<Option>, stableId: string ) {
-    let option = options.find( x => x.optionStableId === stableId );
-    if (option != null) {
-      return option.optionText;
+  getOptionOrGroupText( questionDefinition: QuestionDefinition, stableId: string ): string {
+    if (questionDefinition.options) {
+      let option = questionDefinition.options.find( x => x.optionStableId === stableId );
+      if (option != null) {
+        return option.optionText;
+      }
+    }
+    if (questionDefinition.groups) {
+      let text = "";
+      questionDefinition.groups.find( g => {
+        if (g.options) {
+          let option = g.options.find(o => o.optionStableId === stableId);
+          if (option) {
+            text = option.optionText;
+            return true;
+          }
+        }
+        return false;
+      });
+      return text;
     }
     return "";
   }

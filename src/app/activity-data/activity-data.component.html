@@ -56,7 +56,7 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                         {{getUtil().getNiceUserText(answer[i])}}
                       </b>
                       <b *ngIf="cQ.questionType === 'PICKLIST' && answer[i] != null">
-                        {{getUtil().getOptionText(cQ.options, answer[i])}}
+                        {{getUtil().getOptionOrGroupText(cQ, answer[i])}}
                       </b>
                       <b *ngIf="cQ.questionType !== 'DATE' && cQ.questionType !== 'PICKLIST' && answer[i] != null">
                         {{getUtil().getNiceUserText(answer[i])}}
@@ -106,7 +106,7 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                     </ng-container>
                   </ng-container>
                   <ng-container *ngIf="qDef.selectMode === 'SINGLE'">
-                    <ng-container *ngIf="questionAnswer.answer[0] != null && questionAnswer.optionDetails != null"><b class="TD--Padding-Left-Bigger">{{getUtil().getOptionText(qDef.options,
+                    <ng-container *ngIf="questionAnswer.answer[0] != null && questionAnswer.optionDetails != null"><b class="TD--Padding-Left-Bigger">{{getUtil().getOptionOrGroupText(qDef,
                       questionAnswer.answer[0])}}</b>
                       <ng-container *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, questionAnswer.answer[0]) as oDetail">
                         <div>{{oDetail.details}}
