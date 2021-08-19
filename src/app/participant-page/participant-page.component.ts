@@ -290,10 +290,6 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     return "";
   }
 
-  getParticipantAddress() {
-    return this.activityDefinitions;
-  }
-
   getGroupHref( group: string ): string {
     return "#" + group;
   }
