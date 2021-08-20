@@ -1331,45 +1331,4 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     this.universalModal.show();
     return false;
   }
-
-  isNotBlank(value: any): boolean {
-    return value != "" && value != null;
-  }
-
-  street1HasValue(): boolean {
-    return this.isNotBlank(this.participant.data.address.street1);
-  }
-
-  street2HasValue(): boolean {
-    return this.isNotBlank(this.participant.data.address.street2);
-  }
-
-  cityHasValue(): boolean {
-    return this.isNotBlank(this.participant.data.address.city);
-  }
-  
-  postalCodeHasValue(): boolean {
-    return this.isNotBlank(this.participant.data.address.postalCode);
-  }
-
-  stateHasValue(): boolean {
-    return this.isNotBlank(this.participant.data.address.state);
-  }
-
-  countryHasValue(): boolean {
-    return this.isNotBlank(this.participant.data.address.country);
-  }
-
-  mailToNameHasValue(): boolean {
-    return this.isNotBlank(this.participant.data.address.mailToName);
-  }
-
-  zipHasValue(): boolean {
-    return this.isNotBlank(this.participant.data.address.zip);
-  }
-
-  validHasValue(): boolean {
-    return this.isNotBlank(this.participant.data.address.valid);
-  }
-
 }
