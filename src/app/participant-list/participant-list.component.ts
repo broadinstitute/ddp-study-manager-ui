@@ -96,8 +96,8 @@ export class ParticipantListComponent implements OnInit {
   cancers: string[] = [];
   mrCoverPdfSettings: Value[] = [];
 
-  sortField: string = null;
-  sortDir: string = null;
+  sortField: string = "profile.createdAt";
+  sortDir: string = "desc";
   sortParent: string = null;
   currentView: string = null;
   showHelp: boolean = false;
@@ -152,7 +152,7 @@ export class ParticipantListComponent implements OnInit {
        this.applyFilter(this.viewFilter, from, to);
     } else {
       if (this.jsonPatch) {
-        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.jsonPatch, this.parent, null, from, to ).subscribe( 
+        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.jsonPatch, this.parent, null, from, to, this.sortField, this.sortDir ).subscribe(
         data => {
           this.setFilterDataOnSuccess(data);
         }, err => {
@@ -164,7 +164,7 @@ export class ParticipantListComponent implements OnInit {
         } );
 
       } else {
-        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null, this.parent, true, from, to ).subscribe(
+        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null, this.parent, true, from, to, this.sortField, this.sortDir ).subscribe(
           data => {
             this.setFilterDataOnSuccess(data);
           },
@@ -178,9 +178,49 @@ export class ParticipantListComponent implements OnInit {
         );
       }
     }
-
-
     this.activePage = pageNumber;
+  }
+
+  sortOrderChanged( col: Filter ) {
+    this.sortDir = this.sortField === col.participantColumn.name ? ( this.sortDir === "asc" ? "desc" : "asc" ) : "asc";
+    this.sortField = this.getTableAlias(col.participantColumn) + "." + col.participantColumn.name;
+    this.loadingParticipants = true;
+    console.log(this.sortDir);
+    console.log(this.sortField);
+    console.log(col);
+    let rowsPerPage =  this.role.getUserSetting().getRowsPerPage();
+    let from = (this.activePage - 1) * rowsPerPage;
+    let to = this.activePage * rowsPerPage;
+    if (this.viewFilter) {
+      this.applyFilter(this.viewFilter, from, to, this.sortField, this.sortDir);
+    } else {
+      if (this.jsonPatch) {
+        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.jsonPatch, this.parent, null, from, to, this.sortField, this.sortDir ).subscribe(
+          data => {
+            this.setFilterDataOnSuccess(data);
+          }, err => {
+            this.participantList = [];
+            this.originalParticipantList = [];
+            this.copyParticipantList = [];
+            this.loadingParticipants = null;
+            this.additionalMessage = "Error - Filtering Participant List, Please contact your DSM developer";
+          } );
+
+      } else {
+        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null, this.parent, true, from, to, this.sortField, this.sortDir ).subscribe(
+          data => {
+            this.setFilterDataOnSuccess(data);
+          },
+          err => {
+            if (err._body === Auth.AUTHENTICATION_ERROR) {
+              this.auth.logout();
+            }
+            this.loadingParticipants = null;
+            this.errorMessage = "Error - Loading Participant List, Please contact your DSM developer";
+          }
+        );
+      }
+    }
   }
 
   private setFilterDataOnSuccess(data: any) {
@@ -772,8 +812,8 @@ export class ParticipantListComponent implements OnInit {
     this.applyFilter(viewFilter);
   }
 
-  private applyFilter(viewFilter: ViewFilter, from : number = 0, to : number = this.role.getUserSetting().getRowsPerPage()) {
-    this.dsmService.applyFilter(viewFilter, localStorage.getItem(ComponentService.MENU_SELECTED_REALM), this.parent, null, from, to).subscribe(
+  private applyFilter(viewFilter: ViewFilter, from : number = 0, to : number = this.role.getUserSetting().getRowsPerPage(), sortField : string = 'profile.createdAt', sortDir : string = 'desc') {
+    this.dsmService.applyFilter(viewFilter, localStorage.getItem(ComponentService.MENU_SELECTED_REALM), this.parent, null, from, to, sortField, sortDir).subscribe(
       data => {
         if (data != null) {
           if (viewFilter != null && viewFilter.filters != null) {

@@ -225,7 +225,8 @@
           <thead>
           <th *ngIf="hasAssignees()"></th> <!-- needed for the first column with checkbox -->
           <ng-container *ngFor="let alias of getKeys()">
-            <th *ngFor="let col of selectedColumns[alias]" (click)="sortByColumnName(col, alias)"
+<!--            <th *ngFor="let col of selectedColumns[alias]" (click)="sortByColumnName(col, alias)"-->
+            <th *ngFor="let col of selectedColumns[alias]" (click)="sortOrderChanged(col)"
                 tooltip="{{getTableAlias(col.participantColumn)}}.{{col.participantColumn.name}}"
                 [ngClass]="{'Table--Sticky': true, 'Color--blue': isSortField(col.participantColumn.name)}">
               {{col.participantColumn.display}}
@@ -241,7 +242,7 @@
           </ng-container>
           </thead>
           <tbody>
-          <tr *ngFor="let pt of participantList | paginate: { id: 'participant_list', itemsPerPage: rowsPerPage, 
+          <tr *ngFor="let pt of participantList | paginate: { id: 'participant_list', itemsPerPage: rowsPerPage,
                         currentPage: activePage, totalItems: getPaginationParticipantListSize() }">
             <!--checkbox to assign or trigger blood kits-->
             <td *ngIf="hasAssignees()">
@@ -691,7 +692,7 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
           <tfoot *ngIf="participantList != null">
           <tr>
             <td [attr.colspan]="getColSpan()-3">
-              <pagination-controls  
+              <pagination-controls
                     class="custom-pagination"
                     id="participant_list"
                     (pageChange)="pageChanged($event, rowsPerPage)"
