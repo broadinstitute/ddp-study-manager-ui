@@ -142,9 +142,9 @@ export class Participant {
       } );
     }
 
-    let data: Data = null;
-    if (json.data != null) {
-      data = Data.parse( json.data );
+    let esData: Data = null;
+    if (json.esData != null) {
+      esData = Data.parse( json.esData );
     }
 
     let proxyData: Array<Data> = [];
@@ -195,6 +195,6 @@ export class Participant {
       } );
     }
 
-    return new Participant( data, participant, medicalRecords, samples, oncHistoryDetails, json.abstractionActivities, abstractionSummary, participantData, abstraction, review, qc, finalA, proxyData );
+    return new Participant( esData, participant, medicalRecords, samples, oncHistoryDetails, json.abstractionActivities, abstractionSummary, participantData, abstraction, review, qc, finalA, proxyData );
   }
 }
