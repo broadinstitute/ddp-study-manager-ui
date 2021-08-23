@@ -112,7 +112,7 @@ export class ParticipantListComponent implements OnInit {
   participantsSize: number = 0;
   jsonPatch: any;
   viewFilter: any;
-
+  
   constructor( private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
                private router: Router, private auth: Auth, private route: ActivatedRoute, private util: Utils ) {
     if (!auth.authenticated()) {
