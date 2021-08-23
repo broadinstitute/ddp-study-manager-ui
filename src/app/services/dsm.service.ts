@@ -104,11 +104,13 @@ export class DSMService {
   }
 
 
-  public filterData( realm: string, json: string, parent: string, defaultFilter: boolean ): Observable<any> {
+  public filterData( realm: string, json: string, parent: string, defaultFilter: boolean, from: number = 0, to: number = this.role.getUserSetting().getRowsPerPage() ): Observable<any> {
     let url = this.baseUrl + DSMService.UI + "filterList";
     let map: { name: string, value: any }[] = [];
     map.push( {name: DSMService.REALM, value: realm} );
     map.push( {name: "parent", value: parent} );
+    map.push( {name: "from", value: from} );
+    map.push( {name: "to", value: to} );
     map.push( {name: "userId", value: this.role.userID()} );
     map.push( {name: "userMail", value: this.role.userMail()} );
     map.push( {name: "defaultFilter", value: defaultFilter == true ? "1" : defaultFilter != null ? "0" : ""} );
@@ -125,7 +127,7 @@ export class DSMService {
     return this.http.patch( url, json, this.buildQueryHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError );
   }
 
-  public applyFilter( json: ViewFilter, realm: string, parent: string, filterQuery: string ): Observable<any> {
+  public applyFilter( json: ViewFilter, realm: string, parent: string, filterQuery: string, from: number = 0, to: number = this.role.getUserSetting().getRowsPerPage() ): Observable<any> {
     let viewFilterCopy = null;
     if (json != null) {
       if (json != null && json.filters != null) {
@@ -149,6 +151,8 @@ export class DSMService {
     let userId = this.role.userID();
     let map: { name: string, value: any }[] = [];
     map.push( {name: DSMService.REALM, value: realm} );
+    map.push( {name: "from", value: from} );
+    map.push( {name: "to", value: to} );
     map.push( {name: "userId", value: userId} );
     map.push( {name: "parent", value: parent} );
     if (filterQuery != null) {

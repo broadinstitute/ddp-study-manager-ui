@@ -222,9 +222,8 @@
         </app-search-bar>
 
         <table class="table table-striped Table--Hover Table--Foot Width--100">
-          <!--#mf="mfDataTable" [mfRowsOnPage]="hasRole().getUserSetting().getRowsPerPage()"-->
           <thead>
-          <th></th> <!-- needed for the first column with checkbox -->
+          <th *ngIf="hasAssignees()"></th> <!-- needed for the first column with checkbox -->
           <ng-container *ngFor="let alias of getKeys()">
             <th *ngFor="let col of selectedColumns[alias]" (click)="sortByColumnName(col, alias)"
                 tooltip="{{getTableAlias(col.participantColumn)}}.{{col.participantColumn.name}}"
@@ -242,9 +241,10 @@
           </ng-container>
           </thead>
           <tbody>
-          <tr *ngFor="let pt of participantList | paginate: { itemsPerPage: rowsPerPage, currentPage: activePage }">
+          <tr *ngFor="let pt of participantList | paginate: { id: 'participant_list', itemsPerPage: rowsPerPage, 
+                        currentPage: activePage, totalItems: getPaginationParticipantListSize() }">
             <!--checkbox to assign or trigger blood kits-->
-            <td>
+            <td *ngIf="hasAssignees()">
               <md-checkbox color="primary" disableRipple *ngIf="pt.participant != null"
                            [checked]="pt.isSelected"
                            (change)="pt.isSelected = $event.checked; checkboxChecked()"></md-checkbox>
@@ -345,7 +345,7 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                           <ng-container
                             *ngIf="questionAnswer.questionType === 'PICKLIST' && questionAnswer.answer != null">
                             <ng-container
-                              *ngIf="getUtil().getQuestionDefinition(activityDefinitionList, alias, questionAnswer.stableId) as qDef">
+                              *ngIf="getUtil().getQuestionDefinition(activityDefinitionList, alias, questionAnswer.stableId, activityData.activityVersion) as qDef">
                               <ng-container *ngIf="qDef.selectMode === 'MULTIPLE'">
                                 <ng-container *ngIf="qDef.options !== null">
                                   <ul *ngFor="let o of qDef.options">
@@ -382,7 +382,7 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                               </ng-container>
                               <ng-container *ngIf="qDef.selectMode === 'SINGLE'">
                                 <ng-container *ngIf="questionAnswer.answer[0] != null">
-                                  <div class="TD--Padding-Left-Bigger">{{getUtil().getOptionText(qDef.options, questionAnswer.answer[0])}}</div>
+                                  <div class="TD--Padding-Left-Bigger">{{getUtil().getOptionOrGroupText(qDef, questionAnswer.answer[0])}}</div>
                                   <ng-container *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, questionAnswer.answer[0]) as oDetail">
                                     <div>{{oDetail.details}}
                                     </div>
@@ -672,12 +672,14 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                   <div *ngIf="checkIfColumnIsTabGrouped(alias)">
                     <ul class="NO-PADDING-START">
                       <li class="LIST-SEPARATOR">
-                        <div *ngFor="let personData of pt.participantData; let i = index">
+                        <ng-container *ngFor="let personData of pt.participantData; let i = index">
                           <div *ngIf="this.getPersonField(personData, col, pt) as text">
-                            {{getPersonType(personData)}}: {{text}}
+                              <ng-container *ngIf="getPersonType(personData)">
+                                {{getPersonType(personData)}}:
+                              </ng-container>{{text}}
                             <hr *ngIf="i != pt.participantData.length - 1" style="border-color: lightgray">
                           </div>
-                        </div>
+                        </ng-container>
                       </li>
                     </ul>
                   </div>
@@ -689,7 +691,21 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
           <tfoot *ngIf="participantList != null">
           <tr>
             <td [attr.colspan]="getColSpan()-3">
-              <pagination-controls class="custom-pagination" (pageChange)="activePage = $event"></pagination-controls>
+              <pagination-controls  
+                    class="custom-pagination"
+                    id="participant_list"
+                    (pageChange)="pageChanged($event, rowsPerPage)"
+                    (pageBoundsCorrection)="pageChanged($event)"
+                    maxSize="9"
+                    directionLinks="true"
+                    autoHide="true"
+                    responsive="true"
+                    previousLabel="Previous"
+                    nextLabel="Next"
+                    screenReaderPaginationLabel="Pagination"
+                    screenReaderPageLabel="page"
+                    screenReaderCurrentLabel="You're on page">
+              </pagination-controls>
             </td>
             <td colspan="3">
               <div class="Float--right">
@@ -707,10 +723,10 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
           </tr>
           <tr>
             <td [attr.colspan]="getColSpan()">
-              <b># of participants: {{participantList.length}}</b>
+              <b># of participants: {{getPaginationParticipantListSize()}}</b>
             </td>
           </tr>
-          <tr>
+          <tr *ngIf="hasAssignees()">
             <td [attr.colspan]="getColSpan()">
               <button md-raised-button color="primary"
                       (click)="openModal('assignParticipant')" [disabled]="isAssignButtonDisabled">Assign
