@@ -259,7 +259,7 @@ export class ParticipantListComponent implements OnInit {
           ["oD", "Onc History"],
           ["t", "Tissue"],
           ["k", "Sample"],
-          ["a", "Abstraction"]] );
+          ["a", "Abstraction"]]);
         this.sourceColumns = {};
         this.selectedColumns = {};
         this.settings = {};
@@ -545,6 +545,41 @@ export class ParticipantListComponent implements OnInit {
           } );
           this.orderColumns();
         }
+
+        /*
+              "street1":"101 John Doe",
+               "street2":"1",
+               "city":"Boston",
+               "state":"MA",
+               "zip":"02114",
+               "country":"US",
+               "phone":"777-777-7777",
+               "mailToName":"Netsanet Tsegai",
+               "valid":false
+        */
+        if (jsonData.hasAddressTab) {
+          this.showContactInformation = true;
+
+          this.dataSources.set("contactInformation", "Contact Information");
+          let possibleColumns: Array<Filter> = [];
+          possibleColumns.push(new Filter( new ParticipantColumn("Street 1", "street1", "contactInformation", null, true), Filter.TEXT_TYPE) );
+          possibleColumns.push(new Filter( new ParticipantColumn("Street 2", "street2", "contactInformation", null, true), Filter.TEXT_TYPE) );
+          possibleColumns.push(new Filter( new ParticipantColumn("City", "city", "contactInformation", null, true), Filter.TEXT_TYPE) );
+          possibleColumns.push(new Filter( new ParticipantColumn("State", "state", "contactInformation", null, true), Filter.TEXT_TYPE) );
+          possibleColumns.push(new Filter( new ParticipantColumn("Zip", "zip", "contactInformation", null, true), Filter.TEXT_TYPE) );
+          possibleColumns.push(new Filter( new ParticipantColumn("Country", "country", "contactInformation", null, true), Filter.TEXT_TYPE) );
+          possibleColumns.push(new Filter( new ParticipantColumn("Phone", "phone", "contactInformation", null, true), Filter.TEXT_TYPE) );
+          possibleColumns.push(new Filter( new ParticipantColumn("Mail To Name", "mailToName", "contactInformation", null, true), Filter.TEXT_TYPE) );
+          possibleColumns.push(new Filter( new ParticipantColumn("Valid", "valid", "contactInformation", null, true), Filter.BOOLEAN_TYPE) );
+
+          this.sourceColumns["contactInformation"] = possibleColumns;
+          this.selectedColumns[ "contactInformation" ] = [];
+          possibleColumns.forEach( filter => {
+            let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
+            this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
+          } );
+          this.orderColumns();
+        }
         if (jsonData.hasProxyData != null) {
           this.dataSources.set( "proxy", "Proxy" );
           let possibleColumns: Array<Filter> = [];
@@ -598,7 +633,6 @@ export class ParticipantListComponent implements OnInit {
         } else {
           this.hideSamplesTab = false;
         }
-        this.showContactInformation = jsonData.hasAddressTab ? jsonData.hasAddressTab : false;
         this.orderColumns();
         this.getData();
         // this.renewSelectedColumns(); commented out becasue if we have defaultColumns for all the studies we won't need it anymore
