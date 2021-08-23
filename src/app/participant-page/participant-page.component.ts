@@ -1261,7 +1261,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
           realm:  localStorage.getItem( ComponentService.MENU_SELECTED_REALM ),
           nameValues: nameValue,
           actions: actionPatch,
-          ddpParticipantId: this.participant.participant.ddpParticipantId
+          ddpParticipantId: participantId
         };
 
         this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
