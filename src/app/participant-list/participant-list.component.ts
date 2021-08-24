@@ -545,18 +545,6 @@ export class ParticipantListComponent implements OnInit {
           } );
           this.orderColumns();
         }
-
-        /*
-              "street1":"101 John Doe",
-               "street2":"1",
-               "city":"Boston",
-               "state":"MA",
-               "zip":"02114",
-               "country":"US",
-               "phone":"777-777-7777",
-               "mailToName":"Netsanet Tsegai",
-               "valid":false
-        */
         if (jsonData.hasAddressTab) {
           this.showContactInformation = true;
 
