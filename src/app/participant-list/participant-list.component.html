@@ -288,6 +288,28 @@
                     </ul>
                   </ng-container>
                 </ng-container>
+
+                <ng-container *ngIf="col.participantColumn.esData && pt.data.address != null">
+                  <ng-container *ngIf="col.participantColumn.tableAlias === 'contactInformation'">
+                    <ul class="NO-PADDING-START">
+                        <p class="BIT-OF-MARGIN">
+                        <ng-container *ngIf="col.type === 'DATE'">
+                          {{ parseMillisToDateString(pt.data.address[col.participantColumn.name]) }}
+                        </ng-container>
+                        <ng-container *ngIf="col.type === 'TEXT' && col.participantColumn.name !== 'guid'">
+                          {{ pt.data.address[col.participantColumn.name] }}
+                        </ng-container>
+                        <ng-container *ngIf="col.type === 'BOOLEAN' && col.participantColumn.name !== 'guid'">
+                          {{ pt.data.address[col.participantColumn.name] }}
+                        </ng-container>
+                        <ng-container *ngIf="col.participantColumn.name === 'guid'">
+                          {{formatInvitation(pt.data.address[col.participantColumn.name]) }}
+                        </ng-container>
+                      </p>
+                    </ul>
+                  </ng-container>
+                </ng-container>
+
                 <ng-container *ngIf="col.participantColumn.esData && pt.data.activities != null">
 
                   <ng-container *ngIf="pt.data.getActivityDataByCode(alias) as activityData">
