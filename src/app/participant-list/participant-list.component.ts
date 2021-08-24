@@ -560,20 +560,20 @@ export class ParticipantListComponent implements OnInit {
         if (jsonData.hasAddressTab) {
           this.showContactInformation = true;
 
-          this.dataSources.set("contactInformation", "Contact Information");
+          this.dataSources.set("address", "Contact Information");
           let possibleColumns: Array<Filter> = [];
-          possibleColumns.push(new Filter( new ParticipantColumn("Street 1", "street1", "contactInformation", null, true), Filter.TEXT_TYPE) );
-          possibleColumns.push(new Filter( new ParticipantColumn("Street 2", "street2", "contactInformation", null, true), Filter.TEXT_TYPE) );
-          possibleColumns.push(new Filter( new ParticipantColumn("City", "city", "contactInformation", null, true), Filter.TEXT_TYPE) );
-          possibleColumns.push(new Filter( new ParticipantColumn("State", "state", "contactInformation", null, true), Filter.TEXT_TYPE) );
-          possibleColumns.push(new Filter( new ParticipantColumn("Zip", "zip", "contactInformation", null, true), Filter.TEXT_TYPE) );
-          possibleColumns.push(new Filter( new ParticipantColumn("Country", "country", "contactInformation", null, true), Filter.TEXT_TYPE) );
-          possibleColumns.push(new Filter( new ParticipantColumn("Phone", "phone", "contactInformation", null, true), Filter.TEXT_TYPE) );
-          possibleColumns.push(new Filter( new ParticipantColumn("Mail To Name", "mailToName", "contactInformation", null, true), Filter.TEXT_TYPE) );
-          possibleColumns.push(new Filter( new ParticipantColumn("Valid", "valid", "contactInformation", null, true), Filter.BOOLEAN_TYPE) );
+          possibleColumns.push(new Filter( new ParticipantColumn("Street 1", "street1", "address", null, true), Filter.TEXT_TYPE) );
+          possibleColumns.push(new Filter( new ParticipantColumn("Street 2", "street2", "address", null, true), Filter.TEXT_TYPE) );
+          possibleColumns.push(new Filter( new ParticipantColumn("City", "city", "address", null, true), Filter.TEXT_TYPE) );
+          possibleColumns.push(new Filter( new ParticipantColumn("State", "state", "address", null, true), Filter.TEXT_TYPE) );
+          possibleColumns.push(new Filter( new ParticipantColumn("Zip", "zip", "address", null, true), Filter.TEXT_TYPE) );
+          possibleColumns.push(new Filter( new ParticipantColumn("Country", "country", "address", null, true), Filter.TEXT_TYPE) );
+          possibleColumns.push(new Filter( new ParticipantColumn("Phone", "phone", "address", null, true), Filter.TEXT_TYPE) );
+          possibleColumns.push(new Filter( new ParticipantColumn("Mail To Name", "mailToName", "address", null, true), Filter.TEXT_TYPE) );
+          possibleColumns.push(new Filter( new ParticipantColumn("Valid", "valid", "address", null, true), Filter.BOOLEAN_TYPE) );
 
-          this.sourceColumns["contactInformation"] = possibleColumns;
-          this.selectedColumns[ "contactInformation" ] = [];
+          this.sourceColumns["address"] = possibleColumns;
+          this.selectedColumns[ "address" ] = [];
           possibleColumns.forEach( filter => {
             let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
             this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
