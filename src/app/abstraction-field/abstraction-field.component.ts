@@ -259,7 +259,7 @@ export class AbstractionFieldComponent implements OnInit {
           ddpParticipantId: this.participant.participant.ddpParticipantId
         };
       }
-      // value of field changed
+      // value of field changed, used for table
       else if (fieldName === "value") {
         patch = {
           id: field.fieldValue.primaryKeyId,

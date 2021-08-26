@@ -23,7 +23,7 @@
           <md-select *ngIf="field.type2 === options"
                      [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently(field.value, i)}"
                      [(ngModel)]="row[field.value]" [disabled]="disabled"
-                     (change)="multiTypeValueChanged($event, row, field.value, field, i)">
+                     (change)="multiTypeValueChanged($event, row, field.value, field, i); ">
             <md-option *ngFor="let drug of drugs" [value]="drug">
               {{drug}}
             </md-option>
@@ -126,12 +126,12 @@
           <md-option value="other"> Other</md-option>
         </md-select>
 
-        <md-input-container *ngIf="_other[field.value] != null && (field.type === options || field.type2 === options || field.type === multiOptions || field.type2 === multiOptions)"
-                            [ngClass]="{'Width--100': true, 'Input': true, 'Color--Field--Patched': isPatchedCurrently(other + '_' + field.value, i)}">
+        <md-input-container *ngIf="_other[i][field.value] != null && (field.type === options || field.type2 === options || field.type === multiOptions || field.type2 === multiOptions)"
+                            [ngClass]="{'Width--100': true, 'Input': true, 'Color--Field--Patched': isPatchedCurrently(otherString + '_' + field.value, i)}">
           <input mdInput maxlength="200" [disabled]="disabled" autocomplete="off"
-                 [(ngModel)]="_other[field.value]" placeholder="{{field.value}} - Other"
-                 (change)="multiTypeValueChanged($event, row, other, field, i)"
-                 (blur)="currentField(null, i)" (focus)="currentField(other + '_' + field.value, i)">
+                 [(ngModel)]="_other[i][field.value]" placeholder="{{field.value}} - Other"
+                 (change)="multiTypeValueChanged($event, row, otherString, field, i)"
+                 (blur)="currentField(null, i)" (focus)="currentField(otherString + '_' + field.value, i)">
         </md-input-container>
 
         <md-checkbox *ngIf="field.type === 'checkbox'" disableRipple color="primary"
@@ -149,7 +149,6 @@
   </button>
   <span><b>  Add another {{fieldName}}</b></span>
 </table>
-
 
 <app-modal>
   <div class="app-modal-header">

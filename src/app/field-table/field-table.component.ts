@@ -2,37 +2,38 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {ModalComponent} from "../modal/modal.component";
 import {Value} from "../utils/value.model";
 
-@Component({
+@Component( {
   selector: 'app-field-table',
   templateUrl: './field-table.component.html',
-  styleUrls: ['./field-table.component.css']
-})
+  styleUrls: [ './field-table.component.css' ]
+} )
 export class FieldTableComponent implements OnInit, OnChanges {
 
-@ViewChild( ModalComponent )
-public universalModal: ModalComponent;
+  @ViewChild( ModalComponent )
+  public universalModal: ModalComponent;
 
-@Input() possibleValues: Value[];
-@Input() jsonArray: any;
-@Input() disabled: boolean = false;
-@Input() fieldName: string;
-@Input() drugs: string[];
-@Input() cancers: string[];
-@Input() finished: boolean;
-@Output() changes = new EventEmitter();
+  @Input() possibleValues: Value[];
+  @Input() jsonArray: any;
+  @Input() disabled: boolean = false;
+  @Input() fieldName: string;
+  @Input() drugs: string[];
+  @Input() cancers: string[];
+  @Input() finished: boolean;
+  @Output() changes = new EventEmitter();
 
   multiTypes = [];
   nope: boolean = false;
 
   multiOptions: string = "multi_options";
   options: string = "options";
-  other: string = "other";
+  otherString: string = "other";
 
   showDelete: boolean = false;
   currentPatchField: string;
-  _other: { [ k: string ]: string } = {};
+  _other: any[] = [];
 
   constructor() {
+    this.setMultiTypes();
   }
 
   ngOnInit() {
@@ -40,7 +41,7 @@ public universalModal: ModalComponent;
   }
 
   ngOnChanges( changes: SimpleChanges ) {
-    this.setMultiTypes();
+//    this.setMultiTypes();
   }
 
   setMultiTypes() {
@@ -62,6 +63,7 @@ public universalModal: ModalComponent;
     else {
       this.nope = true;
     }
+    this.setOthers();
   }
 
   valuesChanged( change: any, fieldName: string, index: number ) {
@@ -133,53 +135,67 @@ public universalModal: ModalComponent;
   }
 
   isPatchedCurrently( field: string, row: number ): boolean {
-    if (this.currentPatchField === field) {
+    if (this.currentPatchField === field + row) {
       return true;
     }
     return false;
   }
 
-  multiTypeValueChanged( value: any, multiType: {}, displayName: string, val: Value, i: number ) {
+  multiTypeValueChanged( event: any, multiType: {}, displayName: string, field: Value, i: number ) {
     let v;
-    if (typeof value === "string") {
-      v = value;
+    if (typeof event === "string") {
+      v = event;
     }
     else {
-      if (value.srcElement != null && typeof value.srcElement.value === "string") {
-        v = value.srcElement.value;
+      if (event.srcElement != null && typeof event.srcElement.value === "string") {
+        v = event.srcElement.value;
       }
-      else if (value.value != null) {
-        v = value.value;
+      else if (event.value != null) {
+        v = event.value;
       }
-      else if (value.checked != null) {
-        v = value.checked;
+      else if (event.checked != null) {
+        v = event.checked;
       }
-      else if (value.source.value != null && value.source.selected) {
-        v = value.source.value;
+      else if (event.source.value != null && event.source.selected) {
+        v = event.source.value;
       }
     }
     multiType[ displayName ] = v;
-    this.currentPatchField = displayName;
+    this.currentPatchField = displayName + i;
 
-    if (displayName === this.other) {
-      multiType[ this.other ] = this._other;
-      this.currentPatchField = this.other + "_" + displayName;
+    if (displayName === this.otherString) {
+      this._other[ i ][ field.value ] = v;
+      multiType[ this.otherString ] = this._other[ i ];
+      this.currentPatchField = this.otherString + "_" + displayName + i;
     }
-    else if (val.type === this.multiOptions || val.type2 === this.multiOptions || val.type === this.options || val.type2 === this.options) {
-      if (multiType[ displayName ] === this.other) {
-        this._other[ val.value ] = "";
+    else if (field.type === this.multiOptions || field.type2 === this.multiOptions || field.type === this.options || field.type2 === this.options) {
+      if (multiType[ displayName ] === this.otherString) {
+        this._other[ i ][ displayName ] = v;
       }
       else {
-        this._other[ val.value ] = null;
+        this._other[ i ][ displayName ] = null;
       }
-      multiType[ this.other ] = this._other;
+      multiType[ this.otherString ] = this._other[ i ];
     }
-    this.valuesChanged(multiType, null, i);
+    this.valuesChanged( multiType, null, i );
   }
 
-  currentField( field: string, row: number) {
-    if (field != null || ( field == null)) {
-      this.currentPatchField = field;
+  currentField( field: string, row: number ) {
+    if (field != null || ( field == null )) {
+      this.currentPatchField = field + row;
+    }
+  }
+
+  private setOthers() {
+    for (let i = 0; i < this.multiTypes.length; i += 1) {
+      this._other[ i ] = {};
+      this.possibleValues.forEach( value => {
+        let val = null;
+        if (this.multiTypes[ i ][ this.otherString ] !== undefined) {
+          val = this.multiTypes[ i ][ this.otherString ][ value.value ];
+        }
+        this._other[ i ][ value.value ] = val;
+      } );
     }
   }
 }
