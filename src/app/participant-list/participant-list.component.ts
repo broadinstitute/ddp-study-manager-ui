@@ -29,6 +29,7 @@ import {Sample} from "./models/sample.model";
 import {Participant} from "./participant-list.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
 import { ParticipantData } from "./models/participant-data.model";
+import { connectableObservableDescriptor } from "rxjs/observable/ConnectableObservable";
 
 @Component( {
   selector: "app-participant-list",
@@ -109,10 +110,12 @@ export class ParticipantListComponent implements OnInit {
   showGroupFields: boolean = false;
   hideSamplesTab: boolean = false;
   showContactInformation: boolean = false;
+  showComputedObject: boolean = false;
   participantsSize: number = 0;
   jsonPatch: any;
   viewFilter: any;
-  
+
+
   constructor( private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
                private router: Router, private auth: Auth, private route: ActivatedRoute, private util: Utils ) {
     if (!auth.authenticated()) {
@@ -546,27 +549,10 @@ export class ParticipantListComponent implements OnInit {
           this.orderColumns();
         }
         if (jsonData.hasAddressTab) {
-          this.showContactInformation = true;
-
-          this.dataSources.set("address", "Contact Information");
-          let possibleColumns: Array<Filter> = [];
-          possibleColumns.push(new Filter( new ParticipantColumn("Street 1", "street1", "address", null, true), Filter.TEXT_TYPE) );
-          possibleColumns.push(new Filter( new ParticipantColumn("Street 2", "street2", "address", null, true), Filter.TEXT_TYPE) );
-          possibleColumns.push(new Filter( new ParticipantColumn("City", "city", "address", null, true), Filter.TEXT_TYPE) );
-          possibleColumns.push(new Filter( new ParticipantColumn("State", "state", "address", null, true), Filter.TEXT_TYPE) );
-          possibleColumns.push(new Filter( new ParticipantColumn("Zip", "zip", "address", null, true), Filter.TEXT_TYPE) );
-          possibleColumns.push(new Filter( new ParticipantColumn("Country", "country", "address", null, true), Filter.TEXT_TYPE) );
-          possibleColumns.push(new Filter( new ParticipantColumn("Phone", "phone", "address", null, true), Filter.TEXT_TYPE) );
-          possibleColumns.push(new Filter( new ParticipantColumn("Mail To Name", "mailToName", "address", null, true), Filter.TEXT_TYPE) );
-          possibleColumns.push(new Filter( new ParticipantColumn("Valid", "valid", "address", null, true), Filter.BOOLEAN_TYPE) );
-
-          this.sourceColumns["address"] = possibleColumns;
-          this.selectedColumns[ "address" ] = [];
-          possibleColumns.forEach( filter => {
-            let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
-            this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
-          } );
-          this.orderColumns();
+          this.addContactInformationColumns();
+        }
+        if (jsonData.hasComputedObject) {
+          this.addAutomatedScoringColumns();
         }
         if (jsonData.hasProxyData != null) {
           this.dataSources.set( "proxy", "Proxy" );
@@ -623,9 +609,8 @@ export class ParticipantListComponent implements OnInit {
         }
         this.orderColumns();
         this.getData();
+        },
         // this.renewSelectedColumns(); commented out becasue if we have defaultColumns for all the studies we won't need it anymore
-      },
-    
       err => {
         if (err._body === Auth.AUTHENTICATION_ERROR) {
           this.auth.logout();
@@ -736,7 +721,7 @@ export class ParticipantListComponent implements OnInit {
               this.originalParticipantList = this.participantList;
               this.participantsSize = jsonData['totalCount'];
               let date = new Date();
-              this.loadedTimeStamp = Utils.getDateFormatted( date, Utils.DATE_STRING_IN_EVENT_CVS );
+              this.loadedTimeStamp = Utils.getDateFormatted( date, Utils.DATE_STRING_IN_EVENT_CVS);
             }
             this.loadingParticipants = null;
             this.dataSources.forEach( ( value: string, key: string ) => {
@@ -1766,6 +1751,30 @@ export class ParticipantListComponent implements OnInit {
     }
   }
 
+  addContactInformationColumns(): void {
+    this.showContactInformation = true;
+
+    this.dataSources.set("address", "Contact Information");
+    let possibleColumns: Array<Filter> = [];
+    possibleColumns.push(new Filter( new ParticipantColumn("Street 1", "street1", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("Street 2", "street2", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("City", "city", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("State", "state", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("Zip", "zip", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("Country", "country", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("Phone", "phone", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("Mail To Name", "mailToName", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("Valid", "valid", "address", null, true), Filter.BOOLEAN_TYPE) );
+
+    this.sourceColumns["address"] = possibleColumns;
+    this.selectedColumns[ "address" ] = [];
+    possibleColumns.forEach( filter => {
+      let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
+      this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
+    } );
+    this.orderColumns();
+  }
+
   getQuestionAnswerByName( questionsAnswers: Array<QuestionAnswer>, name: string ) {
     return questionsAnswers.find( x => x.stableId === name );
   }
@@ -2124,5 +2133,21 @@ export class ParticipantListComponent implements OnInit {
       }
     }
     return false;
+  }
+
+  addAutomatedScoringColumns(): void {
+    this.showComputedObject = true;
+
+    this.dataSources.set("computed", "Morning-Evening Questionnaire Scoring");
+    let possibleColumns: Array<Filter> = [];
+    possibleColumns.push(new Filter( new ParticipantColumn("MEQ Score", "meqScore", "computed", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("MEQ Chronotype", "meqChronotype", "computed", null, true), Filter.TEXT_TYPE) );
+    this.sourceColumns["computed"] = possibleColumns;
+    this.selectedColumns[ "computed" ] = [];
+    possibleColumns.forEach( filter => {
+      let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
+      this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
+     });
+     this.orderColumns(); 
   }
 }

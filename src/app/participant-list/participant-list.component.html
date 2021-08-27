@@ -7,6 +7,7 @@
                         [showGroupFields]="showGroupFields"
                         [hideSamplesTab]="hideSamplesTab"
                         [showContactInformation]="showContactInformation"
+                        [showComputedObject]="showComputedObject"
                         (leaveParticipant)="updateParticipant($event)"></app-participant-page>
 
 </ng-container>
@@ -304,6 +305,18 @@
                         </ng-container>
                         <ng-container *ngIf="col.participantColumn.name === 'guid'">
                           {{formatInvitation(pt.data.address[col.participantColumn.name]) }}
+                        </ng-container>
+                      </p>
+                    </ul>
+                  </ng-container>
+                </ng-container>
+
+                <ng-container *ngIf="col.participantColumn.esData && pt.data.computed != null">
+                  <ng-container *ngIf="col.participantColumn.tableAlias === 'computed'">
+                    <ul class="NO-PADDING-START">
+                        <p class="BIT-OF-MARGIN">
+                        <ng-container>
+                          {{ pt.data.computed[col.participantColumn.name] }}
                         </ng-container>
                       </p>
                     </ul>

@@ -683,6 +683,21 @@ participant.data.dsm['diagnosisYear'] != null">
               </legend>
           </tab>
 
+          <tab *ngIf="showComputedObject" heading="Morning Evening Questionnaire Scores">
+            <legend class="Group--Title">
+              <div class="Float--left Width--100">
+                <table class="Width--100 Table--box">
+                  <tr *ngIf="participant && participant.data && participant.data.computed && participant.data.computed.meqScore">
+                    <td class="TD--Padding-Left Width--50"> MEQ Score: {{ participant.data.computed.meqScore }} </td>
+                  </tr>
+                  <tr *ngIf="participant && participant.data && participant.data.computed && participant.data.computed.meqChronotype">
+                    <td class="TD--Padding-Left Width--50"> MEQ Chronotype: {{ participant.data.computed.meqChronotype }} </td>
+                  </tr>
+                  </table>
+                </div>
+              </legend>
+          </tab>
+
             <tab heading="Medical Records"
                  *ngIf="participant.medicalRecords != null && participant.medicalRecords.length > 0"
                  [active]="tabActive('Medical Records')" (select)="onSelect($event, 'Medical Records')">
