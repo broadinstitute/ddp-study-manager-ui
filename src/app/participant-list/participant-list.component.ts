@@ -152,7 +152,7 @@ export class ParticipantListComponent implements OnInit {
        this.applyFilter(this.viewFilter, from, to);
     } else {
       if (this.jsonPatch) {
-        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.jsonPatch, this.parent, null, from, to ).subscribe( 
+        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.jsonPatch, this.parent, null, from, to ).subscribe(
         data => {
           this.setFilterDataOnSuccess(data);
         }, err => {
@@ -1037,6 +1037,10 @@ export class ParticipantListComponent implements OnInit {
         tabAnchor = "Onc History";
         this.selectedMR = "";
         this.selectedOncOrTissue = "";
+      }
+      if (participant.data.activities !== null){
+        let p = participant.participantData.find( p => p.data["COLLABORATOR_PARTICIPANT_ID"].slice(-2)=== "_3")
+        tabAnchor = p.dataId;
       }
       if (this.filtered && participant.participant != null && participant.participant.ddpParticipantId != null) {
         this.loadingParticipants = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
