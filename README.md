@@ -13,4 +13,4 @@ gcloud --project=${PROJECT_ID} secrets versions access latest --secret="study-ma
 ng serve --proxy-config=proxy.conf.json
 ```
 
-Then point your browser to http://localhost:4200 and you're good to go, assuming that you've also got the backend up and running locally!
+Then point your browser to http://localhost:4200 and you're good to go, assuming that you've also got the [backend up and running](https://github.com/broadinstitute/ddp-study-manager) locally!
