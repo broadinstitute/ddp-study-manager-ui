@@ -1367,12 +1367,16 @@ export class ParticipantListComponent implements OnInit {
       this.participantList.sort( ( a, b ) => ( a.data == null || b.data == null ) ? 1 : this.sort( a.data, b.data, order, this.sortField, colType ) );
     } else if (this.sortParent === "p") {
       this.participantList.sort( ( a, b ) => {
-        if (a.participant == null || a.participant[ this.sortField ] == null) {
+        if (a.participant == null || (a.participant[ this.sortField ] == null && a.participant['additionalValues'] == null)) {
           return 1;
-        } else if (b.participant == null || b.participant[ this.sortField ] == null) {
+        } else if (b.participant == null || (b.participant[ this.sortField ] == null && b.participant['additionalValues'] == null)) {
           return -1;
         } else {
-          return this.sort( a.participant[ this.sortField ], b.participant[ this.sortField ], order, undefined, colType );
+          if (a.participant['additionalValues'][this.sortField] != null || b.participant['additionalValues'][this.sortField] != null) {
+            return this.sort( a.participant['additionalValues'][ this.sortField ], b.participant['additionalValues'][ this.sortField ], order, undefined, colType )
+          } else {
+            return this.sort( a.participant[ this.sortField ], b.participant[ this.sortField ], order, undefined, colType );
+          }
         }
       } );
     } else if (this.sortParent === "m") {
