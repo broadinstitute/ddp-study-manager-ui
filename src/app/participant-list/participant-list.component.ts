@@ -1591,6 +1591,8 @@ export class ParticipantListComponent implements OnInit {
         paths.push(["abstractionSummary", source]);
       }  else if (source === "invitations") {
         paths.push(["invitations", source]);
+      }  else if (source.includes("GROUP")) {
+        paths.push(["participantData", source]);
       } else {
         paths.push([source, source]);
       }

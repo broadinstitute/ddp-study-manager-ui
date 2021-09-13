@@ -377,6 +377,8 @@ export class Utils {
             let value = o[ col.participantColumn.name ];
             if (col.participantColumn.object != null && o[ col.participantColumn.object ] != null) {
               value = o[ col.participantColumn.object ][ col.participantColumn.name ];
+            } else if (o['data'] && o['data'][col.participantColumn.name]) {
+              value = o['data'][col.participantColumn.name];
             }
             if (col.type === Filter.DATE_TYPE) {
               if (value === 0) {
