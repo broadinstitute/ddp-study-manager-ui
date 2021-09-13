@@ -29,7 +29,6 @@ import {Sample} from "./models/sample.model";
 import {Participant} from "./participant-list.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
 import { ParticipantData } from "./models/participant-data.model";
-import { connectableObservableDescriptor } from "rxjs/observable/ConnectableObservable";
 
 @Component( {
   selector: "app-participant-list",
