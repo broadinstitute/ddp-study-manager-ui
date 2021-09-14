@@ -391,7 +391,7 @@ export class Utils {
               value = o['data'][col.participantColumn.name];
             }
             if (col.type === Filter.DATE_TYPE) {
-              if (value === 0) {
+              if (!value) {
                 value = "";
               } else {
                 value = this.getDateFormatted( new Date( value ), Utils.DATE_STRING_IN_CVS );
