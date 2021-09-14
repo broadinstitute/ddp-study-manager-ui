@@ -1039,7 +1039,10 @@ export class ParticipantListComponent implements OnInit {
         this.selectedOncOrTissue = "";
       }
       if (participant.data.activities !== null){
-        let p = participant.participantData.find( p => p.data["COLLABORATOR_PARTICIPANT_ID"].slice(-2)=== "_3")
+        let p = participant.participantData.find( p => p.data["MEMBER_TYPE"] === "SELF")
+        if (!p) {
+          p = participant.participantData.find( p => p.data[ "COLLABORATOR_PARTICIPANT_ID" ].slice( -2 ) === "_3" )
+        }
         tabAnchor = p.dataId;
       }
       if (this.filtered && participant.participant != null && participant.participant.ddpParticipantId != null) {
