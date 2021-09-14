@@ -164,10 +164,6 @@ export class MailingListComponent implements OnInit {
     }
   }
 
-  getJsonValue( info: string, key: string ): string {
-    return info[ key ];
-  }
-
   sortByJson( key: string ) {
     if (this.sortKey !== key) {
       this.sortKey = "";
