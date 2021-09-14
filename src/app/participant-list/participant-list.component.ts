@@ -152,7 +152,7 @@ export class ParticipantListComponent implements OnInit {
        this.applyFilter(this.viewFilter, from, to);
     } else {
       if (this.jsonPatch) {
-        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.jsonPatch, this.parent, null, from, to ).subscribe( 
+        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.jsonPatch, this.parent, null, from, to ).subscribe(
         data => {
           this.setFilterDataOnSuccess(data);
         }, err => {
@@ -958,6 +958,7 @@ export class ParticipantListComponent implements OnInit {
     this.filterQuery = null;
     this.deselectQuickFilters();
     this.clearManualFilters();
+    this.selectedFilterName = "";
     this.getData();
   }
 
@@ -1037,6 +1038,13 @@ export class ParticipantListComponent implements OnInit {
         tabAnchor = "Onc History";
         this.selectedMR = "";
         this.selectedOncOrTissue = "";
+      }
+      if (participant.data.activities !== null){
+        let p = participant.participantData.find( p => p.data["MEMBER_TYPE"] === "SELF")
+        if (!p) {
+          p = participant.participantData.find( p => p.data[ "COLLABORATOR_PARTICIPANT_ID" ].slice( -2 ) === "_3" )
+        }
+        tabAnchor = p.dataId;
       }
       if (this.filtered && participant.participant != null && participant.participant.ddpParticipantId != null) {
         this.loadingParticipants = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
@@ -1367,12 +1375,16 @@ export class ParticipantListComponent implements OnInit {
       this.participantList.sort( ( a, b ) => ( a.data == null || b.data == null ) ? 1 : this.sort( a.data, b.data, order, this.sortField, colType ) );
     } else if (this.sortParent === "p") {
       this.participantList.sort( ( a, b ) => {
-        if (a.participant == null || a.participant[ this.sortField ] == null) {
+        if (a.participant == null || (a.participant[ this.sortField ] == null && a.participant['additionalValues'] == null)) {
           return 1;
-        } else if (b.participant == null || b.participant[ this.sortField ] == null) {
+        } else if (b.participant == null || (b.participant[ this.sortField ] == null && b.participant['additionalValues'] == null)) {
           return -1;
         } else {
-          return this.sort( a.participant[ this.sortField ], b.participant[ this.sortField ], order, undefined, colType );
+          if (a.participant['additionalValues'][this.sortField] != null || b.participant['additionalValues'][this.sortField] != null) {
+            return this.sort( a.participant['additionalValues'][ this.sortField ], b.participant['additionalValues'][ this.sortField ], order, undefined, colType )
+          } else {
+            return this.sort( a.participant[ this.sortField ], b.participant[ this.sortField ], order, undefined, colType );
+          }
         }
       } );
     } else if (this.sortParent === "m") {
