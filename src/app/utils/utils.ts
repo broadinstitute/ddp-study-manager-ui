@@ -254,12 +254,22 @@ export class Utils {
       for (let path of paths) {
         let output = this.makeCSVForObjectArray( d, path, columns, 0 );
         let temp = [];
-
-        for (let o of output) {
-          for (let i of input) {
-            temp.push( i + o );
-          }
+        
+        for (let i = 0; i < output.length; i++) {
+          if (input.length === output.length) {
+            temp.push(input[i] + output[i]);
+          } else {
+            for (let j = 0; j < input.length; j++) {
+              temp.push(input[j] + output[i]);              
+            }
+          }         
         }
+
+        // for (let o of output) {
+        //   for (let i of input) {
+        //     temp.push( i + o );
+        //   }
+        // }
         if (input.length == 0) {
           temp = output;
         }
