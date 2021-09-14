@@ -958,6 +958,7 @@ export class ParticipantListComponent implements OnInit {
     this.filterQuery = null;
     this.deselectQuickFilters();
     this.clearManualFilters();
+    this.selectedFilterName = "";
     this.getData();
   }
 
