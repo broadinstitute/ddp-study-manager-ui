@@ -152,7 +152,7 @@ export class ParticipantListComponent implements OnInit {
        this.applyFilter(this.viewFilter, from, to);
     } else {
       if (this.jsonPatch) {
-        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.jsonPatch, this.parent, null, from, to ).subscribe( 
+        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.jsonPatch, this.parent, null, from, to ).subscribe(
         data => {
           this.setFilterDataOnSuccess(data);
         }, err => {

@@ -43,6 +43,7 @@ import {ScanComponent} from "./scan/scan.component";
 import {AuthGuard} from "./auth0/auth.guard";
 import {Auth} from "./services/auth.service";
 import {ScanPairComponent} from "./scan-pair/scan-pair.component";
+import {LoggingService} from "./services/logging.service";
 import {SessionService} from "./services/session.service";
 import {RoleService} from "./services/role.service";
 import {ModalComponent} from "./modal/modal.component";
@@ -52,6 +53,7 @@ import {ParticipantPageComponent} from "./participant-page/participant-page.comp
 import {ComponentService} from "./services/component.service";
 import {PermalinkComponent} from "./permalink/permalink.component";
 import {MedicalRecordLogSortPipe} from "./pipe/medical-record-log-sort.pipe";
+import {StackdriverErrorReporterService} from "./services/stackdriver-error-reporter.service";
 import {Language} from "./utils/language";
 import {Utils} from "./utils/utils";
 import {DashboardComponent} from "./dashboard/dashboard.component";
@@ -236,7 +238,10 @@ import { AddFamilyMemberComponent } from './popups/add-family-member/add-family-
     SessionService,
     Utils,
     Statics,
-    Language
+    Language,
+    StackdriverErrorReporterService,
+    LoggingService,
+//    { provide: ErrorHandler, useClass: StackdriverErrorReporterService }
   ],
   bootstrap: [ AppComponent ]
 } )
