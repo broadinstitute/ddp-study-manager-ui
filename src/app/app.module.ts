@@ -240,8 +240,7 @@ import { AddFamilyMemberComponent } from './popups/add-family-member/add-family-
     Statics,
     Language,
     StackdriverErrorReporterService,
-    LoggingService,
-//    { provide: ErrorHandler, useClass: StackdriverErrorReporterService }
+    LoggingService
   ],
   bootstrap: [ AppComponent ]
 } )
