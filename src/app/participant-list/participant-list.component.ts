@@ -1039,13 +1039,13 @@ export class ParticipantListComponent implements OnInit {
         this.selectedMR = "";
         this.selectedOncOrTissue = "";
       }
-      if (participant.data.activities !== null) {
-        let p = participant.participantData.find( p => p.data[ "MEMBER_TYPE" ] === "SELF" )
-        if (!p) {
-          p = participant.participantData.find( p => p.data[ "COLLABORATOR_PARTICIPANT_ID" ].slice( -2 ) === "_3" )
+      if (participant.participantData) {
+        let proband = participant.participantData.find( p => p.data[ "MEMBER_TYPE" ] === "SELF" )
+        if (!proband) {
+          proband = participant.participantData.find( p => p.data[ "COLLABORATOR_PARTICIPANT_ID" ] && p.data[ "COLLABORATOR_PARTICIPANT_ID" ].slice( -2 ) === "_3" )
         }
-        if (p && p.dataId) {
-          tabAnchor = p.dataId;
+        if (proband && proband.dataId) {
+          tabAnchor = proband.dataId;
         }
       }
       if (this.filtered && participant.participant != null && participant.participant.ddpParticipantId != null) {
