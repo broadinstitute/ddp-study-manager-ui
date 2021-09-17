@@ -959,7 +959,25 @@ export class ParticipantListComponent implements OnInit {
     this.deselectQuickFilters();
     this.clearManualFilters();
     this.selectedFilterName = "";
+    this.setDefaultColumns();
     this.getData();
+  }
+
+  private setDefaultColumns() {
+    let filteredColumns = {};
+    for (var [key, value] of Object.entries(this.selectedColumns)) {
+      let val = value as Filter[];
+      let newVal = [];
+      val.forEach(el => {
+        this.defaultColumns.forEach(col => {
+          if (el['participantColumn']['name'] === col['participantColumn']['name']) {
+            newVal.push(el);
+          }
+        });
+      });
+      filteredColumns[key] = newVal;
+    }
+    Object.assign(this.selectedColumns, filteredColumns);
   }
 
   public parseMillisToDateString( dateInMillis: number ) : string {
