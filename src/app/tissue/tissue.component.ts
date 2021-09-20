@@ -161,7 +161,7 @@ export class TissueComponent implements OnInit {
                   if (nameValue.name && nameValue.name.indexOf( '.' ) != -1) {
                     nameValue.name = nameValue.name.substr( nameValue.name.indexOf( "." ) + 1);
                   }
-                  this.oncHistoryDetail[ nameValue.name.substr( nameValue.name.indexOf( "." ) + 1 ) ] = nameValue.value;
+                  this.oncHistoryDetail[ nameValue.name ] = nameValue.value;
                 });
               }
             }
