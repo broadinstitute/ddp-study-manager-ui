@@ -448,6 +448,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
           let result = Result.parse( data );
           if (result.code === 200 && result.body != null) {
             let jsonData: any | any[] = JSON.parse( result.body );
+            console.log(jsonData);
             if (jsonData instanceof Array) {
               jsonData.forEach( ( val ) => {
                 let nameValue = NameValue.parse( val );

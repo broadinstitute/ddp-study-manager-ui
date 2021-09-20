@@ -145,11 +145,13 @@ export class OncHistoryDetailComponent implements OnInit {
           if (jsonData instanceof Array) {
             jsonData.forEach( ( val ) => {
               let nameValue = NameValue.parse( val );
+              console.log(jsonData);
               if (nameValue.name === "createdOncHistory") {
                 this.participant.participant[ "createdOncHistory" ] = nameValue.value;
               }
               else {
                 this.oncHistory[ index ][ nameValue.name ] = nameValue.value;
+
               }
             } );
           }
@@ -164,11 +166,13 @@ export class OncHistoryDetailComponent implements OnInit {
             }
             //set other workflow fieldValue
             if (jsonData.NameValue != null) {
+              console.log(jsonData);
               let innerJson: any | any[] = JSON.parse( jsonData.NameValue );
               //should be only needed for setting oncHistoryDetails on pt level to created
               if (innerJson instanceof Array) {
                 innerJson.forEach( ( val ) => {
                   let nameValue = NameValue.parse( val );
+                  console.log(innerJson);
                   if (nameValue.name === "createdOncHistory") {
                     this.participant.participant[ nameValue.name ] = nameValue.value;
                   }
