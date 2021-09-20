@@ -143,7 +143,6 @@ export class TissueComponent implements OnInit {
             this.dup = false;
             if ( jsonData instanceof Array ) {
               jsonData.forEach((val) => {
-                console.log(jsonData);
                 let nameValue = NameValue.parse(val);
                 this.oncHistoryDetail[nameValue.name] = nameValue.value;
               });
@@ -158,9 +157,11 @@ export class TissueComponent implements OnInit {
               let jsonData: any | any[] = JSON.parse(result.body);
               if ( jsonData instanceof Array ) {
                 jsonData.forEach((val) => {
-                  console.log(jsonData);
                   let nameValue = NameValue.parse(val);
-                  this.oncHistoryDetail[nameValue.name] = nameValue.value;
+                  if (nameValue.name && nameValue.name.indexOf( '.' ) != -1) {
+                    nameValue.name = nameValue.name.substr( nameValue.name.indexOf( "." ) + 1);
+                  }
+                  this.oncHistoryDetail[ nameValue.name.substr( nameValue.name.indexOf( "." ) + 1 ) ] = nameValue.value;
                 });
               }
             }
