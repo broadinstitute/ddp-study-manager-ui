@@ -673,10 +673,10 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                     <ul class="NO-PADDING-START">
                       <li class="LIST-SEPARATOR">
                         <ng-container *ngFor="let personData of pt.participantData; let i = index">
-                          <div *ngIf="this.getPersonField(personData, col, pt) as text">
+                          <div *ngIf="this.getPersonField(personData, col, pt) !== null && this.getPersonField(personData, col, pt) !== undefined">
                               <ng-container *ngIf="getPersonType(personData)">
                                 {{getPersonType(personData)}}:
-                              </ng-container>{{text}}
+                              </ng-container>{{getPersonField(personData, col, pt)}}
                             <hr *ngIf="i != pt.participantData.length - 1" style="border-color: lightgray">
                           </div>
                         </ng-container>
