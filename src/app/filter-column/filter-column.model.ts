@@ -22,6 +22,7 @@ export class Filter {
   public static RADIO_TYPE = "RADIO";
   public static TEXTAREA_TYPE = "TEXTAREA";
   public static ACTIVITY_STAFF_TYPE = "ACTIVITY_STAFF";
+  public static AGREEMENT = "AGREEMENT";
 
   //ES data
   public static REALM = new Filter( ParticipantColumn.REALM, Filter.TEXT_TYPE );
@@ -609,7 +610,7 @@ export class Filter {
         return null;
       }
     }
-    else if (filter.type === Filter.BOOLEAN_TYPE || filter.type === Filter.CHECKBOX_TYPE) {
+    else if (filter.type === Filter.BOOLEAN_TYPE || filter.type === Filter.CHECKBOX_TYPE || filter.type === Filter.AGREEMENT) {
       if (( filter.value1 !== null && filter.value1 == true )) {
         filterText = this.getFilterJson( parent,
           new NameValue( filter.participantColumn.name, "true" ),
