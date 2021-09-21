@@ -12,6 +12,7 @@ import {QuestionDefinition} from "../activity-data/models/question-definition.mo
 import { FieldSettings } from "../field-settings/field-settings.model";
 import {Filter} from "../filter-column/filter-column.model";
 import {AbstractionField} from "../medical-record-abstraction/medical-record-abstraction-field.model";
+import { ParticipantData } from "../participant-list/models/participant-data.model";
 import {Participant} from "../participant-list/participant-list.model";
 import {NameValue} from "./name-value.model";
 
@@ -293,7 +294,8 @@ export class Utils {
         objects = [ data[ paths[ index ] ] ];
       }
       else {
-        objects = data[ paths[ index ] ];
+        let participantDataIndex: number = Utils.findParticipantDataIndex(paths, columns, data, index);
+        objects = [ data[ paths[ index ] ] [participantDataIndex] ];
       }
       if (objects != null) {
         for (let o of objects) {
@@ -315,6 +317,20 @@ export class Utils {
       }
       return result;
     }
+  }
+
+  private static findParticipantDataIndex(paths: any[], columns: {}, data: Object, index: number) {
+    let fieldTypeIndex: number = paths[paths.length - 1];
+    let filterNameArray: string[] = columns[fieldTypeIndex].map(filter => filter.participantColumn.name);
+    let participantDataArray: ParticipantData[] = data[ paths[ index ] ];
+    var participantDataIndex: number = null;
+    for (let filter of filterNameArray) {
+      participantDataIndex = participantDataArray.findIndex(participantData => Object.keys(participantData.data).includes(filter));
+      if (participantDataIndex != null) {
+        break;
+      }
+    }
+    return participantDataIndex;
   }
 
   private static getObjectAdditionalValue( o: Object, fieldName: string, column: any ) {
