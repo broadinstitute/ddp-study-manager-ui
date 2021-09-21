@@ -954,6 +954,15 @@ export class ParticipantListComponent implements OnInit {
         this.selectedMR = "";
         this.selectedOncOrTissue = "";
       }
+      if (participant.participantData) {
+        let proband = participant.participantData.find( p => p.data[ "MEMBER_TYPE" ] === "SELF" )
+        if (!proband) {
+          proband = participant.participantData.find( p => p.data[ "COLLABORATOR_PARTICIPANT_ID" ] && p.data[ "COLLABORATOR_PARTICIPANT_ID" ].slice( -2 ) === "_3" )
+        }
+        if (proband && proband.dataId) {
+          tabAnchor = proband.dataId;
+        }
+      }
       if (this.filtered && participant.participant != null && participant.participant.ddpParticipantId != null) {
         this.loadingParticipants = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
         this.dsmService.getParticipantData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), participant.participant.ddpParticipantId, this.parent ).subscribe(

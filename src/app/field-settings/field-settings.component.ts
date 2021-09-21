@@ -136,7 +136,7 @@ export class FieldSettingsComponent implements OnInit {
           let type = this.possibleTypes.find( x => x.tableAlias === key );
           for (let setting of value) {
             let event = FieldSettings.parse( setting );
-            FieldSettings.addSettingWithType( this.fieldSettings, event, type );
+            FieldSettings.addSettingWithType( this.fieldSettings, event, type ? type : new FieldType("", ""));
           }
         }
         if (this.selectedType) {
@@ -206,7 +206,7 @@ export class FieldSettingsComponent implements OnInit {
               this.auth.logout();
               this.loading = false;
             }
-            this.additionalMessage = "Error - Saving field settings\nPlease contact your DSM developer";
+            this.additionalMessage = JSON.parse(err._body).body;
           }
         );
       }

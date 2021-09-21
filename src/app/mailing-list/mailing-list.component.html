@@ -30,16 +30,11 @@
       <th *ngIf="showColumn('lastName')" (click)="clearKeySort()">
         <mfDefaultSorter by="lastName">Last Name</mfDefaultSorter>
       </th>
-      <th (click)="clearKeySort()">
+      <th *ngIf="showColumn('email')" (click)="clearKeySort()">
         <mfDefaultSorter by="email">Email</mfDefaultSorter>
-      </th>
-      <ng-container *ngIf="showColumn('info')">
-<!--        <th (click)="sortByJson(key)" class="Sort-Header">-->
-<!--          Info-->
-<!--          <span *ngIf="sortDir === 'asc' && sortKey === key" class="glyphicon glyphicon-triangle-top"></span>-->
-<!--          <span *ngIf="sortDir === 'desc' && sortKey === key" class="glyphicon glyphicon-triangle-bottom"></span>-->
-<!--        </th>-->
-      </ng-container>
+      <th *ngIf="showColumn('info')" (click)="clearKeySort()">
+        <mfDefaultSorter by="info">Info</mfDefaultSorter>
+        </th>
       <th (click)="clearKeySort()">
         <mfDefaultSorter by="dateCreated">Date signed up</mfDefaultSorter>
       </th>
