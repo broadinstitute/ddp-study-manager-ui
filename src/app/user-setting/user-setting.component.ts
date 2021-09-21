@@ -126,7 +126,6 @@ export class UserSettingComponent implements OnInit {
     };
     let jsonString = JSON.stringify(json);
     this.saving = true;
-    console.log(filterName);
     this.dsmService.setDefaultFilter(jsonString, filterName, parent, localStorage.getItem(ComponentService.MENU_SELECTED_REALM)).subscribe(
       data => {
         this.additionalMessage = "";
@@ -165,7 +164,6 @@ export class UserSettingComponent implements OnInit {
             this.participantListFilterNames.push(val.filterName);
           }
         });
-        console.log(this.tissueListFilterNames);
       },
       err => {
         this.errorMessage = "Error getting a list of filters, Please contact your DSM Developer\n" + err;

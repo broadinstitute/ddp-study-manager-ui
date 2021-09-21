@@ -15,13 +15,18 @@
   </ng-container>
 </ng-container>
 <ng-container
-  *ngIf="dataFilter.type === 'BOOLEAN' || dataFilter.type === 'CHECKBOX' || (dataFilter.type === 'ADDITIONALVALUE' && dataFilter.additionalType === 'CHECKBOX')">
-  <md-checkbox color="primary" disableRipple
+  *ngIf="dataFilter.type === 'BOOLEAN' || dataFilter.type === 'AGREEMENT' || dataFilter.type === 'CHECKBOX' || (dataFilter.type === 'ADDITIONALVALUE' && dataFilter.additionalType === 'CHECKBOX')">
+  <div>
+    <b>{{dataFilter.participantColumn.display}}</b>
+  </div>
+  <ng-container>
+    <md-checkbox color="primary" disableRipple
                [checked]="dataFilter.value1" [(ngModel)]="dataFilter.value1" (change)="changeValue($event, dataFilter)"> Yes
-  </md-checkbox>
-  <md-checkbox color="primary" disableRipple
-               [checked]="dataFilter.value2" [(ngModel)]="dataFilter.value2" (change)="changeValue2($event, dataFilter)"> No
-  </md-checkbox>
+    </md-checkbox>
+    <md-checkbox color="primary" disableRipple
+                [checked]="dataFilter.value2" [(ngModel)]="dataFilter.value2" (change)="changeValue2($event, dataFilter)"> No
+    </md-checkbox>
+  </ng-container>
 </ng-container>
 <ng-container *ngIf="dataFilter.type === 'NUMBER' || (dataFilter.type === 'ADDITIONALVALUE' && dataFilter.additionalType === 'NUMBER')">
   <md-input-container>
