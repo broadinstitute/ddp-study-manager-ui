@@ -19,3 +19,9 @@
 .mat-icon-button {
   width: auto;
 }
+
+td {
+
+  white-space: nowrap;
+
+}
