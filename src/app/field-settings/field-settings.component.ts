@@ -159,7 +159,8 @@ export class FieldSettingsComponent implements OnInit {
           this.auth.logout();
         }
         this.loading = false;
-        this.errorMessage = "Error - Loading FieldSettings\nPlease contact your DSM developer";
+        let returnedMessage = JSON.parse(err._body);
+        this.errorMessage = returnedMessage['body'] ? returnedMessage['body'] : "Error - Loading FieldSettings\nPlease contact your DSM developer";
       }
     );
   }
