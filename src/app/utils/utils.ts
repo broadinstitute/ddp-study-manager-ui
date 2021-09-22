@@ -28,6 +28,8 @@ export class Utils {
   static DATE_STRING_IN_CVS: string = "MM/dd/yyyy";
   static DATE_STRING_IN_EVENT_CVS: string = "MMM dd, yyyy, hh:mm:ss a";
   static DATE_PARTIAL: string = "partial date";
+  static COMMA: string = ",";
+  static EMPTY_STRING_CSV: string = "\"\"";
 
   YES: string = "Yes";
   NO: string = "No";
@@ -251,6 +253,7 @@ export class Utils {
     let result = [];
     for (let d of data) {
       let input = [];
+      let dynamicFieldsResultArray: string[] = null;
       for (let path of paths) {
         let output = this.makeCSVForObjectArray( d, path, columns, 0 );
         let temp = [];
@@ -265,12 +268,30 @@ export class Utils {
           }         
         }
 
+        if (output.length > 1) {
+          var resultOutputSplitted = output[0].split(this.COMMA);
+          output.slice(1, output.length).forEach(outputArray => {
+            let tempOutputArray = outputArray.split(this.COMMA)
+            for (let j = 0; j < tempOutputArray.length; j++) {
+              if (resultOutputSplitted[j] === this.EMPTY_STRING_CSV) {
+                resultOutputSplitted[j] = tempOutputArray[j];
+              }
+            }
+          });
+          var tempSplitted: string[] = temp[0].split(this.COMMA);
+          var defaultFields: string[] = tempSplitted.slice(0, tempSplitted.length - resultOutputSplitted.length);
+          dynamicFieldsResultArray = [defaultFields.concat(resultOutputSplitted).join(this.COMMA)];
+        }
+
         // for (let o of output) {
         //   for (let i of input) {
         //     temp.push( i + o );
         //   }
         // }
-        if (input.length == 0) {
+        if (dynamicFieldsResultArray) {
+          temp = dynamicFieldsResultArray;
+        }
+        else if (input.length == 0) {
           temp = output;
         }
         input = temp;
