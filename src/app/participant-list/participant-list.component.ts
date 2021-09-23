@@ -547,17 +547,16 @@ export class ParticipantListComponent implements OnInit {
         if (jsonData.hasProxyData != null) {
           this.dataSources.set( "proxy", "Proxy" );
           let possibleColumns: Array<Filter> = [];
-          possibleColumns.push( new Filter( new ParticipantColumn( "First Name", "firstName", "proxy", "profile", true ), Filter.TEXT_TYPE ) );
-          possibleColumns.push( new Filter( new ParticipantColumn( "Last Name", "lastName", "proxy", "profile", true ), Filter.TEXT_TYPE ) );
-          possibleColumns.push( new Filter( new ParticipantColumn( "Email", "email", "proxy", "profile", true ), Filter.TEXT_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "First Name", "firstName", "proxy", null, true ), Filter.TEXT_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Last Name", "lastName", "proxy", null, true ), Filter.TEXT_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Email", "email", "proxy", null, true ), Filter.TEXT_TYPE ) );
 
           this.sourceColumns[ "proxy" ] = possibleColumns;
           this.selectedColumns[ "proxy" ] = [];
-          //TODO add when proxy is searchable
-          // possibleColumns.forEach( filter => {
-          //   let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
-          //   this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
-          // } );
+          possibleColumns.forEach( filter => {
+            let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
+            this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
+          } );
           this.orderColumns();
         }
         if (jsonData.hideESFields != null) {
@@ -1624,9 +1623,11 @@ export class ParticipantListComponent implements OnInit {
       } else if (source === "a") {
         paths.push(["abstractionActivities", source]);
         paths.push(["abstractionSummary", source]);
-      }  else if (source === "invitations") {
+      } else if (source === "invitations") {
         paths.push(["invitations", source]);
-      }  else if (source.includes("GROUP")) {
+      } else if (source === "proxy") {
+        paths.push(["proxy", source]);
+      } else if (source.includes("GROUP")) {
         paths.push(["participantData", source]);
       } else {
         paths.push([source, source]);
