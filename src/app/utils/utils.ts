@@ -253,8 +253,8 @@ export class Utils {
     let result = [];
     for (let d of data) {
       let input = [];
-      let dynamicFieldsResultArray: string[] = null;
       for (let path of paths) {
+        let nonDefaultFieldsResultArray: string[] = null;
         let output = this.makeCSVForObjectArray( d, path, columns, 0 );
         let temp = [];
         
@@ -278,9 +278,7 @@ export class Utils {
               }
             }
           });
-          var tempSplitted: string[] = temp[0].split(this.COMMA);
-          var defaultFields: string[] = tempSplitted.slice(0, tempSplitted.length - resultOutputSplitted.length);
-          dynamicFieldsResultArray = [defaultFields.concat(resultOutputSplitted).join(this.COMMA)];
+          nonDefaultFieldsResultArray = Utils.mergeDefaultColumnsWithNonDefaultColumns(temp, resultOutputSplitted);
         }
 
         // for (let o of output) {
@@ -288,8 +286,8 @@ export class Utils {
         //     temp.push( i + o );
         //   }
         // }
-        if (dynamicFieldsResultArray) {
-          temp = dynamicFieldsResultArray;
+        if (nonDefaultFieldsResultArray) {
+          temp = nonDefaultFieldsResultArray;
         }
         else if (input.length == 0) {
           temp = output;
@@ -302,6 +300,12 @@ export class Utils {
     return mainStr;
   }
 
+
+  private static mergeDefaultColumnsWithNonDefaultColumns(temp: any[], resultOutputSplitted: string[]) {
+    var tempSplitted: string[] = temp[0].split(this.COMMA);
+    var defaultFields: string[] = tempSplitted.slice(0, tempSplitted.length - resultOutputSplitted.length);
+    return [defaultFields.concat(resultOutputSplitted).join(this.COMMA)];
+  }
 
   public static makeCSVForObjectArray( data: Object, paths: any[], columns: {}, index: number ): string[] {
     let result: string[] = [];
