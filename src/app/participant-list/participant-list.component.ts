@@ -109,6 +109,8 @@ export class ParticipantListComponent implements OnInit {
   isAddFamilyMember: boolean = false;
   showGroupFields: boolean = false;
   hideSamplesTab: boolean = false;
+  jsonPatch: any;
+  viewFilter: any;
 
   constructor( private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
                private router: Router, private auth: Auth, private route: ActivatedRoute, private util: Utils ) {
@@ -883,9 +885,18 @@ export class ParticipantListComponent implements OnInit {
     this.clearManualFilters();
     this.selectedFilterName = "";
     this.getData();
+    this.setDefaultColumns();
   }
 
   private setDefaultColumns() {
+    let filteredColumns = this.extractDefaultColumns(this.selectedColumns);
+    Object.assign(this.selectedColumns, filteredColumns);
+    if (this.isDataOfViewFilterExists()) {
+      this.viewFilter.columns = this.extractDefaultColumns(this.viewFilter.columns);
+    }
+  }
+
+  private extractDefaultColumns(selectedColumns: {}): {} {
     let filteredColumns = {};
     for (var [key, value] of Object.entries(this.selectedColumns)) {
       let val = value as Filter[];
@@ -899,7 +910,7 @@ export class ParticipantListComponent implements OnInit {
       });
       filteredColumns[key] = newVal;
     }
-    Object.assign(this.selectedColumns, filteredColumns);
+    return filteredColumns;
   }
 
   public parseMillisToDateString( dateInMillis: number ) : string {
@@ -942,6 +953,13 @@ export class ParticipantListComponent implements OnInit {
     } else {
       this.selectedColumns[ parent ].push( column );
     }
+    if (this.isDataOfViewFilterExists()) {
+      this.viewFilter.columns.data.push(column);
+    }
+  }
+
+  private isDataOfViewFilterExists() {
+    return this.viewFilter && this.viewFilter.columns && this.viewFilter.columns.data;
   }
 
   renewSelectedColumns() {
