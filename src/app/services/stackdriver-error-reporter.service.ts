@@ -33,7 +33,6 @@ export class StackdriverErrorReporterService extends ErrorHandler {
 
   public handleError(error: Error | string): void {
     if (DDP_ENV.doGcpErrorReporting) {
-      console.log(DDP_ENV.doGcpErrorReporting)
       this.errorHandler.report(error);
     }
     // Pass the error to the original handleError otherwise it gets swallowed in the browser console
