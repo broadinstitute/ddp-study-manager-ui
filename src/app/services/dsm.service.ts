@@ -741,9 +741,7 @@ export class DSMService {
   }
 
   private handleError( error: any ) {
-    if (DDP_ENV.reportError) {
-      this.logger.logError( "ERROR: " + JSON.stringify( error ) );
-    }
+    this.logger.logError( "ERROR: " + JSON.stringify( error ) );
     return Observable.throw( error );
   }
 
