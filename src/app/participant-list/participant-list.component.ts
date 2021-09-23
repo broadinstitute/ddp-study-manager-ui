@@ -960,6 +960,32 @@ export class ParticipantListComponent implements OnInit {
     this.clearManualFilters();
     this.selectedFilterName = "";
     this.getData();
+    this.setDefaultColumns();
+  }
+
+  private setDefaultColumns() {
+    let filteredColumns = this.extractDefaultColumns(this.selectedColumns);
+    Object.assign(this.selectedColumns, filteredColumns);
+    if (this.isDataOfViewFilterExists()) {
+      this.viewFilter.columns = this.extractDefaultColumns(this.viewFilter.columns);
+    }
+  }
+
+  private extractDefaultColumns(selectedColumns: {}): {} {
+    let filteredColumns = {};
+    for (var [key, value] of Object.entries(selectedColumns)) {
+      let val = value as Filter[];
+      let newVal = [];
+      val.forEach(el => {
+        this.defaultColumns.forEach(col => {
+          if (el['participantColumn']['name'] === col['participantColumn']['name']) {
+            newVal.push(el);
+          }
+        });
+      });
+      filteredColumns[key] = newVal;
+    }
+    return filteredColumns;
   }
 
   public parseMillisToDateString( dateInMillis: number ) : string {
@@ -1010,6 +1036,13 @@ export class ParticipantListComponent implements OnInit {
     } else {
       this.selectedColumns[ parent ].push( column );
     }
+    if (this.isDataOfViewFilterExists()) {
+      this.viewFilter.columns.data.push(column);
+    }
+  }
+
+  private isDataOfViewFilterExists() {
+    return this.viewFilter && this.viewFilter.columns && this.viewFilter.columns.data;
   }
 
   renewSelectedColumns() {
@@ -1039,12 +1072,14 @@ export class ParticipantListComponent implements OnInit {
         this.selectedMR = "";
         this.selectedOncOrTissue = "";
       }
-      if (participant.data.activities !== null){
-        let p = participant.participantData.find( p => p.data["MEMBER_TYPE"] === "SELF")
-        if (!p) {
-          p = participant.participantData.find( p => p.data[ "COLLABORATOR_PARTICIPANT_ID" ].slice( -2 ) === "_3" )
+      if (participant.participantData) {
+        let proband = participant.participantData.find( p => p.data[ "MEMBER_TYPE" ] === "SELF" )
+        if (!proband) {
+          proband = participant.participantData.find( p => p.data[ "COLLABORATOR_PARTICIPANT_ID" ] && p.data[ "COLLABORATOR_PARTICIPANT_ID" ].slice( -2 ) === "_3" )
         }
-        tabAnchor = p.dataId;
+        if (proband && proband.dataId) {
+          tabAnchor = proband.dataId;
+        }
       }
       if (this.filtered && participant.participant != null && participant.participant.ddpParticipantId != null) {
         this.loadingParticipants = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
@@ -1591,6 +1626,8 @@ export class ParticipantListComponent implements OnInit {
         paths.push(["abstractionSummary", source]);
       }  else if (source === "invitations") {
         paths.push(["invitations", source]);
+      }  else if (source.includes("GROUP")) {
+        paths.push(["participantData", source]);
       } else {
         paths.push([source, source]);
       }

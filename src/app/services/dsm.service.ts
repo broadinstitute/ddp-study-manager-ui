@@ -685,7 +685,9 @@ export class DSMService {
 
   public saveFieldSettings( source: string, json: string ): Observable<any> {
     let url = this.baseUrl + DSMService.UI + "fieldSettings/" + source;
-    return this.http.patch( url, json, this.buildHeader() ).map( ( res: Response ) => res.json() ).catch( this.handleError.bind(this) );
+    let map: { name: string, value: any }[] = [];
+    map.push( {name: "userId", value: this.role.userID()} );
+    return this.http.patch( url, json, this.buildQueryHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError.bind(this)  );
   }
 
   public applyDestructionPolicyToAll( source: string, json: string ): Observable<any> {
