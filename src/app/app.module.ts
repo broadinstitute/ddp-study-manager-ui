@@ -114,6 +114,8 @@ import { InvitationDataComponent } from './invitation-data/invitation-data.compo
 import { ParticipantUpdateResultDialogComponent } from './dialogs/participant-update-result-dialog.component';
 import { FormDataComponent } from './form-data/form-data.component';
 import { AddFamilyMemberComponent } from './popups/add-family-member/add-family-member.component';
+import {LoggingService} from "./services/logging.service";
+import {StackdriverErrorReporterService} from "./services/stackdriver-error-reporter.service";
 
 @NgModule( {
   declarations: [
@@ -236,7 +238,9 @@ import { AddFamilyMemberComponent } from './popups/add-family-member/add-family-
     SessionService,
     Utils,
     Statics,
-    Language
+    Language,
+    StackdriverErrorReporterService,
+    LoggingService
   ],
   bootstrap: [ AppComponent ]
 } )
