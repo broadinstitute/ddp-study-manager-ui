@@ -1613,6 +1613,8 @@ export class ParticipantListComponent implements OnInit {
         paths.push(["invitations", source]);
       }  else if (source.includes("GROUP")) {
         paths.push(["participantData", source]);
+      } else if (source === "proxy") {
+        paths.push(["proxyData", source])
       } else {
         paths.push([source, source]);
       }
