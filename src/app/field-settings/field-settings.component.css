@@ -1,0 +1,7 @@
+.settings_container td {
+  vertical-align: baseline;
+}
+
+.settings_container td > md-input-container {
+  display: inline;;
+}
