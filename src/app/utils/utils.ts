@@ -28,6 +28,8 @@ export class Utils {
   static DATE_STRING_IN_CVS: string = "MM/dd/yyyy";
   static DATE_STRING_IN_EVENT_CVS: string = "MMM dd, yyyy, hh:mm:ss a";
   static DATE_PARTIAL: string = "partial date";
+  static COMMA: string = ",";
+  static EMPTY_STRING_CSV: string = "\"\"";
 
   YES: string = "Yes";
   NO: string = "No";
@@ -252,17 +254,22 @@ export class Utils {
     for (let d of data) {
       let input = [];
       for (let path of paths) {
+        let nonDefaultFieldsResultArray: string[] = null;
         let output = this.makeCSVForObjectArray( d, path, columns, 0 );
         let temp = [];
-        
+
         for (let i = 0; i < output.length; i++) {
           if (input.length === output.length) {
             temp.push(input[i] + output[i]);
           } else {
             for (let j = 0; j < input.length; j++) {
-              temp.push(input[j] + output[i]);              
+              temp.push(input[j] + output[i]);
             }
-          }         
+          }
+        }
+        if (output.length > 1) {
+          let resultOutputSplitted = Utils.fillEmptyValuesFromCorrespondingOutputArray(output);
+          nonDefaultFieldsResultArray = Utils.mergeDefaultColumnsWithNonDefaultColumns(temp, resultOutputSplitted);
         }
 
         // for (let o of output) {
@@ -279,6 +286,25 @@ export class Utils {
     }
     let mainStr = result.join( "\r\n" );
     return mainStr;
+  }
+
+  private static fillEmptyValuesFromCorrespondingOutputArray(output: string[]) {
+    var resultOutputSplitted = output[0].split(this.COMMA);
+    output.slice(1, output.length).forEach(outputArray => {
+      let tempOutputArray = outputArray.split(this.COMMA);
+      for (let j = 0; j < tempOutputArray.length; j++) {
+        if (resultOutputSplitted[j] === this.EMPTY_STRING_CSV) {
+          resultOutputSplitted[j] = tempOutputArray[j];
+        }
+      }
+    });
+    return resultOutputSplitted;
+  }
+
+  private static mergeDefaultColumnsWithNonDefaultColumns(temp: any[], resultOutputSplitted: string[]) {
+    var tempSplitted: string[] = temp[0].split(this.COMMA);
+    var defaultFields: string[] = tempSplitted.slice(0, tempSplitted.length - resultOutputSplitted.length);
+    return [defaultFields.concat(resultOutputSplitted).join(this.COMMA)];
   }
 
 
