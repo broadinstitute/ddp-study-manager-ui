@@ -269,15 +269,7 @@ export class Utils {
         }
 
         if (output.length > 1) {
-          var resultOutputSplitted = output[0].split(this.COMMA);
-          output.slice(1, output.length).forEach(outputArray => {
-            let tempOutputArray = outputArray.split(this.COMMA)
-            for (let j = 0; j < tempOutputArray.length; j++) {
-              if (resultOutputSplitted[j] === this.EMPTY_STRING_CSV) {
-                resultOutputSplitted[j] = tempOutputArray[j];
-              }
-            }
-          });
+          let resultOutputSplitted = Utils.fillEmptyValuesFromCorrespondingOutputArray(output);
           nonDefaultFieldsResultArray = Utils.mergeDefaultColumnsWithNonDefaultColumns(temp, resultOutputSplitted);
         }
 
@@ -300,6 +292,19 @@ export class Utils {
     return mainStr;
   }
 
+
+  private static fillEmptyValuesFromCorrespondingOutputArray(output: string[]) {
+    var resultOutputSplitted = output[0].split(this.COMMA);
+    output.slice(1, output.length).forEach(outputArray => {
+      let tempOutputArray = outputArray.split(this.COMMA);
+      for (let j = 0; j < tempOutputArray.length; j++) {
+        if (resultOutputSplitted[j] === this.EMPTY_STRING_CSV) {
+          resultOutputSplitted[j] = tempOutputArray[j];
+        }
+      }
+    });
+    return resultOutputSplitted;
+  }
 
   private static mergeDefaultColumnsWithNonDefaultColumns(temp: any[], resultOutputSplitted: string[]) {
     var tempSplitted: string[] = temp[0].split(this.COMMA);
