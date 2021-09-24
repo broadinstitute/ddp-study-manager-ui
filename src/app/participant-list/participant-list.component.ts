@@ -958,13 +958,21 @@ export class ParticipantListComponent implements OnInit {
     this.deselectQuickFilters();
     this.clearManualFilters();
     this.selectedFilterName = "";
-    this.setDefaultColumns();
     this.getData();
+    this.setDefaultColumns();
   }
 
   private setDefaultColumns() {
+    let filteredColumns = this.extractDefaultColumns(this.selectedColumns);
+    Object.assign(this.selectedColumns, filteredColumns);
+    if (this.isDataOfViewFilterExists()) {
+      this.viewFilter.columns = this.extractDefaultColumns(this.viewFilter.columns);
+    }
+  }
+
+  private extractDefaultColumns(selectedColumns: {}): {} {
     let filteredColumns = {};
-    for (var [key, value] of Object.entries(this.selectedColumns)) {
+    for (var [key, value] of Object.entries(selectedColumns)) {
       let val = value as Filter[];
       let newVal = [];
       val.forEach(el => {
@@ -976,7 +984,7 @@ export class ParticipantListComponent implements OnInit {
       });
       filteredColumns[key] = newVal;
     }
-    Object.assign(this.selectedColumns, filteredColumns);
+    return filteredColumns;
   }
 
   public parseMillisToDateString( dateInMillis: number ) : string {
@@ -1027,6 +1035,13 @@ export class ParticipantListComponent implements OnInit {
     } else {
       this.selectedColumns[ parent ].push( column );
     }
+    if (this.isDataOfViewFilterExists()) {
+      this.viewFilter.columns.data.push(column);
+    }
+  }
+
+  private isDataOfViewFilterExists() {
+    return this.viewFilter && this.viewFilter.columns && this.viewFilter.columns.data;
   }
 
   renewSelectedColumns() {
