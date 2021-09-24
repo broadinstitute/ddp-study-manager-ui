@@ -107,6 +107,8 @@ export class ParticipantListComponent implements OnInit {
   preferredLanguages: PreferredLanguage[] = [];
   savedSelectedColumns = {};
   isAddFamilyMember: boolean = false;
+  showContactInformation: boolean = false;
+  showComputedObject: boolean = false
   showGroupFields: boolean = false;
   hideSamplesTab: boolean = false;
   jsonPatch: any;
@@ -478,6 +480,12 @@ export class ParticipantListComponent implements OnInit {
             this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
           } );
           this.orderColumns();
+        }
+        if (jsonData.hasAddressTab) {
+          this.addContactInformationColumns();
+        }
+        if (jsonData.hasComputedObject) {
+          this.addAutomatedScoringColumns();
         }
         if (jsonData.hasProxyData != null) {
           this.dataSources.set( "proxy", "Proxy" );
@@ -1705,9 +1713,49 @@ export class ParticipantListComponent implements OnInit {
     }
   }
 
+  addContactInformationColumns(): void {
+    this.showContactInformation = true;
+
+    this.dataSources.set("address", "Contact Information");
+    let possibleColumns: Array<Filter> = [];
+    possibleColumns.push(new Filter( new ParticipantColumn("Street 1", "street1", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("Street 2", "street2", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("City", "city", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("State", "state", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("Zip", "zip", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("Country", "country", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("Phone", "phone", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("Mail To Name", "mailToName", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("Valid", "valid", "address", null, true), Filter.BOOLEAN_TYPE) );
+
+    this.sourceColumns["address"] = possibleColumns;
+    this.selectedColumns[ "address" ] = [];
+    possibleColumns.forEach( filter => {
+      let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
+      this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
+    } );
+    this.orderColumns();
+  }
+
   getQuestionAnswerByName( questionsAnswers: Array<QuestionAnswer>, name: string ) {
     return questionsAnswers.find( x => x.stableId === name );
   }
+
+  addAutomatedScoringColumns(): void {
+    this.showComputedObject = true;
+
+    this.dataSources.set("computed", "Morning-Evening Questionnaire Scoring");
+  let possibleColumns: Array<Filter> = [];
+  possibleColumns.push(new Filter( new ParticipantColumn("MEQ Score", "meqScore", "computed", null, true), Filter.TEXT_TYPE) );
+  possibleColumns.push(new Filter( new ParticipantColumn("MEQ Chronotype", "meqChronotype", "computed", null, true), Filter.TEXT_TYPE) );
+  this.sourceColumns["computed"] = possibleColumns;
+  this.selectedColumns[ "computed" ] = [];
+  possibleColumns.forEach( filter => {
+  let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
+  this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
+});
+this.orderColumns();
+}
 
   updateParticipant( participant: Participant ) {
     if (participant != null) {
