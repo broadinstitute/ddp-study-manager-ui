@@ -30,6 +30,8 @@ export class Utils {
   static DATE_PARTIAL: string = "partial date";
   static COMMA: string = ",";
   static EMPTY_STRING_CSV: string = "\"\"";
+  static DATA: string = "data";
+  static PROFILE: string = "profile";
 
   YES: string = "Yes";
   NO: string = "No";
@@ -277,7 +279,10 @@ export class Utils {
         //     temp.push( i + o );
         //   }
         // }
-        if (input.length == 0) {
+        if (nonDefaultFieldsResultArray) {
+          temp = nonDefaultFieldsResultArray;
+        }
+        else if (input.length == 0) {
           temp = output;
         }
         input = temp;
@@ -289,7 +294,7 @@ export class Utils {
   }
 
   private static fillEmptyValuesFromCorrespondingOutputArray(output: string[]) {
-    var resultOutputSplitted = output[0].split(this.COMMA);
+    let resultOutputSplitted = output[0].split(this.COMMA);
     output.slice(1, output.length).forEach(outputArray => {
       let tempOutputArray = outputArray.split(this.COMMA);
       for (let j = 0; j < tempOutputArray.length; j++) {
@@ -302,8 +307,8 @@ export class Utils {
   }
 
   private static mergeDefaultColumnsWithNonDefaultColumns(temp: any[], resultOutputSplitted: string[]) {
-    var tempSplitted: string[] = temp[0].split(this.COMMA);
-    var defaultFields: string[] = tempSplitted.slice(0, tempSplitted.length - resultOutputSplitted.length);
+    let tempSplitted: string[] = temp[0].split(this.COMMA);
+    let defaultFields: string[] = tempSplitted.slice(0, tempSplitted.length - resultOutputSplitted.length);
     return [defaultFields.concat(resultOutputSplitted).join(this.COMMA)];
   }
 
@@ -315,7 +320,10 @@ export class Utils {
     }
     else {
       let objects = null;
-      if (!( data[ paths[ index ] ] instanceof Array )) {
+      if (Utils.isColumnNestedInParticipantData(data, paths, index)) {
+        objects = [ data[Utils.DATA] [paths[ index ]] ];
+      }
+      else if (!( data[ paths[ index ] ] instanceof Array )) {
         objects = [ data[ paths[ index ] ] ];
       }
       else {
@@ -341,6 +349,22 @@ export class Utils {
       }
       return result;
     }
+  }
+
+  private static isColumnNestedInParticipantData(data: Object, paths: any[], index: number): boolean {
+    return Utils.participantDataExists(data, paths, index) && data[Utils.DATA][ paths[ index ]];
+  }
+
+  private static participantDataExists(data: Object, path: any[], index:number) :boolean {
+    return data && data[Utils.DATA];
+  }
+
+  private static isColumnNestedInProfileData(data: Object, columnName: string) {
+    return this.profileDataExists(data) && data[Utils.PROFILE][columnName];
+  }
+
+  private static profileDataExists(data: Object): boolean {
+    return data && data[Utils.PROFILE];
   }
 
   private static getObjectAdditionalValue( o: Object, fieldName: string, column: any ) {
@@ -410,7 +434,12 @@ export class Utils {
             }
           }
           else {
-            let value = o[ col.participantColumn.name ];
+            let value = null;
+            if (Utils.isColumnNestedInProfileData(o, col.participantColumn.name)) {
+              value = o[Utils.PROFILE][col.participantColumn.name]
+            }else {
+              value = o[ col.participantColumn.name ];
+            }
             if (col.participantColumn.object != null && o[ col.participantColumn.object ] != null) {
               value = o[ col.participantColumn.object ][ col.participantColumn.name ];
             } else if (o['data'] && o['data'][col.participantColumn.name]) {
