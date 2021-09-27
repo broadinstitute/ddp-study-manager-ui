@@ -30,6 +30,8 @@ export class Utils {
   static DATE_PARTIAL: string = "partial date";
   static COMMA: string = ",";
   static EMPTY_STRING_CSV: string = "\"\"";
+  static DATA: string = "data";
+  static PROFILE: string = "profile";
 
   YES: string = "Yes";
   NO: string = "No";
@@ -318,7 +320,10 @@ export class Utils {
     }
     else {
       let objects = null;
-      if (!( data[ paths[ index ] ] instanceof Array )) {
+      if (Utils.isColumnNestedInParticipantData(data, paths, index)) {
+        objects = [ data[Utils.DATA] [paths[ index ]] ];
+      }
+      else if (!( data[ paths[ index ] ] instanceof Array )) {
         objects = [ data[ paths[ index ] ] ];
       }
       else {
@@ -344,6 +349,22 @@ export class Utils {
       }
       return result;
     }
+  }
+
+  private static isColumnNestedInParticipantData(data: Object, paths: any[], index: number): boolean {
+    return Utils.participantDataExists(data, paths, index) && data[Utils.DATA][ paths[ index ]];
+  }
+
+  private static participantDataExists(data: Object, path: any[], index:number) :boolean {
+    return data && data[Utils.DATA];
+  }
+
+  private static isColumnNestedInProfileData(data: Object, columnName: string) {
+    return this.profileDataExists(data) && data[Utils.PROFILE][columnName];
+  }
+
+  private static profileDataExists(data: Object): boolean {
+    return data[Utils.PROFILE] != undefined;
   }
 
   private static getObjectAdditionalValue( o: Object, fieldName: string, column: any ) {
@@ -413,7 +434,12 @@ export class Utils {
             }
           }
           else {
-            let value = o[ col.participantColumn.name ];
+            let value = null;
+            if (Utils.isColumnNestedInProfileData(o, col.participantColumn.name)) {
+              value = o[Utils.PROFILE][col.participantColumn.name]
+            }else {
+              value = o[ col.participantColumn.name ];
+            }
             if (col.participantColumn.object != null && o[ col.participantColumn.object ] != null) {
               value = o[ col.participantColumn.object ][ col.participantColumn.name ];
             } else if (o['data'] && o['data'][col.participantColumn.name]) {
