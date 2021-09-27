@@ -364,7 +364,7 @@ export class Utils {
   }
 
   private static profileDataExists(data: Object): boolean {
-    return data[Utils.PROFILE] != undefined;
+    return data && data[Utils.PROFILE];
   }
 
   private static getObjectAdditionalValue( o: Object, fieldName: string, column: any ) {
