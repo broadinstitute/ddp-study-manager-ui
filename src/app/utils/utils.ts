@@ -277,7 +277,10 @@ export class Utils {
         //     temp.push( i + o );
         //   }
         // }
-        if (input.length == 0) {
+        if (nonDefaultFieldsResultArray) {
+          temp = nonDefaultFieldsResultArray;
+        }
+        else if (input.length == 0) {
           temp = output;
         }
         input = temp;
@@ -289,7 +292,7 @@ export class Utils {
   }
 
   private static fillEmptyValuesFromCorrespondingOutputArray(output: string[]) {
-    var resultOutputSplitted = output[0].split(this.COMMA);
+    let resultOutputSplitted = output[0].split(this.COMMA);
     output.slice(1, output.length).forEach(outputArray => {
       let tempOutputArray = outputArray.split(this.COMMA);
       for (let j = 0; j < tempOutputArray.length; j++) {
@@ -302,8 +305,8 @@ export class Utils {
   }
 
   private static mergeDefaultColumnsWithNonDefaultColumns(temp: any[], resultOutputSplitted: string[]) {
-    var tempSplitted: string[] = temp[0].split(this.COMMA);
-    var defaultFields: string[] = tempSplitted.slice(0, tempSplitted.length - resultOutputSplitted.length);
+    let tempSplitted: string[] = temp[0].split(this.COMMA);
+    let defaultFields: string[] = tempSplitted.slice(0, tempSplitted.length - resultOutputSplitted.length);
     return [defaultFields.concat(resultOutputSplitted).join(this.COMMA)];
   }
 
