@@ -11,6 +11,6 @@ export class ParticipantData {
     if (json.data != null) {
       data = JSON.parse(json.data);
     }
-    return new ParticipantData(json.participantDataId, json.fieldTypeId, data);
+    return new  ParticipantData(json.dataId, json.fieldTypeId, data);
   }
 }
