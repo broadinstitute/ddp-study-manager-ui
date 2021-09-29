@@ -117,6 +117,30 @@ export class Utils {
     } );
   }
 
+  getAnswerGroupOrOptionText( answer: string, groups: Array<Group>, options: Array<Option> ): string {
+    let text = answer;
+    let ans = groups.find( option => {
+      if (option.groupStableId === answer) {
+        return true;
+      }
+      return false;
+    } );
+    if(ans){
+      text = ans.groupText;
+    }
+    else{
+      let ans = options.find( option => {
+        if (option.optionStableId === answer) {
+          return true;
+        }
+        return false;
+      } );
+      text = ans.optionText;
+    }
+    return text;
+
+  }
+
   isOptionSelected( selected: Array<string>, optionStableId: string ) {
     return selected.find( x => x === optionStableId );
   }
