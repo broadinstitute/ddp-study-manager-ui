@@ -2,7 +2,6 @@ import {Component, EventEmitter, Input, OnInit, Output, ViewChild, OnDestroy } f
 import { MdDialog } from '@angular/material';
 import {TabDirective} from "ngx-bootstrap";
 import {ActivatedRoute, Router} from "@angular/router";
-import {ActivityData} from "../activity-data/activity-data.model";
 import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
 import {ParticipantData} from "../participant-list/models/participant-data.model";
@@ -21,7 +20,6 @@ import {OncHistoryDetail} from "../onc-history-detail/onc-history-detail.model";
 import {ModalComponent} from "../modal/modal.component";
 import {Tissue} from "../tissue/tissue.model";
 import {Value} from "../utils/value.model";
-import {DDPParticipantInformation} from "./participant-page.model";
 import {Result} from "../utils/result.model";
 import {NameValue} from "../utils/name-value.model";
 import {Abstraction} from "../medical-record-abstraction/medical-record-abstraction.model";
@@ -59,6 +57,8 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   @Input() isAddFamilyMember: boolean;
   @Input() showGroupFields: boolean;
   @Input() hideSamplesTab: boolean;
+  @Input() showContactInformation: boolean;
+  @Input() showComputedObject: boolean;
   @Output() leaveParticipant = new EventEmitter();
   @Output('ngModelChange') update = new EventEmitter();
 

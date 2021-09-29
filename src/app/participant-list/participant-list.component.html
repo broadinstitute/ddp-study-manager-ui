@@ -6,6 +6,8 @@
                         [isAddFamilyMember]="isAddFamilyMember"
                         [showGroupFields]="showGroupFields"
                         [hideSamplesTab]="hideSamplesTab"
+                        [showContactInformation]="showContactInformation"
+                        [showComputedObject]="showComputedObject"
                         (leaveParticipant)="updateParticipant($event)"></app-participant-page>
 
 </ng-container>
@@ -55,7 +57,7 @@
             <button md-raised-button color="primary" (click)="clearManualFilters()">Clear</button>
 
             <ng-container *ngFor="let key of getKeys()">
-              <ng-container *ngIf="key !== 'proxy' && key !== 'a'">
+              <ng-container *ngIf="key !== 'a'">
                 <table *ngFor="let filter of selectedColumns[key]" style="border: none">
                   <ng-container *ngIf="filter.participantColumn.name !== 'ddp'">
                     <app-filter-column [dataFilter]="filter" [editable]="true"></app-filter-column>
@@ -241,7 +243,7 @@
           </ng-container>
           </thead>
           <tbody>
-          <tr *ngFor="let pt of participantList | paginate: { id: 'participant_list', itemsPerPage: rowsPerPage, 
+          <tr *ngFor="let pt of participantList | paginate: { id: 'participant_list', itemsPerPage: rowsPerPage,
                         currentPage: activePage, totalItems: getPaginationParticipantListSize() }">
             <!--checkbox to assign or trigger blood kits-->
             <td *ngIf="hasAssignees()">
@@ -287,6 +289,40 @@
                     </ul>
                   </ng-container>
                 </ng-container>
+
+                <ng-container *ngIf="col.participantColumn.esData && pt.data.address != null">
+                  <ng-container *ngIf="col.participantColumn.tableAlias === 'address'">
+                    <ul class="NO-PADDING-START">
+                        <p class="BIT-OF-MARGIN">
+                        <ng-container *ngIf="col.type === 'DATE'">
+                          {{ parseMillisToDateString(pt.data.address[col.participantColumn.name]) }}
+                        </ng-container>
+                        <ng-container *ngIf="col.type === 'TEXT' && col.participantColumn.name !== 'guid'">
+                          {{ pt.data.address[col.participantColumn.name] }}
+                        </ng-container>
+                        <ng-container *ngIf="col.type === 'BOOLEAN' && col.participantColumn.name !== 'guid'">
+                          {{ pt.data.address[col.participantColumn.name] }}
+                        </ng-container>
+                        <ng-container *ngIf="col.participantColumn.name === 'guid'">
+                          {{formatInvitation(pt.data.address[col.participantColumn.name]) }}
+                        </ng-container>
+                      </p>
+                    </ul>
+                  </ng-container>
+                </ng-container>
+
+                <ng-container *ngIf="col.participantColumn.esData && pt.data.computed != null">
+                  <ng-container *ngIf="col.participantColumn.tableAlias === 'computed'">
+                    <ul class="NO-PADDING-START">
+                        <p class="BIT-OF-MARGIN">
+                        <ng-container>
+                          {{ pt.data.computed[col.participantColumn.name] }}
+                        </ng-container>
+                      </p>
+                    </ul>
+                  </ng-container>
+                </ng-container>
+
                 <ng-container *ngIf="col.participantColumn.esData && pt.data.activities != null">
 
                   <ng-container *ngIf="pt.data.getActivityDataByCode(alias) as activityData">
@@ -691,7 +727,7 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
           <tfoot *ngIf="participantList != null">
           <tr>
             <td [attr.colspan]="getColSpan()-3">
-              <pagination-controls  
+              <pagination-controls
                     class="custom-pagination"
                     id="participant_list"
                     (pageChange)="pageChanged($event, rowsPerPage)"
