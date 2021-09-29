@@ -650,6 +650,11 @@ participant.data.dsm['diagnosisYear'] != null">
             <tab *ngIf="showContactInformation" heading="Contact Information">
               <legend class="Group--Title">
                 <div class="Float--left Width--100">
+                  <ng-container *ngIf="participant && (!participant.data ||!participant.data.address)">
+                    <div>
+                      <p>Not Entered</p>
+                    </div>
+                  </ng-container>
                   <table class="Width--100 Table--box">
                     <tr *ngIf="participant && participant.data && participant.data.address && participant.data.address.street1">
                       <td class="TD--Padding-Left Width--50"> Street 1: {{ participant.data.address.street1 }} </td>

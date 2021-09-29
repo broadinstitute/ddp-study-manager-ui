@@ -483,6 +483,8 @@ export class ParticipantListComponent implements OnInit {
         }
         if (jsonData.hasAddressTab) {
           this.addContactInformationColumns();
+        }else{
+          this.showContactInformation = false;
         }
         if (jsonData.hasComputedObject) {
           this.addAutomatedScoringColumns();
