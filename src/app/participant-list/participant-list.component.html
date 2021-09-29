@@ -732,7 +732,7 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
           <tfoot *ngIf="participantList != null">
           <tr>
             <td [attr.colspan]="getColSpan()-3">
-              <pagination-controls class="custom-pagination" (pageChange)="activePage = $event"></pagination-controls>
+              <pagination-controls class="custom-pagination" id="participant_list" (pageChange)="activePage = $event"></pagination-controls>
             </td>
             <td colspan="3">
               <div class="Float--right">
