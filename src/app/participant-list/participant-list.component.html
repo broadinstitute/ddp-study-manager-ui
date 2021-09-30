@@ -423,20 +423,16 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                               </ng-container>
                               <ng-container *ngIf="qDef.selectMode === 'SINGLE'">
                                 <ng-container *ngIf="pt.data.getMultipleAnswersForPickList(activityData, col.participantColumn.name) as answers">
-                                  <div *ngFor="let answer of answers">
-                                    <ng-container *ngIf="getUtil().getAnswerGroupOrOptionText(answer, qDef.groups, qDef.options) as txt">
-                                      {{txt}}
-                                    </ng-container>
-                                  </div>
-                                </ng-container>
-                              </ng-container>
-                              <ng-container *ngIf="qDef.selectMode === 'SINGLE'">
-                                <ng-container *ngIf="questionAnswer.answer[0] != null">
-                                  <div class="TD--Padding-Left-Bigger">{{getUtil().getOptionOrGroupText(qDef, questionAnswer.answer[0])}}</div>
-                                  <ng-container *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, questionAnswer.answer[0]) as oDetail">
-                                    <div>{{oDetail.details}}
-                                    </div>
-                                  </ng-container>
+                                  <ul class="NO-PADDING-START" >
+                                    <li class="LIST-SEPARATOR" *ngFor="let answer of answers" >
+                                      <p class="BIT-OF-MARGIN" *ngIf="getUtil().getAnswerGroupOrOptionText(answer, qDef.groups, qDef.options) as txt">
+                                        {{txt}}
+                                      </p>
+                                      <p class="BIT-OF-MARGIN" *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, answer) as oDetail">
+                                        {{oDetail.details}}
+                                      </p>
+                                    </li>
+                                  </ul>
                                 </ng-container>
                               </ng-container>
                             </ng-container>
