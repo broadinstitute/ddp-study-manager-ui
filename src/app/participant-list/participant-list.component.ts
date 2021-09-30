@@ -1372,6 +1372,16 @@ export class ParticipantListComponent implements OnInit {
         }
       } );
     } else if (this.sortParent === "t") {
+    } else if (this.sortParent === "proxy") {
+      this.participantList.sort( (c1, c2) => {
+        if (!c1.proxyData[0] || c1.proxyData[0].profile['name'] == null) {
+          return 1;
+        } else if (!c2.proxyData[0] || c2.proxyData[0].profile['name'] == null) {
+          return -1;
+        } else {
+          return this.sort( c1.proxyData[0].profile[this.sortField], c2.proxyData[0].profile[this.sortField], order, undefined, colType );
+        }
+      })
     } else if (this.sortParent === "k") {
       this.participantList.map( participant =>
         participant.kits.sort( (n, m) => this.sort( n[ this.sortField ], m[ this.sortField ], order, undefined, colType ))
