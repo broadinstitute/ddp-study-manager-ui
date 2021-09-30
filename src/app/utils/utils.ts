@@ -135,7 +135,7 @@ export class Utils {
         }
         return false;
       } );
-      text = ans.optionText;
+      if(ans) text = ans.optionText;
     }
     return text;
 
