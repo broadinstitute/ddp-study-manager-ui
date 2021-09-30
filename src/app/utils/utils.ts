@@ -125,7 +125,7 @@ export class Utils {
       }
       return false;
     } );
-    if(ans){
+    if (ans) {
       text = ans.groupText;
     }
     else{
@@ -135,7 +135,8 @@ export class Utils {
         }
         return false;
       } );
-      if(ans) text = ans.optionText;
+      if (ans)
+        text = ans.optionText;
     }
     return text;
 
