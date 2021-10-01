@@ -423,16 +423,18 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                               </ng-container>
                               <ng-container *ngIf="qDef.selectMode === 'SINGLE'">
                                 <ng-container *ngIf="pt.data.getMultipleAnswersForPickList(activityData, col.participantColumn.name) as answers">
-                                  <ul class="NO-PADDING-START" >
-                                    <li class="LIST-SEPARATOR" *ngFor="let answer of answers" >
-                                      <p class="BIT-OF-MARGIN" *ngIf="getUtil().getAnswerGroupOrOptionText(answer, qDef.groups, qDef.options) as txt">
+                                  <div class="NO-PADDING-START" >
+                                    <div *ngFor="let answer of answers; let i=index;" >
+                                      <div *ngIf="getUtil().getAnswerGroupOrOptionText(answer, qDef.groups, qDef.options) as txt">
                                         {{txt}}
-                                      </p>
-                                      <p class="BIT-OF-MARGIN" *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, answer) as oDetail">
+                                        <hr *ngIf="i !== answers.length-1" style="border-color: lightgray">
+                                      </div>
+                                      <div *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, answer) as oDetail">
                                         {{oDetail.details}}
-                                      </p>
-                                    </li>
-                                  </ul>
+                                        <hr *ngIf="i !== answers.length-1" style="border-color: lightgray">
+                                      </div>
+                                    </div>
+                                  </div>
                                 </ng-container>
                               </ng-container>
                             </ng-container>
