@@ -2,14 +2,14 @@ import {DatePipe} from "@angular/common";
 import {Injectable} from "@angular/core";
 import {FormControl} from "@angular/forms";
 import {AbstractionGroup} from "../abstraction-group/abstraction-group.model";
-import { ActivityData } from "../activity-data/activity-data.model";
+import {ActivityData} from "../activity-data/activity-data.model";
 import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
 import {Group} from "../activity-data/models/group.model";
 import {OptionDetail} from "../activity-data/models/option-detail.model";
 import {Option} from "../activity-data/models/option.model";
 import {QuestionAnswer} from "../activity-data/models/question-answer.model";
 import {QuestionDefinition} from "../activity-data/models/question-definition.model";
-import { FieldSettings } from "../field-settings/field-settings.model";
+import {FieldSettings} from "../field-settings/field-settings.model";
 import {Filter} from "../filter-column/filter-column.model";
 import {AbstractionField} from "../medical-record-abstraction/medical-record-abstraction-field.model";
 import {Participant} from "../participant-list/participant-list.model";
@@ -117,10 +117,13 @@ export class Utils {
     } );
   }
 
-  getAnswerGroupOrOptionText( answer: string, groups: Array<Group>, options: Array<Option> ): string {
+  getAnswerGroupOrOptionText( answer: any, qdef: QuestionDefinition ): string {
+    if (answer instanceof Array) {
+      answer = answer[ 0 ];
+    }
     let text = answer;
-    let ans = groups.find( option => {
-      if (option.groupStableId === answer) {
+    let ans = qdef.groups.find( group => {
+      if (group.groupStableId === answer) {
         return true;
       }
       return false;
@@ -128,18 +131,18 @@ export class Utils {
     if (ans) {
       text = ans.groupText;
     }
-    else{
-      let ans = options.find( option => {
+    else {
+      let ans = qdef.options.find( option => {
         if (option.optionStableId === answer) {
           return true;
         }
         return false;
       } );
-      if (ans)
+      if (ans) {
         text = ans.optionText;
+      }
     }
     return text;
-
   }
 
   isOptionSelected( selected: Array<string>, optionStableId: string ) {
@@ -157,14 +160,14 @@ export class Utils {
       let text = "";
       questionDefinition.groups.find( g => {
         if (g.options) {
-          let option = g.options.find(o => o.optionStableId === stableId);
+          let option = g.options.find( o => o.optionStableId === stableId );
           if (option) {
             text = option.optionText;
             return true;
           }
         }
         return false;
-      });
+      } );
       return text;
     }
     return "";
@@ -287,16 +290,17 @@ export class Utils {
 
         for (let i = 0; i < output.length; i++) {
           if (input.length === output.length) {
-            temp.push(input[i] + output[i]);
-          } else {
+            temp.push( input[ i ] + output[ i ] );
+          }
+          else {
             for (let j = 0; j < input.length; j++) {
-              temp.push(input[j] + output[i]);
+              temp.push( input[ j ] + output[ i ] );
             }
           }
         }
         if (output.length > 1) {
-          let resultOutputSplitted = Utils.fillEmptyValuesFromCorrespondingOutputArray(output);
-          nonDefaultFieldsResultArray = Utils.mergeDefaultColumnsWithNonDefaultColumns(temp, resultOutputSplitted);
+          let resultOutputSplitted = Utils.fillEmptyValuesFromCorrespondingOutputArray( output );
+          nonDefaultFieldsResultArray = Utils.mergeDefaultColumnsWithNonDefaultColumns( temp, resultOutputSplitted );
         }
 
         // for (let o of output) {
@@ -376,20 +380,20 @@ export class Utils {
     }
   }
 
-  private static isColumnNestedInParticipantData(data: Object, paths: any[], index: number): boolean {
-    return Utils.participantDataExists(data, paths, index) && data[Utils.DATA][ paths[ index ]];
+  private static isColumnNestedInParticipantData( data: Object, paths: any[], index: number ): boolean {
+    return Utils.participantDataExists( data, paths, index ) && data[ Utils.DATA ][ paths[ index ] ];
   }
 
-  private static participantDataExists(data: Object, path: any[], index:number) :boolean {
-    return data && data[Utils.DATA];
+  private static participantDataExists( data: Object, path: any[], index: number ): boolean {
+    return data && data[ Utils.DATA ];
   }
 
-  private static isColumnNestedInProfileData(data: Object, columnName: string) {
-    return this.profileDataExists(data) && data[Utils.PROFILE][columnName];
+  private static isColumnNestedInProfileData( data: Object, columnName: string ) {
+    return this.profileDataExists( data ) && data[ Utils.PROFILE ][ columnName ];
   }
 
-  private static profileDataExists(data: Object): boolean {
-    return data && data[Utils.PROFILE];
+  private static profileDataExists( data: Object ): boolean {
+    return data && data[ Utils.PROFILE ];
   }
 
   private static getObjectAdditionalValue( o: Object, fieldName: string, column: any ) {
@@ -696,12 +700,12 @@ export class Utils {
     return null;
   }
 
-  public static getActivityDataValues(fieldSetting: FieldSettings, participant: Participant, activityDefinitions: ActivityDefinition[]) {
-    if (fieldSetting != null && fieldSetting.possibleValues != null && fieldSetting.possibleValues[0] != null && fieldSetting.possibleValues[0].value != null) {
+  public static getActivityDataValues( fieldSetting: FieldSettings, participant: Participant, activityDefinitions: ActivityDefinition[] ) {
+    if (fieldSetting != null && fieldSetting.possibleValues != null && fieldSetting.possibleValues[ 0 ] != null && fieldSetting.possibleValues[ 0 ].value != null) {
       let tmp: string[] = fieldSetting.possibleValues[ 0 ].value.split( '.' );
       if (tmp != null && tmp.length > 1) {
         if (tmp[ 0 ] === 'profile') {
-          return participant.data.profile[tmp[1]];
+          return participant.data.profile[ tmp[ 1 ] ];
         }
         else {
           if (participant != null && participant.data != null && participant.data.activities != null) {
