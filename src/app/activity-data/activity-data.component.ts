@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from "@angular/core";
 import {Utils} from "../utils/utils";
 import {ActivityData} from "./activity-data.model";
 import {ActivityDefinition} from "./models/activity-definition.model";
+import {QuestionAnswer} from "./models/question-answer.model";
 
 @Component( {
   selector: "app-activity-data",
@@ -21,6 +22,14 @@ export class ActivityDataComponent implements OnInit {
 
   getUtil(): Utils {
     return this.util;
+  }
+
+    getActivityName(activityDefinition: ActivityDefinition) {
+        return activityDefinition.activityName;
+    }
+
+  getActivityCode( activity: ActivityData ) {
+    return activity.activityCode;
   }
 
 }

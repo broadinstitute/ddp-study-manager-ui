@@ -1,6 +1,6 @@
 <div class="Display--block Width--100">
   <fieldset style="border: 1px black solid">
-    <legend class="Group--Title" id="{{activity.activityCode}}">{{activityDefinition.activityName}}</legend>
+    <legend class="Group--Title" id="{{getActivityCode(activity)}}">{{getActivityName(activityDefinition)}}</legend>
     <div class="Router--Outlet">
       <div>Survey Version: {{activity.activityVersion}}</div>
       <div>Created: {{activity.createdAt | date:'medium'}}</div>
@@ -106,13 +106,13 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                     </ng-container>
                   </ng-container>
                   <ng-container *ngIf="qDef.selectMode === 'SINGLE'">
-                    <ng-container *ngIf="activity.questionsAnswers as answers">
+                    <ng-container *ngIf="questionAnswer.answer as answers">
                       <ul class="NO-PADDING-START" >
                         <li class="LIST-SEPARATOR" *ngFor="let answer of answers" >
                           <p class="BIT-OF-MARGIN">
-                            {{getUtil().getAnswerGroupOrOptionText( answer.answer, qDef)}}
+                            {{getUtil().getAnswerGroupOrOptionText( answer, qDef)}}
                           </p>
-                          <p class="BIT-OF-MARGIN" *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, answer.answer) as oDetail">
+                          <p class="BIT-OF-MARGIN" *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, answer) as oDetail">
                             {{oDetail.details}}
                           </p>
                         </li>
