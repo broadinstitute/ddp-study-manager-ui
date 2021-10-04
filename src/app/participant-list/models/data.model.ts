@@ -37,7 +37,7 @@ export class Data {
         }
       }
     }
-    return answers;
+    return answers.reverse();
   }
 
   static parse( json ): Data {
