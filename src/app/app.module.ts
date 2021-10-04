@@ -1,5 +1,5 @@
 import {BrowserModule} from "@angular/platform-browser";
-import {NgModule} from "@angular/core";
+import {ErrorHandler, NgModule} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
 import {RouterModule} from "@angular/router";
@@ -240,7 +240,8 @@ import {StackdriverErrorReporterService} from "./services/stackdriver-error-repo
     Statics,
     Language,
     StackdriverErrorReporterService,
-    LoggingService
+    LoggingService,
+    { provide: ErrorHandler, useClass: StackdriverErrorReporterService },
   ],
   bootstrap: [ AppComponent ]
 } )

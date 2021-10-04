@@ -29,7 +29,6 @@ import {Sample} from "./models/sample.model";
 import {Participant} from "./participant-list.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
 import { ParticipantData } from "./models/participant-data.model";
-import { ParticipantPageComponent } from "../participant-page/participant-page.component";
 
 @Component( {
   selector: "app-participant-list",
@@ -483,6 +482,8 @@ export class ParticipantListComponent implements OnInit {
         }
         if (jsonData.hasAddressTab) {
           this.addContactInformationColumns();
+        }else{
+          this.showContactInformation = false;
         }
         if (jsonData.hasComputedObject) {
           this.addAutomatedScoringColumns();
@@ -1748,7 +1749,8 @@ export class ParticipantListComponent implements OnInit {
   }
 
   getQuestionAnswerByName( questionsAnswers: Array<QuestionAnswer>, name: string ) {
-    return questionsAnswers.find( x => x.stableId === name );
+    let a = questionsAnswers.find( x => x.stableId === name );
+    return a;
   }
 
   addAutomatedScoringColumns(): void {
@@ -2121,4 +2123,5 @@ this.orderColumns();
     }
     return false;
   }
+
 }
