@@ -122,16 +122,20 @@ export class Utils {
       answer = answer[ 0 ];
     }
     let text = answer;
-    let ans = qdef.groups.find( group => {
-      if (group.groupStableId === answer) {
-        return true;
+    let ans;
+    if (qdef.groups) {
+      ans = qdef.groups.find( group => {
+        if (group.groupStableId === answer) {
+          return true;
+        }
+        return false;
+      } );
+
+      if (ans) {
+        text = ans.groupText;
       }
-      return false;
-    } );
-    if (ans) {
-      text = ans.groupText;
     }
-    else {
+    if (!ans && qdef.options) {
       let ans = qdef.options.find( option => {
         if (option.optionStableId === answer) {
           return true;
@@ -322,23 +326,23 @@ export class Utils {
     return mainStr;
   }
 
-  private static fillEmptyValuesFromCorrespondingOutputArray(output: string[]) {
-    let resultOutputSplitted = output[0].split(this.COMMA);
-    output.slice(1, output.length).forEach(outputArray => {
-      let tempOutputArray = outputArray.split(this.COMMA);
+  private static fillEmptyValuesFromCorrespondingOutputArray( output: string[] ) {
+    let resultOutputSplitted = output[ 0 ].split( this.COMMA );
+    output.slice( 1, output.length ).forEach( outputArray => {
+      let tempOutputArray = outputArray.split( this.COMMA );
       for (let j = 0; j < tempOutputArray.length; j++) {
-        if (resultOutputSplitted[j] === this.EMPTY_STRING_CSV) {
-          resultOutputSplitted[j] = tempOutputArray[j];
+        if (resultOutputSplitted[ j ] === this.EMPTY_STRING_CSV) {
+          resultOutputSplitted[ j ] = tempOutputArray[ j ];
         }
       }
-    });
+    } );
     return resultOutputSplitted;
   }
 
-  private static mergeDefaultColumnsWithNonDefaultColumns(temp: any[], resultOutputSplitted: string[]) {
-    let tempSplitted: string[] = temp[0].split(this.COMMA);
-    let defaultFields: string[] = tempSplitted.slice(0, tempSplitted.length - resultOutputSplitted.length);
-    return [defaultFields.concat(resultOutputSplitted).join(this.COMMA)];
+  private static mergeDefaultColumnsWithNonDefaultColumns( temp: any[], resultOutputSplitted: string[] ) {
+    let tempSplitted: string[] = temp[ 0 ].split( this.COMMA );
+    let defaultFields: string[] = tempSplitted.slice( 0, tempSplitted.length - resultOutputSplitted.length );
+    return [ defaultFields.concat( resultOutputSplitted ).join( this.COMMA ) ];
   }
 
 
@@ -349,8 +353,8 @@ export class Utils {
     }
     else {
       let objects = null;
-      if (Utils.isColumnNestedInParticipantData(data, paths, index)) {
-        objects = [ data[Utils.DATA] [paths[ index ]] ];
+      if (Utils.isColumnNestedInParticipantData( data, paths, index )) {
+        objects = [ data[ Utils.DATA ] [ paths[ index ] ] ];
       }
       else if (!( data[ paths[ index ] ] instanceof Array )) {
         objects = [ data[ paths[ index ] ] ];
@@ -464,20 +468,23 @@ export class Utils {
           }
           else {
             let value = null;
-            if (Utils.isColumnNestedInProfileData(o, col.participantColumn.name)) {
-              value = o[Utils.PROFILE][col.participantColumn.name]
-            }else {
+            if (Utils.isColumnNestedInProfileData( o, col.participantColumn.name )) {
+              value = o[ Utils.PROFILE ][ col.participantColumn.name ];
+            }
+            else {
               value = o[ col.participantColumn.name ];
             }
             if (col.participantColumn.object != null && o[ col.participantColumn.object ] != null) {
               value = o[ col.participantColumn.object ][ col.participantColumn.name ];
-            } else if (o['data'] && o['data'][col.participantColumn.name]) {
-              value = o['data'][col.participantColumn.name];
+            }
+            else if (o[ 'data' ] && o[ 'data' ][ col.participantColumn.name ]) {
+              value = o[ 'data' ][ col.participantColumn.name ];
             }
             if (col.type === Filter.DATE_TYPE) {
               if (!value) {
                 value = "";
-              } else {
+              }
+              else {
                 value = this.getDateFormatted( new Date( value ), Utils.DATE_STRING_IN_CVS );
               }
             }
@@ -506,9 +513,11 @@ export class Utils {
                 if (questionAnswer != null) {
                   if (col.type === Filter.DATE_TYPE) {
                     value = questionAnswer.date;
-                  } else if (col.type === Filter.COMPOSITE_TYPE) {
-                    questionAnswer.answer.map(arr => value += arr.join(', ') + '\n');
-                  } else {
+                  }
+                  else if (col.type === Filter.COMPOSITE_TYPE) {
+                    questionAnswer.answer.map( arr => value += arr.join( ', ' ) + '\n' );
+                  }
+                  else {
                     value = questionAnswer.answer; //TODO react to what kind of answer it is and make pretty
                   }
                 }
@@ -721,14 +730,14 @@ export class Utils {
                     return "No";
                   }
                   if (questionAnswer.answer instanceof Array) {
-                    return questionAnswer.answer[0];
+                    return questionAnswer.answer[ 0 ];
                   }
                   return questionAnswer.answer;
                 }
                 else if (tmp.length === 3) {
                   if (fieldSetting.possibleValues != null && fieldSetting.possibleValues[ 0 ] != null && fieldSetting.possibleValues[ 0 ].type != null && fieldSetting.possibleValues[ 0 ].type === "RADIO") {
                     if (questionAnswer.answer != null) {
-                      let found = questionAnswer.answer.find( answer => answer === tmp[ 2 ] )
+                      let found = questionAnswer.answer.find( answer => answer === tmp[ 2 ] );
                       if (found != null) {
                         return "Yes";
                       }
