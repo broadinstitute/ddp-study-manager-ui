@@ -116,6 +116,16 @@ import { InvitationDataComponent } from './invitation-data/invitation-data.compo
 import { ParticipantUpdateResultDialogComponent } from './dialogs/participant-update-result-dialog.component';
 import { FormDataComponent } from './form-data/form-data.component';
 import { AddFamilyMemberComponent } from './popups/add-family-member/add-family-member.component';
+import { DynamicDashboardComponent } from './dynamic-dashboard/dynamic-dashboard.component';
+
+//fusion charts
+import { FusionChartsModule } from 'angular-fusioncharts';
+import * as PowerCharts from 'fusioncharts/fusioncharts.powercharts';
+import * as FusionCharts from 'fusioncharts';
+import * as Charts from 'fusioncharts/fusioncharts.charts';
+import * as FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
+
+FusionChartsModule.fcRoot(FusionCharts, PowerCharts, Charts, FusionTheme);
 
 @NgModule( {
   declarations: [
@@ -194,7 +204,8 @@ import { AddFamilyMemberComponent } from './popups/add-family-member/add-family-
     InvitationDataComponent,
     ParticipantUpdateResultDialogComponent,
     FormDataComponent,
-    AddFamilyMemberComponent
+    AddFamilyMemberComponent,
+    DynamicDashboardComponent
   ],
   entryComponents: [ParticipantUpdateResultDialogComponent, AddFamilyMemberComponent],
   imports: [
@@ -227,7 +238,8 @@ import { AddFamilyMemberComponent } from './popups/add-family-member/add-family-
     CookieModule.forRoot(),
     AccordionModule.forRoot(),
     TypeaheadModule.forRoot(),
-    DragulaModule
+    DragulaModule,
+    FusionChartsModule
   ],
   providers: [
     Auth,

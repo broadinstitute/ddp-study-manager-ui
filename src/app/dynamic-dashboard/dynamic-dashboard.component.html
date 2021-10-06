@@ -1,0 +1,26 @@
+<h1>
+  {{title}}
+</h1>
+<fusioncharts
+  *ngIf="dataLoaded"
+  width="100%"
+  height="700"
+  type="heatmap"
+  [dataSource]="dataSource"
+  (dataLabelClick)="clickRow($event)"
+>
+</fusioncharts>
+
+
+
+<button md-raised-button color="primary"
+    *ngIf="dataLoaded"
+    (click)="previousRow()"
+    [disabled]="false">Previous
+</button>
+
+<button md-raised-button color="primary"
+    *ngIf="dataLoaded"
+    (click)="nextRow()"
+    [disabled]="false">Next
+</button>
