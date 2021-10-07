@@ -192,6 +192,18 @@
         </ng-container>
       </ng-container>
 
+      <ng-container *ngIf="field.type === 'table'">
+        <ng-container *ngIf="viewValue != null">
+          <app-field-table [possibleValues]="field.possibleValues" [jsonArray]="viewValue.value" [fieldName]="field.displayName"
+                           [disabled]="readonly" [drugs]="availableDrugs" [cancers]="availableCancers"></app-field-table>
+        </ng-container>
+        <ng-container *ngIf="viewValue == null">
+          <app-field-table [possibleValues]="field.possibleValues" [jsonArray]="field.fieldValue.value" [fieldName]="field.displayName"
+                           [disabled]="field.fieldValue.noData || readonly" [drugs]="availableDrugs" [cancers]="availableCancers"
+                           [finished]="patchFinished" (changes)="abstractionValueChanged($event, field, 'value')"></app-field-table>
+        </ng-container>
+      </ng-container>
+
       <ng-container *ngIf="field.type === 'multi_type'">
         <ng-container *ngIf="viewValue != null">
           <app-field-multi-type [values]="field.possibleValues" [json]="viewValue.value" [fieldName]="field.displayName"
@@ -358,7 +370,7 @@
       </ng-container>
     </td>
 
-    <td *ngIf="activityOfField !== 'final'"
+    <td *ngIf="activityOfField !== 'final' && field.fileInfo"
         [ngClass]="{'Width--20': true, 'TD--Padding': true, 'Abstraction-Background-Oki': field.qcWrapper.equals && (type === 'abstraction' || type === 'review'), 'Abstraction-Background-Warning': !field.qcWrapper.equals && (type === 'abstraction' || type === 'review'),
           'Abstraction-Background-Check': field.qcWrapper.check && (type === 'abstraction' || type === 'review')}">
       <ng-container *ngIf="viewValue != null">
