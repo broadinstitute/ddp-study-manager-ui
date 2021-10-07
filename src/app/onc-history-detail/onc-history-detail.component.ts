@@ -139,9 +139,8 @@ export class OncHistoryDetailComponent implements OnInit {
   patch( patch: any, index: number ) {
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
       data => {
-          let jsonData = data;
-          if (jsonData instanceof Array) {
-            jsonData.forEach( ( val ) => {
+          if (data instanceof Array) {
+            data.forEach( ( val ) => {
               let nameValue = NameValue.parse( val );
               if (nameValue.name === "createdOncHistory") {
                 this.participant.participant[ "createdOncHistory" ] = nameValue.value;
@@ -152,7 +151,7 @@ export class OncHistoryDetailComponent implements OnInit {
             } );
           }
           else {
-            this.oncHistory[ index ].oncHistoryDetailId = jsonData.oncHistoryDetailId;
+            this.oncHistory[ index ].oncHistoryDetailId = data.oncHistoryDetailId;
             if (!this.editable) {
               this.editable = true;
             }
@@ -161,8 +160,8 @@ export class OncHistoryDetailComponent implements OnInit {
               tissue.oncHistoryDetailId = this.oncHistory[ index ].oncHistoryDetailId;
             }
             //set other workflow fieldValue
-            if (jsonData.NameValue != null) {
-              let innerJson: any | any[] = JSON.parse( jsonData.NameValue );
+            if (data.NameValue != null) {
+              let innerJson: any | any[] = JSON.parse( data.NameValue );
               //should be only needed for setting oncHistoryDetails on pt level to created
               if (innerJson instanceof Array) {
                 innerJson.forEach( ( val ) => {

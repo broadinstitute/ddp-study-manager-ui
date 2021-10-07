@@ -310,12 +310,11 @@ export class AbstractionFieldComponent implements OnInit {
                 this.setOtherOptionText();
               }
               if (data) {
-                let jsonData: any | any[] = JSON.parse( data );
-                if (jsonData.primaryKeyId !== undefined && jsonData.primaryKeyId !== "") {
-                  field.fieldValue.primaryKeyId = jsonData.primaryKeyId;
+                if (data.primaryKeyId !== undefined && data.primaryKeyId !== "") {
+                  field.fieldValue.primaryKeyId = data.primaryKeyId;
                 }
-                if (jsonData instanceof Array) {
-                  jsonData.forEach( ( val ) => {
+                if (data instanceof Array) {
+                  data.forEach( ( val ) => {
                     let nameValue = NameValue.parse( val );
                     if (fieldName === "question") {
                       this.field.fieldValue.question = nameValue.value;
@@ -359,9 +358,8 @@ export class AbstractionFieldComponent implements OnInit {
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
       data => {
           if (data) {
-            let jsonData: any | any[] = JSON.parse( data );
-            if (jsonData.primaryKeyId !== undefined && jsonData.primaryKeyId !== "") {
-              field.fieldValue.primaryKeyId = jsonData.primaryKeyId;
+            if (data.primaryKeyId !== undefined && data.primaryKeyId !== "") {
+              field.fieldValue.primaryKeyId = data.primaryKeyId;
             }
           }
       },

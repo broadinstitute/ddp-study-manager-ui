@@ -135,22 +135,20 @@ export class TissueComponent implements OnInit {
       this.dsmService.patchParticipantRecord(JSON.stringify(patch)).subscribe(// need to subscribe, otherwise it will not send!
         data => {
           if ( data && this.tissue.tissueId == null ) {
-            let jsonData: any | any[] = JSON.parse(data);
-            this.tissue.tissueId = jsonData.tissueId;
+            this.tissue.tissueId = data.tissueId;
             this.patchFinished = true;
             this.currentPatchField = null;
             this.dup = false;
-            if ( jsonData instanceof Array ) {
-              jsonData.forEach((val) => {
+            if ( data instanceof Array ) {
+              data.forEach((val) => {
                 let nameValue = NameValue.parse(val);
                 this.oncHistoryDetail[nameValue.name] = nameValue.value;
               });
             }
           }
           else if ( data ) {
-            let jsonData: any | any[] = JSON.parse(data);
-            if ( jsonData instanceof Array ) {
-              jsonData.forEach((val) => {
+            if ( data instanceof Array ) {
+              data.forEach((val) => {
                 let nameValue = NameValue.parse(val);
                 this.oncHistoryDetail[nameValue.name] = nameValue.value;
               });

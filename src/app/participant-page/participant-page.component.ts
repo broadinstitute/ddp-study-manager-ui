@@ -446,16 +446,15 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
       this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
         data => {
           if (data) {
-            let jsonData: any | any[] = JSON.parse( data );
-            if (jsonData instanceof Array) {
-              jsonData.forEach( ( val ) => {
+            if (data instanceof Array) {
+              data.forEach( ( val ) => {
                 let nameValue = NameValue.parse( val );
                 this.participant.participant[ nameValue.name ] = nameValue.value;
               } );
             }
             else {
-              if (jsonData.participantId != null && jsonData.participantId != undefined) {
-                this.participant.participant.participantId = jsonData.participantId;
+              if (data.participantId != null && data.participantId != undefined) {
+                this.participant.participant.participantId = data.participantId;
               }
             }
           }
@@ -498,9 +497,8 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
       this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
         data => {
           if (data) {
-            let jsonData: any[] = JSON.parse( data );
-            if (jsonData instanceof Array) {
-              jsonData.forEach( ( val ) => {
+            if (data instanceof Array) {
+              data.forEach( ( val ) => {
                 let nameValue = NameValue.parse( val );
                 oncHis[ nameValue.name.substr( 3 ) ] = nameValue.value;
               } );
@@ -1263,10 +1261,9 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
         this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
           data => {
             if (data) {
-              let jsonData: any | any[] = JSON.parse( data );
-              if (jsonData.participantDataId !== undefined && jsonData.participantDataId !== "") {
+              if (data.participantDataId !== undefined && data.participantDataId !== "") {
                 if (participantData != null) {
-                  participantData.dataId = jsonData.participantDataId;
+                  participantData.dataId = data.participantDataId;
                 }
               }
           }

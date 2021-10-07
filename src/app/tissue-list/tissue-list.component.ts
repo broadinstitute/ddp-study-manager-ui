@@ -998,22 +998,21 @@ export class TissueListComponent implements OnInit {
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
       data => {
         if (data) {
-          let jsonData: any | any[] = JSON.parse( data);
-          if (jsonData instanceof Array) {
-            jsonData.forEach( ( val ) => {
+          if (data instanceof Array) {
+            data.forEach( ( val ) => {
               let nameValue = NameValue.parse( val );
               this.tissueListWrappers[ index ].tissueList.oncHistoryDetails[ nameValue.name ] = nameValue.value;
             } );
           }
           else {
-            this.tissueListWrappers[ index ].tissueList.oncHistoryDetails.oncHistoryDetailId = jsonData.oncHistoryDetailId;
+            this.tissueListWrappers[ index ].tissueList.oncHistoryDetails.oncHistoryDetailId = data.oncHistoryDetailId;
             //set oncHistoryDetailId to tissue as well
             for (let tissue of this.tissueListWrappers[ index ].tissueList.oncHistoryDetails.tissues) {
               tissue.oncHistoryDetailId = this.tissueListWrappers[ index ].tissueList.oncHistoryDetails.oncHistoryDetailId;
             }
             //set other workflow values
-            if (jsonData.NameValue != null) {
-              let innerJson: any | any[] = JSON.parse( jsonData.NameValue );
+            if (data.NameValue != null) {
+              let innerJson: any | any[] = JSON.parse( data.NameValue );
               if (innerJson instanceof Array) {
                 innerJson.forEach( ( val ) => {
                   let nameValue = NameValue.parse( val );
