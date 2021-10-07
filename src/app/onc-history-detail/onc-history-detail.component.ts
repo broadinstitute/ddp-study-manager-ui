@@ -139,9 +139,7 @@ export class OncHistoryDetailComponent implements OnInit {
   patch( patch: any, index: number ) {
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
       data => {
-        let result = Result.parse( data );
-        if (result.code === 200 && result.body != null && result.body !== "") {
-          let jsonData: any | any[] = JSON.parse( result.body );
+          let jsonData = data;
           if (jsonData instanceof Array) {
             jsonData.forEach( ( val ) => {
               let nameValue = NameValue.parse( val );
@@ -179,7 +177,7 @@ export class OncHistoryDetailComponent implements OnInit {
               }
             }
           }
-        }
+        
         this.patchFinished = true;
         this.currentPatchField = null;
         this.currentPatchFieldRow = null;
@@ -263,9 +261,7 @@ export class OncHistoryDetailComponent implements OnInit {
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
       data => {
         let result = Result.parse( data );
-        if (result.code === 200) {
-          this.oncHistory.splice( index, 1 );
-        }
+        this.oncHistory.splice( index, 1 );
         this.patchFinished = true;
         this.currentPatchField = null;
       },
