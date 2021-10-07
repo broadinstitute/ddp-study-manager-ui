@@ -306,13 +306,11 @@ export class AbstractionFieldComponent implements OnInit {
       if (patch != null) {
         this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
           data => {
-            let result = Result.parse( data );
-            if (result.code === 200) {
               if (putOtherBack) {
                 this.setOtherOptionText();
               }
-              if (result.body != null && result.body !== "") {
-                let jsonData: any | any[] = JSON.parse( result.body );
+              if (data) {
+                let jsonData: any | any[] = JSON.parse( data );
                 if (jsonData.primaryKeyId !== undefined && jsonData.primaryKeyId !== "") {
                   field.fieldValue.primaryKeyId = jsonData.primaryKeyId;
                 }
@@ -324,7 +322,6 @@ export class AbstractionFieldComponent implements OnInit {
                     }
                   } );
                 }
-              }
             }
             this.patchFinished = true;
             if (fieldName !== "note" && fieldName !== "question") {
@@ -361,15 +358,12 @@ export class AbstractionFieldComponent implements OnInit {
     };
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
       data => {
-        let result = Result.parse( data );
-        if (result.code === 200) {
-          if (result.body != null && result.body !== "") {
-            let jsonData: any | any[] = JSON.parse( result.body );
+          if (data) {
+            let jsonData: any | any[] = JSON.parse( data );
             if (jsonData.primaryKeyId !== undefined && jsonData.primaryKeyId !== "") {
               field.fieldValue.primaryKeyId = jsonData.primaryKeyId;
             }
           }
-        }
       },
       err => {
         if (err._body === Auth.AUTHENTICATION_ERROR) {
