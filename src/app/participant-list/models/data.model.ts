@@ -24,6 +24,22 @@ export class Data {
     return this.activities.find( x => x.activityCode === code );
   }
 
+  getMultipleAnswersForPickList( activityData: ActivityData, name: string ) {
+    let answers: Array<string> = new Array();
+    for (let x of this.activities) {
+      if (x.activityCode === activityData.activityCode) {
+        for (let y of x.questionsAnswers) {
+          if (y.stableId === name) {
+            for (let answer of y.answer) {
+              answers.push( answer );
+            }
+          }
+        }
+      }
+    }
+    return answers.reverse();
+  }
+
   static parse( json ): Data {
     let jsonData: any[];
     let medicalProviders: Array<MedicalProvider> = null;

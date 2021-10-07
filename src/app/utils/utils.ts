@@ -115,6 +115,38 @@ export class Utils {
     } );
   }
 
+  getAnswerGroupOrOptionText( answer: any, qdef: QuestionDefinition ): string {
+    if (answer instanceof Array) {
+      answer = answer[ 0 ];
+    }
+    let text = answer;
+    let ans;
+    if (qdef.groups) {
+      ans = qdef.groups.find( group => {
+        if (group.groupStableId === answer) {
+          return true;
+        }
+        return false;
+      } );
+
+      if (ans) {
+        text = ans.groupText;
+      }
+    }
+    if (!ans && qdef.options) {
+      let ans = qdef.options.find( option => {
+        if (option.optionStableId === answer) {
+          return true;
+        }
+        return false;
+      } );
+      if (ans) {
+        text = ans.optionText;
+      }
+    }
+    return text;
+  }
+
   isOptionSelected( selected: Array<string>, optionStableId: string ) {
     return selected.find( x => x === optionStableId );
   }
@@ -257,15 +289,15 @@ export class Utils {
         let nonDefaultFieldsResultArray: string[] = null;
         let output = this.makeCSVForObjectArray( d, path, columns, 0 );
         let temp = [];
-        
+
         for (let i = 0; i < output.length; i++) {
           if (input.length === output.length) {
             temp.push(input[i] + output[i]);
           } else {
             for (let j = 0; j < input.length; j++) {
-              temp.push(input[j] + output[i]);              
+              temp.push(input[j] + output[i]);
             }
-          }         
+          }
         }
 
         if (output.length > 1) {
