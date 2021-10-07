@@ -445,9 +445,8 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
       // console.log( JSON.stringify( patch ) );
       this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
         data => {
-          let result = Result.parse( data );
-          if (result.code === 200 && result.body != null) {
-            let jsonData: any | any[] = JSON.parse( result.body );
+          if (data) {
+            let jsonData: any | any[] = JSON.parse( data );
             if (jsonData instanceof Array) {
               jsonData.forEach( ( val ) => {
                 let nameValue = NameValue.parse( val );
@@ -498,9 +497,8 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
       this.currentPatchField = parameterName;
       this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
         data => {
-          let result = Result.parse( data );
-          if (result.code === 200 && result.body != null) {
-            let jsonData: any[] = JSON.parse( result.body );
+          if (data) {
+            let jsonData: any[] = JSON.parse( data );
             if (jsonData instanceof Array) {
               jsonData.forEach( ( val ) => {
                 let nameValue = NameValue.parse( val );
@@ -1264,17 +1262,14 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
         this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
           data => {
-            let result = Result.parse( data );
-            if (result.code === 200) {
-              if (result.body != null && result.body !== "") {
-                let jsonData: any | any[] = JSON.parse( result.body );
-                if (jsonData.participantDataId !== undefined && jsonData.participantDataId !== "") {
-                  if (participantData != null) {
-                    participantData.dataId = jsonData.participantDataId;
-                  }
+            if (data) {
+              let jsonData: any | any[] = JSON.parse( data );
+              if (jsonData.participantDataId !== undefined && jsonData.participantDataId !== "") {
+                if (participantData != null) {
+                  participantData.dataId = jsonData.participantDataId;
                 }
               }
-            }
+          }
             this.patchFinished = true;
           },
           err => {

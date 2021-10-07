@@ -152,17 +152,14 @@ export class TissuePageComponent implements OnInit {
       this.currentPatchField = parameterName;
       this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
         data => {
-          let result = Result.parse( data );
-          if (result.code === 200) {
+          if (data) {
             this.oncHistoryDetail[ parameterName ] = v;
-            if (result.body != null) {
-              let jsonData: any | any[] = JSON.parse( result.body );
-              if (jsonData instanceof Array) {
-                jsonData.forEach( ( val ) => {
-                  let nameValue = NameValue.parse( val );
-                  this.oncHistoryDetail[ nameValue.name.substr( nameValue.name.indexOf( "." ) + 1 ) ] = nameValue.value;
-                } );
-              }
+            let jsonData: any | any[] = JSON.parse( data.body );
+            if (jsonData instanceof Array) {
+              jsonData.forEach( ( val ) => {
+                let nameValue = NameValue.parse( val );
+                this.oncHistoryDetail[ nameValue.name.substr( nameValue.name.indexOf( "." ) + 1 ) ] = nameValue.value;
+              } );
             }
           }
           // console.info(`response saving data: ${JSON.stringify(data, null, 2)}`);

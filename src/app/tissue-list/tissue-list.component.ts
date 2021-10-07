@@ -762,10 +762,7 @@ export class TissueListComponent implements OnInit {
       { name: "shared", value: value }, null, this.parent, null, null, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null );
     let patch = patch1.getPatch();
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe( data => {
-      let result = Result.parse( data );
-      if (result.code == 200) {
-        this.savedFilters[ i ].shared = (value === "1");
-      }
+      this.savedFilters[ i ].shared = (value === "1");
     }, err => {
     } );
   }
@@ -775,10 +772,7 @@ export class TissueListComponent implements OnInit {
       { name: "fDeleted", value: "1" }, null, this.parent, null, null, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null );
     let patch = patch1.getPatch();
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe( data => {
-      let result = Result.parse( data );
-      if (result.code == 200) {
         this.getAllFilters( false );
-      }
     }, err => {
     } );
   }
@@ -1003,9 +997,8 @@ export class TissueListComponent implements OnInit {
   patch( patch: any, index: number ) {
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
       data => {
-        let result = Result.parse( data );
-        if (result.code === 200 && result.body != null && result.body !== "") {
-          let jsonData: any | any[] = JSON.parse( result.body );
+        if (data) {
+          let jsonData: any | any[] = JSON.parse( data);
           if (jsonData instanceof Array) {
             jsonData.forEach( ( val ) => {
               let nameValue = NameValue.parse( val );

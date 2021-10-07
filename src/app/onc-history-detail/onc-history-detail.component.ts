@@ -260,7 +260,6 @@ export class OncHistoryDetailComponent implements OnInit {
     this.patchFinished = false;
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
       data => {
-        let result = Result.parse( data );
         this.oncHistory.splice( index, 1 );
         this.patchFinished = true;
         this.currentPatchField = null;

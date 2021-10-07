@@ -1315,10 +1315,7 @@ export class ParticipantListComponent implements OnInit {
       {name: "shared", value: value}, null, this.parent, null, null, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null );
     let patch = patch1.getPatch();
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe( data => {
-      let result = Result.parse( data );
-      if (result.code == 200) {
-        this.savedFilters[ i ].shared = ( value === "1" );
-      }
+      this.savedFilters[ i ].shared = ( value === "1" );
     }, err => {
       this.additionalMessage = "Error - Sharing Filter, Please contact your DSM developer";
     } );
@@ -1329,10 +1326,7 @@ export class ParticipantListComponent implements OnInit {
       {name: "fDeleted", value: "1"}, null, this.parent, null, null, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null );
     let patch = patch1.getPatch();
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe( data => {
-      let result = Result.parse( data );
-      if (result.code == 200) {
-        this.getFilters();
-      }
+      this.getFilters();
     }, err => {
       this.additionalMessage = "Error - Deleting Filter, Please contact your DSM developer";
     } );

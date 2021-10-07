@@ -164,17 +164,14 @@ export class MedicalRecordComponent implements OnInit {
       }
       this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
         data => {
-          let result = Result.parse( data );
-          if (result.code === 200) {
-            if (result.body != null) {
-              let jsonData: any | any[] = JSON.parse( result.body );
+            if (data) {
+              let jsonData: any | any[] = JSON.parse( data );
               if (jsonData instanceof Array) {
                 jsonData.forEach( ( val ) => {
                   let nameValue = NameValue.parse( val );
                   this.medicalRecord[ nameValue.name ] = nameValue.value;
                 } );
               }
-            }
           }
           this.patchFinished = true;
           this.currentPatchField = null;

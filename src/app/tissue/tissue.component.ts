@@ -134,9 +134,8 @@ export class TissueComponent implements OnInit {
       this.currentPatchField = parameterName;
       this.dsmService.patchParticipantRecord(JSON.stringify(patch)).subscribe(// need to subscribe, otherwise it will not send!
         data => {
-          let result = Result.parse(data);
-          if ( result.code == 200 && result.body != null && result.body !== "" && this.tissue.tissueId == null ) {
-            let jsonData: any | any[] = JSON.parse(result.body);
+          if ( data && this.tissue.tissueId == null ) {
+            let jsonData: any | any[] = JSON.parse(data);
             this.tissue.tissueId = jsonData.tissueId;
             this.patchFinished = true;
             this.currentPatchField = null;
@@ -147,20 +146,14 @@ export class TissueComponent implements OnInit {
                 this.oncHistoryDetail[nameValue.name] = nameValue.value;
               });
             }
-
           }
-          else if ( result.code === 500 && result.body != null ) {
-            this.dup = true;
-          }
-          else if ( result.code === 200 ) {
-            if ( result.body != null && result.body !== "" ) {
-              let jsonData: any | any[] = JSON.parse(result.body);
-              if ( jsonData instanceof Array ) {
-                jsonData.forEach((val) => {
-                  let nameValue = NameValue.parse(val);
-                  this.oncHistoryDetail[nameValue.name] = nameValue.value;
-                });
-              }
+          else if ( data ) {
+            let jsonData: any | any[] = JSON.parse(data);
+            if ( jsonData instanceof Array ) {
+              jsonData.forEach((val) => {
+                let nameValue = NameValue.parse(val);
+                this.oncHistoryDetail[nameValue.name] = nameValue.value;
+              });
             }
             this.patchFinished = true;
             this.currentPatchField = null;
@@ -168,6 +161,7 @@ export class TissueComponent implements OnInit {
           }
         },
         err => {
+          this.dup = true;
           if ( err._body === Auth.AUTHENTICATION_ERROR ) {
             this.router.navigate([ Statics.HOME_URL ]);
           }
