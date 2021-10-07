@@ -467,7 +467,7 @@ participant.data.dsm['diagnosisYear'] != null">
                          (change)="onAdditionalValueChange($event, fieldSetting.columnName)"
                          (blur)="currentField(null)" (focus)="currentField(fieldSetting.columnName)">
                 </md-input-container>
-                <textarea maxlength="10000" *ngIf="fieldSetting.displayType === 'TEXTAREA'"
+                <textarea maxlength="50000" *ngIf="fieldSetting.displayType === 'TEXTAREA'"
                           [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}"
                           (blur)="currentField(null)" (focus)="currentField(fieldSetting.columnName)"
                           [disabled]="participantExited"
@@ -646,6 +646,57 @@ participant.data.dsm['diagnosisYear'] != null">
                 </fieldset>
               </ng-container>
             </tab>
+
+          <tab *ngIf="showContactInformation" heading="Contact Information">
+            <legend class="Group--Title">
+              <div class="Float--left Width--100">
+                <table class="Width--100 Table--box">
+                  <tr *ngIf="participant && participant.data && participant.data.address && participant.data.address.street1">
+                    <td class="TD--Padding-Left Width--50"> Street 1: {{ participant.data.address.street1 }} </td>
+                  </tr>
+                  <tr *ngIf="participant && participant.data && participant.data.address && participant.data.address.street2">
+                    <td class="TD--Padding-Left Width--50"> Street 2: {{ participant.data.address.street2 }} </td>
+                  </tr>
+                  <tr *ngIf="participant && participant.data && participant.data.address && participant.data.address.city">              
+                    <td class="TD--Padding-Left Width--50"> City: {{ participant.data.address.city }} </td>
+                  </tr>
+                  <tr *ngIf="participant && participant.data && participant.data.address && participant.data.address.postalCode">
+                    <td class="TD--Padding-Left Width--50"> PostalCode: {{ participant.data.address.postalCode }} </td>
+                  </tr>
+                  <tr *ngIf="participant && participant.data && participant.data.address && participant.data.address.state">
+                    <td class="TD--Padding-Left Width--50"> State: {{ participant.data.address.state }} </td>
+                  </tr>
+                  <tr *ngIf="participant && participant.data && participant.data.address && participant.data.address.country">
+                    <td class="TD--Padding-Left Width--50"> Country: {{ participant.data.address.country }} </td>
+                  </tr>
+                  <tr *ngIf="participant && participant.data && participant.data.address && participant.data.address.mailToName">
+                    <td class="TD--Padding-Left Width--50"> Mail To Name: {{ participant.data.address.mailToName }} </td>
+                  </tr>
+                  <tr *ngIf="participant && participant.data && participant.data.address && participant.data.address.zip">
+                    <td class="TD--Padding-Left Width--50"> Zip: {{ participant.data.address.zip }} </td>
+                  </tr>
+                  <tr *ngIf="participant && participant.data && participant.data.address && participant.data.address.valid">
+                    <td class="TD--Padding-Left Width--50"> Valid: {{ participant.data.address.valid }} </td>
+                  </tr>
+                  </table>
+                </div>
+              </legend>
+          </tab>
+
+          <tab *ngIf="showComputedObject" heading="Morning Evening Questionnaire Scores">
+            <legend class="Group--Title">
+              <div class="Float--left Width--100">
+                <table class="Width--100 Table--box">
+                  <tr *ngIf="participant && participant.data && participant.data.computed && participant.data.computed.meqScore">
+                    <td class="TD--Padding-Left Width--50"> MEQ Score: {{ participant.data.computed.meqScore }} </td>
+                  </tr>
+                  <tr *ngIf="participant && participant.data && participant.data.computed && participant.data.computed.meqChronotype">
+                    <td class="TD--Padding-Left Width--50"> MEQ Chronotype: {{ participant.data.computed.meqChronotype }} </td>
+                  </tr>
+                  </table>
+                </div>
+              </legend>
+          </tab>
 
             <tab heading="Medical Records"
                  *ngIf="participant.medicalRecords != null && participant.medicalRecords.length > 0"

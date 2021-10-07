@@ -316,7 +316,6 @@ export class AbstractionFieldComponent implements OnInit {
                 if (jsonData.primaryKeyId !== undefined && jsonData.primaryKeyId !== "") {
                   field.fieldValue.primaryKeyId = jsonData.primaryKeyId;
                 }
-                // console.log( jsonData );
                 if (jsonData instanceof Array) {
                   jsonData.forEach( ( val ) => {
                     let nameValue = NameValue.parse( val );

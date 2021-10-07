@@ -108,9 +108,12 @@ export class ParticipantListComponent implements OnInit {
   isAddFamilyMember: boolean = false;
   showGroupFields: boolean = false;
   hideSamplesTab: boolean = false;
+  showContactInformation: boolean = false;
+  showComputedObject: boolean = false;
   participantsSize: number = 0;
   jsonPatch: any;
   viewFilter: any;
+
 
   constructor( private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
                private router: Router, private auth: Auth, private route: ActivatedRoute, private util: Utils ) {
@@ -152,7 +155,7 @@ export class ParticipantListComponent implements OnInit {
        this.applyFilter(this.viewFilter, from, to);
     } else {
       if (this.jsonPatch) {
-        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.jsonPatch, this.parent, null, from, to ).subscribe( 
+        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.jsonPatch, this.parent, null, from, to ).subscribe(
         data => {
           this.setFilterDataOnSuccess(data);
         }, err => {
@@ -258,7 +261,7 @@ export class ParticipantListComponent implements OnInit {
           ["oD", "Onc History"],
           ["t", "Tissue"],
           ["k", "Sample"],
-          ["a", "Abstraction"]] );
+          ["a", "Abstraction"]]);
         this.sourceColumns = {};
         this.selectedColumns = {};
         this.settings = {};
@@ -544,20 +547,25 @@ export class ParticipantListComponent implements OnInit {
           } );
           this.orderColumns();
         }
+        if (jsonData.hasAddressTab) {
+          this.addContactInformationColumns();
+        }
+        if (jsonData.hasComputedObject) {
+          this.addAutomatedScoringColumns();
+        }
         if (jsonData.hasProxyData != null) {
           this.dataSources.set( "proxy", "Proxy" );
           let possibleColumns: Array<Filter> = [];
-          possibleColumns.push( new Filter( new ParticipantColumn( "First Name", "firstName", "proxy", "profile", true ), Filter.TEXT_TYPE ) );
-          possibleColumns.push( new Filter( new ParticipantColumn( "Last Name", "lastName", "proxy", "profile", true ), Filter.TEXT_TYPE ) );
-          possibleColumns.push( new Filter( new ParticipantColumn( "Email", "email", "proxy", "profile", true ), Filter.TEXT_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "First Name", "firstName", "proxy", null, true ), Filter.TEXT_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Last Name", "lastName", "proxy", null, true ), Filter.TEXT_TYPE ) );
+          possibleColumns.push( new Filter( new ParticipantColumn( "Email", "email", "proxy", null, true ), Filter.TEXT_TYPE ) );
 
           this.sourceColumns[ "proxy" ] = possibleColumns;
           this.selectedColumns[ "proxy" ] = [];
-          //TODO add when proxy is searchable
-          // possibleColumns.forEach( filter => {
-          //   let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
-          //   this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
-          // } );
+          possibleColumns.forEach( filter => {
+            let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
+            this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
+          } );
           this.orderColumns();
         }
         if (jsonData.hideESFields != null) {
@@ -599,8 +607,8 @@ export class ParticipantListComponent implements OnInit {
         }
         this.orderColumns();
         this.getData();
+        },
         // this.renewSelectedColumns(); commented out becasue if we have defaultColumns for all the studies we won't need it anymore
-      },
       err => {
         if (err._body === Auth.AUTHENTICATION_ERROR) {
           this.auth.logout();
@@ -711,7 +719,7 @@ export class ParticipantListComponent implements OnInit {
               this.originalParticipantList = this.participantList;
               this.participantsSize = jsonData['totalCount'];
               let date = new Date();
-              this.loadedTimeStamp = Utils.getDateFormatted( date, Utils.DATE_STRING_IN_EVENT_CVS );
+              this.loadedTimeStamp = Utils.getDateFormatted( date, Utils.DATE_STRING_IN_EVENT_CVS);
             }
             this.loadingParticipants = null;
             this.dataSources.forEach( ( value: string, key: string ) => {
@@ -958,7 +966,34 @@ export class ParticipantListComponent implements OnInit {
     this.filterQuery = null;
     this.deselectQuickFilters();
     this.clearManualFilters();
+    this.selectedFilterName = "";
     this.getData();
+    this.setDefaultColumns();
+  }
+
+  private setDefaultColumns() {
+    let filteredColumns = this.extractDefaultColumns(this.selectedColumns);
+    Object.assign(this.selectedColumns, filteredColumns);
+    if (this.isDataOfViewFilterExists()) {
+      this.viewFilter.columns = this.extractDefaultColumns(this.viewFilter.columns);
+    }
+  }
+
+  private extractDefaultColumns(selectedColumns: {}): {} {
+    let filteredColumns = {};
+    for (var [key, value] of Object.entries(selectedColumns)) {
+      let val = value as Filter[];
+      let newVal = [];
+      val.forEach(el => {
+        this.defaultColumns.forEach(col => {
+          if (el['participantColumn']['name'] === col['participantColumn']['name']) {
+            newVal.push(el);
+          }
+        });
+      });
+      filteredColumns[key] = newVal;
+    }
+    return filteredColumns;
   }
 
   public parseMillisToDateString( dateInMillis: number ) : string {
@@ -1009,6 +1044,13 @@ export class ParticipantListComponent implements OnInit {
     } else {
       this.selectedColumns[ parent ].push( column );
     }
+    if (this.isDataOfViewFilterExists()) {
+      this.viewFilter.columns.data.push(column);
+    }
+  }
+
+  private isDataOfViewFilterExists() {
+    return this.viewFilter && this.viewFilter.columns && this.viewFilter.columns.data;
   }
 
   renewSelectedColumns() {
@@ -1037,6 +1079,15 @@ export class ParticipantListComponent implements OnInit {
         tabAnchor = "Onc History";
         this.selectedMR = "";
         this.selectedOncOrTissue = "";
+      }
+      if (participant.participantData) {
+        let proband = participant.participantData.find( p => p.data[ "MEMBER_TYPE" ] === "SELF" )
+        if (!proband) {
+          proband = participant.participantData.find( p => p.data[ "COLLABORATOR_PARTICIPANT_ID" ] && p.data[ "COLLABORATOR_PARTICIPANT_ID" ].slice( -2 ) === "_3" )
+        }
+        if (proband && proband.dataId) {
+          tabAnchor = proband.dataId;
+        }
       }
       if (this.filtered && participant.participant != null && participant.participant.ddpParticipantId != null) {
         this.loadingParticipants = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
@@ -1367,12 +1418,16 @@ export class ParticipantListComponent implements OnInit {
       this.participantList.sort( ( a, b ) => ( a.data == null || b.data == null ) ? 1 : this.sort( a.data, b.data, order, this.sortField, colType ) );
     } else if (this.sortParent === "p") {
       this.participantList.sort( ( a, b ) => {
-        if (a.participant == null || a.participant[ this.sortField ] == null) {
+        if (a.participant == null || (a.participant[ this.sortField ] == null && a.participant['additionalValues'] == null)) {
           return 1;
-        } else if (b.participant == null || b.participant[ this.sortField ] == null) {
+        } else if (b.participant == null || (b.participant[ this.sortField ] == null && b.participant['additionalValues'] == null)) {
           return -1;
         } else {
-          return this.sort( a.participant[ this.sortField ], b.participant[ this.sortField ], order, undefined, colType );
+          if (a.participant['additionalValues'][this.sortField] != null || b.participant['additionalValues'][this.sortField] != null) {
+            return this.sort( a.participant['additionalValues'][ this.sortField ], b.participant['additionalValues'][ this.sortField ], order, undefined, colType )
+          } else {
+            return this.sort( a.participant[ this.sortField ], b.participant[ this.sortField ], order, undefined, colType );
+          }
         }
       } );
     } else if (this.sortParent === "m") {
@@ -1577,8 +1632,14 @@ export class ParticipantListComponent implements OnInit {
       } else if (source === "a") {
         paths.push(["abstractionActivities", source]);
         paths.push(["abstractionSummary", source]);
-      }  else if (source === "invitations") {
+      } else if (source === "invitations") {
         paths.push(["invitations", source]);
+      } else if (source === "proxy") {
+        paths.push(["proxyData", source]);
+      } else if (source.includes("GROUP")) {
+        paths.push(["participantData", source]);
+      } else if (source === "proxy") {
+        paths.push(["proxyData", source])
       } else {
         paths.push([source, source]);
       }
@@ -1739,6 +1800,30 @@ export class ParticipantListComponent implements OnInit {
     if (this.filterQuery !== queryText) {
       this.selectedFilterName = "";
     }
+  }
+
+  addContactInformationColumns(): void {
+    this.showContactInformation = true;
+
+    this.dataSources.set("address", "Contact Information");
+    let possibleColumns: Array<Filter> = [];
+    possibleColumns.push(new Filter( new ParticipantColumn("Street 1", "street1", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("Street 2", "street2", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("City", "city", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("State", "state", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("Zip", "zip", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("Country", "country", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("Phone", "phone", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("Mail To Name", "mailToName", "address", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("Valid", "valid", "address", null, true), Filter.BOOLEAN_TYPE) );
+
+    this.sourceColumns["address"] = possibleColumns;
+    this.selectedColumns[ "address" ] = [];
+    possibleColumns.forEach( filter => {
+      let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
+      this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
+    } );
+    this.orderColumns();
   }
 
   getQuestionAnswerByName( questionsAnswers: Array<QuestionAnswer>, name: string ) {
@@ -2099,5 +2184,21 @@ export class ParticipantListComponent implements OnInit {
       }
     }
     return false;
+  }
+
+  addAutomatedScoringColumns(): void {
+    this.showComputedObject = true;
+
+    this.dataSources.set("computed", "Morning-Evening Questionnaire Scoring");
+    let possibleColumns: Array<Filter> = [];
+    possibleColumns.push(new Filter( new ParticipantColumn("MEQ Score", "meqScore", "computed", null, true), Filter.TEXT_TYPE) );
+    possibleColumns.push(new Filter( new ParticipantColumn("MEQ Chronotype", "meqChronotype", "computed", null, true), Filter.TEXT_TYPE) );
+    this.sourceColumns["computed"] = possibleColumns;
+    this.selectedColumns[ "computed" ] = [];
+    possibleColumns.forEach( filter => {
+      let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
+      this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
+     });
+     this.orderColumns(); 
   }
 }
