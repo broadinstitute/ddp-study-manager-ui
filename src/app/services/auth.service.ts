@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Router} from "@angular/router";
-import {Http, Headers, Response, RequestOptions} from "@angular/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable, Subject} from "rxjs";
 import {NameValue} from "../utils/name-value.model";
 
@@ -75,7 +75,7 @@ export class Auth {
     allowedConnections: [ "google-oauth2" ]
   } );
 
-  constructor( private router: Router, private http: Http, private sessionService: SessionService, private role: RoleService,
+  constructor( private router: Router, private http: HttpClient, private sessionService: SessionService, private role: RoleService,
                private compService: ComponentService, private dsmService: DSMService ) {
     // Add callback for lock `authenticated` event
     this.lock.on( "authenticated", ( authResult: any ) => {
@@ -121,9 +121,7 @@ export class Auth {
 
   public doLogin( authPayload: any ) {
     let dsmObservable = this.http.post( this.authUrl, authPayload, this.buildHeaders() )
-      .map( ( res: Response ) => res.json() )
       .catch( this.handleError );
-
 
     let dsmResponse: any;
 
@@ -168,10 +166,13 @@ export class Auth {
     );
   }
 
-  public buildHeaders(): RequestOptions {
-    let headers = new Headers( {"Content-Type": "application/json", "Accept": "application/json"} );
-    headers.append( "Authorization", this.sessionService.getAuthBearerHeaderValue() );
-    return new RequestOptions( {headers: headers, withCredentials: true} );
+  public buildHeaders(): any {
+    const headers = new HttpHeaders( {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      "Authorization": this.sessionService.getAuthBearerHeaderValue()
+    } );
+    return {headers, withCredentials: true};
   }
 
   private handleError( error: any ) {

@@ -1,7 +1,7 @@
 import {BrowserModule} from "@angular/platform-browser";
 import {ErrorHandler, NgModule} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {HttpModule} from "@angular/http";
+import { HttpClientModule } from "@angular/common/http";
 import {RouterModule} from "@angular/router";
 import {DataTableModule} from "angular2-datatable";
 import {
@@ -204,7 +204,7 @@ import { FieldTableComponent } from './field-table/field-table.component';
     BrowserModule,
     FormsModule,
     RouterModule.forRoot( AppRoutes, {enableTracing: true} ),
-    HttpModule,
+    HttpClientModule,
     ReactiveFormsModule,
 
     MdCheckboxModule,
