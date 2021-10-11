@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {Router} from "@angular/router";
-import {JwtHelper} from "angular2-jwt";
+import { JwtHelperService } from "@auth0/angular-jwt";
 import {Observable} from "rxjs";
 import {Filter} from "../filter-column/filter-column.model";
 import {ViewFilter} from "../filter-column/models/view-filter.model";
@@ -820,7 +820,7 @@ export class DSMService {
       return false;
     }
     else {
-      let jwtHelper: JwtHelper = new JwtHelper();
+      const jwtHelper = new JwtHelperService();
       let expirationDate: Date = jwtHelper.getTokenExpirationDate( this.sessionService.getDSMToken() );
       let myDate = new Date();
       if (expirationDate <= myDate) {
