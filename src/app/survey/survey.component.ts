@@ -19,10 +19,10 @@ import {FieldFilepickerComponent} from "../field-filepicker/field-filepicker.com
 })
 export class SurveyComponent implements OnInit {
 
-  @ViewChild(ModalComponent)
+  @ViewChild(ModalComponent, { static: false })
   public modal: ModalComponent;
 
-  @ViewChild(FieldFilepickerComponent)
+  @ViewChild(FieldFilepickerComponent, { static: false })
   public filepicker: FieldFilepickerComponent;
 
   errorMessage: string;

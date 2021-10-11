@@ -39,7 +39,7 @@ var fileSaver = require( "file-saver/FileSaver.js" );
 } )
 export class ParticipantPageComponent implements OnInit, OnDestroy {
 
-  @ViewChild( ModalComponent )
+  @ViewChild( ModalComponent, { static: false })
   public universalModal: ModalComponent;
 
   @Input() parentList: string;
@@ -698,7 +698,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     window.scrollTo( 0, 0 );
   }
 
-  downloadFile( data: Response, type: string ) {
+  downloadFile( data: any, type: string ) {
     var blob = new Blob( [data], {type: "application/pdf"} );
 
     let shortId = this.participant.data.profile[ "hruid" ];
