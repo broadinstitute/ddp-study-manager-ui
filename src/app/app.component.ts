@@ -1,5 +1,5 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
-import {MdMenuTrigger} from "@angular/material";
+
+import {Component, OnInit} from "@angular/core";
 import {DomSanitizer} from "@angular/platform-browser";
 import {ActivatedRoute, Router} from "@angular/router";
 
@@ -13,7 +13,6 @@ import {ComponentService} from "./services/component.service";
 } )
 export class AppComponent implements OnInit {
   private realmFromUrl: string;
-  @ViewChild( MdMenuTrigger ) trigger: MdMenuTrigger;
 
   constructor( private router: Router, private auth: Auth, private sanitizer: DomSanitizer, private role: RoleService
     , private route: ActivatedRoute ) {
