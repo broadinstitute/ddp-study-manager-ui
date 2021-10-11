@@ -4,6 +4,14 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import {RouterModule} from "@angular/router";
 import {DataTableModule} from "angular2-datatable";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatButtonModule} from "@angular/material/button";
+import {MatInputModule} from "@angular/material/input";
+import {MatSelectModule} from "@angular/material/select";
+import {MatRadioModule} from "@angular/material/radio";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatDialogModule} from "@angular/material/dialog";
 import {
   AccordionModule,
   CollapseModule,
@@ -14,16 +22,6 @@ import {
   TooltipModule,
   TypeaheadModule
 } from "ngx-bootstrap";
-import {
-  MdAutocompleteModule,
-  MdButtonModule,
-  MdButtonToggleModule,
-  MdCheckboxModule,
-  MdInputModule,
-  MdRadioModule,
-  MdSelectModule,
-  MdDialogModule
-} from "@angular/material";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {CookieModule} from "ngx-cookie";
 import {NgxPaginationModule} from "ngx-pagination";
@@ -207,16 +205,16 @@ import { FieldTableComponent } from './field-table/field-table.component';
     HttpClientModule,
     ReactiveFormsModule,
 
-    MdCheckboxModule,
-    MdButtonModule,
-    MdInputModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    MatInputModule,
+    MatSelectModule,
+    MatRadioModule,
+    MatButtonToggleModule,
+    MatAutocompleteModule,
+    MatDialogModule,
     BrowserAnimationsModule,
-    MdSelectModule,
-    MdRadioModule,
-    MdButtonToggleModule,
     NgxPageScrollModule,
-    MdAutocompleteModule,
-    MdDialogModule,
 
     DataTableModule,
     NgxPaginationModule,
