@@ -22,24 +22,24 @@
       <ng-container *ngIf="hasParticipantSpecificPDFs">
         <p>If your participant is a migrated one and has a altPID please use that ID for the PDF download, otherwise use the GUID</p>
 
-        <md-input-container>
-          <input maxlength="200" style="width: 10cm" mdInput type="text" placeholder="Participant ID"
+        <mat-form-field>
+          <input maxlength="200" style="width: 10cm" matInput type="text" placeholder="Participant ID"
                  [(ngModel)]="participantId">
-        </md-input-container>
-        <button md-raised-button type="button" color="primary"
+        </mat-form-field>
+        <button mat-raised-button type="button" color="primary"
                 (click)="getParticipantsPDFs()"
                 [disabled]="participantId == null || loading">Get List of PDFs for Participant
         </button>
 
         <div *ngIf="participantPDFs != null && participantPDFs.length != 0">
-          <md-select placeholder="Select PDF" class="Input--Abstraction" [(ngModel)]="selectedPDF">
-            <md-option *ngFor="let e of participantPDFs" [value]="e.configName">
+          <mat-select placeholder="Select PDF" class="Input--Abstraction" [(ngModel)]="selectedPDF">
+            <mat-option *ngFor="let e of participantPDFs" [value]="e.configName">
               {{e.displayName}}
-            </md-option>
-          </md-select>
+            </mat-option>
+          </mat-select>
           <br/>
           <br/>
-          <button md-raised-button color="primary"
+          <button mat-raised-button color="primary"
                   [disabled]="selectedPDF == null || selectedPDF === ''"
                   (click)="downloadPDF(selectedPDF)">Download selected PDF
           </button>
@@ -57,22 +57,22 @@
         </div>
 
         <div *ngIf="possiblePDFs.length > 0">
-          <md-select placeholder="PDF" class="Input--Bigger-WIDTH"
+          <mat-select placeholder="PDF" class="Input--Bigger-WIDTH"
                      [(ngModel)]="selectedPDF">
-            <md-option *ngFor="let pdf of possiblePDFs"
+            <mat-option *ngFor="let pdf of possiblePDFs"
                        [value]="pdf">
               {{ pdf | titlecase }}
-            </md-option>
-          </md-select>
+            </mat-option>
+          </mat-select>
         </div>
 
         <div *ngIf="realm != null && selectedPDF != null" class="Width--80">
           <br/>
-          <md-input-container>
-            <input maxlength="200" style="width: 10cm" mdInput type="text" placeholder="Participant ID"
+          <mat-form-field>
+            <input maxlength="200" style="width: 10cm" matInput type="text" placeholder="Participant ID"
                    [(ngModel)]="participantId">
-          </md-input-container>
-          <button md-raised-button type="button" color="primary"
+          </mat-form-field>
+          <button mat-raised-button type="button" color="primary"
                   (click)="downloadPDF(selectedPDF)"
                   [disabled]="participantId == null || loading">Download PDF
           </button>

@@ -19,7 +19,7 @@
   <app-field-datepicker [dateString]="startDate" (dateChanged)="startChanged($event)"></app-field-datepicker>
   end date of period
   <app-field-datepicker [dateString]="endDate" (dateChanged)="endChanged($event)"></app-field-datepicker>
-  <button class="Float--right" type="button" md-raised-button color="primary"
+  <button class="Float--right" type="button" mat-raised-button color="primary"
           (click)="reload()">Reload</button>
     </b>
 </div>
@@ -60,5 +60,5 @@
     </div>
   </ng-container>
 
-  <button md-raised-button (click)="downloadReport()" color="primary">Download Report</button>
+  <button mat-raised-button (click)="downloadReport()" color="primary">Download Report</button>
 </div>

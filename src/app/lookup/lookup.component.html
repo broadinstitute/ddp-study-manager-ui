@@ -1,17 +1,17 @@
-<md-input-container [ngClass]="{'Width--100': true, 'Input--Bigger-WIDTH': largeInputField, 'Input--Min-WIDTH': !largeInputField, 'Color--Field--Patched': isPatchedCurrently(fieldName)}">
+<mat-form-field [ngClass]="{'Width--100': true, 'Input--Bigger-WIDTH': largeInputField, 'Input--Min-WIDTH': !largeInputField, 'Color--Field--Patched': isPatchedCurrently(fieldName)}">
   <input *ngIf="!multiLineInput" autocomplete="off"
-         mdInput maxlength="200"
+         matInput maxlength="200"
          placeholder="{{placeholder}}"
          [(ngModel)]="lookupValue" [disabled]="disabled"
          (ngModelChange)="checkForLookup()" (change)="changeValue()"
          (blur)="currentField(null)" (focus)="currentField(fieldName)">
   <textarea *ngIf="multiLineInput"
-            mdInput maxlength="200"
+            matInput maxlength="200"
             placeholder="{{placeholder}}"
             [(ngModel)]="lookupValue" [disabled]="disabled"
             (ngModelChange)="checkForLookup()" (change)="changeValue()"
             (blur)="currentField(null)" (focus)="currentField(fieldName)"></textarea>
-</md-input-container>
+</mat-form-field>
 <div>
   <ul class="Lookup--Dropdown"
       *ngIf="lookups != null && lookups.length > 0" [style.display]="getStyleDisplay()">

@@ -1,8 +1,8 @@
 <div class="TD--Padding-Bottom">
-  <md-checkbox color="primary" [disabled]="disabled"
+  <mat-checkbox color="primary" [disabled]="disabled"
                (change)="valuesChanged($event, 'no', null)" [(ngModel)]="nope"
                disableRipple>No {{fieldName}}
-  </md-checkbox>
+  </mat-checkbox>
 </div>
 <ng-container *ngIf="jsonArray !== 'no'">
   <div *ngFor="let v of multiTypes; let i = index">
@@ -15,7 +15,7 @@
       </ng-container>
     </div>
   </div>
-  <button md-mini-fab color="primary" [disabled]="disabled" tooltip="Add {{fieldName}}"
+  <button mat-mini-fab color="primary" [disabled]="disabled" tooltip="Add {{fieldName}}"
           (click)="addAction()">
     <i class="fas fa-plus fa-lg"></i>
   </button>

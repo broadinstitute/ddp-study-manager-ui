@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MD_DIALOG_DATA } from '@angular/material';
+import { MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-participant-update-result-dialog',
@@ -8,7 +8,7 @@ import { MD_DIALOG_DATA } from '@angular/material';
 })
 export class ParticipantUpdateResultDialogComponent implements OnInit {
 
-  constructor(@Inject(MD_DIALOG_DATA) public data: {message: string}) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: {message: string}) { }
 
   ngOnInit() {
   }

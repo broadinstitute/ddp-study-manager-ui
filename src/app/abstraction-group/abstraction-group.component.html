@@ -9,69 +9,69 @@
           <ng-container *ngIf="!field.deleted">
             <tr>
               <td class="Width--10 Abstraction--Setup--TD">
-                <md-input-container [ngClass]="{'Width--100': true, 'Input--Min-WIDTH': true}">
-                  <input mdInput maxlength="200" autocomplete="off" placeholder="Field Name"
+                <mat-form-field [ngClass]="{'Width--100': true, 'Input--Min-WIDTH': true}">
+                  <input matInput maxlength="200" autocomplete="off" placeholder="Field Name"
                          [(ngModel)]="field.displayName" (change)="formChanged(field)">
-                </md-input-container>
+                </mat-form-field>
               </td>
               <td class="Abstraction--Setup--TD Width--10">
-                <md-select class="Input--Min-WIDTH" placeholder="Field Type" [(ngModel)]="field.type" (change)="formChanged(field)" [disabled]="!field.newAdded">
-                  <md-option value="button_select"> Button-Select</md-option>
-                  <md-option value="checkbox">
-                    <md-icon>
+                <mat-select class="Input--Min-WIDTH" placeholder="Field Type" [(ngModel)]="field.type" (change)="formChanged(field)" [disabled]="!field.newAdded">
+                  <mat-option value="button_select"> Button-Select</mat-option>
+                  <mat-option value="checkbox">
+                    <mat-icon>
                       <i class="fas fa-check-square fa-sm"></i>
-                    </md-icon>
-                    Checkbox</md-option>
-                  <md-option value="cancers">
-                    <md-icon>
+                    </mat-icon>
+                    Checkbox</mat-option>
+                  <mat-option value="cancers">
+                    <mat-icon>
                       <i class="fas fa-disease fa-sm"></i>
-                    </md-icon>Cancers</md-option>
-                  <md-option value="date">
-                    <md-icon>
+                    </mat-icon>Cancers</mat-option>
+                  <mat-option value="date">
+                    <mat-icon>
                       <i class="fas fa-calendar-alt fa-sm"></i>
-                    </md-icon>
-                    Date</md-option>
-                  <md-option value="drugs">
-                    <md-icon>
+                    </mat-icon>
+                    Date</mat-option>
+                  <mat-option value="drugs">
+                    <mat-icon>
                       <i class="fas fa-prescription-bottle fa-sm"></i>
-                    </md-icon>
-                    Drugs</md-option>
-                  <md-option value="multi_options">
-                    <md-icon>
+                    </mat-icon>
+                    Drugs</mat-option>
+                  <mat-option value="multi_options">
+                    <mat-icon>
                       <i class="fas fa-list fa-sm"></i>
-                    </md-icon>
-                    Multi-Select</md-option>
-                  <md-option value="textarea"> Multiline-Text</md-option>
-                  <md-option value="multi_type"> Multi</md-option>
-                  <md-option value="multi_type_array"> Multi-Array</md-option>
-                  <md-option value="number"> Number</md-option>
-                  <md-option value="options"> Select</md-option>
-                  <md-option value="table"> Table</md-option>
-                  <md-option value="text">
-                    <md-icon>
+                    </mat-icon>
+                    Multi-Select</mat-option>
+                  <mat-option value="textarea"> Multiline-Text</mat-option>
+                  <mat-option value="multi_type"> Multi</mat-option>
+                  <mat-option value="multi_type_array"> Multi-Array</mat-option>
+                  <mat-option value="number"> Number</mat-option>
+                  <mat-option value="options"> Select</mat-option>
+                  <mat-option value="table"> Table</mat-option>
+                  <mat-option value="text">
+                    <mat-icon>
                       <i class="fas fa-window-minimize fa-sm"></i>
-                    </md-icon>
-                    Text</md-option>
-                </md-select>
+                    </mat-icon>
+                    Text</mat-option>
+                </mat-select>
               </td>
               <td class="Abstraction--Setup--TD Width--60">
                 <ng-container *ngIf="field.type === 'cancers' || field.type === 'drugs'">
-                  <md-select class="Input--Min-WIDTH" placeholder="Input Type" [(ngModel)]="field.additionalType" (change)="formChanged(field)" [disabled]="!field.newAdded">
-                    <md-option value="multi_options"> Multi-Select</md-option>
-                    <md-option value="options"> Select</md-option>
-                    <md-option value="text"> Text</md-option>
-                  </md-select>
+                  <mat-select class="Input--Min-WIDTH" placeholder="Input Type" [(ngModel)]="field.additionalType" (change)="formChanged(field)" [disabled]="!field.newAdded">
+                    <mat-option value="multi_options"> Multi-Select</mat-option>
+                    <mat-option value="options"> Select</mat-option>
+                    <mat-option value="text"> Text</mat-option>
+                  </mat-select>
                 </ng-container>
                 <ng-container *ngIf="field.type === 'multi_options' || field.type === 'options' || field.type === 'button_select'">
                   <div class="Width--100">
                     <ng-container *ngFor="let value of field.possibleValues; let i = index">
-                      <md-input-container [ngClass]="{'Width--100': true, 'Input--Min-WIDTH': true}">
-                        <input mdInput maxlength="200" autocomplete="off"
+                      <mat-form-field [ngClass]="{'Width--100': true, 'Input--Min-WIDTH': true}">
+                        <input matInput maxlength="200" autocomplete="off"
                                placeholder="Value {{i+1}}" (change)="formChanged(field)"
                                [(ngModel)]="value.value">
-                      </md-input-container>
+                      </mat-form-field>
                     </ng-container>
-                    <button md-mini-fab color="primary" tooltip="Add Value"
+                    <button mat-mini-fab color="primary" tooltip="Add Value"
                             (click)="addValue(field)">
                       <i class="fas fa-plus fa-lg"></i>
                     </button>
@@ -79,71 +79,71 @@
                 </ng-container>
                 <ng-container *ngIf="field.type === 'multi_type' || field.type === 'multi_type_array'">
                   <div class="Width--100" *ngFor="let value of field.possibleValues; let i = index">
-                    <md-input-container [ngClass]="{'Width--100': true, 'Input--Min-WIDTH': true}">
-                      <input mdInput maxlength="200" autocomplete="off"
+                    <mat-form-field [ngClass]="{'Width--100': true, 'Input--Min-WIDTH': true}">
+                      <input matInput maxlength="200" autocomplete="off"
                              placeholder="Field" [disabled]="!field.newAdded"
                              [(ngModel)]="value.value">
-                    </md-input-container>
+                    </mat-form-field>
 
-                    <md-select class="Input--Abstraction" placeholder="Field Type" [(ngModel)]="value.type" (change)="createMultiValue(value)"
+                    <mat-select class="Input--Abstraction" placeholder="Field Type" [(ngModel)]="value.type" (change)="createMultiValue(value)"
                                [disabled]="!field.newAdded">
-                      <md-option value="button_select"> Button-Select</md-option>
-                      <md-option value="checkbox">
-                        <md-icon>
+                      <mat-option value="button_select"> Button-Select</mat-option>
+                      <mat-option value="checkbox">
+                        <mat-icon>
                           <i class="fas fa-check-square fa-sm"></i>
-                        </md-icon>
-                        Checkbox</md-option>
-                      <md-option value="cancers">
-                        <md-icon>
+                        </mat-icon>
+                        Checkbox</mat-option>
+                      <mat-option value="cancers">
+                        <mat-icon>
                           <i class="fas fa-disease fa-sm"></i>
-                        </md-icon>Cancers</md-option>
-                      <md-option value="date">
-                        <md-icon>
+                        </mat-icon>Cancers</mat-option>
+                      <mat-option value="date">
+                        <mat-icon>
                           <i class="fas fa-calendar-alt fa-sm"></i>
-                        </md-icon>
-                        Date</md-option>
-                      <md-option value="drugs">
-                        <md-icon>
+                        </mat-icon>
+                        Date</mat-option>
+                      <mat-option value="drugs">
+                        <mat-icon>
                           <i class="fas fa-prescription-bottle fa-sm"></i>
-                        </md-icon>Drugs</md-option>
-                      <md-option value="multi_options">
-                        <md-icon>
+                        </mat-icon>Drugs</mat-option>
+                      <mat-option value="multi_options">
+                        <mat-icon>
                           <i class="fas fa-list fa-sm"></i>
-                        </md-icon>
-                        Multi-Select</md-option>
-                      <md-option value="textarea"> Multiline-Text</md-option>
-                      <md-option value="number"> Number</md-option>
-                      <md-option value="options"> Select</md-option>
-                      <md-option value="table"> Table</md-option>
-                      <md-option value="text">
-                        <md-icon>
+                        </mat-icon>
+                        Multi-Select</mat-option>
+                      <mat-option value="textarea"> Multiline-Text</mat-option>
+                      <mat-option value="number"> Number</mat-option>
+                      <mat-option value="options"> Select</mat-option>
+                      <mat-option value="table"> Table</mat-option>
+                      <mat-option value="text">
+                        <mat-icon>
                           <i class="fas fa-window-minimize fa-sm"></i>
-                        </md-icon>
-                        Text</md-option>
-                    </md-select>
+                        </mat-icon>
+                        Text</mat-option>
+                    </mat-select>
                     <ng-container *ngIf="value.type === 'cancers' || value.type === 'drugs'">
-                      <md-select class="Input--Min-WIDTH" placeholder="Input Type" [(ngModel)]="value.type2" (change)="formChanged(field)" [disabled]="!field.newAdded">
-                        <md-option value="multi_options"> Multi-Select</md-option>
-                        <md-option value="options"> Select</md-option>
-                        <md-option value="text"> Text</md-option>
-                      </md-select>
+                      <mat-select class="Input--Min-WIDTH" placeholder="Input Type" [(ngModel)]="value.type2" (change)="formChanged(field)" [disabled]="!field.newAdded">
+                        <mat-option value="multi_options"> Multi-Select</mat-option>
+                        <mat-option value="options"> Select</mat-option>
+                        <mat-option value="text"> Text</mat-option>
+                      </mat-select>
                     </ng-container>
                     <div *ngIf="value.type === 'multi_options' || value.type === 'options' || value.type === 'button_select'"
                          class="Width--100 TD--Padding-Left">
                       <ng-container *ngFor="let v of value.values; let y = index">
-                        <md-input-container [ngClass]="{'Width--100': true, 'Input--Min-WIDTH': true}">
-                          <input mdInput maxlength="200" autocomplete="off" [disabled]="!v.newAdded"
+                        <mat-form-field [ngClass]="{'Width--100': true, 'Input--Min-WIDTH': true}">
+                          <input matInput maxlength="200" autocomplete="off" [disabled]="!v.newAdded"
                                  placeholder="Value {{y+1}}" (change)="formChanged(field)"
                                  [(ngModel)]="v.value">
-                        </md-input-container>
+                        </mat-form-field>
                       </ng-container>
-                      <button md-mini-fab color="primary" tooltip="Add Value"
+                      <button mat-mini-fab color="primary" tooltip="Add Value"
                               (click)="addMultiValue(value); formChanged(field)">
                         <i class="fas fa-plus fa-lg"></i>
                       </button>
                     </div>
                     <button *ngIf="i == (field.possibleValues.length-1)"
-                            md-mini-fab color="primary" tooltip="Add Sub Field"
+                            mat-mini-fab color="primary" tooltip="Add Sub Field"
                             (click)="addMultiType(field)" [disabled]="value.type == null || value.value == null">
                       <i class="fas fa-plus fa-lg"></i>
                     </button>
@@ -151,12 +151,12 @@
                 </ng-container>
               </td>
               <td class="Width--10 Abstraction--Setup--TD">
-                <md-checkbox disableRipple color="primary"
+                <mat-checkbox disableRipple color="primary"
                              [(ngModel)]="field.fileInfo" (change)="formChanged(field)">File Information
-                </md-checkbox>
+                </mat-checkbox>
               </td>
               <td class="Width--10 Abstraction--Setup--TD">
-                <button md-mini-fab color="warn" tooltip="Delete Field"
+                <button mat-mini-fab color="warn" tooltip="Delete Field"
                         (click)="deleteField(field)">
                   <i class="fas fa-trash-alt fa-lg"></i>
                 </button>
@@ -173,50 +173,50 @@
         </div>
         <tr>
           <td class="Abstraction--Setup--TD" colspan="4">
-            <md-input-container [ngClass]="{'Width--100': true, 'Input--Min-WIDTH': true}">
-              <input mdInput maxlength="200" autocomplete="off" placeholder="New Field"
+            <mat-form-field [ngClass]="{'Width--100': true, 'Input--Min-WIDTH': true}">
+              <input matInput maxlength="200" autocomplete="off" placeholder="New Field"
                      [(ngModel)]="newField">
-            </md-input-container>
+            </mat-form-field>
 
-            <md-select class="Input--Abstraction" placeholder="Field Type" [(ngModel)]="newType">
-              <md-option value="button_select"> Button-Select</md-option>
-              <md-option value="checkbox">
-                <md-icon>
+            <mat-select class="Input--Abstraction" placeholder="Field Type" [(ngModel)]="newType">
+              <mat-option value="button_select"> Button-Select</mat-option>
+              <mat-option value="checkbox">
+                <mat-icon>
                   <i class="fas fa-check-square fa-sm"></i>
-                </md-icon>
-                Checkbox</md-option>
-              <md-option value="cancers">
-                <md-icon>
+                </mat-icon>
+                Checkbox</mat-option>
+              <mat-option value="cancers">
+                <mat-icon>
                   <i class="fas fa-disease fa-sm"></i>
-                </md-icon>Cancers</md-option>
-              <md-option value="date">
-                <md-icon>
+                </mat-icon>Cancers</mat-option>
+              <mat-option value="date">
+                <mat-icon>
                   <i class="fas fa-calendar-alt fa-sm"></i>
-                </md-icon>
-                Date</md-option>
-              <md-option value="drugs">
-                <md-icon>
+                </mat-icon>
+                Date</mat-option>
+              <mat-option value="drugs">
+                <mat-icon>
                   <i class="fas fa-prescription-bottle fa-sm"></i>
-                </md-icon>Drugs</md-option>
-              <md-option value="multi_options">
-                <md-icon>
+                </mat-icon>Drugs</mat-option>
+              <mat-option value="multi_options">
+                <mat-icon>
                   <i class="fas fa-list fa-sm"></i>
-                </md-icon>
-                Multi-Select</md-option>
-              <md-option value="textarea"> Multiline-Text</md-option>
-              <md-option value="multi_type"> Multi</md-option>
-              <md-option value="multi_type_array"> Multi-Array</md-option>
-              <md-option value="number"> Number</md-option>
-              <md-option value="options"> Select</md-option>
-              <md-option value="table"> Table</md-option>
-              <md-option value="text">
-                <md-icon>
+                </mat-icon>
+                Multi-Select</mat-option>
+              <mat-option value="textarea"> Multiline-Text</mat-option>
+              <mat-option value="multi_type"> Multi</mat-option>
+              <mat-option value="multi_type_array"> Multi-Array</mat-option>
+              <mat-option value="number"> Number</mat-option>
+              <mat-option value="options"> Select</mat-option>
+              <mat-option value="table"> Table</mat-option>
+              <mat-option value="text">
+                <mat-icon>
                   <i class="fas fa-window-minimize fa-sm"></i>
-                </md-icon>
-                Text</md-option>
-            </md-select>
+                </mat-icon>
+                Text</mat-option>
+            </mat-select>
 
-            <button md-mini-fab color="primary" tooltip="Add Field"
+            <button mat-mini-fab color="primary" tooltip="Add Field"
                     (click)="addField()" [disabled]="newType == null || newField == null">
               <i class="fas fa-plus fa-lg"></i>
             </button>

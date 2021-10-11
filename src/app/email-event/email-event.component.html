@@ -215,9 +215,9 @@
 
       <br/>
 
-      <button *ngIf="page !== FOLLOW_UP" md-raised-button color="primary" (click)="csvDownload()">Download All Event Data</button>
-      <button *ngIf="page === FOLLOW_UP" md-raised-button color="primary" (click)="csvFollowUpDownload()">Download Follow-up Event Data</button>
-      <button *ngIf="page === FOLLOW_UP" md-raised-button color="primary" (click)="saveFollowUp()">Save Follow-up Dates</button>
+      <button *ngIf="page !== FOLLOW_UP" mat-raised-button color="primary" (click)="csvDownload()">Download All Event Data</button>
+      <button *ngIf="page === FOLLOW_UP" mat-raised-button color="primary" (click)="csvFollowUpDownload()">Download Follow-up Event Data</button>
+      <button *ngIf="page === FOLLOW_UP" mat-raised-button color="primary" (click)="saveFollowUp()">Save Follow-up Dates</button>
     </span>
   </div>
 </div>

@@ -149,27 +149,27 @@
       <tr>
         <td>Problem with Tissue?</td>
         <td style="padding-bottom: 15px;" class="Width--40">
-          <md-select [ngClass]="{ 'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently('tissueProblemOption')}"
+          <mat-select [ngClass]="{ 'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently('tissueProblemOption')}"
                      placeholder="Tissue problems" [(ngModel)]="oncHistoryDetail.tissueProblemOption"
                      [disabled]="!editable || participantExited"
                      (change)="valueChanged($event, 'tissueProblemOption')"
                      (blur)="currentField(null)" (focus)="currentField('tissueProblemOption')">
-            <md-option value="insufficientPath">Insufficient material per path</md-option>
-            <md-option value="insufficientSHL">Insufficient material per SHL</md-option>
-            <md-option value="noESign">No e signatures</md-option>
-            <md-option value="pathPolicy">Path department policy</md-option>
-            <md-option value="pathNoLocate">Path department unable to locate</md-option>
-            <md-option value="destroyed">Tissue destroyed</md-option>
-            <md-option value="other">Other</md-option>
-            <md-option value="{{null}}">No Problem</md-option>
-          </md-select>
+            <mat-option value="insufficientPath">Insufficient material per path</mat-option>
+            <mat-option value="insufficientSHL">Insufficient material per SHL</mat-option>
+            <mat-option value="noESign">No e signatures</mat-option>
+            <mat-option value="pathPolicy">Path department policy</mat-option>
+            <mat-option value="pathNoLocate">Path department unable to locate</mat-option>
+            <mat-option value="destroyed">Tissue destroyed</mat-option>
+            <mat-option value="other">Other</mat-option>
+            <mat-option value="{{null}}">No Problem</mat-option>
+          </mat-select>
 
         </td>
         <td>
-          <md-checkbox [(ngModel)]="oncHistoryDetail.unableToObtain" (change)="valueChanged($event, 'unableToObtain')"
+          <mat-checkbox [(ngModel)]="oncHistoryDetail.unableToObtain" (change)="valueChanged($event, 'unableToObtain')"
                        [disabled]="participantExited"
                        [color]="isCheckboxPatchedCurrently('unableToObtain')" (blur)="currentField(null)"
-                       (focus)="currentField('unableToObtain')"></md-checkbox>
+                       (focus)="currentField('unableToObtain')"></mat-checkbox>
           Unable to Obtain
         </td>
       </tr>
@@ -186,21 +186,21 @@
       <tr>
         <td>Destruction Policy (years)</td>
         <td colspan="2">
-          <md-input-container
+          <mat-form-field
             [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently('destructionPolicy')}">
-            <input mdInput type="number" min="0" max="10"
+            <input matInput type="number" min="0" max="10"
                    [disabled]="!editable || participantExited || indefinitely"
                    (blur)="currentField(null)" (focus)="currentField('destructionPolicy')"
                    [(ngModel)]="oncHistoryDetail.destructionPolicy"
                    (change)="valueChanged($event, 'destructionPolicy')">
-          </md-input-container>
+          </mat-form-field>
           <span [ngClass]="{'Width--30': true, 'Color--Field--Patched':isPatchedCurrently('destructionPolicy')}">
-            <md-checkbox [checked]="oncHistoryDetail.destructionPolicy === 'indefinitely'? true : false"
+            <mat-checkbox [checked]="oncHistoryDetail.destructionPolicy === 'indefinitely'? true : false"
                          [(ngModel)]="indefinitely"
                          [disabled]="!editable || participantExited"
                          (change)="valueChanged($event, 'indefinitely')"
                          [color]="isCheckboxPatchedCurrently('destructionPolicy')" (blur)="currentField(null)"
-                         (focus)="currentField('destructionPolicy')"></md-checkbox>
+                         (focus)="currentField('destructionPolicy')"></mat-checkbox>
           kept indefinitely
           </span>
           <button
@@ -216,14 +216,14 @@
         <td>Gender</td>
         <td style="padding-bottom: 15px;" colspan="2">
           <br/>
-          <md-select placeholder="Gender"
+          <mat-select placeholder="Gender"
                      [ngClass]="{'Input--Min-WIDTH': true, 'Color--Field--Patched': isPatchedCurrently('gender')}"
                      [(ngModel)]="oncHistoryDetail.gender" [disabled]="!editable || participantExited"
                      (change)="valueChanged($event, 'gender')"
                      (blur)="currentField(null)" (focus)="currentField('gender')">
-            <md-option value="male">Male</md-option>
-            <md-option value="female">Female</md-option>
-          </md-select>
+            <mat-option value="male">Male</mat-option>
+            <mat-option value="female">Female</mat-option>
+          </mat-select>
         </td>
       </tr>
       <ng-container *ngFor="let tis of oncHistoryDetail.tissues">
@@ -238,7 +238,7 @@
       </ng-container>
       <tr>
         <td class="TD--Padding" colspan="3">
-          <button md-mini-fab color="primary" [disabled]="!editable || participantExited"
+          <button mat-mini-fab color="primary" [disabled]="!editable || participantExited"
                   (click)="addTissue()">
             <i class="fas fa-plus fa-lg"></i>
           </button>

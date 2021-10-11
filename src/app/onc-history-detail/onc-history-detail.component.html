@@ -52,12 +52,12 @@
 
       <tr [id]="oncHis.oncHistoryDetailId" [ngClass]="{'Green-background': oncHis.oncHistoryDetailId === oncHistoryId}">
         <td>
-          <md-checkbox *ngIf="oncHis.request === 'request' || oncHis.request === 'sent'" color="primary" disableRipple
+          <mat-checkbox *ngIf="oncHis.request === 'request' || oncHis.request === 'sent'" color="primary" disableRipple
                        [(ngModel)]="oncHis.selected" (change)="selected(i)" [disabled]="!editable || participantExited">
-          </md-checkbox>
+          </mat-checkbox>
           <button
 
-            md-mini-fab [color]="getNoteButtonColorStyle(oncHis.tissueReceived)"
+            mat-mini-fab [color]="getNoteButtonColorStyle(oncHis.tissueReceived)"
             (click)="openTissuePage(oncHis)" tooltip="Tissue information">
             <i class="fas fa-vial fa-lg"></i>
           </button>
@@ -74,11 +74,11 @@
                       [colorDuringPatch]="isPatchedCurrently('typePX', i)"></app-lookup>
         </td>
         <td>
-          <md-input-container [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently('locationPX', i)}">
-            <input mdInput class="Width--100 Input--Min-WIDTH" maxlength="200" [disabled]="!editable || participantExited"
+          <mat-form-field [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently('locationPX', i)}">
+            <input matInput class="Width--100 Input--Min-WIDTH" maxlength="200" [disabled]="!editable || participantExited"
                    [(ngModel)]="oncHis.locationPX" (change)="valueChanged($event, 'locationPX', i)"
                    (blur)="currentField(null, null)" (focus)="currentField('locationPX', i)">
-          </md-input-container>
+          </mat-form-field>
         </td>
         <td>
           <app-lookup [lookupValue]="oncHis.histology" [lookupType]="'tHistology'" [multiLineInput]="true"
@@ -86,12 +86,12 @@
                       [colorDuringPatch]="isPatchedCurrently('histology', i)"></app-lookup>
         </td>
         <td>
-          <md-input-container
+          <mat-form-field
             [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently('accessionNumber', i)}">
-            <input mdInput class="Width--100 Input--Min-WIDTH" maxlength="200" [disabled]="!editable || participantExited"
+            <input matInput class="Width--100 Input--Min-WIDTH" maxlength="200" [disabled]="!editable || participantExited"
                    [(ngModel)]="oncHis.accessionNumber" (change)="valueChanged($event, 'accessionNumber', i)"
                    (blur)="currentField(null, null)" (focus)="currentField('accessionNumber', i)">
-          </md-input-container>
+          </mat-form-field>
         </td>
         <td>
           <app-lookup [lookupValue]="oncHis.facility" [lookupType]="'tFacility'" [fieldName]="'facility'"
@@ -99,95 +99,95 @@
                       [colorDuringPatch]="isPatchedCurrently('facility', i)"></app-lookup>
         </td>
         <td>
-          <md-input-container
+          <mat-form-field
             [ngClass]="{'Input': true, 'Input--Phone-Number': true, 'Color--Field--Patched': isPatchedCurrently('fPhone', i)}">
-            <input mdInput maxlength="14" [disabled]="!editable || participantExited"
+            <input matInput maxlength="14" [disabled]="!editable || participantExited"
                    [(ngModel)]="oncHis.fPhone" (change)="valueChanged($event, 'fPhone', i)"
                    [errorStateMatcher]="getUtil().phoneNumberValidator"
                    (blur)="currentField(null, null)" (focus)="currentField('fPhone', i)">
-            <md-error>xxx-xxx-xxxx</md-error>
-          </md-input-container>
+            <mat-error>xxx-xxx-xxxx</mat-error>
+          </mat-form-field>
         </td>
         <td>
-          <md-input-container
+          <mat-form-field
             [ngClass]="{'Input': true, 'Input--Phone-Number': true, 'Color--Field--Patched': isPatchedCurrently('fFax', i)}">
-            <input mdInput maxlength="14" [disabled]="!editable || participantExited"
+            <input matInput maxlength="14" [disabled]="!editable || participantExited"
                    [(ngModel)]="oncHis.fFax" (change)="valueChanged($event, 'fFax', i)"
                    [errorStateMatcher]="getUtil().phoneNumberValidator"
                    (blur)="currentField(null, null)" (focus)="currentField('fFax', i)">
-            <md-error>xxx-xxx-xxxx</md-error>
-          </md-input-container>
+            <mat-error>xxx-xxx-xxxx</mat-error>
+          </mat-form-field>
         </td>
         <td>
-          <md-input-container
+          <mat-form-field
             [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently('destructionPolicy', i)}">
-            <input mdInput min="0" maxlength="14" [disabled]="!editable || participantExited"
+            <input matInput min="0" maxlength="14" [disabled]="!editable || participantExited"
                    [(ngModel)]="oncHis.destructionPolicy" (change)="valueChanged($event, 'destructionPolicy', i)"
                    (blur)="currentField(null, null)" (focus)="currentField('destructionPolicy', i)">
-          </md-input-container>
-          <md-hint class="ErrorMessageForm" *ngIf="isError(oncHis.destructionPolicy)">Only numbers or "indefinitely"
-          </md-hint>
+          </mat-form-field>
+          <mat-hint class="ErrorMessageForm" *ngIf="isError(oncHis.destructionPolicy)">Only numbers or "indefinitely"
+          </mat-hint>
         </td>
         <ng-container *ngFor="let col of settings['oD']">
           <td>
-            <md-input-container *ngIf="col.displayType === 'TEXT' || col.displayType === ''|| col.displayType == null"
+            <mat-form-field *ngIf="col.displayType === 'TEXT' || col.displayType === ''|| col.displayType == null"
               [ngClass]="{'Input--Phone-Number': true, 'Input': true, 'Color--Field--Patched': isPatchedCurrently(col.columnName, i)}">
-              <input mdInput maxlength="200" [disabled]="!editable || participantExited"
+              <input matInput maxlength="200" [disabled]="!editable || participantExited"
                      value="{{getAdditionalValue(i, col.columnName)}}"
                      (change)="onAdditionalColChange($event, i, col.columnName)"
                      (blur)="currentField(null, null)" (focus)="currentField(col.columnName, i)">
-            </md-input-container>
-            <md-input-container *ngIf="col.displayType === 'NUMBER'"
+            </mat-form-field>
+            <mat-form-field *ngIf="col.displayType === 'NUMBER'"
               [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently(col.columnName, i)}">
-              <input mdInput maxlength="200" type="number" [disabled]="!editable || participantExited"
+              <input matInput maxlength="200" type="number" [disabled]="!editable || participantExited"
                      value="{{getAdditionalValue(i, col.columnName)}}"
                      (change)="onAdditionalColChange($event, i, col.columnName)"
                      (blur)="currentField(null, null)" (focus)="currentField(col.columnName, i)">
-            </md-input-container>
+            </mat-form-field>
             <textarea maxlength="1000" *ngIf="col.displayType === 'TEXTAREA'"
                       [ngClass]="{'Input--Phone-Number': true, 'Width--100': true, 'Color--Field--Patched': isPatchedCurrently(col.columnName, i)}"
                       (blur)="currentField(null, null)" (focus)="currentField(col.columnName, i)" [disabled]="!editable || participantExited"
                       value="{{getAdditionalValue(i, col.columnName)}}" (change)="onAdditionalColChange($event, i, col.columnName)"></textarea>
-            <md-select *ngIf="col.displayType === 'OPTIONS'"
+            <mat-select *ngIf="col.displayType === 'OPTIONS'"
                        [ngModel]="getAdditionalValue(i, col.columnName)"
                        (change)="onAdditionalColChange($event, i, col.columnName)" [disabled]="!editable || participantExited"
                        [ngClass]="{'Color--Field--Patched': isPatchedCurrently(col.columnName, i)}">
-              <md-option *ngFor="let op of col.possibleValues" [value]="op.value">{{op.value}}</md-option>
-            </md-select>
-            <md-checkbox *ngIf="col.displayType === 'CHECKBOX'" color="primary" disableRipple
+              <mat-option *ngFor="let op of col.possibleValues" [value]="op.value">{{op.value}}</mat-option>
+            </mat-select>
+            <mat-checkbox *ngIf="col.displayType === 'CHECKBOX'" color="primary" disableRipple
                          [ngModel]="getAdditionalValue(i, col.columnName)"
                          (change)="onAdditionalColChange($event, i, col.columnName)" [disabled]="!editable || participantExited">
-            </md-checkbox>
+            </mat-checkbox>
             <app-field-datepicker *ngIf="col.displayType === 'DATE'" [colorDuringPatch]="isPatchedCurrently(col.columnName, i)" [disabled]="participantExited"
                                   [dateString]="getAdditionalValue(i, col.columnName)"
                                   (dateChanged)="onAdditionalColChange($event, i, col.columnName)"></app-field-datepicker>
           </td>
         </ng-container>
         <td>
-          <button md-mini-fab [color]="getNoteButtonColorStyle(oncHis.oncHisNotes)" placement="left"
+          <button mat-mini-fab [color]="getNoteButtonColorStyle(oncHis.oncHisNotes)" placement="left"
                   tooltip='{{oncHis.oncHisNotes}}' [disabled]="participantExited"
                   (click)="openNoteModal(i); oncHisNoteModal.show()">
             <i class="fas fa-comment-alt fa-lg" data-fa-transform="down-2"></i>
           </button>
         </td>
         <td *ngIf="oncHis.request !== 'unableToObtain'">
-          <md-select [(ngModel)]="oncHis.request" (change)="onRequestChange(i)" [disabled]="!editable || participantExited"
+          <mat-select [(ngModel)]="oncHis.request" (change)="onRequestChange(i)" [disabled]="!editable || participantExited"
                      [ngClass]="{'Color--Field--Patched': isPatchedCurrently('request', i)}">
-            <md-option value="review">Needs Review</md-option>
-            <md-option value="no">Don't Request</md-option>
-            <md-option value="hold">On Hold</md-option>
-            <md-option value="request">Request</md-option>
-            <md-option value="sent" disabled>Sent</md-option>
-            <md-option value="received" disabled>Received</md-option>
-            <md-option value="returned" disabled>Returned</md-option>
-            <md-option value="unableToObtain" disabled>Unable To Obtain</md-option>
-          </md-select>
+            <mat-option value="review">Needs Review</mat-option>
+            <mat-option value="no">Don't Request</mat-option>
+            <mat-option value="hold">On Hold</mat-option>
+            <mat-option value="request">Request</mat-option>
+            <mat-option value="sent" disabled>Sent</mat-option>
+            <mat-option value="received" disabled>Received</mat-option>
+            <mat-option value="returned" disabled>Returned</mat-option>
+            <mat-option value="unableToObtain" disabled>Unable To Obtain</mat-option>
+          </mat-select>
         </td>
         <td *ngIf="oncHis.request === 'unableToObtain'">
           Unable To Obtain
         </td>
         <td>
-          <button md-mini-fab color="warn" [disabled]="!editable || participantExited"
+          <button mat-mini-fab color="warn" [disabled]="!editable || participantExited"
                   *ngIf="i < oncHistory.length-1"
                   (click)="deleteOncHistory(i)">
             <i class="fas fa-trash-alt fa-lg"></i>

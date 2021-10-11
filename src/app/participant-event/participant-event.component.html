@@ -27,22 +27,22 @@
     </div>
 
     <div *ngIf="possibleEvents.length > 0">
-      <md-select placeholder="Event Type" class="Input--Bigger-WIDTH"
+      <mat-select placeholder="Event Type" class="Input--Bigger-WIDTH"
                  [(ngModel)]="event">
-        <md-option *ngFor="let e of possibleEvents"
+        <mat-option *ngFor="let e of possibleEvents"
                    [value]="e.name">
           {{e.description}}
-        </md-option>
-      </md-select>
+        </mat-option>
+      </mat-select>
     </div>
 
     <div *ngIf="realm != null && event != null" class="Width--80">
       <br/>
-      <md-input-container>
-        <input maxlength="200" style="width: 10cm" mdInput type="text"  placeholder="Participant ID"
+      <mat-form-field>
+        <input maxlength="200" style="width: 10cm" matInput type="text"  placeholder="Participant ID"
                [(ngModel)]="participantId">
-      </md-input-container>
-      <button md-raised-button type="button" color="primary"
+      </mat-form-field>
+      <button mat-raised-button type="button" color="primary"
               (click)="triggerSkippingEvent()"
               [disabled]="participantId == null">Deactivate Event Type</button>
     </div>

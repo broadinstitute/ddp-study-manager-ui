@@ -22,10 +22,10 @@
     <br/>
     <div *ngIf="kitTypes != null && kitTypes.length > 0">
       <div *ngFor="let type of kitTypes">
-        <md-checkbox color="primary" [checked]="type.selected" (change)="type.selected = $event.checked; typeChecked(type)" disableRipple>
+        <mat-checkbox color="primary" [checked]="type.selected" (change)="type.selected = $event.checked; typeChecked(type)" disableRipple>
           <ng-container *ngIf="type.displayName !== null">{{type.displayName}}</ng-container>
           <ng-container *ngIf="type.displayName == null">{{type.name}}</ng-container>
-        </md-checkbox>
+        </mat-checkbox>
       </div>
     </div>
     <br/>
@@ -51,7 +51,7 @@
 
     <div class="Width--100" *ngIf="kitType !== null">
       <ng-container *ngIf="!(kitType.externalShipper && queueToPrint())">
-        <button class="Float--right" md-raised-button (click)="reload()" color="primary" [disabled]="loading">Reload Kit List</button>
+        <button class="Float--right" mat-raised-button (click)="reload()" color="primary" [disabled]="loading">Reload Kit List</button>
       </ng-container>
     </div>
 
@@ -64,7 +64,7 @@
         <thead>
         <tr>
           <th *ngIf="getRole().allowedToHandleSamples() && (queueToPrint() || shippingPage === UPLOADED) && !kitType.externalShipper" class="Line--Break">Print Kit
-<md-checkbox color="primary" disableRipple [checked]="allSelected" (change)="allSelected = $event.checked; allChecked()"></md-checkbox></th>
+<mat-checkbox color="primary" disableRipple [checked]="allSelected" (change)="allSelected = $event.checked; allChecked()"></mat-checkbox></th>
           <th>
             <mfDefaultSorter by="collaboratorParticipantId">Short ID</mfDefaultSorter>
           </th>
@@ -117,7 +117,7 @@
           </th>
           <th *ngIf="kitsWithNoReturn">Return to Broad</th>
           <th *ngIf="queueToPrint() && kitType.manualSentTrack" class="Line--Break">Kit Sent
-            <md-checkbox color="primary" [checked]="allSentSelected" (change)="allSentSelected = $event.checked; allSentChecked()" disableRipple></md-checkbox>
+            <mat-checkbox color="primary" [checked]="allSentSelected" (change)="allSentSelected = $event.checked; allSentChecked()" disableRipple></mat-checkbox>
           </th>
         </tr>
         <tr>
@@ -174,9 +174,9 @@
         <tr *ngFor="let kitRequest of mf.data; let i = index">
           <td *ngIf="getRole().allowedToHandleSamples() && (queueToPrint() || shippingPage === UPLOADED) && !kitType.externalShipper">
             <ng-container *ngIf="(shippingPage === UPLOADED && kitRequest.labelTriggeredDate == 0) || queueToPrint()">
-              <md-checkbox color="primary" disableRipple
+              <mat-checkbox color="primary" disableRipple
                            [checked]="kitRequest.isSelected" (click)="shiftClick(i, $event)"
-                           (change)="kitRequest.isSelected = $event.checked; checkboxChecked()"></md-checkbox>
+                           (change)="kitRequest.isSelected = $event.checked; checkboxChecked()"></mat-checkbox>
             </ng-container>
             <ng-container *ngIf="(shippingPage === UPLOADED && kitRequest.labelTriggeredDate != 0)">
               <i class="fas fa-spin fa-cog fa-lg Color--primary"></i>
@@ -241,8 +241,8 @@
           <td *ngIf="kitsWithNoReturn">{{getUtil().getYesNo(!kitRequest.noReturn)}}
           </td>
           <td *ngIf="getRole().allowedToHandleSamples() && queueToPrint() && kitType.manualSentTrack">
-            <md-checkbox color="primary" [checked]="kitRequest.setSent" (change)="kitRequest.setSent = $event.checked; sentCheckboxChecked()"
-                         disableRipple></md-checkbox>
+            <mat-checkbox color="primary" [checked]="kitRequest.setSent" (change)="kitRequest.setSent = $event.checked; sentCheckboxChecked()"
+                         disableRipple></mat-checkbox>
           </td>
         </tr>
         <tbody>
@@ -269,28 +269,28 @@
           <option *ngFor="let label of labelNames" [value]="label">{{label}}</option>
         </select>
 
-        <button md-raised-button color="primary"
+        <button mat-raised-button color="primary"
                 (click)="getSelectedList(shippingPage)" [disabled]="isPrintButtonDisabled">Print Labels
         </button>
 
-        <button md-raised-button color="primary"
+        <button mat-raised-button color="primary"
                 *ngIf="kitType.manualSentTrack"
                 (click)="setKitSent()" [disabled]="isSentButtonDisabled">Set Kit Sent
         </button>
       </div>
 
       <div *ngIf="getRole().allowedToHandleSamples() && shippingPage === UPLOADED && kitType != null && !kitType.externalShipper">
-        <button md-raised-button (click)="triggerLabelCreation()" color="primary" [disabled]="isPrintButtonDisabled">Create Labels</button>
+        <button mat-raised-button (click)="triggerLabelCreation()" color="primary" [disabled]="isPrintButtonDisabled">Create Labels</button>
       </div>
       <div *ngIf="getRole().allowedToHandleSamples() && (shippingPage === UPLOADED || queueToPrint())">
-        <button md-raised-button color="primary"
+        <button mat-raised-button color="primary"
                 *ngIf="needsNameLabels"
                 (click)="showNameModal(); modal.show()" [disabled]="isPrintButtonDisabled">Names from Labels
         </button>
       </div>
 
       <div *ngIf="shippingPage === OVERVIEW">
-        <button md-raised-button (click)="downloadReceivedData()" color="primary">Download kit data</button>
+        <button mat-raised-button (click)="downloadReceivedData()" color="primary">Download kit data</button>
       </div>
     </div>
   </div>
@@ -317,9 +317,9 @@
           <tr>
             <td>Reason:</td>
             <td>
-              <md-input-container>
-                <input mdInput type="text" [(ngModel)]="deactivationReason" class="Width--100 Input--Bigger-WIDTH" maxlength="500">
-              </md-input-container>
+              <mat-form-field>
+                <input matInput type="text" [(ngModel)]="deactivationReason" class="Width--100 Input--Bigger-WIDTH" maxlength="500">
+              </mat-form-field>
             </td>
           </tr>
         </table>

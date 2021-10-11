@@ -24,13 +24,13 @@
     </div>
 
     <div *ngIf="possibleSurveys.length > 0">
-    <md-select placeholder="Survey" class="Input--Bigger-WIDTH"
+    <mat-select placeholder="Survey" class="Input--Bigger-WIDTH"
                [(ngModel)]="survey" (change)="getListOfSurveyStatus()">
-      <md-option *ngFor="let surveys of possibleSurveys"
+      <mat-option *ngFor="let surveys of possibleSurveys"
                  [value]="surveys">
         {{surveys.name}}  ({{surveys.type}})
-      </md-option>
-    </md-select>
+      </mat-option>
+    </mat-select>
   </div>
 
     <br/>
@@ -40,10 +40,10 @@
         <table class="Width--100">
           <tr>
             <td class="Width--50">
-              <md-input-container>
-                <input maxlength="200" style="width: 10cm" mdInput type="text"  placeholder="Participant ID"
+              <mat-form-field>
+                <input maxlength="200" style="width: 10cm" matInput type="text"  placeholder="Participant ID"
                        [(ngModel)]="participantId">
-              </md-input-container>
+              </mat-form-field>
             </td>
             <td class="Width--50">
               <app-filepicker [id]="'surveyUploadFile'" [fileFormat]="'txt'" (fileSelected)="fileSelected($event)"></app-filepicker>
@@ -52,12 +52,12 @@
         </table>
       </div>
       <div *ngIf="!noSurveyStatus">
-        <md-input-container>
-          <input maxlength="200" style="width: 10cm" mdInput type="text"  placeholder="Reason for Follow-Up Survey"
+        <mat-form-field>
+          <input maxlength="200" style="width: 10cm" matInput type="text"  placeholder="Reason for Follow-Up Survey"
                  [(ngModel)]="reason">
-        </md-input-container>
+        </mat-form-field>
       </div>
-      <button md-raised-button type="button" color="primary"
+      <button mat-raised-button type="button" color="primary"
               (click)="triggerSurvey()"
               [disabled]="disableButton()">Create Survey</button>
     </div>
@@ -97,7 +97,7 @@
 
         <div *ngIf="surveyStatus.length > 0">
           <h4>List of previous triggered surveys</h4>
-          <button class="Float--right" md-raised-button type="button" color="primary"
+          <button class="Float--right" mat-raised-button type="button" color="primary"
                   (click)="getListOfSurveyStatus()">Reload</button>
 
           <table class="table table-striped Width--100"
@@ -197,9 +197,9 @@
   <div class="app-modal-body">
     <div *ngFor="let pt of alreadyTriggered">
       <div *ngIf="survey != null && survey.type !== 'NONREPEATING'">
-        <md-checkbox color="primary" [checked]="pt.selected" (change)="pt.selected = $event.checked" disableRipple>
+        <mat-checkbox color="primary" [checked]="pt.selected" (change)="pt.selected = $event.checked" disableRipple>
           {{pt.ddpParticipantId}} {{pt.shortId}} {{pt.firstName}} {{pt.lastName}}
-        </md-checkbox>
+        </mat-checkbox>
       </div>
       <div *ngIf="survey != null && survey.type === 'NONREPEATING'">
         {{pt.ddpParticipantId}} {{pt.shortId}} {{pt.firstName}} {{pt.lastName}}

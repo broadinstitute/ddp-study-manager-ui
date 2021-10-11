@@ -4,13 +4,13 @@
         [ngClass]="{'Width--5': true, 'TD--Padding': true, 'Abstraction-Background-Oki': field.qcWrapper.equals && (type === 'abstraction' || type === 'review'), 'Abstraction-Background-Warning': !field.qcWrapper.equals && (type === 'abstraction' || type === 'review'),
           'Abstraction-Background-Check': field.qcWrapper.check && (type === 'abstraction' || type === 'review')}">
       <ng-container *ngIf="viewValue != null">
-        <button md-mini-fab [color]="getNoteButtonColorStyle(viewValue.note)" placement="right" tooltip='{{viewValue.note}}'
+        <button mat-mini-fab [color]="getNoteButtonColorStyle(viewValue.note)" placement="right" tooltip='{{viewValue.note}}'
                 (click)="openNoteModal(viewValue.note, 'note', true); noteModal.show()">
           <i class="fas fa-sticky-note fa-lg"></i>
         </button>
       </ng-container>
       <ng-container *ngIf="viewValue == null">
-        <button md-mini-fab [color]="getNoteButtonColorStyle(field.fieldValue.note)" placement="right" tooltip='{{field.fieldValue.note}}'
+        <button mat-mini-fab [color]="getNoteButtonColorStyle(field.fieldValue.note)" placement="right" tooltip='{{field.fieldValue.note}}'
                 (click)="openNoteModal(field.fieldValue.note, 'note', false); noteModal.show()">
           <i class="fas fa-sticky-note fa-lg"></i>
         </button>
@@ -21,13 +21,13 @@
         [ngClass]="{'Width--5': true, 'TD--Padding': true, 'Abstraction-Background-Oki': field.qcWrapper.equals && (type === 'abstraction' || type === 'review'), 'Abstraction-Background-Warning': !field.qcWrapper.equals && (type === 'abstraction' || type === 'review'),
           'Abstraction-Background-Check': field.qcWrapper.check && (type === 'abstraction' || type === 'review')}">
       <ng-container *ngIf="viewValue != null">
-        <button md-mini-fab [color]="getQuestionButtonColorStyle(viewValue.question)" placement="right" tooltip='{{getQuestionTooltip(viewValue.question)}}'
+        <button mat-mini-fab [color]="getQuestionButtonColorStyle(viewValue.question)" placement="right" tooltip='{{getQuestionTooltip(viewValue.question)}}'
                 (click)="openNoteModal(viewValue.question, 'question', true); noteModal.show()">
           <i class="fas fa-comments fa-lg"></i>
         </button>
       </ng-container>
       <ng-container *ngIf="viewValue == null">
-        <button md-mini-fab [color]="getQuestionButtonColorStyle(field.fieldValue.question)" placement="right"
+        <button mat-mini-fab [color]="getQuestionButtonColorStyle(field.fieldValue.question)" placement="right"
                 tooltip='{{getQuestionTooltip(field.fieldValue.question)}}'
                 (click)="openNoteModal(field.fieldValue.question, 'question', false); noteModal.show()">
           <i class="fas fa-comments fa-lg"></i>
@@ -67,52 +67,52 @@
         <ng-container *ngIf="viewValue != null">
           <app-field-typeahead *ngIf="field.additionalType === 'text'" [dataSource]="availableDrugs" [drug]="viewValue.value" [disabled]="readonly" [fieldName]="field.displayName"></app-field-typeahead>
 
-          <md-select placeholder="{{field.displayName}}" *ngIf="field.additionalType === 'options'"
+          <mat-select placeholder="{{field.displayName}}" *ngIf="field.additionalType === 'options'"
                      [(ngModel)]="viewValue.value" [disabled]="readonly">
-            <md-option *ngFor="let drug of availableDrugs" [value]="drug">
+            <mat-option *ngFor="let drug of availableDrugs" [value]="drug">
               {{drug}}
-            </md-option>
-            <md-option value="other"> Other</md-option>
-          </md-select>
+            </mat-option>
+            <mat-option value="other"> Other</mat-option>
+          </mat-select>
 
-          <md-select placeholder="{{field.displayName}}" *ngIf="field.additionalType === 'multi_options'"
+          <mat-select placeholder="{{field.displayName}}" *ngIf="field.additionalType === 'multi_options'"
                      [(ngModel)]="viewValue.value" [disabled]="readonly" multiple>
-            <md-option *ngFor="let drug of availableDrugs" [value]="drug">
+            <mat-option *ngFor="let drug of availableDrugs" [value]="drug">
               {{drug}}
-            </md-option>
-            <md-option value="other"> Other</md-option>
-          </md-select>
-          <md-input-container *ngIf="_other != null || _other === ''"
+            </mat-option>
+            <mat-option value="other"> Other</mat-option>
+          </mat-select>
+          <mat-form-field *ngIf="_other != null || _other === ''"
                               [ngClass]="{'Width--100': true, 'Input--Abstraction': true}">
-            <input mdInput maxlength="200" [disabled]="readonly" placeholder="Other" autocomplete="off"
+            <input matInput maxlength="200" [disabled]="readonly" placeholder="Other" autocomplete="off"
                    [(ngModel)]="_other">
-          </md-input-container>
+          </mat-form-field>
         </ng-container>
         <ng-container *ngIf="viewValue == null">
-          <md-select placeholder="{{field.displayName}}" *ngIf="field.additionalType === 'options'"
+          <mat-select placeholder="{{field.displayName}}" *ngIf="field.additionalType === 'options'"
                      [(ngModel)]="field.fieldValue.value" [disabled]="field.fieldValue.noData || readonly"
                      (change)="abstractionValueChanged($event, field, 'value')">
-            <md-option *ngFor="let drug of availableDrugs" [value]="drug">
+            <mat-option *ngFor="let drug of availableDrugs" [value]="drug">
               {{drug}}
-            </md-option>
-            <md-option value="other"> Other</md-option>
-          </md-select>
+            </mat-option>
+            <mat-option value="other"> Other</mat-option>
+          </mat-select>
 
-          <md-select placeholder="{{field.displayName}}" *ngIf="field.additionalType === 'multi_options'"
+          <mat-select placeholder="{{field.displayName}}" *ngIf="field.additionalType === 'multi_options'"
                      [(ngModel)]="field.fieldValue.value" [disabled]="field.fieldValue.noData || readonly"
                      (change)="abstractionValueChanged($event, field, 'value')" multiple>
-            <md-option *ngFor="let drug of availableDrugs" [value]="drug" [disabled]="!patchFinished">
+            <mat-option *ngFor="let drug of availableDrugs" [value]="drug" [disabled]="!patchFinished">
               {{drug}}
-            </md-option>
-            <md-option value="other"> Other</md-option>
-          </md-select>
-          <md-input-container *ngIf="_other != null"
+            </mat-option>
+            <mat-option value="other"> Other</mat-option>
+          </mat-select>
+          <mat-form-field *ngIf="_other != null"
                               [ngClass]="{'Width--100': true, 'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(field.displayName, 'value')}">
-            <input mdInput maxlength="200" [disabled]="field.fieldValue.noData || readonly" autocomplete="off"
+            <input matInput maxlength="200" [disabled]="field.fieldValue.noData || readonly" autocomplete="off"
                    [(ngModel)]="_other" placeholder="Other"
                    (change)="abstractionValueChanged($event, field, 'other')"
                    (blur)="currentField(null, null)" (focus)="currentField(field.displayName, 'value')">
-          </md-input-container>
+          </mat-form-field>
 
           <app-field-typeahead *ngIf="field.additionalType === 'text'"
                                [dataSource]="availableDrugs" [drug]="field.fieldValue.value" [disabled]="field.fieldValue.noData || readonly"
@@ -125,52 +125,52 @@
         <ng-container *ngIf="viewValue != null">
           <app-field-typeahead *ngIf="field.additionalType === 'text'" [dataSource]="availableCancers" [drug]="viewValue.value" [disabled]="readonly" [fieldName]="field.displayName"></app-field-typeahead>
 
-          <md-select placeholder="{{field.displayName}}" *ngIf="field.additionalType === 'options'"
+          <mat-select placeholder="{{field.displayName}}" *ngIf="field.additionalType === 'options'"
                      [(ngModel)]="viewValue.value" [disabled]="readonly">
-            <md-option *ngFor="let cancer of availableCancers" [value]="cancer">
+            <mat-option *ngFor="let cancer of availableCancers" [value]="cancer">
               {{cancer}}
-            </md-option>
-            <md-option value="other"> Other</md-option>
-          </md-select>
+            </mat-option>
+            <mat-option value="other"> Other</mat-option>
+          </mat-select>
 
-          <md-select placeholder="{{field.displayName}}" *ngIf="field.additionalType === 'multi_options'"
+          <mat-select placeholder="{{field.displayName}}" *ngIf="field.additionalType === 'multi_options'"
                      [(ngModel)]="viewValue.value" [disabled]="readonly" multiple>
-            <md-option *ngFor="let cancer of availableCancers" [value]="cancer">
+            <mat-option *ngFor="let cancer of availableCancers" [value]="cancer">
               {{cancer}}
-            </md-option>
-            <md-option value="other"> Other</md-option>
-          </md-select>
-          <md-input-container *ngIf="_other != null"
+            </mat-option>
+            <mat-option value="other"> Other</mat-option>
+          </mat-select>
+          <mat-form-field *ngIf="_other != null"
                               [ngClass]="{'Width--100': true, 'Input--Abstraction': true}">
-            <input mdInput maxlength="200" [disabled]="readonly" placeholder="Other" autocomplete="off"
+            <input matInput maxlength="200" [disabled]="readonly" placeholder="Other" autocomplete="off"
                    [(ngModel)]="_other">
-          </md-input-container>
+          </mat-form-field>
         </ng-container>
         <ng-container *ngIf="viewValue == null">
-          <md-select placeholder="{{field.displayName}}" *ngIf="field.additionalType === 'options'"
+          <mat-select placeholder="{{field.displayName}}" *ngIf="field.additionalType === 'options'"
                      [(ngModel)]="field.fieldValue.value" [disabled]="field.fieldValue.noData || readonly"
                      (change)="abstractionValueChanged($event, field, 'value')">
-            <md-option *ngFor="let cancer of availableCancers" [value]="cancer">
+            <mat-option *ngFor="let cancer of availableCancers" [value]="cancer">
               {{cancer}}
-            </md-option>
-            <md-option value="other"> Other</md-option>
-          </md-select>
+            </mat-option>
+            <mat-option value="other"> Other</mat-option>
+          </mat-select>
 
-          <md-select placeholder="{{field.displayName}}" *ngIf="field.additionalType === 'multi_options'"
+          <mat-select placeholder="{{field.displayName}}" *ngIf="field.additionalType === 'multi_options'"
                      [(ngModel)]="field.fieldValue.value" [disabled]="field.fieldValue.noData || readonly"
                      (change)="abstractionValueChanged($event, field, 'value')" multiple>
-            <md-option *ngFor="let cancer of availableCancers" [value]="cancer" [disabled]="!patchFinished">
+            <mat-option *ngFor="let cancer of availableCancers" [value]="cancer" [disabled]="!patchFinished">
               {{cancer}}
-            </md-option>
-            <md-option value="other"> Other</md-option>
-          </md-select>
-          <md-input-container *ngIf="_other != null"
+            </mat-option>
+            <mat-option value="other"> Other</mat-option>
+          </mat-select>
+          <mat-form-field *ngIf="_other != null"
                               [ngClass]="{'Width--100': true, 'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(field.displayName, 'value')}">
-            <input mdInput maxlength="200" [disabled]="field.fieldValue.noData || readonly" autocomplete="off"
+            <input matInput maxlength="200" [disabled]="field.fieldValue.noData || readonly" autocomplete="off"
                    [(ngModel)]="_other" placeholder="Other"
                    (change)="abstractionValueChanged($event, field, 'other')"
                    (blur)="currentField(null, null)" (focus)="currentField(field.displayName, 'value')">
-          </md-input-container>
+          </mat-form-field>
 
           <app-field-typeahead *ngIf="field.additionalType === 'text'"
                                [dataSource]="availableCancers" [drug]="field.fieldValue.value" [disabled]="field.fieldValue.noData || readonly"
@@ -218,51 +218,51 @@
 
       <ng-container *ngIf="field.type === 'number'">
         <ng-container *ngIf="viewValue != null">
-          <md-input-container>
-            <input mdInput type="number" [disabled]="readonly" placeholder="{{field.displayName}}"
+          <mat-form-field>
+            <input matInput type="number" [disabled]="readonly" placeholder="{{field.displayName}}"
                    [(ngModel)]="viewValue.value">
-          </md-input-container>
+          </mat-form-field>
         </ng-container>
         <ng-container *ngIf="viewValue == null">
-          <md-input-container [ngClass]="{'Color--Field--Patched': isPatchedCurrently(field.displayName, 'value')}">
-            <input mdInput type="number" [disabled]="field.fieldValue.noData || readonly"
+          <mat-form-field [ngClass]="{'Color--Field--Patched': isPatchedCurrently(field.displayName, 'value')}">
+            <input matInput type="number" [disabled]="field.fieldValue.noData || readonly"
                    [(ngModel)]="field.fieldValue.value" placeholder="{{field.displayName}}"
                    (change)="abstractionValueChanged($event, field, 'value')"
                    (blur)="currentField(null, null)" (focus)="currentField(field.displayName, 'value')">
-          </md-input-container>
+          </mat-form-field>
         </ng-container>
       </ng-container>
 
       <ng-container *ngIf="field.type === 'text'">
         <ng-container *ngIf="viewValue != null">
-          <md-input-container [ngClass]="{'Width--100': true, 'Input--Abstraction': true}">
-            <input mdInput maxlength="200" [disabled]="readonly" placeholder="{{field.displayName}}" autocomplete="off"
+          <mat-form-field [ngClass]="{'Width--100': true, 'Input--Abstraction': true}">
+            <input matInput maxlength="200" [disabled]="readonly" placeholder="{{field.displayName}}" autocomplete="off"
                    [(ngModel)]="viewValue.value">
-          </md-input-container>
+          </mat-form-field>
         </ng-container>
         <ng-container *ngIf="viewValue == null">
-          <md-input-container
+          <mat-form-field
             [ngClass]="{'Width--100': true, 'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(field.displayName, 'value')}">
-            <input mdInput maxlength="200" [disabled]="field.fieldValue.noData || readonly" autocomplete="off"
+            <input matInput maxlength="200" [disabled]="field.fieldValue.noData || readonly" autocomplete="off"
                    [(ngModel)]="field.fieldValue.value" placeholder="{{field.displayName}}"
                    (change)="abstractionValueChanged($event, field, 'value')"
                    (blur)="currentField(null, null)" (focus)="currentField(field.displayName, 'value')">
-          </md-input-container>
+          </mat-form-field>
         </ng-container>
       </ng-container>
 
       <ng-container *ngIf="field.type === 'checkbox'">
         <ng-container *ngIf="viewValue != null">
-          <md-checkbox color="primary" disableRipple
+          <mat-checkbox color="primary" disableRipple
                        [ngModel]="viewValue.value" [disabled]="readonly">
-          </md-checkbox>
+          </mat-checkbox>
         </ng-container>
         <ng-container *ngIf="viewValue == null">
-          <md-checkbox color="primary" disableRipple
+          <mat-checkbox color="primary" disableRipple
                        [ngModel]="field.fieldValue.value" [disabled]="field.fieldValue.noData || readonly"
                        (change)="abstractionValueChanged($event, field, 'value')"
                        (blur)="currentField(null, null)" (focus)="currentField(field.displayName, 'value')">
-          </md-checkbox>
+          </mat-checkbox>
         </ng-container>
       </ng-container>
 
@@ -283,89 +283,89 @@
 
       <ng-container *ngIf="field.type === 'button_select'">
         <ng-container *ngIf="viewValue != null">
-          <md-button-toggle-group [disabled]="readonly" [(ngModel)]="viewValue.value">
-            <md-button-toggle *ngFor="let value of field.possibleValues" [value]="value.value">
+          <mat-button-toggle-group [disabled]="readonly" [(ngModel)]="viewValue.value">
+            <mat-button-toggle *ngFor="let value of field.possibleValues" [value]="value.value">
               {{value.value}}
-            </md-button-toggle>
-          </md-button-toggle-group>
+            </mat-button-toggle>
+          </mat-button-toggle-group>
         </ng-container>
         <ng-container *ngIf="viewValue == null">
-          <md-button-toggle-group [ngClass]="{'Color--Button-Select--Patched': isPatchedCurrently(field.displayName, 'value')}"
+          <mat-button-toggle-group [ngClass]="{'Color--Button-Select--Patched': isPatchedCurrently(field.displayName, 'value')}"
                                   [disabled]="field.fieldValue.noData || readonly" [(ngModel)]="field.fieldValue.value">
-            <md-button-toggle *ngFor="let value of field.possibleValues" [value]="value.value"
+            <mat-button-toggle *ngFor="let value of field.possibleValues" [value]="value.value"
                               (change)="abstractionValueChanged($event, field, 'value')">
               {{value.value}}
-            </md-button-toggle>
-          </md-button-toggle-group>
+            </mat-button-toggle>
+          </mat-button-toggle-group>
         </ng-container>
       </ng-container>
 
       <ng-container *ngIf="field.type === 'options'">
         <ng-container *ngIf="viewValue != null">
-          <md-select [ngClass]="{'Input--Abstraction': true}" placeholder="{{field.displayName}}"
+          <mat-select [ngClass]="{'Input--Abstraction': true}" placeholder="{{field.displayName}}"
                      [(ngModel)]="viewValue.value" [disabled]="readonly">
-            <md-option *ngFor="let value of field.possibleValues" [value]="value.value">
+            <mat-option *ngFor="let value of field.possibleValues" [value]="value.value">
               {{value.value}}
-            </md-option>
-            <md-option value="other"> Other</md-option>
-          </md-select>
-          <md-input-container *ngIf="viewValue.value != null && (viewValue.value['other'] != null || viewValue.value === 'other')" [ngClass]="{'Width--100': true, 'Input--Abstraction': true}">
-            <input mdInput maxlength="200" [disabled]="readonly" placeholder="Other" autocomplete="off"
+            </mat-option>
+            <mat-option value="other"> Other</mat-option>
+          </mat-select>
+          <mat-form-field *ngIf="viewValue.value != null && (viewValue.value['other'] != null || viewValue.value === 'other')" [ngClass]="{'Width--100': true, 'Input--Abstraction': true}">
+            <input matInput maxlength="200" [disabled]="readonly" placeholder="Other" autocomplete="off"
                    [(ngModel)]="_other">
-          </md-input-container>
+          </mat-form-field>
         </ng-container>
         <ng-container *ngIf="viewValue == null">
-          <md-select [ngClass]="{'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(field.displayName, 'value')}"
+          <mat-select [ngClass]="{'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(field.displayName, 'value')}"
                      placeholder="{{field.displayName}}"
                      [(ngModel)]="field.fieldValue.value" [disabled]="field.fieldValue.noData || readonly"
                      (change)="abstractionValueChanged($event, field, 'value')">
-            <md-option *ngFor="let value of field.possibleValues" [value]="value.value">
+            <mat-option *ngFor="let value of field.possibleValues" [value]="value.value">
               {{value.value}}
-            </md-option>
-            <md-option value="other"> Other</md-option>
-          </md-select>
-          <md-input-container *ngIf="field.fieldValue.value != null && (field.fieldValue.value['other'] != null || field.fieldValue.value === 'other')"
+            </mat-option>
+            <mat-option value="other"> Other</mat-option>
+          </mat-select>
+          <mat-form-field *ngIf="field.fieldValue.value != null && (field.fieldValue.value['other'] != null || field.fieldValue.value === 'other')"
             [ngClass]="{'Width--100': true, 'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(field.displayName, 'value')}">
-            <input mdInput maxlength="200" [disabled]="field.fieldValue.noData || readonly" autocomplete="off"
+            <input matInput maxlength="200" [disabled]="field.fieldValue.noData || readonly" autocomplete="off"
                    [(ngModel)]="_other" placeholder="Other"
                    (change)="abstractionValueChanged($event, field, 'other')"
                    (blur)="currentField(null, null)" (focus)="currentField(field.displayName, 'value')">
-          </md-input-container>
+          </mat-form-field>
         </ng-container>
       </ng-container>
 
       <ng-container *ngIf="field.type === 'multi_options'">
         <ng-container *ngIf="viewValue != null">
-          <md-select [ngClass]="{'Input--Abstraction': true}"
+          <mat-select [ngClass]="{'Input--Abstraction': true}"
                      [(ngModel)]="viewValue.value" [disabled]="readonly" multiple>
-            <md-option *ngFor="let value of field.possibleValues" [value]="value.value">
+            <mat-option *ngFor="let value of field.possibleValues" [value]="value.value">
               {{value.value}}
-            </md-option>
-            <md-option value="other"> Other</md-option>
-          </md-select>
-          <md-input-container *ngIf="viewValue.value != null && (viewValue.value['other'] != null || viewValue.value === 'other')"
+            </mat-option>
+            <mat-option value="other"> Other</mat-option>
+          </mat-select>
+          <mat-form-field *ngIf="viewValue.value != null && (viewValue.value['other'] != null || viewValue.value === 'other')"
                               [ngClass]="{'Width--100': true, 'Input--Abstraction': true}">
-            <input mdInput maxlength="200" [disabled]="readonly" placeholder="Other" autocomplete="off"
+            <input matInput maxlength="200" [disabled]="readonly" placeholder="Other" autocomplete="off"
                    [(ngModel)]="_other">
-          </md-input-container>
+          </mat-form-field>
         </ng-container>
         <ng-container *ngIf="viewValue == null">
-          <md-select [ngClass]="{'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(field.displayName, 'value')}"
+          <mat-select [ngClass]="{'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(field.displayName, 'value')}"
                      placeholder="{{field.displayName}}"
                      [(ngModel)]="field.fieldValue.value" [disabled]="field.fieldValue.noData || readonly"
                      (change)="abstractionValueChanged($event, field, 'value')" multiple>
-            <md-option *ngFor="let value of field.possibleValues" [value]="value.value" [disabled]="!patchFinished">
+            <mat-option *ngFor="let value of field.possibleValues" [value]="value.value" [disabled]="!patchFinished">
               {{value.value}}
-            </md-option>
-            <md-option value="other"> Other</md-option>
-          </md-select>
-          <md-input-container *ngIf="_other != null"
+            </mat-option>
+            <mat-option value="other"> Other</mat-option>
+          </mat-select>
+          <mat-form-field *ngIf="_other != null"
                               [ngClass]="{'Width--100': true, 'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(field.displayName, 'value')}">
-            <input mdInput maxlength="200" [disabled]="field.fieldValue.noData || readonly" autocomplete="off"
+            <input matInput maxlength="200" [disabled]="field.fieldValue.noData || readonly" autocomplete="off"
                    [(ngModel)]="_other" placeholder="Other"
                    (change)="abstractionValueChanged($event, field, 'other')"
                    (blur)="currentField(null, null)" (focus)="currentField(field.displayName, 'value')">
-          </md-input-container>
+          </mat-form-field>
         </ng-container>
       </ng-container>
     </td>
@@ -374,57 +374,57 @@
         [ngClass]="{'Width--20': true, 'TD--Padding': true, 'Abstraction-Background-Oki': field.qcWrapper.equals && (type === 'abstraction' || type === 'review'), 'Abstraction-Background-Warning': !field.qcWrapper.equals && (type === 'abstraction' || type === 'review'),
           'Abstraction-Background-Check': field.qcWrapper.check && (type === 'abstraction' || type === 'review')}">
       <ng-container *ngIf="viewValue != null">
-        <md-input-container class="Input--Min-WIDTH">
-          <input type="text" [ngClass]="{'Color--Field--Patched': isPatchedCurrently(field.displayName, 'fileName')}" placeholder="MR File Name" mdInput
+        <mat-form-field class="Input--Min-WIDTH">
+          <input type="text" [ngClass]="{'Color--Field--Patched': isPatchedCurrently(field.displayName, 'fileName')}" placeholder="MR File Name" matInput
                  [(ngModel)]="viewValue.fileName" [disabled]="readonly">
-        </md-input-container>
-        <md-input-container class="Input--Page-WIDTH">
-          <input type="text" [ngClass]="{'Color--Field--Patched': isPatchedCurrently(field.displayName, 'filePage')}" placeholder="Page" mdInput
+        </mat-form-field>
+        <mat-form-field class="Input--Page-WIDTH">
+          <input type="text" [ngClass]="{'Color--Field--Patched': isPatchedCurrently(field.displayName, 'filePage')}" placeholder="Page" matInput
                  [(ngModel)]="viewValue.filePage" [disabled]="readonly">
-        </md-input-container>
+        </mat-form-field>
       </ng-container>
       <ng-container *ngIf="viewValue == null">
-        <md-input-container class="Input--Min-WIDTH">
+        <mat-form-field class="Input--Min-WIDTH">
           <input type="text" [ngClass]="{'Color--Field--Patched': isPatchedCurrently(field.displayName, 'fileName')}" placeholder="MR File Name"
-                 aria-label="Number" mdInput
-                 [(ngModel)]="field.fieldValue.fileName" [mdAutocomplete]="auto"
+                 aria-label="Number" matInput
+                 [(ngModel)]="field.fieldValue.fileName" [matAutocomplete]="auto"
                  (change)="abstractionValueChanged($event, field, 'fileName')" [disabled]="readonly">
-          <md-autocomplete #auto="mdAutocomplete">
-            <md-option *ngFor="let file of availableFileNames" [value]="file" (onSelectionChange)="abstractionValueChanged($event, field, 'fileName')">
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let file of availableFileNames" [value]="file" (onSelectionChange)="abstractionValueChanged($event, field, 'fileName')">
               {{ file }}
-            </md-option>
-          </md-autocomplete>
-        </md-input-container>
-        <md-input-container class="Input--Page-WIDTH">
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field class="Input--Page-WIDTH">
           <input type="text" [ngClass]="{'Color--Field--Patched': isPatchedCurrently(field.displayName, 'filePage')}" placeholder="Page" aria-label="Number"
-                 mdInput autocomplete="off"
+                 matInput autocomplete="off"
                  [(ngModel)]="field.fieldValue.filePage"
                  (change)="abstractionValueChanged($event, field, 'filePage')" [disabled]="readonly">
-        </md-input-container>
+        </mat-form-field>
       </ng-container>
     </td>
 
     <td [ngClass]="{'Width--15': true, 'TD--Padding': true, 'Abstraction-Background-Oki': field.qcWrapper.equals && (type === 'abstraction' || type === 'review'), 'Abstraction-Background-Warning': !field.qcWrapper.equals && (type === 'abstraction' || type === 'review'),
           'Abstraction-Background-Check': field.qcWrapper.check && (type === 'abstraction' || type === 'review')}">
       <ng-container *ngIf="viewValue != null">
-        <md-checkbox color="primary" [checked]="viewValue.noData" [disabled]="readonly"
+        <mat-checkbox color="primary" [checked]="viewValue.noData" [disabled]="readonly"
                      disableRipple>Not found in record
-        </md-checkbox>
-        <md-checkbox *ngIf="!hideDoubleCheck"
+        </mat-checkbox>
+        <mat-checkbox *ngIf="!hideDoubleCheck"
                      color="primary" [checked]="viewValue.doubleCheck" [disabled]="readonly"
                      disableRipple>Double Check
-        </md-checkbox>
+        </mat-checkbox>
       </ng-container>
       <ng-container *ngIf="viewValue == null">
-        <md-checkbox color="primary" [checked]="field.fieldValue.noData"
+        <mat-checkbox color="primary" [checked]="field.fieldValue.noData"
                      (change)="field.fieldValue.noData = $event.checked; abstractionValueChanged($event, field, 'noData')" [disabled]="readonly"
                      disableRipple>Not found in record
-        </md-checkbox>
-        <md-checkbox color="primary" [checked]="field.fieldValue.doubleCheck"
+        </mat-checkbox>
+        <mat-checkbox color="primary" [checked]="field.fieldValue.doubleCheck"
                      (change)="field.fieldValue.doubleCheck = $event.checked; abstractionValueChanged($event, field, 'doubleCheck')" [disabled]="readonly"
                      *ngIf="!hideDoubleCheck && activityOfField !== 'final'"
                      disableRipple>Double Check
-        </md-checkbox>
+        </mat-checkbox>
       </ng-container>
     </td>
   </tr>

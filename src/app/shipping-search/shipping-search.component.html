@@ -20,21 +20,21 @@
 <div class="Width--100">
   <br/>
     <div>
-        <md-select placeholder="Search by Field" class="Input--Bigger-WIDTH"
+        <mat-select placeholder="Search by Field" class="Input--Bigger-WIDTH"
                    [(ngModel)]="searchField">
-          <md-option value="SHORT_ID">Short ID</md-option>
-          <md-option value="TRACKING_NUMBER">Tracking Number (Blood kit return)</md-option>
-          <md-option value="MF_BAR">Manufacturer Barcode</md-option>
-        </md-select>
+          <mat-option value="SHORT_ID">Short ID</mat-option>
+          <mat-option value="TRACKING_NUMBER">Tracking Number (Blood kit return)</mat-option>
+          <mat-option value="MF_BAR">Manufacturer Barcode</mat-option>
+        </mat-select>
     </div>
 
     <div class="Width--80">
       <br/>
-      <md-input-container>
-        <input maxlength="200" style="width: 10cm" mdInput type="text"  placeholder="Value"
+      <mat-form-field>
+        <input maxlength="200" style="width: 10cm" matInput type="text"  placeholder="Value"
                [(ngModel)]="searchValue">
-      </md-input-container>
-      <button md-raised-button type="button" color="primary"
+      </mat-form-field>
+      <button mat-raised-button type="button" color="primary"
               (click)="searchKit()"
               [disabled]="!((searchValue != null && searchValue !== '') && searchField != null)">Search Kit</button>
     </div>
@@ -137,7 +137,7 @@
         <td *ngIf="showColumn('receiveDateString')">{{kitRequest.receiveDateString}}</td>
         <td *ngIf="showColumn('gender')">{{kitRequest.gender}}</td>
         <td *ngIf="!showColumn('receiveDateString')">
-          <button md-raised-button type="button" color="primary" *ngIf="(kitRequest.receiveDateString === '' || kitRequest.receiveDateString === null || kitRequest.receiveDateString === undefined) && kitRequest.realm === 'AT'"
+          <button mat-raised-button type="button" color="primary" *ngIf="(kitRequest.receiveDateString === '' || kitRequest.receiveDateString === null || kitRequest.receiveDateString === undefined) && kitRequest.realm === 'AT'"
                   (click)="receiveATKit(kitRequest)">Mark Received</button>
         </td>
       </tr>

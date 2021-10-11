@@ -85,11 +85,11 @@
               {{s.getAction()}}
             </ng-container>
             <ng-container *ngIf="hasRole().allowedToExitParticipant() && s.isActionStillChangeable()">
-              <md-select class="Input--Min-WIDTH"
+              <mat-select class="Input--Min-WIDTH"
                          [(ngModel)]="s.action" (change)="triggerAction(i)">
-                <md-option value="hold">Hold</md-option>
-                <md-option value="discard">Discard</md-option>
-              </md-select>
+                <mat-option value="hold">Hold</mat-option>
+                <mat-option value="discard">Discard</mat-option>
+              </mat-select>
             </ng-container>
           </td>
           <td (click)="openSample(s)">{{s.discardDate}}</td>
