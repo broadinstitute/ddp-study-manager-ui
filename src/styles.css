@@ -649,7 +649,7 @@ input::-webkit-inner-spin-button {
   filter: alpha(opacity=20);
 }
 
-.custom-pagination /deep/ .ngx-pagination .current {
+.custom-pagination ::ng-deep .ngx-pagination .current {
   background: #4c6a92;
 }
 
