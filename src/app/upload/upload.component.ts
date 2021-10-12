@@ -19,10 +19,10 @@ import {Result} from "../utils/result.model";
 } )
 export class UploadComponent implements OnInit {
 
-  @ViewChild( ModalComponent )
+  @ViewChild( ModalComponent, { static: false } )
   public modal: ModalComponent;
 
-  @ViewChild( FieldFilepickerComponent )
+  @ViewChild( FieldFilepickerComponent, { static: false } )
   public filepicker: FieldFilepickerComponent;
 
   errorMessage: string;

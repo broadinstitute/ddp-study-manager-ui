@@ -21,7 +21,7 @@ import {PatchUtil} from "../utils/patch.model";
 })
 export class TissueComponent implements OnInit {
 
-  @ViewChild("collaboratorSampleId") collaboratorSampleIdInputField;
+  @ViewChild("collaboratorSampleId", { static: false }) collaboratorSampleIdInputField;
 
   @Input() participant: Participant;
   @Input() oncHistoryDetail: OncHistoryDetail;

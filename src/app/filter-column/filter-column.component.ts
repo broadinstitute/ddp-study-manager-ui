@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from "@angular/core";
-import {MdRadioChange} from "@angular/material";
+import {MatRadioChange} from "@angular/material/radio";
 import {Filter} from "./filter-column.model";
 
 @Component( {
@@ -74,7 +74,7 @@ export class FilterColumnComponent implements OnInit {
     return false;
   }
 
-  radioChange( event: MdRadioChange ) {
+  radioChange( event: MatRadioChange ) {
     //deselect all values
     for (let i in this.dataFilter.selectedOptions) {
       if (this.dataFilter.selectedOptions[ i ]) {

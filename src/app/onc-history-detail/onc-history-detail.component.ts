@@ -23,7 +23,7 @@ import {Router} from "@angular/router";
 } )
 export class OncHistoryDetailComponent implements OnInit {
 
-  @ViewChild( ModalComponent )
+  @ViewChild( ModalComponent, { static: false } )
   public oncHisNoteModal: ModalComponent;
 
   @Input() participant: Participant;

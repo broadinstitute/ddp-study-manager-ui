@@ -28,10 +28,10 @@ var fileSaver = require( "file-saver/FileSaver.js" );
 } )
 export class MedicalRecordComponent implements OnInit {
 
-  @ViewChild( OncHistoryDetailComponent )
+  @ViewChild( OncHistoryDetailComponent, { static: false } )
   private oncHistoryDetailComponent: OncHistoryDetailComponent;
 
-  @ViewChild( ModalComponent )
+  @ViewChild( ModalComponent, { static: false } )
   public modal: ModalComponent;
 
   @Input() participant: Participant;

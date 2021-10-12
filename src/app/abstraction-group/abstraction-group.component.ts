@@ -19,10 +19,11 @@ import {DSMService} from "../services/dsm.service";
 } )
 export class AbstractionGroupComponent implements OnInit, OnDestroy {
 
-  @ViewChild( ModalComponent )
+  @ViewChild( ModalComponent, { static: false } )
   public noteModal: ModalComponent;
 
-  @ViewChild( AbstractionFieldComponent ) public abstractionField: AbstractionFieldComponent;
+  @ViewChild( AbstractionFieldComponent, { static: false } )
+  public abstractionField: AbstractionFieldComponent;
 
   @Input() participant: Participant;
   @Input() displayName: string;
