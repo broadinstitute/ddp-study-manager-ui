@@ -116,7 +116,7 @@
              (blur)="currentField(null)" (focus)="currentField(other+'_'+v.value)">
     </md-input-container>
 
-    <md-checkbox *ngIf="v.type === 'checkbox'" disableRipple
+    <md-checkbox *ngIf="v.type === 'checkbox'" disableRipple color="primary"
                  [color]="isCheckboxPatchedCurrently(v.value)"
                  [ngModel]="_multiType[v.value]" [disabled]="disabled"
                  (change)="multiTypeValueChanged($event, _multiType, v.value, v)">{{v.value}}

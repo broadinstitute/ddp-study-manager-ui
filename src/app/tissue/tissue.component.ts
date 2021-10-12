@@ -158,7 +158,10 @@ export class TissueComponent implements OnInit {
               if ( jsonData instanceof Array ) {
                 jsonData.forEach((val) => {
                   let nameValue = NameValue.parse(val);
-                  this.oncHistoryDetail[nameValue.name] = nameValue.value;
+                  if (nameValue.name && nameValue.name.indexOf( '.' ) != -1) {
+                    nameValue.name = nameValue.name.substr( nameValue.name.indexOf( "." ) + 1);
+                  }
+                  this.oncHistoryDetail[ nameValue.name ] = nameValue.value;
                 });
               }
             }

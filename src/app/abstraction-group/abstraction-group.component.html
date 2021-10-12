@@ -46,6 +46,7 @@
                   <md-option value="multi_type_array"> Multi-Array</md-option>
                   <md-option value="number"> Number</md-option>
                   <md-option value="options"> Select</md-option>
+                  <md-option value="table"> Table</md-option>
                   <md-option value="text">
                     <md-icon>
                       <i class="fas fa-window-minimize fa-sm"></i>
@@ -53,7 +54,7 @@
                     Text</md-option>
                 </md-select>
               </td>
-              <td class="Abstraction--Setup--TD Width--70">
+              <td class="Abstraction--Setup--TD Width--60">
                 <ng-container *ngIf="field.type === 'cancers' || field.type === 'drugs'">
                   <md-select class="Input--Min-WIDTH" placeholder="Input Type" [(ngModel)]="field.additionalType" (change)="formChanged(field)" [disabled]="!field.newAdded">
                     <md-option value="multi_options"> Multi-Select</md-option>
@@ -113,6 +114,7 @@
                       <md-option value="textarea"> Multiline-Text</md-option>
                       <md-option value="number"> Number</md-option>
                       <md-option value="options"> Select</md-option>
+                      <md-option value="table"> Table</md-option>
                       <md-option value="text">
                         <md-icon>
                           <i class="fas fa-window-minimize fa-sm"></i>
@@ -147,6 +149,11 @@
                     </button>
                   </div>
                 </ng-container>
+              </td>
+              <td class="Width--10 Abstraction--Setup--TD">
+                <md-checkbox disableRipple color="primary"
+                             [(ngModel)]="field.fileInfo" (change)="formChanged(field)">File Information
+                </md-checkbox>
               </td>
               <td class="Width--10 Abstraction--Setup--TD">
                 <button md-mini-fab color="warn" tooltip="Delete Field"
@@ -201,6 +208,7 @@
               <md-option value="multi_type_array"> Multi-Array</md-option>
               <md-option value="number"> Number</md-option>
               <md-option value="options"> Select</md-option>
+              <md-option value="table"> Table</md-option>
               <md-option value="text">
                 <md-icon>
                   <i class="fas fa-window-minimize fa-sm"></i>
