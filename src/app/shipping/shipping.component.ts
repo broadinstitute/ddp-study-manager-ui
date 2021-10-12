@@ -1,8 +1,9 @@
 import {ChangeDetectorRef, Component, OnInit, ViewChild} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
+import {interval} from "rxjs";
+
 import {Auth} from "../services/auth.service";
 import {DSMService} from "../services/dsm.service";
-import {IntervalObservable} from "rxjs/observable/IntervalObservable";
 import {Language} from "../utils/language";
 import {KitRequest} from "./shipping.model";
 import {KitType} from "../utils/kit-type.model";
@@ -342,7 +343,7 @@ export class ShippingComponent implements OnInit {
         popup.document.close();
 
         //to check if the print window is still open, if it is closed, user should be navigated to scan page
-        var subscription = IntervalObservable.create( 500 ).subscribe( n => {
+        const subscription = interval( 500 ).subscribe( n => {
           if (popup == null || popup.window == null || popup.window.closed) {
             this.closedWindow();
             subscription.unsubscribe();

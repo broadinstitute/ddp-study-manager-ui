@@ -1,7 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
-import {IntervalObservable} from "rxjs/observable/IntervalObservable";
-import {Participant} from "../participant-list/participant-list.model";
+import {Router} from "@angular/router";
+import {interval} from "rxjs";
 
+import {Participant} from "../participant-list/participant-list.model";
 import {OncHistoryDetail} from "./onc-history-detail.model";
 import {DSMService} from "../services/dsm.service";
 import {ComponentService} from "../services/component.service";
@@ -14,7 +15,7 @@ import {Statics} from "../utils/statics";
 import {Auth} from "../services/auth.service";
 import {Result} from "../utils/result.model";
 import {PatchUtil} from "../utils/patch.model";
-import {Router} from "@angular/router";
+
 
 @Component( {
   selector: "app-onc-history-detail",
@@ -122,7 +123,7 @@ export class OncHistoryDetailComponent implements OnInit {
       this.patch( patch, index );
     }
     else {
-      var subscription = IntervalObservable.create( 250 ).subscribe( n => {
+      const subscription = interval( 250 ).subscribe( n => {
         if (this.oncHistory[ index ].oncHistoryDetailId != null) {
           subscription.unsubscribe();
           patch.id = this.oncHistory[ index ].oncHistoryDetailId;
