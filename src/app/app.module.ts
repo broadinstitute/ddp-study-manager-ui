@@ -1,5 +1,5 @@
 import {BrowserModule} from "@angular/platform-browser";
-import {NgModule} from "@angular/core";
+import {ErrorHandler, NgModule} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
 import {RouterModule} from "@angular/router";
@@ -243,7 +243,8 @@ import { FieldTableComponent } from './field-table/field-table.component';
     Statics,
     Language,
     StackdriverErrorReporterService,
-    LoggingService
+    LoggingService,
+    { provide: ErrorHandler, useClass: StackdriverErrorReporterService }
   ],
   bootstrap: [ AppComponent ]
 } )
