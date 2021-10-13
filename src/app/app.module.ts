@@ -3,7 +3,7 @@ import {ErrorHandler, NgModule} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import {RouterModule} from "@angular/router";
-import {DataTableModule} from "angular2-datatable";
+import {DataTableModule} from "@pascalhonegger/ng-datatable";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatButtonModule} from "@angular/material/button";
 import {MatInputModule} from "@angular/material/input";
