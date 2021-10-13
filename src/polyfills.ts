@@ -15,3 +15,6 @@ import 'core-js/es6/map';
 import 'core-js/es6/set';
 import 'core-js/es6/reflect';
 import 'zone.js/dist/zone';
+
+// https://stackoverflow.com/questions/50356408/upgrading-to-angular-6-x-gives-uncaught-referenceerror-global-is-not-defined/50356546
+(window as any).global = window;
