@@ -37,7 +37,7 @@ import { ParticipantData } from "./models/participant-data.model";
 } )
 export class ParticipantListComponent implements OnInit {
 
-  @ViewChild( ModalComponent, { static: false } )
+  @ViewChild(ModalComponent)
   public modal: ModalComponent;
 
   modalAnchor: string;

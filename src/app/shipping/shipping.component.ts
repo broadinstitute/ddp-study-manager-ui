@@ -23,7 +23,7 @@ import {Result} from "../utils/result.model";
 } )
 export class ShippingComponent implements OnInit {
 
-  @ViewChild( ModalComponent, { static: false } )
+  @ViewChild(ModalComponent)
   public modal: ModalComponent;
 
   QUEUE: string = "queue";

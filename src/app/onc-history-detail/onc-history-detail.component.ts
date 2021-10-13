@@ -24,7 +24,7 @@ import {PatchUtil} from "../utils/patch.model";
 } )
 export class OncHistoryDetailComponent implements OnInit {
 
-  @ViewChild( ModalComponent, { static: false } )
+  @ViewChild(ModalComponent)
   public oncHisNoteModal: ModalComponent;
 
   @Input() participant: Participant;

@@ -6,8 +6,8 @@ import { Component, OnInit, ViewChild, Output, EventEmitter, Input } from '@angu
 })
 export class ScanPairComponent implements OnInit {
 
-  @ViewChild('leftInput', { static: false }) leftInput;
-  @ViewChild('rightInput', { static: false }) rightInput;
+  @ViewChild('leftInput') leftInput;
+  @ViewChild('rightInput') rightInput;
 
   @Input() positionScanPair: number;
   @Input() countScanPair: number;

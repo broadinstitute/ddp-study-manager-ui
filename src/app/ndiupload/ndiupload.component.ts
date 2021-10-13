@@ -17,7 +17,7 @@ var fileSaver = require("file-saver/FileSaver.js");
 export class NDIUploadComponent implements OnInit {
 
 
-  @ViewChild(FieldFilepickerComponent, { static: false })
+  @ViewChild(FieldFilepickerComponent)
   public filepicker: FieldFilepickerComponent;
 
   errorMessage: string;

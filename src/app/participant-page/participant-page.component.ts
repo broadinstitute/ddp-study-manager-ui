@@ -39,7 +39,7 @@ var fileSaver = require( "file-saver/FileSaver.js" );
 } )
 export class ParticipantPageComponent implements OnInit, OnDestroy {
 
-  @ViewChild( ModalComponent, { static: false })
+  @ViewChild(ModalComponent)
   public universalModal: ModalComponent;
 
   @Input() parentList: string;

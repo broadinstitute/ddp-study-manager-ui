@@ -7,7 +7,7 @@ import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angula
 })
 export class ScanValueComponent implements OnInit {
 
-  @ViewChild('scanValue', { static: false }) scanValue;
+  @ViewChild('scanValue') scanValue;
 
   @Input() positionScanValue: number;
   @Input() countScanValue: number;

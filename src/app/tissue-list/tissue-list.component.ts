@@ -24,7 +24,7 @@ import {FieldSettings} from "../field-settings/field-settings.model";
 } )
 export class TissueListComponent implements OnInit {
 
-  @ViewChild( ModalComponent, { static: false } )
+  @ViewChild(ModalComponent)
   public modal: ModalComponent;
 
   tissueListWrappers: TissueListWrapper[] = [];
