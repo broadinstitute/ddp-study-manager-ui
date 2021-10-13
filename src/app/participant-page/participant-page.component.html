@@ -136,7 +136,13 @@
           </tr>
           <tr>
             <td>Do Not Contact</td>
-            <td>{{getUtil().getYesNo(participant.data.profile['doNotContact'])}}</td>
+            <td *ngIf="hasRole().allowedToEditParticipant()">
+              <md-checkbox [value]="updatedDNC" color="primary" disableRipple
+                           (click)="updateDNC($event)"></md-checkbox>
+            </td>
+            <td *ngIf="!hasRole().allowedToEditParticipant()">
+              {{getUtil().getYesNo(participant.data.profile['doNotContact'])}}
+            </td>
           </tr>
           <tr>
             <td>Date of Birth</td>

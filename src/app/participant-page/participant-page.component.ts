@@ -106,6 +106,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   updatedFirstName: string;
   updatedLastName: string;
   updatedEmail: string;
+  updatedDNC: boolean = false;
   updatingParticipant: boolean = false;
   private taskType: string;
   private checkParticipantStatusInterval: any;
@@ -179,6 +180,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     this.updatedFirstName = this.participant.data.profile[ "firstName" ];
     this.updatedLastName = this.participant.data.profile[ "lastName" ];
     this.updatedEmail = this.participant.data.profile[ "email" ];
+    this.updatedDNC = this.participant.data.profile[ "doNotContact" ];
   }
 
   private isReturnedUserAndParticipantTheSame(parsedData: any) {
@@ -198,6 +200,10 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
       }
       case "UPDATE_EMAIL": {
         this.participant.data.profile[ "email" ] = this.updatedEmail;
+        break;
+      }
+      case "UPDATE_DNC": {
+        this.participant.data.profile[ "doNotContact" ] = this.updatedDNC;
         break;
       }
     }
@@ -262,6 +268,28 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
       }
     );
     delete this.payload[ "data" ][ "email" ];
+  }
+
+  updateDNC( value: any) {
+    if (confirm("Are you sure you want to set this participant as “Do Not Contact”?")) {
+      this.updatingParticipant = true;
+      this.taskType = "UPDATE_DNC";
+      this.updatedDNC = true;
+      this.payload[ "data" ][ "doNotContact" ] = value.checked;
+      this.dsmService.updateParticipant( JSON.stringify( this.payload ) ).subscribe(
+        data => {
+
+        },
+        err => {
+          this.openResultDialog( "Error - Failed to update participant" );
+        }
+      );
+      delete this.payload[ "data" ][ "doNotContact" ];
+    }
+    else {
+      this.updatedDNC = false;
+      debugger;
+    }
   }
 
   validateEmailInput( changedValue ) {
