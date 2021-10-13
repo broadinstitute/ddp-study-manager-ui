@@ -13,17 +13,17 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatIconModule} from "@angular/material/icon";
-import {
-  AccordionModule,
-  CollapseModule,
-  DatepickerModule,
-  ModalModule,
-  SortableModule,
-  TabsModule,
-  TooltipModule,
-  TypeaheadModule
-} from "ngx-bootstrap";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+
+import {AccordionModule} from "ngx-bootstrap/accordion";
+import {CollapseModule} from "ngx-bootstrap/collapse";
+import {DatepickerModule} from "ngx-bootstrap/datepicker";
+import {ModalModule} from "ngx-bootstrap/modal";
+import {SortableModule} from "ngx-bootstrap/sortable";
+import {TabsModule} from "ngx-bootstrap/tabs";
+import {TooltipModule} from "ngx-bootstrap/tooltip";
+import {TypeaheadModule} from "ngx-bootstrap/typeahead";
+
 import {CookieModule} from "ngx-cookie";
 import {NgxPaginationModule} from "ngx-pagination";
 

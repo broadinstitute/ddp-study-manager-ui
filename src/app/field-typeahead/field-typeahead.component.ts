@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {TypeaheadMatch} from "ngx-bootstrap";
+import {TypeaheadMatch} from "ngx-bootstrap/typeahead";
 
 @Component( {
   selector: "app-field-typeahead",

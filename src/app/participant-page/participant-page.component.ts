@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild, OnDestroy } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import {TabDirective} from "ngx-bootstrap";
+import {TabDirective} from "ngx-bootstrap/tabs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
 import {FieldSettings} from "../field-settings/field-settings.model";

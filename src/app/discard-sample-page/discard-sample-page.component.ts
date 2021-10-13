@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
-import {BsModalRef, BsModalService} from "ngx-bootstrap";
 import {DomSanitizer} from "@angular/platform-browser";
+import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
 
 import {Utils} from "../utils/utils";
 import {ComponentService} from "../services/component.service";

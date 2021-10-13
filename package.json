@@ -34,7 +34,7 @@
     "jquery": "3.5.0",
     "json2csv": "4.2.1",
     "ng2-dragula": "^1.5.0",
-    "ngx-bootstrap": "^4.3.0",
+    "ngx-bootstrap": "^6.2.0",
     "ngx-cookie": "^2.0.1",
     "ngx-page-scroll": "^7.0.5",
     "ngx-page-scroll-core": "^7.0.5",
