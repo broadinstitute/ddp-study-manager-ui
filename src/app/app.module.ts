@@ -12,6 +12,7 @@ import {MatRadioModule} from "@angular/material/radio";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatDialogModule} from "@angular/material/dialog";
+import {MatIconModule} from "@angular/material/icon";
 import {
   AccordionModule,
   CollapseModule,
@@ -213,6 +214,7 @@ import { FieldTableComponent } from './field-table/field-table.component';
     MatButtonToggleModule,
     MatAutocompleteModule,
     MatDialogModule,
+    MatIconModule,
     BrowserAnimationsModule,
     NgxPageScrollModule,
 
