@@ -38,7 +38,7 @@
     "ngx-cookie": "^2.0.1",
     "ngx-page-scroll": "^7.0.5",
     "ngx-page-scroll-core": "^7.0.5",
-    "ngx-pagination": "3.3.1",
+    "ngx-pagination": "^5.1.1",
     "rxjs": "6.6.7",
     "stackdriver-errors-js": "0.10.0",
     "tslib": "^2.0.0",
