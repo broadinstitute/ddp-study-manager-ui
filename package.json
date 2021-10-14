@@ -29,7 +29,7 @@
     "@pascalhonegger/ng-datatable": "^10.0.0",
     "@types/node": "^12.11.1",
     "bootstrap": "3.4.1",
-    "core-js": "2.5.0",
+    "core-js": "^3.18.3",
     "file-saver": "1.3.3",
     "jquery": "3.5.0",
     "json2csv": "4.2.1",
