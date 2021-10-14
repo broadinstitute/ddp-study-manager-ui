@@ -19,7 +19,7 @@ import {Utils} from "../utils/utils";
 import {MedicalRecord} from "./medical-record.model";
 import {MedicalRecordLog} from "./model/medical-record-log.model";
 
-var fileSaver = require( "file-saver/FileSaver.js" );
+var fileSaver = require( "file-saver" );
 
 @Component( {
   selector: "app-medical-record",

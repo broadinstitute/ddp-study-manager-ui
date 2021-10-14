@@ -30,7 +30,7 @@ import { AddFamilyMemberComponent } from "../popups/add-family-member/add-family
 import { Sample } from "../participant-list/models/sample.model";
 import { ParticipantDSMInformation } from "../participant-list/models/participant.model";
 
-var fileSaver = require( "file-saver/FileSaver.js" );
+var fileSaver = require( "file-saver" );
 
 @Component( {
   selector: "app-participant-page",

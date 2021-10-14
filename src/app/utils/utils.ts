@@ -15,7 +15,7 @@ import {AbstractionField} from "../medical-record-abstraction/medical-record-abs
 import {Participant} from "../participant-list/participant-list.model";
 import {NameValue} from "./name-value.model";
 
-var fileSaver = require( "file-saver/FileSaver.js" );
+var fileSaver = require( "file-saver" );
 const Json2csvParser = require( "json2csv" ).Parser;
 
 @Injectable()

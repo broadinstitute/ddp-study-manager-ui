@@ -5,7 +5,7 @@ import {Auth} from "../services/auth.service";
 import {ComponentService} from "../services/component.service";
 import {ActivatedRoute} from "@angular/router";
 
-var fileSaver = require("file-saver/FileSaver.js");
+var fileSaver = require("file-saver");
 
 //declare var fileSaver: any;
 
