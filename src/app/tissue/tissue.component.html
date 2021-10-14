@@ -325,7 +325,7 @@
       <td colspan="3">
         <mat-select [disabled]="!editable" [(ngModel)]="tissue.sequenceResults"
                    (change)="valueChanged($event, 'sequenceResults')"
-                   [ngClass]="{'Color--Field--Patched': isPatchedCurrently('sequenceResults', i)}"
+                   [ngClass]="{'Color--Field--Patched': isPatchedCurrently('sequenceResults')}"
                    placeholder="Sequence Results">
           <mat-option value="failureSHL">Failure at SHL</mat-option>
           <mat-option value="abandonedGP">Abandoned at GP</mat-option>
