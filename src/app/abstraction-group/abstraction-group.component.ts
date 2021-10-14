@@ -1,9 +1,10 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from "@angular/core";
-import {DragulaService} from "ng2-dragula";
-import {Subscription} from "rxjs";
 import {Router} from "@angular/router";
-import {AbstractionFieldComponent} from "../abstraction-field/abstraction-field.component";
+import {Subscription} from "rxjs";
+import {DragulaService} from "ng2-dragula";
+import {Group} from "ng2-dragula/dist/Group";
 
+import {AbstractionFieldComponent} from "../abstraction-field/abstraction-field.component";
 import {AbstractionField, AbstractionFieldValue} from "../medical-record-abstraction/medical-record-abstraction-field.model";
 import {ModalComponent} from "../modal/modal.component";
 import {Participant} from "../participant-list/participant-list.model";
@@ -50,24 +51,26 @@ export class AbstractionGroupComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this.setupForm) {
+      const groupName = this.getDisplayNameWithoutSpace() + "-list-group";
+
       if (this.fields != null && this.fields.length > 0) {
-        const bag: any = this.dragulaService.find( this.getDisplayNameWithoutSpace() + "-list-bag" );
-        if (bag !== undefined) {
-          this.dragulaService.destroy( this.getDisplayNameWithoutSpace() + "-list-bag" );
+        const group: Group = this.dragulaService.find(groupName);
+        if (group !== undefined) {
+          this.dragulaService.destroy(groupName);
         }
-        this.dragulaService.setOptions( this.getDisplayNameWithoutSpace() + "-list-bag", {
+        this.dragulaService.createGroup(groupName, {
           revertOnSpill: true
         } );
       }
-      this.subs.add( this.dragulaService.dropModel.asObservable().subscribe( ( args: any ) => {
-        let [ bagName, el, target, source ] = args;
-        if (bagName === this.getDisplayNameWithoutSpace() + "-list-bag") {
-          for (let i = 0; i < this.fields.length; i++) {
-            this.fields[ i ].orderNumber = i + 1;
-            this.fields[ i ].changed = true;
-          }
-        }
-      } ) );
+      this.subs.add(
+        this.dragulaService.dropModel(groupName)
+          .subscribe(() => {
+            for (let i = 0; i < this.fields.length; i++) {
+              this.fields[i].orderNumber = i + 1;
+              this.fields[i].changed = true;
+            }
+          })
+      );
     }
   }
 

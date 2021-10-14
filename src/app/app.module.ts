@@ -230,7 +230,7 @@ import { FieldTableComponent } from './field-table/field-table.component';
     CookieModule.forRoot(),
     AccordionModule.forRoot(),
     TypeaheadModule.forRoot(),
-    DragulaModule
+    DragulaModule.forRoot()
   ],
   providers: [
     Auth,

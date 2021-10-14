@@ -4,7 +4,7 @@
 
     <!-- Setup abstraction form -->
     <ng-container *ngIf="setupForm">
-      <div class="container Width--100" dragula="{{getDisplayNameWithoutSpace()}}-list-bag" [dragulaModel]='fields'>
+      <div class="container Width--100" dragula="{{getDisplayNameWithoutSpace()}}-list-group" [(dragulaModel)]='fields'>
         <div *ngFor="let field of fields" class="div Width--100">
           <ng-container *ngIf="!field.deleted">
             <tr>
