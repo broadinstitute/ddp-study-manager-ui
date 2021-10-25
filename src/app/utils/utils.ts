@@ -283,12 +283,10 @@ export class Utils {
   }
 
   private static makeCSV( data: any[], paths: any[], columns: {} ): string {
-    let input = [];
     let result = [];
     for (let d of data) {
       let input = [];
       for (let path of paths) {
-        let nonDefaultFieldsResultArray: string[] = null;
         let output = this.makeCSVForObjectArray( d, path, columns, 0 );
         let temp = [];
 
@@ -302,20 +300,7 @@ export class Utils {
             }
           }
         }
-        if (output.length > 1) {
-          let resultOutputSplitted = Utils.fillEmptyValuesFromCorrespondingOutputArray( output );
-          nonDefaultFieldsResultArray = Utils.mergeDefaultColumnsWithNonDefaultColumns( temp, resultOutputSplitted );
-        }
-
-        // for (let o of output) {
-        //   for (let i of input) {
-        //     temp.push( i + o );
-        //   }
-        // }
-        if (nonDefaultFieldsResultArray) {
-          temp = nonDefaultFieldsResultArray;
-        }
-        else if (input.length == 0) {
+        if (input.length == 0) {
           temp = output;
         }
         input = temp;
@@ -325,26 +310,6 @@ export class Utils {
     let mainStr = result.join( "\r\n" );
     return mainStr;
   }
-
-  private static fillEmptyValuesFromCorrespondingOutputArray( output: string[] ) {
-    let resultOutputSplitted = output[ 0 ].split( this.COMMA );
-    output.slice( 1, output.length ).forEach( outputArray => {
-      let tempOutputArray = outputArray.split( this.COMMA );
-      for (let j = 0; j < tempOutputArray.length; j++) {
-        if (resultOutputSplitted[ j ] === this.EMPTY_STRING_CSV) {
-          resultOutputSplitted[ j ] = tempOutputArray[ j ];
-        }
-      }
-    } );
-    return resultOutputSplitted;
-  }
-
-  private static mergeDefaultColumnsWithNonDefaultColumns( temp: any[], resultOutputSplitted: string[] ) {
-    let tempSplitted: string[] = temp[ 0 ].split( this.COMMA );
-    let defaultFields: string[] = tempSplitted.slice( 0, tempSplitted.length - resultOutputSplitted.length );
-    return [ defaultFields.concat( resultOutputSplitted ).join( this.COMMA ) ];
-  }
-
 
   public static makeCSVForObjectArray( data: Object, paths: any[], columns: {}, index: number ): string[] {
     let result: string[] = [];
@@ -385,10 +350,10 @@ export class Utils {
   }
 
   private static isColumnNestedInParticipantData( data: Object, paths: any[], index: number ): boolean {
-    return Utils.participantDataExists( data, paths, index ) && data[ Utils.DATA ][ paths[ index ] ];
+    return Utils.participantDataExists( data ) && data[ Utils.DATA ][ paths[ index ] ];
   }
 
-  private static participantDataExists( data: Object, path: any[], index: number ): boolean {
+  private static participantDataExists( data: Object ): boolean {
     return data && data[ Utils.DATA ];
   }
 
