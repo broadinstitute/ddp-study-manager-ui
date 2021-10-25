@@ -270,26 +270,19 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     delete this.payload[ "data" ][ "email" ];
   }
 
-  updateDNC( value: any) {
-    if (confirm("Are you sure you want to set this participant as “Do Not Contact”?")) {
-      this.updatingParticipant = true;
-      this.taskType = "UPDATE_DNC";
-      this.updatedDNC = true;
-      this.payload[ "data" ][ "doNotContact" ] = value.checked;
-      this.dsmService.updateParticipant( JSON.stringify( this.payload ) ).subscribe(
-        data => {
+  updateDNC() {
+    this.updatingParticipant = true;
+    this.taskType = "UPDATE_DNC";
+    this.payload[ "data" ][ "doNotContact" ] = this.updatedDNC;
+    this.dsmService.updateParticipant( JSON.stringify( this.payload ) ).subscribe(
+      data => {
 
-        },
-        err => {
-          this.openResultDialog( "Error - Failed to update participant" );
-        }
-      );
-      delete this.payload[ "data" ][ "doNotContact" ];
-    }
-    else {
-      this.updatedDNC = false;
-      debugger;
-    }
+      },
+      err => {
+        this.openResultDialog( "Error - Failed to update participant" );
+      }
+    );
+    delete this.payload[ "data" ][ "doNotContact" ];
   }
 
   validateEmailInput( changedValue ) {

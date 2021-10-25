@@ -129,16 +129,19 @@
               [disabled]="updatedEmail === participant.data.profile['email'] || updatedEmail.length == 0 || isEmailValid == false"
               (click)="updateEmail()">Update
             </button>
-          </td>
-          <td *ngIf="!hasRole().allowedToEditParticipant()">
-            {{participant.data.profile['email']}}
-          </td>
+            </td>
+            <td *ngIf="!hasRole().allowedToEditParticipant()">
+              {{participant.data.profile['email']}}
+            </td>
           </tr>
           <tr>
             <td>Do Not Contact</td>
             <td *ngIf="hasRole().allowedToEditParticipant()">
-              <md-checkbox [value]="updatedDNC" color="primary" disableRipple
-                           (click)="updateDNC($event)"></md-checkbox>
+              <md-checkbox [(ngModel)]="updatedDNC" color="primary" disableRipple></md-checkbox>
+              <button md-raised-button color="primary"
+                      [disabled]="updatedDNC === participant.data.profile['doNotContact']"
+                      (click)="updateDNC()">Update
+              </button>
             </td>
             <td *ngIf="!hasRole().allowedToEditParticipant()">
               {{getUtil().getYesNo(participant.data.profile['doNotContact'])}}
