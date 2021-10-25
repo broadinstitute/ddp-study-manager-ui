@@ -158,7 +158,7 @@ export class DSMService {
   public applyFilter( json: ViewFilter, realm: string, parent: string, filterQuery: string, from: number = 0, to: number = this.role.getUserSetting().getRowsPerPage() ): Observable<any> {
     let viewFilterCopy = null;
     if (json != null) {
-      if (json != null && json.filters != null) {
+      if (json.filters != null) {
         viewFilterCopy = json.copy();
         for (let filter of json.filters) {
           if (filter.type === Filter.OPTION_TYPE && filter.participantColumn.tableAlias !== 'participantData') {
@@ -183,15 +183,17 @@ export class DSMService {
     map.push( {name: "to", value: to} );
     map.push( {name: "userId", value: userId} );
     map.push( {name: "parent", value: parent} );
+
     if (filterQuery != null) {
       map.push( {name: "filterQuery", value: filterQuery} );
     }
-    else if (json == null || json.filters == undefined || json.filters == null) {
-      map.push( {name: "filterName", value: json == null ? null : json.filterName} );
+    else if (json == null || json.filters == null) {
+      json && map.push( {name: "filterName", value: json.filterName} );
     }
     else if (viewFilterCopy != null) {
       map.push( {name: "filters", value: JSON.stringify( viewFilterCopy.filters )} );
     }
+
     return this.http.get(url, this.buildQueryHeader(map)).pipe(
       catchError(this.handleError.bind(this))
     );
