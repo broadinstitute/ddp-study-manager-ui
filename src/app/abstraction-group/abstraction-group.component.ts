@@ -62,9 +62,12 @@ export class AbstractionGroupComponent implements OnInit, OnDestroy {
           revertOnSpill: true
         } );
       }
+
       this.subs.add(
         this.dragulaService.dropModel(groupName)
-          .subscribe(() => {
+          .subscribe(({sourceModel}) => {
+            // updated model
+            this.fields = sourceModel;
             for (let i = 0; i < this.fields.length; i++) {
               this.fields[i].orderNumber = i + 1;
               this.fields[i].changed = true;
@@ -174,5 +177,9 @@ export class AbstractionGroupComponent implements OnInit, OnDestroy {
       field.fieldValue.matchPhrase = selectedVersion.matchPhrase;
       this.abstractionField.saveSelectedQc( field );
     }
+  }
+
+  print(e: any[]) {
+    console.log('FUCK:', e);
   }
 }
