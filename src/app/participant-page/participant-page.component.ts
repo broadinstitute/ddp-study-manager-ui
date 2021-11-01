@@ -1317,9 +1317,12 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     return Math.abs(diffDate.getUTCFullYear() - 1970);
   }
 
-  findDataId(): string {
-    if (this.participant && this.participant.participantData && this.participant.participantData[0]) {
-      return this.participant.participantData[0].dataId;
+  findDataId(fieldSetting: FieldSettings): string {
+    if (this.participant && this.participant.participantData) {
+      let participantDataOfFieldSetting = this.participant.participantData.find(participantData => participantData.fieldTypeId === fieldSetting.fieldType);
+      if (participantDataOfFieldSetting) {
+        return participantDataOfFieldSetting.dataId;
+      }
     }
     return "";
   }
