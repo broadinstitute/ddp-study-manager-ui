@@ -172,8 +172,4 @@ export class AbstractionGroupComponent implements OnInit, OnDestroy {
       this.abstractionField.saveSelectedQc( field );
     }
   }
-
-  print(e: any[]) {
-    console.log('FUCK:', e);
-  }
 }
