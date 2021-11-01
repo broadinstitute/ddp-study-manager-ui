@@ -292,11 +292,10 @@ export class Utils {
 
         for (let i = 0; i < output.length; i++) {
           if (input.length === output.length) {
-            temp.push( input[ i ] + output[ i ] );
-          }
-          else {
+            temp.push(input[i] + output[i]);
+          } else {
             for (let j = 0; j < input.length; j++) {
-              temp.push( input[ j ] + output[ i ] );
+              temp.push(input[j] + output[i]);
             }
           }
         }
