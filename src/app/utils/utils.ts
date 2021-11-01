@@ -2,14 +2,14 @@ import {DatePipe} from "@angular/common";
 import {Injectable} from "@angular/core";
 import {FormControl} from "@angular/forms";
 import {AbstractionGroup} from "../abstraction-group/abstraction-group.model";
-import { ActivityData } from "../activity-data/activity-data.model";
+import {ActivityData} from "../activity-data/activity-data.model";
 import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
 import {Group} from "../activity-data/models/group.model";
 import {OptionDetail} from "../activity-data/models/option-detail.model";
 import {Option} from "../activity-data/models/option.model";
 import {QuestionAnswer} from "../activity-data/models/question-answer.model";
 import {QuestionDefinition} from "../activity-data/models/question-definition.model";
-import { FieldSettings } from "../field-settings/field-settings.model";
+import {FieldSettings} from "../field-settings/field-settings.model";
 import {Filter} from "../filter-column/filter-column.model";
 import {AbstractionField} from "../medical-record-abstraction/medical-record-abstraction-field.model";
 import {Participant} from "../participant-list/participant-list.model";
@@ -30,6 +30,8 @@ export class Utils {
   static DATE_PARTIAL: string = "partial date";
   static COMMA: string = ",";
   static EMPTY_STRING_CSV: string = "\"\"";
+  static DATA: string = "data";
+  static PROFILE: string = "profile";
 
   YES: string = "Yes";
   NO: string = "No";
@@ -281,39 +283,24 @@ export class Utils {
   }
 
   private static makeCSV( data: any[], paths: any[], columns: {} ): string {
-    let input = [];
     let result = [];
     for (let d of data) {
       let input = [];
       for (let path of paths) {
-        let nonDefaultFieldsResultArray: string[] = null;
         let output = this.makeCSVForObjectArray( d, path, columns, 0 );
         let temp = [];
 
         for (let i = 0; i < output.length; i++) {
           if (input.length === output.length) {
-            temp.push(input[i] + output[i]);
-          } else {
+            temp.push( input[ i ] + output[ i ] );
+          }
+          else {
             for (let j = 0; j < input.length; j++) {
-              temp.push(input[j] + output[i]);
+              temp.push( input[ j ] + output[ i ] );
             }
           }
         }
-
-        if (output.length > 1) {
-          let resultOutputSplitted = Utils.fillEmptyValuesFromCorrespondingOutputArray(output);
-          nonDefaultFieldsResultArray = Utils.mergeDefaultColumnsWithNonDefaultColumns(temp, resultOutputSplitted);
-        }
-
-        // for (let o of output) {
-        //   for (let i of input) {
-        //     temp.push( i + o );
-        //   }
-        // }
-        if (nonDefaultFieldsResultArray) {
-          temp = nonDefaultFieldsResultArray;
-        }
-        else if (input.length == 0) {
+        if (input.length == 0) {
           temp = output;
         }
         input = temp;
@@ -324,26 +311,6 @@ export class Utils {
     return mainStr;
   }
 
-
-  private static fillEmptyValuesFromCorrespondingOutputArray(output: string[]) {
-    var resultOutputSplitted = output[0].split(this.COMMA);
-    output.slice(1, output.length).forEach(outputArray => {
-      let tempOutputArray = outputArray.split(this.COMMA);
-      for (let j = 0; j < tempOutputArray.length; j++) {
-        if (resultOutputSplitted[j] === this.EMPTY_STRING_CSV) {
-          resultOutputSplitted[j] = tempOutputArray[j];
-        }
-      }
-    });
-    return resultOutputSplitted;
-  }
-
-  private static mergeDefaultColumnsWithNonDefaultColumns(temp: any[], resultOutputSplitted: string[]) {
-    var tempSplitted: string[] = temp[0].split(this.COMMA);
-    var defaultFields: string[] = tempSplitted.slice(0, tempSplitted.length - resultOutputSplitted.length);
-    return [defaultFields.concat(resultOutputSplitted).join(this.COMMA)];
-  }
-
   public static makeCSVForObjectArray( data: Object, paths: any[], columns: {}, index: number ): string[] {
     let result: string[] = [];
     if (index > paths.length - 1) {
@@ -351,7 +318,10 @@ export class Utils {
     }
     else {
       let objects = null;
-      if (!( data[ paths[ index ] ] instanceof Array )) {
+      if (Utils.isColumnNestedInParticipantData( data, paths, index )) {
+        objects = [ data[ Utils.DATA ] [ paths[ index ] ] ];
+      }
+      else if (!( data[ paths[ index ] ] instanceof Array )) {
         objects = [ data[ paths[ index ] ] ];
       }
       else {
@@ -377,6 +347,22 @@ export class Utils {
       }
       return result;
     }
+  }
+
+  private static isColumnNestedInParticipantData( data: Object, paths: any[], index: number ): boolean {
+    return Utils.participantDataExists( data ) && data[ Utils.DATA ][ paths[ index ] ];
+  }
+
+  private static participantDataExists( data: Object ): boolean {
+    return data && data[ Utils.DATA ];
+  }
+
+  private static isColumnNestedInProfileData( data: Object, columnName: string ) {
+    return this.profileDataExists( data ) && data[ Utils.PROFILE ][ columnName ];
+  }
+
+  private static profileDataExists( data: Object ): boolean {
+    return data && data[ Utils.PROFILE ];
   }
 
   private static getObjectAdditionalValue( o: Object, fieldName: string, column: any ) {
@@ -446,7 +432,13 @@ export class Utils {
             }
           }
           else {
-            let value = o[ col.participantColumn.name ];
+            let value = null;
+            if (Utils.isColumnNestedInProfileData( o, col.participantColumn.name )) {
+              value = o[ Utils.PROFILE ][ col.participantColumn.name ];
+            }
+            else {
+              value = o[ col.participantColumn.name ];
+            }
             if (col.participantColumn.object != null && o[ col.participantColumn.object ] != null) {
               value = o[ col.participantColumn.object ][ col.participantColumn.name ];
             } else if (o['data'] && o['data'][col.participantColumn.name]) {
