@@ -1,6 +1,7 @@
 import {DatePipe} from "@angular/common";
 import {Injectable} from "@angular/core";
 import {FormControl} from "@angular/forms";
+import {ErrorStateMatcher} from "@angular/material/core";
 import {AbstractionGroup} from "../abstraction-group/abstraction-group.model";
 import { ActivityData } from "../activity-data/activity-data.model";
 import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
@@ -572,15 +573,21 @@ export class Utils {
     fileSaver.saveAs( data, fileName );
   }
 
-  phoneNumberValidator( control: FormControl ) {
-    let validationError = {"invalidPhoneNumber": true};
-    if (!control || !control.value) {
-      return null;
-    }
-    if (control.value.match( /^\d{3}-\d{3}-\d{4}$/ )) {
-      return null;
-    }
-    return validationError;
+  // breaking change after Angular update to v.10
+  // Instead of passing a validating function,
+  // we should now pass a class instance (object) of type ErrorStateMatcher
+  // that has an isErrorState method.
+  // See https://github.com/angular/components/issues/7694
+  phoneNumberValidator(): ErrorStateMatcher {
+    return {
+      isErrorState: (control: FormControl | null) => {
+        if (control?.value) {
+          return !(control.value.match( /^\d{3}-\d{3}-\d{4}$/ ));
+        }
+
+        return false;
+      }
+    };
   }
 
   public static parseDate( dateString: string, format: string, allowUnknownDay: boolean ): string | Date {
