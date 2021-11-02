@@ -22,7 +22,7 @@ import {ModalComponent} from "../modal/modal.component";
 } )
 export class AbstractionFieldComponent implements OnInit {
 
-  @ViewChild( ModalComponent )
+  @ViewChild(ModalComponent)
   public noteModal: ModalComponent;
 
   @Input() participant: Participant;

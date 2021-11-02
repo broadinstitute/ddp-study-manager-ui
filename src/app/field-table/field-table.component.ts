@@ -9,7 +9,7 @@ import {Value} from "../utils/value.model";
 } )
 export class FieldTableComponent implements OnInit, OnChanges {
 
-  @ViewChild( ModalComponent )
+  @ViewChild(ModalComponent)
   public universalModal: ModalComponent;
 
   @Input() possibleValues: Value[];

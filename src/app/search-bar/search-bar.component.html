@@ -4,10 +4,10 @@
          name="query" (keyup)="checkQuery()" (click)="checkQuery()" (keydown)="search($event)"
          autocomplete="off"
          [ngClass]="{'Color--bg--warn':wrongQuery, 'Float--left': true, 'Width--85': true}">
-  <button md-mini-fab (click)="doFilterByQuery()" [disabled]="wrongQuery" color="Color--primary" tooltip="Search">
+  <button mat-mini-fab (click)="doFilterByQuery()" [disabled]="wrongQuery" color="Color--primary" tooltip="Search">
     <i class="fas fa-search"></i>
   </button>
-  <button md-mini-fab (click)="putFilterQueryBack()" color="Color--primary" tooltip="Erase Query">
+  <button mat-mini-fab (click)="putFilterQueryBack()" color="Color--primary" tooltip="Erase Query">
     <i class="fas fa-eraser"></i>
   </button>
 </div>

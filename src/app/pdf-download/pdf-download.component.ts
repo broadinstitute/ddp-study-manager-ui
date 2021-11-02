@@ -5,10 +5,9 @@ import {Auth} from "../services/auth.service";
 import {ComponentService} from "../services/component.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Statics} from "../utils/statics";
-import {Response} from "@angular/http";
 import {PDFModel} from "./pdf-download.model";
 
-var fileSaver = require( "file-saver/FileSaver.js" );
+var fileSaver = require( "file-saver" );
 
 @Component( {
   selector: "app-pdf-download",
@@ -166,7 +165,7 @@ export class PdfDownloadComponent implements OnInit {
     );
   }
 
-  downloadFile( data: Response, type: string ) {
+  downloadFile( data: any, type: string ) {
     var blob = new Blob( [ data ], {type: "application/pdf"} );
     fileSaver.saveAs( blob, this.participantId + type + Statics.PDF_FILE_EXTENSION );
   }

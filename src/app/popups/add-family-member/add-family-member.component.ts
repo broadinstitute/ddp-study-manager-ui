@@ -1,9 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MD_DIALOG_DATA, MdDialog, MdDialogRef } from '@angular/material';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 
 import { ParticipantUpdateResultDialogComponent } from "../../dialogs/participant-update-result-dialog.component";
 import { ParticipantData } from '../../participant-list/models/participant-data.model';
-
 import {ComponentService} from "../../services/component.service";
 import {DSMService} from "../../services/dsm.service";
 import {RoleService} from "../../services/role.service";
@@ -26,9 +25,9 @@ export class AddFamilyMemberComponent implements OnInit {
   staticRelations = Statics.RELATIONS;
   isDataLoading = false;
 
-  constructor(@Inject(MD_DIALOG_DATA) public data: {participant: any}, private dsmService: DSMService, 
-              private compService: ComponentService, private role: RoleService, public dialog: MdDialog,
-              private dialogRef: MdDialogRef<AddFamilyMemberComponent>) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: {participant: any}, private dsmService: DSMService,
+              private compService: ComponentService, private role: RoleService, public dialog: MatDialog,
+              private dialogRef: MatDialogRef<AddFamilyMemberComponent>) { }
 
   ngOnInit() {
     this.dsmService.getParticipantDsmData(this.compService.getRealm(), this.getAltPidElseGuid()).subscribe(
@@ -43,11 +42,11 @@ export class AddFamilyMemberComponent implements OnInit {
       }
     );
   }
-  
+
   isFamilyMemberFieldsEmpty() {
     return !this.familyMemberFirstName || !this.familyMemberLastName || !this.familyMemberSubjectId || !this.chosenRelation;
   }
-  
+
   submitFamilyMember() {
     let payload = {
       participantId: this.getAltPidElseGuid(),

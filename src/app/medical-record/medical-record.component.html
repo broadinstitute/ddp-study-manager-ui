@@ -117,14 +117,14 @@
       <div *ngIf="pdfs != null && pdfs.length != 0 && getRole().allowedToDownloadPDF()">
         <tr>
           <td>
-            <md-select placeholder="Select PDF" class="Input--Abstraction" [(ngModel)]="selectedPDF">
-              <md-option *ngFor="let e of pdfs" [value]="e.configName">
+            <mat-select placeholder="Select PDF" class="Input--Abstraction" [(ngModel)]="selectedPDF">
+              <mat-option *ngFor="let e of pdfs" [value]="e.configName">
                 {{e.displayName}}
-              </md-option>
-            </md-select>
+              </mat-option>
+            </mat-select>
           </td>
           <td>
-            <button md-raised-button color="primary"
+            <button mat-raised-button color="primary"
                     [disabled]="medicalRecord.name == null || medicalRecord.name === '' || downloading"
                     (click)="downloadPDF(null)">Download PDF Bundle
             </button>
@@ -133,7 +133,7 @@
         <tr>
           <td>
             <div *ngIf="(medicalRecord.name == null || medicalRecord.name === '')"><b>* Institution name is needed for download</b></div>
-            <button md-raised-button color="primary"
+            <button mat-raised-button color="primary"
                     [disabled]="selectedPDF == null || selectedPDF === '' || downloading || ((medicalRecord.name == null || medicalRecord.name === '') && selectedPDF === 'cover')"
                     (click)="downloadPDF(selectedPDF)">Download selected single PDF
             </button>
@@ -188,7 +188,7 @@
         <tr *ngIf="currentLog != null">
           <td></td>
           <td>
-            <button md-raised-button color="primary"
+            <button mat-raised-button color="primary"
                     (click)="saveLog()">Save Review Information
             </button>
           </td>
@@ -213,34 +213,34 @@
       <tr>
         <td>Contact Person</td>
         <td class="Width--20" colspan="3">
-          <md-input-container
+          <mat-form-field
             [ngClass]="{'Input': true, 'Input--Bigger-WIDTH': true, 'Color--Field--Patched': isPatchedCurrently('contact')}">
-            <input mdInput maxlength="200" [disabled]="participantExited"
+            <input matInput maxlength="200" [disabled]="participantExited"
                    [(ngModel)]="medicalRecord.contact" (change)="valueChanged($event, 'contact')"
                    (blur)="currentField(null)" (focus)="currentField('contact')">
-          </md-input-container>
+          </mat-form-field>
         </td>
       </tr>
       <tr>
         <td>Confirmed Phone</td>
         <td>
-          <md-input-container
+          <mat-form-field
             [ngClass]="{'Input': true, 'Input--Phone-Number': true, 'Color--Field--Patched': isPatchedCurrently('phone')}">
-            <input mdInput maxlength="14" [disabled]="participantExited"
+            <input matInput maxlength="14" [disabled]="participantExited"
                    [(ngModel)]="medicalRecord.phone" (change)="valueChanged($event, 'phone')"
-                   [errorStateMatcher]="getUtil().phoneNumberValidator"
+                   [errorStateMatcher]="getUtil().phoneNumberValidator()"
                    (blur)="currentField(null)" (focus)="currentField('phone')">
-            <md-error>xxx-xxx-xxxx</md-error>
-          </md-input-container>
+            <mat-error>xxx-xxx-xxxx</mat-error>
+          </mat-form-field>
         </td>
         <td class="Width--60" rowspan="2" colspan="2">
           <table class="Width--100">
             <tr>
               <td class="Width--10">
-                <md-checkbox [(ngModel)]="medicalRecord.mrProblem" [disabled]="participantExited"
+                <mat-checkbox [(ngModel)]="medicalRecord.mrProblem" [disabled]="participantExited"
                              (change)="mrProblem(); valueChanged($event, 'mrProblem')"
                              [color]="isCheckboxPatchedCurrently('mrProblem')" (blur)="currentField(null)"
-                             (focus)="currentField('mrProblem')"></md-checkbox>
+                             (focus)="currentField('mrProblem')"></mat-checkbox>
               </td>
               <td class="Width--90">MR Problem</td>
             </tr>
@@ -255,10 +255,10 @@
             </tr>
             <tr>
               <td>
-                <md-checkbox [(ngModel)]="medicalRecord.unableObtain"
+                <mat-checkbox [(ngModel)]="medicalRecord.unableObtain"
                              (change)="valueChanged($event, 'unableObtain')" [disabled]="participantExited"
                              [color]="isCheckboxPatchedCurrently('unableObtain')" (blur)="currentField(null)"
-                             (focus)="currentField('unableObtain')"></md-checkbox>
+                             (focus)="currentField('unableObtain')"></mat-checkbox>
               </td>
               <td>Unable to obtain</td>
             </tr>
@@ -274,35 +274,35 @@
             </tr>
             <tr>
               <td>
-                <md-checkbox [(ngModel)]="medicalRecord.duplicate" (change)="valueChanged($event, 'duplicate')"
+                <mat-checkbox [(ngModel)]="medicalRecord.duplicate" (change)="valueChanged($event, 'duplicate')"
                              [color]="isCheckboxPatchedCurrently('duplicate')" (blur)="currentField(null)"
-                             (focus)="currentField('duplicate')" [disabled]="participantExited"></md-checkbox>
+                             (focus)="currentField('duplicate')" [disabled]="participantExited"></mat-checkbox>
               </td>
               <td>Duplicate</td>
             </tr>
             <tr>
               <td>
-                <md-checkbox [(ngModel)]="medicalRecord.international"
+                <mat-checkbox [(ngModel)]="medicalRecord.international"
                              (change)="valueChanged($event, 'international')"
                              [color]="isCheckboxPatchedCurrently('international')" (blur)="currentField(null)"
-                             (focus)="currentField('international')" [disabled]="participantExited"></md-checkbox>
+                             (focus)="currentField('international')" [disabled]="participantExited"></mat-checkbox>
               </td>
               <td>International</td>
             </tr>
             <tr>
               <td>
-                <md-checkbox [(ngModel)]="medicalRecord.crRequired" (change)="valueChanged($event, 'crRequired')"
+                <mat-checkbox [(ngModel)]="medicalRecord.crRequired" (change)="valueChanged($event, 'crRequired')"
                              [color]="isCheckboxPatchedCurrently('crRequired')" (blur)="currentField(null)"
-                             (focus)="currentField('crRequired')" [disabled]="participantExited"></md-checkbox>
+                             (focus)="currentField('crRequired')" [disabled]="participantExited"></mat-checkbox>
               </td>
               <td>Paper C/R required</td>
             </tr>
             <tr>
               <td>
-                <md-checkbox [(ngModel)]="medicalRecord.followUpRequired"
+                <mat-checkbox [(ngModel)]="medicalRecord.followUpRequired"
                              (change)="valueChanged($event, 'followUpRequired')"
                              [color]="isCheckboxPatchedCurrently('followUpRequired')" (blur)="currentField(null)"
-                             (focus)="currentField('followUpRequired')" [disabled]="participantExited"></md-checkbox>
+                             (focus)="currentField('followUpRequired')" [disabled]="participantExited"></mat-checkbox>
               </td>
               <td>Follow-Up required</td>
             </tr>
@@ -322,14 +322,14 @@
       <tr>
         <td>Confirmed Fax</td>
         <td colspan="3">
-          <md-input-container
+          <mat-form-field
             [ngClass]="{'Input': true, 'Input--Phone-Number': true, 'Color--Field--Patched': isPatchedCurrently('fax')}">
-            <input mdInput maxlength="14" [disabled]="participantExited"
+            <input matInput maxlength="14" [disabled]="participantExited"
                    [(ngModel)]="medicalRecord.fax" (change)="valueChanged($event, 'fax')"
-                   [errorStateMatcher]="getUtil().phoneNumberValidator"
+                   [errorStateMatcher]="getUtil().phoneNumberValidator()"
                    (blur)="currentField(null)" (focus)="currentField('fax')">
-            <md-error>xxx-xxx-xxxx</md-error>
-          </md-input-container>
+            <mat-error>xxx-xxx-xxxx</mat-error>
+          </mat-form-field>
         </td>
       </tr>
       <tr>
@@ -389,7 +389,7 @@
                                     (dateChanged)="followUpValueChanged($event, 'fRequest2', i)"></app-field-datepicker>
             </ng-container>
             <ng-container *ngIf="medicalRecord.followUps[i].isEmpty()">
-              <button md-mini-fab color="warn" [disabled]="!medicalRecord.followUps[i].isEmpty() || participantExited"
+              <button mat-mini-fab color="warn" [disabled]="!medicalRecord.followUps[i].isEmpty() || participantExited"
                       (click)="deleteFollowUp(i)">
                 <i class="fas fa-trash-alt fa-lg"></i>
               </button>
@@ -414,7 +414,7 @@
       </ng-container>
       <tr *ngIf="medicalRecord.mrReceived != null">
         <td colspan="4">
-          <button md-mini-fab color="primary"
+          <button mat-mini-fab color="primary"
                   (click)="addNewEmptyFollowUp()">
             <i class="fas fa-plus fa-lg"></i>
           </button>
@@ -425,20 +425,20 @@
         <td class="Width--20">MR Document</td>
         <td>
           <br/>
-          <md-select placeholder="MR Document" [ngClass]="{'Color--Field--Patched': isPatchedCurrently('mrDocument')}"
+          <mat-select placeholder="MR Document" [ngClass]="{'Color--Field--Patched': isPatchedCurrently('mrDocument')}"
                      [(ngModel)]="medicalRecord.mrDocument" [disabled]="participantExited"
                      (change)="valueChanged($event, 'mrDocument')"
                      (blur)="currentField(null)" (focus)="currentField('mrDocument')">
-            <md-option value="Full">Full</md-option>
-            <md-option value="Partial">Partial</md-option>
-          </md-select>
+            <mat-option value="Full">Full</mat-option>
+            <mat-option value="Partial">Partial</mat-option>
+          </mat-select>
         </td>
         <td colspan="2">
-          <md-input-container [ngClass]="{'Input': true, 'Input--Bigger-WIDTH': true, 'Color--Field--Patched': isPatchedCurrently('mrDocumentFileNames')}">
-            <input mdInput maxlength="500" placeholder="MR Document File Names" [disabled]="participantExited"
+          <mat-form-field [ngClass]="{'Input': true, 'Input--Bigger-WIDTH': true, 'Color--Field--Patched': isPatchedCurrently('mrDocumentFileNames')}">
+            <input matInput maxlength="500" placeholder="MR Document File Names" [disabled]="participantExited"
                    [(ngModel)]="medicalRecord.mrDocumentFileNames" (change)="valueChanged($event, 'mrDocumentFileNames')"
                    (blur)="currentField(null)" (focus)="currentField('mrDocumentFileNames')">
-          </md-input-container>
+          </mat-form-field>
         </td>
       </tr>
       <tr
@@ -446,14 +446,14 @@
         <td>Pathology present</td>
         <td colspan="3">
           <br/>
-          <md-select placeholder="Pathology present"
+          <mat-select placeholder="Pathology present"
                      [ngClass]="{'Color--Field--Patched': isPatchedCurrently('pathologyPresent')}"
                      [(ngModel)]="medicalRecord.pathologyPresent" [disabled]="participantExited"
                      (change)="valueChanged($event, 'pathologyPresent')" (blur)="currentField(null)"
                      (focus)="currentField('pathologyPresent')">
-            <md-option value="yes">Yes</md-option>
-            <md-option value="no">No</md-option>
-          </md-select>
+            <mat-option value="yes">Yes</mat-option>
+            <mat-option value="no">No</mat-option>
+          </mat-select>
           <br/><br/>
         </td>
       </tr>
@@ -470,34 +470,34 @@
         <td>{{fieldSetting.columnDisplay}}</td>
         <td colspan="3">
           <br/>
-          <md-input-container *ngIf="fieldSetting.displayType === 'TEXT' || fieldSetting.displayType === ''|| fieldSetting.displayType == null"
+          <mat-form-field *ngIf="fieldSetting.displayType === 'TEXT' || fieldSetting.displayType === ''|| fieldSetting.displayType == null"
                               [ngClass]="{'Width--100': true, 'Input--Min-WIDTH': true, 'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}">
-            <input mdInput maxlength="200" [disabled]="participantExited"
+            <input matInput maxlength="200" [disabled]="participantExited"
                    value="{{getAdditionalValue(fieldSetting.columnName)}}" placeholder="{{fieldSetting.columnDisplay}}"
                    (change)="onAdditionalValueChange($event, fieldSetting.columnName)"
                    (blur)="currentField(null)" (focus)="currentField(fieldSetting.columnName)">
-          </md-input-container>
-          <md-input-container *ngIf="fieldSetting.displayType === 'NUMBER'"
+          </mat-form-field>
+          <mat-form-field *ngIf="fieldSetting.displayType === 'NUMBER'"
                               [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}">
-            <input mdInput maxlength="200" type="number" [disabled]="participantExited"
+            <input matInput maxlength="200" type="number" [disabled]="participantExited"
                    value="{{getAdditionalValue(fieldSetting.columnName)}}"
                    (change)="onAdditionalValueChange($event, fieldSetting.columnName)"
                    (blur)="currentField(null)" (focus)="currentField(fieldSetting.columnName)">
-          </md-input-container>
+          </mat-form-field>
           <textarea maxlength="1000" *ngIf="fieldSetting.displayType === 'TEXTAREA'"
                     [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}"
                     (blur)="currentField(null)" (focus)="currentField(fieldSetting.columnName)" [disabled]="participantExited"
                     value="{{getAdditionalValue(fieldSetting.columnName)}}" (change)="onAdditionalValueChange($event, fieldSetting.columnName)"></textarea>
-          <md-select *ngIf="fieldSetting.displayType === 'OPTIONS'" placeholder="{{fieldSetting.columnDisplay}}"
+          <mat-select *ngIf="fieldSetting.displayType === 'OPTIONS'" placeholder="{{fieldSetting.columnDisplay}}"
                      [ngModel]="getAdditionalValue(fieldSetting.columnName)"
                      (change)="onAdditionalValueChange($event, fieldSetting.columnName)" [disabled]="participantExited"
                      [ngClass]="{'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}">
-            <md-option *ngFor="let op of fieldSetting.possibleValues" [value]="op.value">{{op.value}}</md-option>
-          </md-select>
-          <md-checkbox *ngIf="fieldSetting.displayType === 'CHECKBOX'" color="primary" disableRipple
+            <mat-option *ngFor="let op of fieldSetting.possibleValues" [value]="op.value">{{op.value}}</mat-option>
+          </mat-select>
+          <mat-checkbox *ngIf="fieldSetting.displayType === 'CHECKBOX'" color="primary" disableRipple
                        [ngModel]="getAdditionalValue(fieldSetting.columnName)"
                        (change)="onAdditionalValueChange($event, fieldSetting.columnName)" [disabled]="participantExited">
-          </md-checkbox>
+          </mat-checkbox>
           <app-field-datepicker *ngIf="fieldSetting.displayType === 'DATE'" [colorDuringPatch]="isPatchedCurrently(fieldSetting.columnName)"
                                 [disabled]="participantExited"
                                 [dateString]="getAdditionalValue(fieldSetting.columnName)"
@@ -542,7 +542,7 @@
       </tr>
       <tr *ngFor="let mrCoverSetting of mrCoverPdfSettings">
         <td>
-          <md-checkbox [(ngModel)]="mrCoverSetting.selected" color="primary"></md-checkbox>
+          <mat-checkbox [(ngModel)]="mrCoverSetting.selected" color="primary"></mat-checkbox>
         </td>
         <td>
           {{mrCoverSetting.name}}
@@ -556,11 +556,11 @@
         <tbody>
         <tr *ngFor="let pdf of pdfs">
           <td>
-            <md-select placeholder="Select PDF" [(ngModel)]="pdf.order">
-              <md-option *ngFor="let item of [].constructor(pdfs.length + 1); let i = index" [value]="i">
+            <mat-select placeholder="Select PDF" [(ngModel)]="pdf.order">
+              <mat-option *ngFor="let item of [].constructor(pdfs.length + 1); let i = index" [value]="i">
                 {{i}}
-              </md-option>
-            </md-select>
+              </mat-option>
+            </mat-select>
           </td>
           <td>
             {{pdf.displayName}}

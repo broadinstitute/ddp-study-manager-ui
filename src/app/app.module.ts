@@ -1,30 +1,29 @@
 import {BrowserModule} from "@angular/platform-browser";
 import {ErrorHandler, NgModule} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {HttpModule} from "@angular/http";
+import { HttpClientModule } from "@angular/common/http";
 import {RouterModule} from "@angular/router";
-import {DataTableModule} from "angular2-datatable";
-import {
-  AccordionModule,
-  CollapseModule,
-  DatepickerModule,
-  ModalModule,
-  SortableModule,
-  TabsModule,
-  TooltipModule,
-  TypeaheadModule
-} from "ngx-bootstrap";
-import {
-  MdAutocompleteModule,
-  MdButtonModule,
-  MdButtonToggleModule,
-  MdCheckboxModule,
-  MdInputModule,
-  MdRadioModule,
-  MdSelectModule,
-  MdDialogModule
-} from "@angular/material";
+import {DataTableModule} from "@pascalhonegger/ng-datatable";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatButtonModule} from "@angular/material/button";
+import {MatInputModule} from "@angular/material/input";
+import {MatSelectModule} from "@angular/material/select";
+import {MatRadioModule} from "@angular/material/radio";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatIconModule} from "@angular/material/icon";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+
+import {AccordionModule} from "ngx-bootstrap/accordion";
+import {CollapseModule} from "ngx-bootstrap/collapse";
+import {DatepickerModule} from "ngx-bootstrap/datepicker";
+import {ModalModule} from "ngx-bootstrap/modal";
+import {SortableModule} from "ngx-bootstrap/sortable";
+import {TabsModule} from "ngx-bootstrap/tabs";
+import {TooltipModule} from "ngx-bootstrap/tooltip";
+import {TypeaheadModule} from "ngx-bootstrap/typeahead";
+
 import {CookieModule} from "ngx-cookie";
 import {NgxPaginationModule} from "ngx-pagination";
 
@@ -204,19 +203,20 @@ import { FieldTableComponent } from './field-table/field-table.component';
     BrowserModule,
     FormsModule,
     RouterModule.forRoot( AppRoutes, {enableTracing: true} ),
-    HttpModule,
+    HttpClientModule,
     ReactiveFormsModule,
 
-    MdCheckboxModule,
-    MdButtonModule,
-    MdInputModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    MatInputModule,
+    MatSelectModule,
+    MatRadioModule,
+    MatButtonToggleModule,
+    MatAutocompleteModule,
+    MatDialogModule,
+    MatIconModule,
     BrowserAnimationsModule,
-    MdSelectModule,
-    MdRadioModule,
-    MdButtonToggleModule,
     NgxPageScrollModule,
-    MdAutocompleteModule,
-    MdDialogModule,
 
     DataTableModule,
     NgxPaginationModule,
@@ -230,7 +230,7 @@ import { FieldTableComponent } from './field-table/field-table.component';
     CookieModule.forRoot(),
     AccordionModule.forRoot(),
     TypeaheadModule.forRoot(),
-    DragulaModule
+    DragulaModule.forRoot()
   ],
   providers: [
     Auth,

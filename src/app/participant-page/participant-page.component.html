@@ -88,10 +88,10 @@
           <tr>
             <td>First Name</td>
             <td *ngIf="hasRole().allowedToEditParticipant()">
-              <input mdInput type="text" maxlength="200" autocomplete="off" placeholder="First Name"
+              <input matInput type="text" maxlength="200" autocomplete="off" placeholder="First Name"
                     [(ngModel)]="updatedFirstName"
                     class="update-participant-input">
-              <button md-raised-button color="primary"
+              <button mat-raised-button color="primary"
                       (click)="updateFirstName()"
                       [disabled]="updatedFirstName === participant.data.profile['firstName'] || updatedFirstName.length == 0"
                       >Update
@@ -104,10 +104,10 @@
           <tr>
             <td>Last Name</td>
             <td *ngIf="hasRole().allowedToEditParticipant()">
-              <input mdInput type="text" maxlength="200" autocomplete="off" placeholder="Last Name"
+              <input matInput type="text" maxlength="200" autocomplete="off" placeholder="Last Name"
                   [(ngModel)]="updatedLastName"
                   class="update-participant-input">
-              <button md-raised-button color="primary"
+              <button mat-raised-button color="primary"
                       [disabled]="updatedLastName === participant.data.profile['lastName'] || updatedLastName.length == 0"
                       (click)="updateLastName()">Update
               </button>
@@ -120,12 +120,12 @@
             <td>E-Mail</td>
             <td *ngIf="hasRole().allowedToEditParticipant()">
               <span *ngIf="isEmailValid == false" class="invalid-email">E-Mail is not valid</span>
-              <input mdInput type="email" maxlength="200" autocomplete="off" placeholder="Email"
+              <input matInput type="email" maxlength="200" autocomplete="off" placeholder="Email"
               [ngModel]="updatedEmail"
               (ngModelChange)="validateEmailInput($event)"
               email
               class="update-participant-input">
-              <button md-raised-button color="primary"
+              <button mat-raised-button color="primary"
               [disabled]="updatedEmail === participant.data.profile['email'] || updatedEmail.length == 0 || isEmailValid == false"
               (click)="updateEmail()">Update
             </button>
@@ -185,7 +185,7 @@ participant.data.dsm['diagnosisYear'] != null">
 
         <div *ngIf="isAddFamilyMember" class="Float--right Width--100">
           <div class="family-member-button">
-            <button md-mini-fab color="primary" class="md-fab-bottom-left" (click)="showFamilyMemberPopUpOnClick()">
+            <button mat-mini-fab color="primary" class="mat-fab-bottom-left" (click)="showFamilyMemberPopUpOnClick()">
               <i class="fas fa-plus fa-lg"></i>
             </button>
             <span>Add Family Member</span>
@@ -221,14 +221,14 @@ participant.data.dsm['diagnosisYear'] != null">
         <!--PDF download-->
         <ng-container *ngIf="participant.participant == null">
           <ng-container *ngIf="pdfs != null && pdfs.length != 0 && hasRole().allowedToDownloadPDF()">
-            <md-select placeholder="Select PDF" class="Input--Abstraction" [(ngModel)]="selectedPDF">
-              <md-option *ngFor="let e of pdfs" [value]="e.configName">
+            <mat-select placeholder="Select PDF" class="Input--Abstraction" [(ngModel)]="selectedPDF">
+              <mat-option *ngFor="let e of pdfs" [value]="e.configName">
                 {{e.displayName}}
-              </md-option>
-            </md-select>
+              </mat-option>
+            </mat-select>
             <br/>
             <br/>
-            <button md-raised-button color="primary"
+            <button mat-raised-button color="primary"
                     [disabled]="selectedPDF == null || selectedPDF === '' || disableDownload"
                     (click)="downloadPDFs(selectedPDF)">Download selected PDF
             </button>
@@ -243,13 +243,13 @@ participant.data.dsm['diagnosisYear'] != null">
             </div>
             <div class="Float--left" *ngIf="participant.abstraction.aStatus !== 'in_progress' && participant.abstraction.aStatus !== 'done' && participant.abstraction.aStatus !== 'clear'
                   && hasRole().isAbstracter()">
-              <button md-raised-button type="button" color="primary" [disabled]="participantExited"
+              <button mat-raised-button type="button" color="primary" [disabled]="participantExited"
                       (click)="lockParticipant(participant.abstraction)">Start First MR Abstraction
               </button>
             </div>
             <div class="Float--left" *ngIf="participant.abstraction.aStatus === 'clear' && hasRole().isAbstracter()
                   && ((participant.review != null && participant.review.user !== hasRole().getUserName()) || participant.review == null || participant.review.aStatus === 'clear')">
-              <button md-raised-button type="button" color="primary" [disabled]="participantExited"
+              <button mat-raised-button type="button" color="primary" [disabled]="participantExited"
                       (click)="lockParticipant(participant.abstraction)">Continue First MR Abstraction
               </button>
             </div>
@@ -269,7 +269,7 @@ participant.data.dsm['diagnosisYear'] != null">
             </div>
             <div class="Float--left Width--100"
                  *ngIf="participant.abstraction.aStatus === 'in_progress' && hasRole().isAbstractionAdmin()">
-              <button md-raised-button type="button" color="primary" [disabled]="participantExited"
+              <button mat-raised-button type="button" color="primary" [disabled]="participantExited"
                       (click)="breakLockParticipant(participant.abstraction)">Un-lock First MR Abstraction
               </button>
             </div>
@@ -288,13 +288,13 @@ participant.data.dsm['diagnosisYear'] != null">
             </div>
             <div class="Float--left" *ngIf="participant.review.aStatus !== 'in_progress' && participant.review.aStatus !== 'done' && participant.review.aStatus !== 'clear'
                    && participant.abstraction.user !== hasRole().getUserName() && hasRole().isAbstracter()">
-              <button md-raised-button type="button" color="primary" [disabled]="participantExited"
+              <button mat-raised-button type="button" color="primary" [disabled]="participantExited"
                       (click)="lockParticipant(participant.review)">Start Second MR Abstraction
               </button>
             </div>
             <div class="Float--left" *ngIf="participant.review.aStatus === 'clear' && hasRole().isAbstracter()
                    && (participant.abstraction.user !== hasRole().getUserName() || participant.abstraction.aStatus === 'clear')">
-              <button md-raised-button type="button" color="primary" [disabled]="participantExited"
+              <button mat-raised-button type="button" color="primary" [disabled]="participantExited"
                       (click)="lockParticipant(participant.review)">Continue Second MR Abstraction
               </button>
             </div>
@@ -314,7 +314,7 @@ participant.data.dsm['diagnosisYear'] != null">
             </div>
             <div class="Float--left Width--100"
                  *ngIf="participant.review.aStatus === 'in_progress' && hasRole().isAbstractionAdmin()">
-              <button md-raised-button type="button" color="primary" [disabled]="participantExited"
+              <button mat-raised-button type="button" color="primary" [disabled]="participantExited"
                       (click)="breakLockParticipant(participant.review)">Un-lock Second MR Abstraction
               </button>
             </div>
@@ -335,13 +335,13 @@ participant.data.dsm['diagnosisYear'] != null">
             <div class="Float--left" *ngIf="participant.qc.aStatus !== 'in_progress' && participant.qc.aStatus !== 'done' && participant.qc.aStatus !== 'clear'
                     && participant.abstraction.user !== hasRole().getUserName() && participant.review.user !== hasRole().getUserName()
                     && hasRole().isQC()">
-              <button md-raised-button type="button" color="primary" [disabled]="participantExited"
+              <button mat-raised-button type="button" color="primary" [disabled]="participantExited"
                       (click)="lockParticipant(participant.qc)">Start QC
               </button>
             </div>
             <div class="Float--left" *ngIf="participant.qc.aStatus === 'clear'
                   && hasRole().isAbstracter()">
-              <button md-raised-button type="button" color="primary" [disabled]="participantExited"
+              <button mat-raised-button type="button" color="primary" [disabled]="participantExited"
                       (click)="lockParticipant(participant.qc)">Continue QC
               </button>
             </div>
@@ -356,7 +356,7 @@ participant.data.dsm['diagnosisYear'] != null">
             </div>
             <div class="Float--left Width--100"
                  *ngIf="participant.qc.aStatus === 'in_progress' && hasRole().isAbstractionAdmin()">
-              <button md-raised-button type="button" color="primary" [disabled]="participantExited"
+              <button mat-raised-button type="button" color="primary" [disabled]="participantExited"
                       (click)="breakLockParticipant(participant.qc)">Un-lock QC
               </button>
             </div>
@@ -422,12 +422,12 @@ participant.data.dsm['diagnosisYear'] != null">
               Incomplete/Minimal Medical Records
             </td>
             <td>
-              <md-checkbox color="primary" [disabled]="participantExited"
+              <mat-checkbox color="primary" [disabled]="participantExited"
                            [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('minimalMR')}"
                            [(ngModel)]="participant.participant.minimalMR"
                            (change)="valueChanged($event, 'minimalMR', 'r')"
                            disableRipple>
-              </md-checkbox>
+              </mat-checkbox>
             </td>
           </tr>
           <tr *ngIf="participant.medicalRecords != null && participant.medicalRecords.length > 0">
@@ -435,12 +435,12 @@ participant.data.dsm['diagnosisYear'] != null">
               Ready for Abstraction
             </td>
             <td>
-              <md-checkbox color="primary" [disabled]="participantExited"
+              <mat-checkbox color="primary" [disabled]="participantExited"
                            [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('abstractionReady')}"
                            [(ngModel)]="participant.participant.abstractionReady"
                            (change)="valueChanged($event, 'abstractionReady', 'r')"
                            disableRipple>
-              </md-checkbox>
+              </mat-checkbox>
             </td>
           </tr>
         </table>
@@ -451,40 +451,40 @@ participant.data.dsm['diagnosisYear'] != null">
               <td>{{fieldSetting.columnDisplay}}</td>
               <td>
                 <br/>
-                <md-input-container
+                <mat-form-field
                   *ngIf="fieldSetting.displayType === 'TEXT' || fieldSetting.displayType === ''|| fieldSetting.displayType == null"
                   [ngClass]="{'Width--100': true, 'Input--Min-WIDTH': true, 'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}">
-                  <input mdInput maxlength="200" [disabled]="participantExited"
+                  <input matInput maxlength="200" [disabled]="participantExited"
                          value="{{getAdditionalValue(fieldSetting.columnName)}}"
                          placeholder="{{fieldSetting.columnDisplay}}"
                          (change)="onAdditionalValueChange($event, fieldSetting.columnName)"
                          (blur)="currentField(null)" (focus)="currentField(fieldSetting.columnName)">
-                </md-input-container>
-                <md-input-container *ngIf="fieldSetting.displayType === 'NUMBER'"
+                </mat-form-field>
+                <mat-form-field *ngIf="fieldSetting.displayType === 'NUMBER'"
                                     [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}">
-                  <input mdInput maxlength="200" type="number" [disabled]="participantExited"
+                  <input matInput maxlength="200" type="number" [disabled]="participantExited"
                          value="{{getAdditionalValue(fieldSetting.columnName)}}"
                          (change)="onAdditionalValueChange($event, fieldSetting.columnName)"
                          (blur)="currentField(null)" (focus)="currentField(fieldSetting.columnName)">
-                </md-input-container>
+                </mat-form-field>
                 <textarea maxlength="50000" *ngIf="fieldSetting.displayType === 'TEXTAREA'"
                           [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}"
                           (blur)="currentField(null)" (focus)="currentField(fieldSetting.columnName)"
                           [disabled]="participantExited"
                           value="{{getAdditionalValue(fieldSetting.columnName)}}"
                           (change)="onAdditionalValueChange($event, fieldSetting.columnName)"></textarea>
-                <md-select *ngIf="fieldSetting.displayType === 'OPTIONS'" placeholder="{{fieldSetting.columnDisplay}}"
+                <mat-select *ngIf="fieldSetting.displayType === 'OPTIONS'" placeholder="{{fieldSetting.columnDisplay}}"
                            [ngModel]="getAdditionalValue(fieldSetting.columnName)"
                            (change)="onAdditionalValueChange($event, fieldSetting.columnName)"
                            [disabled]="participantExited"
                            [ngClass]="{'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}">
-                  <md-option *ngFor="let op of fieldSetting.possibleValues" [value]="op.value">{{op.value}}</md-option>
-                </md-select>
-                <md-checkbox *ngIf="fieldSetting.displayType === 'CHECKBOX'" color="primary" disableRipple
+                  <mat-option *ngFor="let op of fieldSetting.possibleValues" [value]="op.value">{{op.value}}</mat-option>
+                </mat-select>
+                <mat-checkbox *ngIf="fieldSetting.displayType === 'CHECKBOX'" color="primary" disableRipple
                              [ngModel]="getAdditionalValue(fieldSetting.columnName)"
                              (change)="onAdditionalValueChange($event, fieldSetting.columnName)"
                              [disabled]="participantExited">
-                </md-checkbox>
+                </mat-checkbox>
                 <app-field-datepicker *ngIf="fieldSetting.displayType === 'DATE'"
                                       [colorDuringPatch]="isPatchedCurrently(fieldSetting.columnName)"
                                       [disabled]="participantExited"
@@ -501,7 +501,7 @@ participant.data.dsm['diagnosisYear'] != null">
             <tab
               *ngIf="participant != null && participant.data != null && participant.data.activities != null && participant.data.activities.length > 0
                 && activityDefinitions != null"
-              heading="Survey Data" [active]="tabActive('Survey Data')" (select)="onSelect($event, 'Survey Data')">
+              heading="Survey Data" [active]="tabActive('Survey Data')" (selectTab)="onSelect($event, 'Survey Data')">
               <br/><br/>
               <div class="Float--left Width--100">
                 <div class="Float--left Width--100"
@@ -705,7 +705,7 @@ participant.data.dsm['diagnosisYear'] != null">
 
             <tab heading="Medical Records"
                  *ngIf="participant.medicalRecords != null && participant.medicalRecords.length > 0"
-                 [active]="tabActive('Medical Records')" (select)="onSelect($event, 'Medical Records')">
+                 [active]="tabActive('Medical Records')" (selectTab)="onSelect($event, 'Medical Records')">
               <br/><br/><br/>
 
               <table class="table table-striped Width--100" [mfData]="participant.medicalRecords" #mf="mfDataTable"
@@ -751,7 +751,7 @@ participant.data.dsm['diagnosisYear'] != null">
                     <td (click)="openMedicalRecord(mr)">{{getUtil().getYesNo(mr.crRequired)}}</td>
                     <td (click)="openMedicalRecord(mr)">{{getUtil().getYesNo(mr.followUpRequired)}}</td>
                     <td>
-                      <button md-mini-fab [color]="getButtonColorStyle(mr.mrNotes)" placement="left"
+                      <button mat-mini-fab [color]="getButtonColorStyle(mr.mrNotes)" placement="left"
                               tooltip='{{mr.mrNotes}}'
                               (click)="openNoteModal(mr); universalModal.show()">
                         <i class="fas fa-comment-alt fa-lg" data-fa-transform="down-2"></i>
@@ -778,7 +778,7 @@ participant.data.dsm['diagnosisYear'] != null">
 
             <tab heading="Onc History"
                  *ngIf="participant.oncHistoryDetails != null && participant.oncHistoryDetails.length > 0"
-                 [active]="tabActive('Onc History')" (select)="onSelect($event, 'Onc History')">
+                 [active]="tabActive('Onc History')" (selectTab)="onSelect($event, 'Onc History')">
               <br/><br/><br/>
 
               <ng-container *ngIf="getTissueConsent() == null || !getTissueConsent()">
@@ -816,10 +816,10 @@ participant.data.dsm['diagnosisYear'] != null">
 
                   <div
                     *ngIf="participant != null && participant.oncHistoryDetails.length > 0 && getTissueConsent() == null || getTissueConsent()">
-                    <button md-raised-button (click)="requestTissue(false)" color="primary" [disabled]="participantExited"
+                    <button mat-raised-button (click)="requestTissue(false)" color="primary" [disabled]="participantExited"
                             [disabled]="disableTissueRequestButton || hasRole().prohibitedToRequestTissue()"> Download Request Documents
                     </button>
-                    <button md-raised-button color="primary"
+                    <button mat-raised-button color="primary"
                             [disabled]="downloading"
                             (click)="requestTissue(true)">Download PDF Bundle
                     </button>
@@ -830,7 +830,7 @@ participant.data.dsm['diagnosisYear'] != null">
             </tab>
 
             <tab heading="First Medical Record Abstraction" [active]="tabActive('abstraction')"
-                 (select)="onSelect($event, 'abstraction'); getFileList(participant.abstraction)"
+                 (selectTab)="onSelect($event, 'abstraction'); getFileList(participant.abstraction)"
                  *ngIf="(participant.abstraction != null && abstractionFields != null
                  && (participant.abstraction.aStatus === 'in_progress' || participant.abstraction.aStatus === 'done'))
                  && participant.finalA != null && participant.finalA.aStatus !== 'done'
@@ -838,14 +838,14 @@ participant.data.dsm['diagnosisYear'] != null">
                  [disabled]="participant.abstraction.user !== hasRole().getUserName()">
               <br/>
               <div class="Float--left Width--100">
-                <md-input-container class="Input--Bigger-WIDTH">
-                  <input mdInput maxlength="500" placeholder="Files used in the abstraction" type="text"
+                <mat-form-field class="Input--Bigger-WIDTH">
+                  <input matInput maxlength="500" placeholder="Files used in the abstraction" type="text"
                          [disabled]="participantExited"
                          [ngClass]="{'Input': true, 'Input--Bigger-WIDTH': true, 'Color--Field--Patched': isPatchedCurrently('filesUsed')}"
                          [(ngModel)]="participant.abstraction.filesUsed"
                          (change)="abstractionFilesUsedChanged(participant.abstraction)"
                          (blur)="currentField(null)" (focus)="currentField('filesUsed')">
-                </md-input-container>
+                </mat-form-field>
               </div>
               <div class="Float--left Width--100">
                 <b class="Group--Title">Jump to:</b>
@@ -874,27 +874,27 @@ participant.data.dsm['diagnosisYear'] != null">
 
               <div class="Float--left Width--100" *ngIf="participant.abstraction.aStatus !== 'done'">
                 <hr style="border-color: black">
-                <button md-raised-button type="button" color="primary"
+                <button mat-raised-button type="button" color="primary"
                         (click)="submitParticipant(participant.abstraction)">Submit MR Abstraction
                 </button>
               </div>
             </tab>
 
             <tab heading="Second Medical Record Abstraction" [active]="tabActive('review')"
-                 (select)="onSelect($event, 'review'); getFileList(participant.review)"
+                 (selectTab)="onSelect($event, 'review'); getFileList(participant.review)"
                  *ngIf="(participant.review != null && reviewFields != null && (participant.review.aStatus === 'in_progress' || participant.review.aStatus === 'done')) && participant.finalA != null && participant.finalA.aStatus !== 'done' &&
                     (hasRole().isAbstractionAdmin() || hasRole().isAbstracter() || hasRole().isQC())"
                  [disabled]="participant.review.user !== hasRole().getUserName()">
               <br/>
               <div class="Float--left Width--100">
-                <md-input-container
+                <mat-form-field
                   [ngClass]="{'Input': true, 'Input--Bigger-WIDTH': true, 'Color--Field--Patched': isPatchedCurrently('filesUsed')}">
-                  <input mdInput maxlength="500" placeholder="Files used in the abstraction" type="text"
+                  <input matInput maxlength="500" placeholder="Files used in the abstraction" type="text"
                          [disabled]="participantExited"
                          [(ngModel)]="participant.review.filesUsed"
                          (change)="abstractionFilesUsedChanged(participant.review)"
                          (blur)="currentField(null)" (focus)="currentField('filesUsed')">
-                </md-input-container>
+                </mat-form-field>
               </div>
               <div class="Float--left Width--100">
                 <b class="Group--Title">Jump to:</b>
@@ -922,26 +922,26 @@ participant.data.dsm['diagnosisYear'] != null">
 
               <div class="Float--left Width--100" *ngIf="participant.review.aStatus !== 'done'">
                 <hr style="border-color: black">
-                <button md-raised-button type="button" color="primary"
+                <button mat-raised-button type="button" color="primary"
                         (click)="submitParticipant(participant.review)">Submit MR Abstraction
                 </button>
               </div>
             </tab>
 
-            <tab heading="QC" [active]="tabActive('qc')" (select)="onSelect($event, 'qc'); getFileList(participant.qc)"
+            <tab heading="QC" [active]="tabActive('qc')" (selectTab)="onSelect($event, 'qc'); getFileList(participant.qc)"
                  *ngIf="(participant.qc != null && qcFields != null && (participant.qc.aStatus === 'in_progress' || participant.qc.aStatus === 'done')) && participant.finalA != null && participant.finalA.aStatus !== 'done' &&
                     (hasRole().isAbstractionAdmin() || hasRole().isAbstracter() || hasRole().isQC())"
                  [disabled]="participant.qc.user !== hasRole().getUserName()">
               <br/>
               <div class="Float--left Width--100">
-                <md-input-container
+                <mat-form-field
                   [ngClass]="{'Input': true, 'Input--Bigger-WIDTH': true, 'Color--Field--Patched': isPatchedCurrently('filesUsed')}">
-                  <input mdInput maxlength="500" placeholder="Files used in the abstraction" type="text"
+                  <input matInput maxlength="500" placeholder="Files used in the abstraction" type="text"
                          [disabled]="participantExited"
                          [(ngModel)]="participant.finalA.filesUsed"
                          (change)="abstractionFilesUsedChanged(participant.finalA)"
                          (blur)="currentField(null)" (focus)="currentField('filesUsed')">
-                </md-input-container>
+                </mat-form-field>
               </div>
               <div class="Float--left Width--100">
                 <b class="Group--Title">Jump to:</b>
@@ -969,13 +969,13 @@ participant.data.dsm['diagnosisYear'] != null">
 
               <div class="Float--left Width--100" *ngIf="participant.qc.aStatus !== 'done'">
                 <hr style="border-color: black">
-                <button md-raised-button type="button" color="primary"
+                <button mat-raised-button type="button" color="primary"
                         (click)="submitParticipant(participant.qc)">Submit QC
                 </button>
               </div>
             </tab>
 
-            <tab heading="Final Abstraction Values" [active]="tabActive('final')" (select)="onSelect($event, 'final')"
+            <tab heading="Final Abstraction Values" [active]="tabActive('final')" (selectTab)="onSelect($event, 'final')"
                  *ngIf="participant.finalA != null && finalFields != null && participant.finalA.aStatus === 'done'">
               <br/>
               <div class="Float--left Width--100">
@@ -1007,7 +1007,7 @@ participant.data.dsm['diagnosisYear'] != null">
                 <!--RGP tabs from fieldSettings-->
                 <ng-container *ngFor="let tab of settings['TAB_GROUPED']">
                   <ng-container *ngIf="displayTab(tab)">
-                    <tab heading="{{createRelativeTabHeading(relative.data)}}" [active]="tabActive(relative.dataId)" (select)="onSelect($event, relative.dataId)" >
+                    <tab heading="{{createRelativeTabHeading(relative.data)}}" [active]="tabActive(relative.dataId)" (selectTab)="onSelect($event, relative.dataId)" >
                     <br/><br/>
                       <div *ngIf="settings[tab.columnName].length > 0 && settings[tab.columnName][0].displayType === 'GROUP'">
                         <div class="Float--left Width--100"
@@ -1060,7 +1060,7 @@ participant.data.dsm['diagnosisYear'] != null">
             <ng-template #groupForm>
               <ng-container *ngFor="let tab of settings['TAB']">
                 <ng-container *ngIf="displayTab(tab)">
-                  <tab heading="{{getDisplayName(tab.columnDisplay, tab.columnName)}}" [active]="tabActive(tab.columnDisplay)" (select)="onSelect($event, tab.columnDisplay)" >
+                  <tab heading="{{getDisplayName(tab.columnDisplay, tab.columnName)}}" [active]="tabActive(tab.columnDisplay)" (selectTab)="onSelect($event, tab.columnDisplay)" >
                     <ng-container *ngFor="let setting of settings[tab.columnName]; let settingIndex = index">
                       <ng-container *ngIf="tabActive(tab.columnDisplay)">
                         <div class="Float--left Width--100">
@@ -1107,11 +1107,11 @@ participant.data.dsm['diagnosisYear'] != null">
           <tbody>
           <tr *ngFor="let pdf of pdfs">
             <td>
-              <md-select placeholder="Select PDF" [(ngModel)]="pdf.order">
-                <md-option *ngFor="let item of [].constructor(pdfs.length + 1); let i = index" [value]="i">
+              <mat-select placeholder="Select PDF" [(ngModel)]="pdf.order">
+                <mat-option *ngFor="let item of [].constructor(pdfs.length + 1); let i = index" [value]="i">
                   {{i}}
-                </md-option>
-              </md-select>
+                </mat-option>
+              </mat-select>
             </td>
             <td>
               {{pdf.displayName}}

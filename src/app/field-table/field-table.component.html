@@ -1,8 +1,8 @@
 <div class="TD--Padding-Bottom">
-  <md-checkbox color="primary" [disabled]="disabled"
+  <mat-checkbox color="primary" [disabled]="disabled"
                (change)="valuesChanged($event, 'no', null)" [(ngModel)]="nope"
                disableRipple>No {{fieldName}}
-  </md-checkbox>
+  </mat-checkbox>
 </div>
 
 <table class="table table-striped Width--100" *ngIf="jsonArray !== 'no'">
@@ -20,24 +20,24 @@
       <td *ngFor="let field of possibleValues">
 
         <ng-container *ngIf="field.type === 'drugs'">
-          <md-select *ngIf="field.type2 === options"
+          <mat-select *ngIf="field.type2 === options"
                      [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently(field.value, i)}"
                      [(ngModel)]="row[field.value]" [disabled]="disabled"
                      (change)="multiTypeValueChanged($event, row, field.value, field, i); ">
-            <md-option *ngFor="let drug of drugs" [value]="drug">
+            <mat-option *ngFor="let drug of drugs" [value]="drug">
               {{drug}}
-            </md-option>
-            <md-option value="other"> Other</md-option>
-          </md-select>
-          <md-select *ngIf="field.type2 === multiOptions"
+            </mat-option>
+            <mat-option value="other"> Other</mat-option>
+          </mat-select>
+          <mat-select *ngIf="field.type2 === multiOptions"
                      [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently(field.value, i)}"
                      [(ngModel)]="row[field.value]" [disabled]="disabled"
                      (change)="multiTypeValueChanged($event, row, field.value, field, i)" multiple>
-            <md-option *ngFor="let drug of drugs" [value]="drug" >
+            <mat-option *ngFor="let drug of drugs" [value]="drug" >
               {{drug}}
-            </md-option>
-            <md-option value="other"> Other</md-option>
-          </md-select>
+            </mat-option>
+            <mat-option value="other"> Other</mat-option>
+          </mat-select>
 
           <app-field-typeahead *ngIf="field.type2 === 'text'" [dataSource]="drugs" [drug]="multiTypes[i][field.value]" [disabled]="disabled" [fieldName]="field.value"
                                (drugSelected)="multiTypeValueChanged($event, row, field.value, field, i)"></app-field-typeahead>
@@ -45,49 +45,49 @@
         </ng-container>
 
         <ng-container *ngIf="field.type === 'cancers'">
-          <md-select *ngIf="field.type2 === options"
+          <mat-select *ngIf="field.type2 === options"
                      [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently(field.value, i)}"
                      [(ngModel)]="row[field.value]" [disabled]="disabled"
                      (change)="multiTypeValueChanged($event, row, field.value, field, i)">
-            <md-option *ngFor="let cancer of cancers" [value]="cancer">
+            <mat-option *ngFor="let cancer of cancers" [value]="cancer">
               {{cancer}}
-            </md-option>
-            <md-option value="other"> Other</md-option>
-          </md-select>
-          <md-select *ngIf="field.type2 === multiOptions"
+            </mat-option>
+            <mat-option value="other"> Other</mat-option>
+          </mat-select>
+          <mat-select *ngIf="field.type2 === multiOptions"
                      [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently(field.value, i)}"
                      [(ngModel)]="row[field.value]" [disabled]="disabled"
                      (change)="multiTypeValueChanged($event, row, field.value, field, i)" multiple>
-            <md-option *ngFor="let cancer of cancers" [value]="cancer" >
+            <mat-option *ngFor="let cancer of cancers" [value]="cancer" >
               {{cancer}}
-            </md-option>
-            <md-option value="other"> Other</md-option>
-          </md-select>
+            </mat-option>
+            <mat-option value="other"> Other</mat-option>
+          </mat-select>
 
           <app-field-typeahead *ngIf="field.type2 === 'text'" [dataSource]="cancers" [drug]="row[field.value]" [disabled]="disabled" [fieldName]="field.value"
                                (drugSelected)="multiTypeValueChanged($event, row, field.value, field, i)"></app-field-typeahead>
         </ng-container>
 
-        <md-input-container *ngIf="field.type === 'text'"
+        <mat-form-field *ngIf="field.type === 'text'"
                             [ngClass]="{'Width--100': true, 'Input': true, 'Color--Field--Patched': isPatchedCurrently(field.value, i)}">
-          <input mdInput maxlength="200" [disabled]="disabled" autocomplete="off"
+          <input matInput maxlength="200" [disabled]="disabled" autocomplete="off"
                  [(ngModel)]="row[field.value]"
                  (change)="multiTypeValueChanged($event, row, field.value, field, i)"
                  (blur)="currentField(null, i)" (focus)="currentField(field.value, i)">
-        </md-input-container>
+        </mat-form-field>
 
         <app-field-datepicker *ngIf="field.type === 'date'" [dateString]="row[field.value]" [disabled]="disabled" [addCheckboxEstimated]="true"
                               [showNAButton]="true" [showNotFoundButton]="true" [allowUnknownDay]="true" [showCalendarButton]="false"
                               [colorDuringPatch]="isPatchedCurrently(field.value, i)"
                               (dateChanged)="multiTypeValueChanged($event, row, field.value, field, i)"></app-field-datepicker>
 
-        <md-input-container *ngIf="field.type === 'number'"
+        <mat-form-field *ngIf="field.type === 'number'"
                             [ngClass]="{'Width--100': true, 'Input': true, 'Color--Field--Patched': isPatchedCurrently(field.value, i)}">
-          <input mdInput type="number" [disabled]="disabled"
+          <input matInput type="number" [disabled]="disabled"
                  [(ngModel)]="row[field.value]"
                  (change)="multiTypeValueChanged($event, row, field.value, field, i)"
                  (blur)="currentField(null, i)" (focus)="currentField(field.value, i)">
-        </md-input-container>
+        </mat-form-field>
 
         <textarea *ngIf="field.type === 'textarea'" maxlength="1000"
                   [ngClass]="{'Width--100': true, 'Input': true, 'Color--Field--Patched': isPatchedCurrently(field.value, i)}"
@@ -97,53 +97,53 @@
 
         <b *ngIf="field.type === 'button_select'">{{field.value}}</b>
 
-        <md-button-toggle-group *ngIf="field.type === 'button_select'"
+        <mat-button-toggle-group *ngIf="field.type === 'button_select'"
                                 [ngClass]="{'Color--Button-Select--Patched': isPatchedCurrently(field.value, i)}"
                                 [disabled]="disabled" [(ngModel)]="row[field.value]">
-          <md-button-toggle *ngFor="let noName of field.values" [value]="noName.value"
+          <mat-button-toggle *ngFor="let noName of field.values" [value]="noName.value"
                             (change)="multiTypeValueChanged($event, row, field.value, field, i)">
             {{noName.value}}
-          </md-button-toggle>
-        </md-button-toggle-group>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
 
-        <md-select *ngIf="field.type === options"
+        <mat-select *ngIf="field.type === options"
                    [ngClass]="{'TD--Padding-Top': true, 'Input': true, 'Color--Field--Patched': isPatchedCurrently(field.value, i)}"
                    [(ngModel)]="row[field.value]" [disabled]="disabled"
                    (change)="multiTypeValueChanged($event, row, field.value, field, i)">
-          <md-option *ngFor="let noName of field.values" [value]="noName.value">
+          <mat-option *ngFor="let noName of field.values" [value]="noName.value">
             {{noName.value}}
-          </md-option>
-          <md-option value="other"> Other</md-option>
-        </md-select>
+          </mat-option>
+          <mat-option value="other"> Other</mat-option>
+        </mat-select>
 
-        <md-select *ngIf="field.type === multiOptions"
+        <mat-select *ngIf="field.type === multiOptions"
                    [ngClass]="{'TD--Padding-Top': true, 'Input': true, 'Color--Field--Patched': isPatchedCurrently(field.value, i)}"
                    [(ngModel)]="row[field.value]" [disabled]="disabled"
                    (change)="multiTypeValueChanged($event, row, field.value, field, i)" multiple>
-          <md-option *ngFor="let noName of field.values" [value]="noName.value">
+          <mat-option *ngFor="let noName of field.values" [value]="noName.value">
             {{noName.value}}
-          </md-option>
-          <md-option value="other"> Other</md-option>
-        </md-select>
+          </mat-option>
+          <mat-option value="other"> Other</mat-option>
+        </mat-select>
 
-        <md-input-container *ngIf="_other[i][field.value] != null && (field.type === options || field.type2 === options || field.type === multiOptions || field.type2 === multiOptions)"
+        <mat-form-field *ngIf="_other[i][field.value] != null && (field.type === options || field.type2 === options || field.type === multiOptions || field.type2 === multiOptions)"
                             [ngClass]="{'Width--100': true, 'Input': true, 'Color--Field--Patched': isPatchedCurrently(otherString + '_' + field.value, i)}">
-          <input mdInput maxlength="200" [disabled]="disabled" autocomplete="off"
+          <input matInput maxlength="200" [disabled]="disabled" autocomplete="off"
                  [(ngModel)]="_other[i][field.value]" placeholder="{{field.value}} - Other"
                  (change)="multiTypeValueChanged($event, row, otherString, field, i)"
                  (blur)="currentField(null, i)" (focus)="currentField(otherString + '_' + field.value, i)">
-        </md-input-container>
+        </mat-form-field>
 
-        <md-checkbox *ngIf="field.type === 'checkbox'" disableRipple color="primary"
+        <mat-checkbox *ngIf="field.type === 'checkbox'" disableRipple color="primary"
                      [ngModel]="row[field.value]" [disabled]="disabled"
                      (change)="multiTypeValueChanged($event, row, field.value, field, i)">
-        </md-checkbox>
+        </mat-checkbox>
 
       </td>
     </ng-container>
   </tr>
   </tbody>
-  <button md-mini-fab color="primary" [disabled]="disabled" tooltip="Add {{fieldName}}"
+  <button mat-mini-fab color="primary" [disabled]="disabled" tooltip="Add {{fieldName}}"
           (click)="addAction()">
     <i class="fas fa-plus fa-lg"></i>
   </button>

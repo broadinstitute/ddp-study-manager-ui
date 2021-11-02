@@ -1,5 +1,5 @@
-<md-input-container *ngIf="dataSource != undefined" [ngClass]="{'Input--Abstraction': true}">
-  <input mdInput autocomplete="off" [disabled]="disabled"
+<mat-form-field *ngIf="dataSource != undefined" [ngClass]="{'Input--Abstraction': true}">
+  <input matInput autocomplete="off" [disabled]="disabled"
          [(ngModel)]="drug"
          (change)="selectDrug($event)"
          [typeahead]="dataSource"
@@ -8,10 +8,10 @@
          [typeaheadOptionsInScrollableView]="6"
          (typeaheadOnSelect)="selectDrug($event)"
          placeholder="Start typing a {{fieldName}}...">
-</md-input-container>
+</mat-form-field>
 
-<md-input-container *ngIf="dataSource == undefined" [ngClass]="{'Input--Abstraction': true}">
-  <input mdInput [disabled]="disabled"
+<mat-form-field *ngIf="dataSource == undefined" [ngClass]="{'Input--Abstraction': true}">
+  <input matInput [disabled]="disabled"
          [(ngModel)]="drug"
          placeholder="Medication">
-</md-input-container>
+</mat-form-field>

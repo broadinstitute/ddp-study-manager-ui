@@ -1,5 +1,5 @@
 <h1> MR Abstraction Settings
-  <button md-mini-fab color="primary" tooltip="Form generation help"
+  <button mat-mini-fab color="primary" tooltip="Form generation help"
           [attr.aria-expanded]="!isViewHelp" aria-controls="collapseHelp"
           (click)="isViewHelp = !isViewHelp; doNothing()">
     <i class="fa-inverse fas fa-question fa-sm"></i>
@@ -46,7 +46,7 @@
         <app-medical-record-abstraction [abstractionFormControls]="abstractionFormControls" [editForm]="true">
         </app-medical-record-abstraction>
       </div>
-      <button md-raised-button (click)="saveSettings()" color="primary"
+      <button mat-raised-button (click)="saveSettings()" color="primary"
               [disabled]="saving">Save Settings</button>
       <br/>
     </div>

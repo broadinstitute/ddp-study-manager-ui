@@ -1,7 +1,8 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
-import {MdMenuTrigger} from "@angular/material";
+
+import {Component, OnInit} from "@angular/core";
 import {DomSanitizer} from "@angular/platform-browser";
 import {ActivatedRoute, Router} from "@angular/router";
+import {filter} from 'rxjs/operators';
 
 import {Auth} from "./services/auth.service";
 import {RoleService} from "./services/role.service";
@@ -13,7 +14,6 @@ import {ComponentService} from "./services/component.service";
 } )
 export class AppComponent implements OnInit {
   private realmFromUrl: string;
-  @ViewChild( MdMenuTrigger ) trigger: MdMenuTrigger;
 
   constructor( private router: Router, private auth: Auth, private sanitizer: DomSanitizer, private role: RoleService
     , private route: ActivatedRoute ) {
@@ -21,11 +21,12 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     window.scrollTo( 0, 0 );
-    this.route.queryParams
-      .filter(params => params.realm)
+    this.route.queryParams.pipe(
+      filter(params => params.realm)
+    )
       .subscribe(params => {
         this.realmFromUrl = params.realm;
-    });
+      });
   }
 
   doNothing() { //needed for the menu, otherwise page will refresh!

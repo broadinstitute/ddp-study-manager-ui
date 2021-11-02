@@ -4,9 +4,8 @@ import {DSMService} from "../services/dsm.service";
 import {Auth} from "../services/auth.service";
 import {ComponentService} from "../services/component.service";
 import {ActivatedRoute} from "@angular/router";
-import {Response} from "@angular/http";
 
-var fileSaver = require("file-saver/FileSaver.js");
+var fileSaver = require("file-saver");
 
 //declare var fileSaver: any;
 
@@ -65,7 +64,7 @@ export class NDIUploadComponent implements OnInit {
   }
 
 
-  downloadFile(data: Response) {
+  downloadFile(data: any) {
     var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
     fileSaver.saveAs(blob, "output" + ".txt");
   }

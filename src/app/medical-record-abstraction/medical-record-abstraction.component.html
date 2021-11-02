@@ -9,13 +9,13 @@
 <div class="Width--100">
   <ng-container *ngIf="editForm">
     <div class="TD--Padding">
-      <md-input-container [ngClass]="{'Width--100': true, 'Input--Abstraction': true}">
-        <input mdInput maxlength="200" (change)="checkName(newGroup)"
+      <mat-form-field [ngClass]="{'Width--100': true, 'Input--Abstraction': true}">
+        <input matInput maxlength="200" (change)="checkName(newGroup)"
                placeholder="New Group" autocomplete="off"
                [(ngModel)]="newGroup">
-        <md-hint class="ErrorMessageForm" *ngIf="notUniqueError">Display name not unique</md-hint>
-      </md-input-container>
-      <button md-mini-fab color="primary" tooltip="Add Group" [disabled]="newGroup == null || newGroup == null || notUniqueError"
+        <mat-hint class="ErrorMessageForm" *ngIf="notUniqueError">Display name not unique</mat-hint>
+      </mat-form-field>
+      <button mat-mini-fab color="primary" tooltip="Add Group" [disabled]="newGroup == null || newGroup == null || notUniqueError"
               (click)="addGroup()">
         <i class="fas fa-plus fa-lg"></i>
       </button>

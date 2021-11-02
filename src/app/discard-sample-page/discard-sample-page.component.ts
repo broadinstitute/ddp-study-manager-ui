@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
-import {BsModalRef, BsModalService} from "ngx-bootstrap";
 import {DomSanitizer} from "@angular/platform-browser";
+import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
 
 import {Utils} from "../utils/utils";
 import {ComponentService} from "../services/component.service";
@@ -10,7 +10,7 @@ import {DSMService} from "../services/dsm.service";
 import {RoleService} from "../services/role.service";
 import {DiscardSample} from "../discard-sample/discard-sample.model";
 import {Result} from "../utils/result.model";
-import {Subscription} from "rxjs/Subscription";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-discard-sample-page',

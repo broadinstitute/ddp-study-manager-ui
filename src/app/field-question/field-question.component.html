@@ -1,14 +1,14 @@
 <span class="Display--Inline-Block">
   <div class="Width--100" *ngIf="question.status !== 'sent' && question.status !== 'done'">
-    <md-input-container class="Input--Abstraction">
-      <input mdInput maxlength="500" placeholder="Recipient email" type="email"
+    <mat-form-field class="Input--Abstraction">
+      <input matInput maxlength="500" placeholder="Recipient email" type="email"
              [(ngModel)]="question.email" (change)="questionChanged($event, 'email')">
-    </md-input-container>
+    </mat-form-field>
     <textarea maxlength="200" placeholder="Question"
               [ngClass]="{'Width--100': true, 'Input--Bigger-WIDTH': true}"
               [(ngModel)]="question.question" [disabled]="disabled"
               (change)="questionChanged($event, 'question')"></textarea>
-    <button md-mini-fab color="warn" [disabled]="disabled" tooltip="Delete Question" *ngIf="isQuestionArray && question.status !== 'done'"
+    <button mat-mini-fab color="warn" [disabled]="disabled" tooltip="Delete Question" *ngIf="isQuestionArray && question.status !== 'done'"
             (click)="deleteQuestion()">
       <i class="fas fa-trash-alt fa-lg"></i>
     </button>

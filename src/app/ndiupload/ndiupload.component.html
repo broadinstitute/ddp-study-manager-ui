@@ -24,7 +24,7 @@
   <br/>
   <div class="Width--80">
     <app-filepicker [id]="'ndiUploadFile'" [fileFormat]="'txt'" (fileSelected)="fileSelected($event)"></app-filepicker>
-    <button type="button" md-raised-button color="primary"
+    <button type="button" mat-raised-button color="primary"
             (click)="upload()"
             [disabled]="file == null || loading">Upload File
     </button>

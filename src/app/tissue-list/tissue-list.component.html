@@ -35,7 +35,7 @@
     <div id="leftPanel" *ngIf="!(errorMessage !== null && errorMessage !== '')">
       <div class="Width--15" style="float: left">
         <div>
-          <button md-mini-fab color="Color--primary"
+          <button mat-mini-fab color="Color--primary"
                   (click)="showFiltersTable()" [color]="getButtonColorStyle(showFilters)">
             <!--<i class="fas fa-dataFilter"></i>-->
             <i class="fas fa-search"></i>
@@ -47,9 +47,9 @@
           <div id="searchTable" *ngIf="this.showFilters" class="table">
             <form>
               <div>
-                <!--<button md-raised-button color="primary" (click)="doFilter()">Search</button>-->
-                <button md-raised-button color="primary" (click)="doFilter()">Search</button>
-                <button md-raised-button color="primary" (click)="clearFilters()">Clear</button>
+                <!--<button mat-raised-button color="primary" (click)="doFilter()">Search</button>-->
+                <button mat-raised-button color="primary" (click)="doFilter()">Search</button>
+                <button mat-raised-button color="primary" (click)="clearFilters()">Clear</button>
               </div>
               <ng-container *ngFor="let source of dataSources">
                 <br>
@@ -58,13 +58,13 @@
                                      [editable]="allColumns[source].includes(filter)? true: edit"></app-filter-column>
                 </table>
               </ng-container>
-              <button md-raised-button color="primary" (click)="doFilter()">Search</button>
-              <button md-raised-button color="primary" (click)="clearFilters()">Clear</button>
+              <button mat-raised-button color="primary" (click)="doFilter()">Search</button>
+              <button mat-raised-button color="primary" (click)="clearFilters()">Clear</button>
             </form>
           </div>
         </div>
         <div>
-          <button md-mini-fab color="Color--primary"
+          <button mat-mini-fab color="Color--primary"
                   (click)="reload(true)">
             <i class="fas fa-sync-alt"></i>
           </button>
@@ -72,7 +72,7 @@
         </div>
         <br>
         <div>
-          <button md-mini-fab color="Color--primary"
+          <button mat-mini-fab color="Color--primary"
                   (click)="showCustomizeView()" [color]="getButtonColorStyle(showCustomizeViewTable)">
             <i class="fas fa-server"></i>
           </button>
@@ -91,10 +91,10 @@
                   (click)="onclickDropDown($event)">
                 <li *ngFor="let oncColumn of allColumns[source]">
                   <ng-container *ngIf="oncColumn.participantColumn.display !== null">
-                    <md-checkbox
+                    <mat-checkbox
                       color="primary"
                       (change)="addOrRemoveColumn(oncColumn, source)"
-                      [checked]="selectedColumns[source]!= undefined  && hasThisColumnSelected(selectedColumns[source], oncColumn)">{{oncColumn.participantColumn.display}}</md-checkbox>
+                      [checked]="selectedColumns[source]!= undefined  && hasThisColumnSelected(selectedColumns[source], oncColumn)">{{oncColumn.participantColumn.display}}</mat-checkbox>
                   </ng-container>
                 </li>
               </ul>
@@ -104,7 +104,7 @@
         </div>
         <br>
         <div>
-          <button md-mini-fab color="Color--primary"
+          <button mat-mini-fab color="Color--primary"
                   (click)="showSavedModal()" [color]="getButtonColorStyle(showModal)">
             <i class="fas fa-tv"></i>
           </button>
@@ -112,7 +112,7 @@
         </div>
         <br>
         <div>
-          <button md-mini-fab color="Color--primary"
+          <button mat-mini-fab color="Color--primary"
                   (click)="showSavedFiltersPanel()" [color]="getButtonColorStyle(showSavedFilters)">
             <i class="fas fa-filter"></i>
           </button>
@@ -133,24 +133,24 @@
             {{savedFilter.filterName}}
           </span>
                   <button class="float-right" color="warn"
-                          md-icon-button (click)="deleteView(savedFilter)">
-                    <md-icon>
+                          mat-icon-button (click)="deleteView(savedFilter)">
+                    <mat-icon>
                       <i class="fas fa-trash-alt fa-sm"></i>
-                    </md-icon>
+                    </mat-icon>
                   </button>
                   <button class="float-right"
-                          md-icon-button [color]="savedFilter.shared == true ? 'accent' : 'black'"
+                          mat-icon-button [color]="savedFilter.shared == true ? 'accent' : 'black'"
                           (click)="shareFilter(savedFilter, i)">
-                    <md-icon>
+                    <mat-icon>
                       <i class="fas fa-share-square"></i>
-                    </md-icon>
+                    </mat-icon>
                   </button>
                   <button class="float-right"
-                          md-icon-button [color]="selectedFilterName === savedFilter.filterName ? 'accent' :'black'"
+                          mat-icon-button [color]="selectedFilterName === savedFilter.filterName ? 'accent' :'black'"
                           (click)="selectFilter(savedFilter)">
-                    <md-icon>
+                    <mat-icon>
                       <i class="fas fa-filter fa-sm"></i>
-                    </md-icon>
+                    </mat-icon>
                   </button>
 
 
@@ -171,7 +171,7 @@
             {{savedFilter.filterName}}
               </span>
                   <button class="float-right"
-                          md-icon-button [color]="selectedFilterName === savedFilter.filterName ? 'accent' :'black'"
+                          mat-icon-button [color]="selectedFilterName === savedFilter.filterName ? 'accent' :'black'"
                           (click)="selectFilter(savedFilter)">
           <span style="font-size: 15px;">
             <i class="fas fa-filter fa-sm"></i>
@@ -187,7 +187,7 @@
     </div>
     <div if="quickFilters">
     <span>
-      <button md-mini-fab color="Color--primary"
+      <button mat-mini-fab color="Color--primary"
               (click)="getDestroyingQueue('destruction')"
               [color]="isCurrentFilter('destruction')">
         <span tooltip="Destruction in 6 Months (destruction queue)">
@@ -195,7 +195,7 @@
         </span>
       </button>
       <span *ngFor="let qFilter of quickFilters; let i=index">
-      <button md-mini-fab
+      <button mat-mini-fab
               [color]="isCurrentFilter(qFilter.filterName)"
               (click)="applyQuickFilter(qFilter)">
         <span tooltip="{{qFilter.filterName}}">
@@ -205,7 +205,7 @@
       </span>
     </span>
       <span class="Float--right">
-        <button md-mini-fab color="Color--primary"
+        <button mat-mini-fab color="Color--primary"
                 (click)="downloadCurrentData()">
         <span tooltip="Download current view in an Excel sheet">
         <i class="fas fa-file-download fa-lg"></i>
@@ -213,7 +213,7 @@
         </button>
       </span>
       <span class="Float--right" style="padding-right: 10px">
-      <button md-mini-fab color="Color--primary"
+      <button mat-mini-fab color="Color--primary"
               (click)="showHelp = !showHelp" [color]="getButtonColorStyle(showHelp)">
       <span tooltip="Search Help">
       <i class="fas fa-info"></i>
@@ -334,17 +334,17 @@
                 </span>
                   <span *ngIf="col.participantColumn.name === 'request'  ">
                 <div class="btn-group">
-                <md-select [(ngModel)]="value.tissueList.oncHistoryDetails[col.participantColumn.name]"
+                <mat-select [(ngModel)]="value.tissueList.oncHistoryDetails[col.participantColumn.name]"
                            (change)="onRequestChange(i)">
-                <md-option value="review">Needs Review</md-option>
-                <md-option value="no">Don't Request</md-option>
-                <md-option value="hold">On Hold</md-option>
-                <md-option value="request">Request</md-option>
-                <md-option value="sent" disabled>Sent</md-option>
-                <md-option value="received" disabled>Received</md-option>
-                <md-option value="returned" disabled>Returned</md-option>
-                <md-option value="unableToObtain" disabled>Unable to Obtain</md-option>
-                </md-select>
+                <mat-option value="review">Needs Review</mat-option>
+                <mat-option value="no">Don't Request</mat-option>
+                <mat-option value="hold">On Hold</mat-option>
+                <mat-option value="request">Request</mat-option>
+                <mat-option value="sent" disabled>Sent</mat-option>
+                <mat-option value="received" disabled>Received</mat-option>
+                <mat-option value="returned" disabled>Returned</mat-option>
+                <mat-option value="unableToObtain" disabled>Unable to Obtain</mat-option>
+                </mat-select>
                 </div>
                 </span>
                   <span *ngIf="col.type === 'OPTIONS' && col.participantColumn.name !== 'request' ">
@@ -424,17 +424,17 @@
         </span>
                 <span *ngIf="col.participantColumn.name === 'request'  ">
         <div class="btn-group">
-        <md-select [(ngModel)]="value.tissueList.oncHistoryDetails[col.participantColumn.name]"
+        <mat-select [(ngModel)]="value.tissueList.oncHistoryDetails[col.participantColumn.name]"
                    (change)="onRequestChange(i)">
-        <md-option value="review">Needs Review</md-option>
-        <md-option value="no">Don't Request</md-option>
-        <md-option value="hold">On Hold</md-option>
-        <md-option value="request">Request</md-option>
-        <md-option value="sent" disabled>Sent</md-option>
-        <md-option value="received" disabled>Received</md-option>
-        <md-option value="returned" disabled>Returned</md-option>
-        <md-option value="unableToObtain" disabled>Unable to Obtain</md-option>
-        </md-select>
+        <mat-option value="review">Needs Review</mat-option>
+        <mat-option value="no">Don't Request</mat-option>
+        <mat-option value="hold">On Hold</mat-option>
+        <mat-option value="request">Request</mat-option>
+        <mat-option value="sent" disabled>Sent</mat-option>
+        <mat-option value="received" disabled>Received</mat-option>
+        <mat-option value="returned" disabled>Returned</mat-option>
+        <mat-option value="unableToObtain" disabled>Unable to Obtain</mat-option>
+        </mat-select>
         </div>
         </span>
                 <span *ngIf="col.type === 'OPTIONS' && col.participantColumn.name !== 'request'  ">
@@ -474,12 +474,12 @@
   <div class="app-modal-body">
     <ng-container *ngIf="newFilterModal">
       <ng-container>
-        <md-input-container class="Input">
-          <input mdInput class="Width--100" maxlength="200" autocomplete="off"
+        <mat-form-field class="Input">
+          <input matInput class="Width--100" maxlength="200" autocomplete="off"
                  [(ngModel)]="newFilterName">
-          <md-hint class="ErrorMessageForm" *ngIf="dup">Name not unique</md-hint>
-          <md-hint class="ErrorMessageForm" *ngIf="plus">Name can't contain +</md-hint>
-        </md-input-container>
+          <mat-hint class="ErrorMessageForm" *ngIf="dup">Name not unique</mat-hint>
+          <mat-hint class="ErrorMessageForm" *ngIf="plus">Name can't contain +</mat-hint>
+        </mat-form-field>
       </ng-container>
     </ng-container>
     <ng-container *ngIf="openTissueModal">
@@ -488,16 +488,16 @@
   </div>
   <div class="app-modal-footer">
     <ng-container *ngIf="newFilterModal">
-      <button md-raised-button color="primary"
+      <button mat-raised-button color="primary"
               (click)="modal.hide(); dup=false; showModal=false; openTissueModal=false; newFilterModal=false;">
         Cancel
       </button>
-      <button md-raised-button color="primary"
+      <button mat-raised-button color="primary"
               (click)="saveCurrentFilter();">Save Filter
       </button>
     </ng-container>
     <ng-container *ngIf="openTissueModal">
-      <button md-raised-button color="primary"
+      <button mat-raised-button color="primary"
               (click)="modal.hide(); showModal=false; openTissueModal=false; newFilterModal=false; selectedTissueStatus=null;">
         OK
       </button>

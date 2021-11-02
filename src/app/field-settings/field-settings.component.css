@@ -2,6 +2,6 @@
     vertical-align: baseline;
 }
 
-.settings_container td > md-input-container {
+.settings_container td > mat-form-field {
     display: inline;;
 }

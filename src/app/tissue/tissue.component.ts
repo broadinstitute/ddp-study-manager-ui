@@ -220,10 +220,7 @@ export class TissueComponent implements OnInit {
   }
 
   isPatchedCurrently (field: string): boolean {
-    if ( this.currentPatchField === field ) {
-      return true;
-    }
-    return false;
+    return this.currentPatchField === field;
   }
 
   currentField (field: string) {

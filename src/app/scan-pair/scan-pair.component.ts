@@ -5,8 +5,7 @@ import { Component, OnInit, ViewChild, Output, EventEmitter, Input } from '@angu
   templateUrl: './scan-pair.component.html',
 })
 export class ScanPairComponent implements OnInit {
-
-  @ViewChild('leftInput') leftInput;
+  @ViewChild('leftInput', {static: true}) leftInput;
   @ViewChild('rightInput') rightInput;
 
   @Input() positionScanPair: number;
@@ -21,9 +20,6 @@ export class ScanPairComponent implements OnInit {
   @Output() pairScanned = new EventEmitter();
   @Output() removeScanPair = new EventEmitter();
   @Output() leftLabelAdded = new EventEmitter();
-
-  constructor() {
-  }
 
   ngOnInit() {
     this.leftInput.nativeElement.focus();

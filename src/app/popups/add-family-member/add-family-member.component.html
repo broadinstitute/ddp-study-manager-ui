@@ -3,7 +3,7 @@
     <i class="fas fa-spinner fa-spin fa-5x Color--primary"></i>
   </div>
 </span>
-<md-dialog-content *ngIf=!isDataLoading>
+<mat-dialog-content *ngIf=!isDataLoading>
   <div class="family-member-popup">
     <div (click)="close()" class="family-member-close">
       X
@@ -16,7 +16,7 @@
             <input 
               type="text" 
               name="first-name"
-              mdInput
+              matInput
               [(ngModel)]="familyMemberFirstName">
           </td>
         </tr>
@@ -27,7 +27,7 @@
             <input 
               type="text" 
               name="last-name"
-              mdInput
+              matInput
               [(ngModel)]="familyMemberLastName">  
           </td>
         </tr>
@@ -41,7 +41,7 @@
             type="text"
             maxlength="10" 
             name="subjectId"
-            mdInput
+            matInput
             [(ngModel)]="familyMemberSubjectId"
             #subjectId="ngModel"  
             pattern="^(\d*)([0-9]+)(_[0-9]+)*"
@@ -52,22 +52,22 @@
         <tr>
           <td><b>Relation</b></td>
           <td>
-            <md-select [(ngModel)]="chosenRelation">
-              <md-option *ngFor="let key of getRelations()" [value]="key">
+            <mat-select [(ngModel)]="chosenRelation">
+              <mat-option *ngFor="let key of getRelations()" [value]="key">
                 {{staticRelations[key]}}
-              </md-option>
-            </md-select>
+              </mat-option>
+            </mat-select>
           </td>
         </tr>
 
         <tr>
           <td><b>Copy Proband Info</b></td>
           <td>
-            <md-checkbox
+            <mat-checkbox
             [(ngModel)]="isCopyProbandInfo"
             [color]="'primary'"
             [disabled]="isParticipantProbandEmpty">
-            </md-checkbox>
+            </mat-checkbox>
           </td>
         </tr>
     
@@ -80,4 +80,4 @@
       </tbody>
     </table>
   </div>
-</md-dialog-content>
+</mat-dialog-content>

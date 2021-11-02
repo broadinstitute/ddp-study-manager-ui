@@ -22,7 +22,7 @@ import {PatchUtil} from "../utils/patch.model";
 } )
 export class TissuePageComponent implements OnInit {
 
-  @ViewChild( ModalComponent )
+  @ViewChild(ModalComponent)
   public applyToAllModal: ModalComponent;
 
   @Input() participant: Participant;

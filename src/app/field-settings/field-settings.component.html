@@ -23,10 +23,10 @@
     <div class="Float--left Width--25">
       <div *ngIf="possibleTypes != null && possibleTypes.length > 0">
         <div *ngFor="let type of possibleTypes">
-          <md-checkbox color="primary" [checked]="type.selected" (change)="type.selected = $event.checked;
+          <mat-checkbox color="primary" [checked]="type.selected" (change)="type.selected = $event.checked;
           typeChecked(type)" disableRipple>
             {{type.name}}
-          </md-checkbox>
+          </mat-checkbox>
         </div>
         <br/>
       </div>
@@ -64,65 +64,65 @@
           <tr class="settings_container">
             <td>
               <ng-container *ngIf="setting.addedNew">
-                <md-input-container class="Input">
-                  <input mdInput class="Width--100" maxlength="45" [(ngModel)]="setting.columnName"
+                <mat-form-field class="Input">
+                  <input matInput class="Width--100" maxlength="45" [(ngModel)]="setting.columnName"
                          (change)="checkColName(i); onChange(i)" autocomplete="off">
-                  <md-hint class="ErrorMessageForm" *ngIf="setting.notUniqueError">Name not unique</md-hint>
-                  <md-hint class="ErrorMessageForm" *ngIf="setting.spaceError">No space allowed</md-hint>
-                </md-input-container>
+                  <mat-hint class="ErrorMessageForm" *ngIf="setting.notUniqueError">Name not unique</mat-hint>
+                  <mat-hint class="ErrorMessageForm" *ngIf="setting.spaceError">No space allowed</mat-hint>
+                </mat-form-field>
               </ng-container>
               <ng-container *ngIf="!setting.addedNew">
                 {{setting.columnName}}
               </ng-container>
             </td>
             <td>
-              <md-input-container>
-                <input mdInput type="text" [(ngModel)]="setting.columnDisplay" (change)="onChange(i)"
+              <mat-form-field>
+                <input matInput type="text" [(ngModel)]="setting.columnDisplay" (change)="onChange(i)"
                        maxlength="45" autocomplete="off">
-              </md-input-container>
+              </mat-form-field>
             </td>
             <td>
-              <md-select class="Input--Min-WIDTH" maxlength="100" placeholder="Display Type" floatPlaceholder="never"
+              <mat-select class="Input--Min-WIDTH" maxlength="100" placeholder="Display Type" floatPlaceholder="never"
                          [(ngModel)]="setting.displayType" (change)="onDisplayTypeChange(i)">
-                <md-option value="CHECKBOX">
-                  <md-icon>
+                <mat-option value="CHECKBOX">
+                  <mat-icon>
                     <i class="fas fa-check-square fa-sm"></i>
-                  </md-icon>
-                  Checkbox</md-option>
-                <md-option value="DATE">
-                  <md-icon>
+                  </mat-icon>
+                  Checkbox</mat-option>
+                <mat-option value="DATE">
+                  <mat-icon>
                     <i class="fas fa-calendar-alt fa-sm"></i>
-                  </md-icon>
-                  Date</md-option>
-                <md-option value="NUMBER">Number</md-option>
-                <md-option value="OPTIONS">Select</md-option>
-                <md-option value="TEXT">
-                  <md-icon>
+                  </mat-icon>
+                  Date</mat-option>
+                <mat-option value="NUMBER">Number</mat-option>
+                <mat-option value="OPTIONS">Select</mat-option>
+                <mat-option value="TEXT">
+                  <mat-icon>
                     <i class="fas fa-window-minimize fa-sm"></i>
-                  </md-icon>
-                  Text</md-option>
-                <md-option value="TEXTAREA">Textarea</md-option>
-                <md-hint class="ErrorMessageForm" *ngIf="setting.missingDispError">Display type not selected</md-hint>
-              </md-select>
+                  </mat-icon>
+                  Text</mat-option>
+                <mat-option value="TEXTAREA">Textarea</mat-option>
+                <mat-hint class="ErrorMessageForm" *ngIf="setting.missingDispError">Display type not selected</mat-hint>
+              </mat-select>
             </td>
             <td>
               <ng-container *ngIf="setting.displayType === 'MULTI_OPTIONS' || setting.displayType === 'OPTIONS'">
                 <ng-container *ngFor="let value of setting.possibleValues; let j=index">
-                  <md-input-container class="Input">
-                    <input mdInput maxlength="100" (change)="onChange(i)" [(ngModel)]="value.value"
+                  <mat-form-field class="Input">
+                    <input matInput maxlength="100" (change)="onChange(i)" [(ngModel)]="value.value"
                            placeholder="Value {{j+1}}" autocomplete="off">
-                    <md-hint class="ErrorMessageForm" *ngIf="setting.missingOptionsError">Missing possible
+                    <mat-hint class="ErrorMessageForm" *ngIf="setting.missingOptionsError">Missing possible
                       values
-                    </md-hint>
-                  </md-input-container>
+                    </mat-hint>
+                  </mat-form-field>
                 </ng-container>
-                <button md-mini-fab color="primary" tooltip="Add Value" (click)="addValue(setting)">
+                <button mat-mini-fab color="primary" tooltip="Add Value" (click)="addValue(setting)">
                   <i class="fas fa-plus fa-lg"></i>
                 </button>
               </ng-container>
             </td>
             <td>
-              <button md-mini-fab color="warn"
+              <button mat-mini-fab color="warn"
                       *ngIf="i < settingsOfSelectedType.length - 1"
                       (click)="deleteFieldSetting(i)">
                 <i class="fas fa-trash-alt fa-lg"></i>
@@ -140,7 +140,7 @@
         </tfoot>
       </table>
       <br/>
-      <button md-raised-button (click)="saveFieldSettings()" color="primary"
+      <button mat-raised-button (click)="saveFieldSettings()" color="primary"
               [disabled]="saving">Save Settings
       </button>
     </div>
