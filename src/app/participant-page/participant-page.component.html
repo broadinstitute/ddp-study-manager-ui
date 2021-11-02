@@ -1061,22 +1061,6 @@ participant.data.dsm['diagnosisYear'] != null">
               <ng-container *ngFor="let tab of settings['TAB']">
                 <ng-container *ngIf="displayTab(tab)">
                   <tab heading="{{getDisplayName(tab.columnDisplay, tab.columnName)}}" [active]="tabActive(tab.columnDisplay)" (selectTab)="onSelect($event, tab.columnDisplay)" >
-  <!--                  <br/>-->
-
-  <!--                  <div class="Float&#45;&#45;left Width&#45;&#45;100">-->
-  <!--                    <b class="Group&#45;&#45;Title">Jump to:</b>-->
-  <!--                  </div>-->
-  <!--                  <ng-container *ngFor="let setting of settings[tab.columnName]; let settingIndex = index">-->
-  <!--                    <div class="Float&#45;&#45;left" *ngIf="setting.displayType === 'GROUP'">-->
-  <!--                      <a class="Abstraction&#45;&#45;Jump&#45;&#45;Group" pageScroll href="{{setting.columnName}}">{{setting.columnDisplay}}</a>-->
-  <!--                    </div>-->
-  <!--                    <ng-container *ngIf="settingIndex < settings[tab.columnName].length - 1">-->
-  <!--                      <div class="Float&#45;&#45;left Vertical&#45;&#45;line"></div>-->
-  <!--                    </ng-container>-->
-  <!--                  </ng-container>-->
-  <!--                  <div class="Float&#45;&#45;left Width&#45;&#45;100">-->
-  <!--                    <hr style="border-color: black">-->
-  <!--                  </div>-->
                     <ng-container *ngFor="let setting of settings[tab.columnName]; let settingIndex = index">
                       <ng-container *ngIf="tabActive(tab.columnDisplay)">
                         <div class="Float--left Width--100">
