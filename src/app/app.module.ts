@@ -116,6 +116,7 @@ import { FormDataComponent } from './form-data/form-data.component';
 import { AddFamilyMemberComponent } from './popups/add-family-member/add-family-member.component';
 import {LoggingService} from "./services/logging.service";
 import {StackdriverErrorReporterService} from "./services/stackdriver-error-reporter.service";
+import { FieldTableComponent } from './field-table/field-table.component';
 
 @NgModule( {
   declarations: [
@@ -194,7 +195,8 @@ import {StackdriverErrorReporterService} from "./services/stackdriver-error-repo
     InvitationDataComponent,
     ParticipantUpdateResultDialogComponent,
     FormDataComponent,
-    AddFamilyMemberComponent
+    AddFamilyMemberComponent,
+    FieldTableComponent,
   ],
   entryComponents: [ParticipantUpdateResultDialogComponent, AddFamilyMemberComponent],
   imports: [
