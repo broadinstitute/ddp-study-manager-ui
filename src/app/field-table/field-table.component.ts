@@ -121,6 +121,13 @@ export class FieldTableComponent implements OnInit, OnChanges {
       } );
       this.multiTypes.push( multiType );
     }
+    let newOther = {};
+    if (this.possibleValues != null) {
+      this.possibleValues.forEach( value => {
+        newOther[ value.value ] = null;
+      } );
+    }
+    this._other.push(newOther);
   }
   changeToNothing() {
     this.jsonArray = this.nope ? "no" : "";
