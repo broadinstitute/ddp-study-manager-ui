@@ -35,7 +35,7 @@ testem.log
 #System Files
 .DS_Store
 Thumbs.db
-
+package-lock.json
 # DO NOT COMMIT RENDERED SECRETS INTO SOURCE CONTROL
 
 logs
