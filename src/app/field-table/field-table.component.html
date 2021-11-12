@@ -3,6 +3,26 @@
              (change)="valuesChanged($event, 'no', null)" [(ngModel)]="nope"
              disableRipple>No {{fieldName}}
 </md-checkbox>
+  <ng-container *ngIf="viewValue != null">
+    <md-checkbox color="primary" [checked]="viewValue.noData" [disabled]="disabled"
+                 disableRipple>Not found in record
+    </md-checkbox>
+    <md-checkbox *ngIf="!hideDoubleCheck"
+                 color="primary" [checked]="viewValue.doubleCheck" [disabled]="disabled"
+                 disableRipple>Double Check
+    </md-checkbox>
+  </ng-container>
+  <ng-container *ngIf="viewValue == null">
+    <md-checkbox color="primary" [checked]="field.fieldValue.noData"
+                 (change)="field.fieldValue.noData = $event.checked; abstractionValueChanged($event,  'noData')"
+                 disableRipple>Not found in record
+    </md-checkbox>
+    <md-checkbox color="primary" [checked]="field.fieldValue.doubleCheck"
+                 (change)="field.fieldValue.doubleCheck = $event.checked; abstractionValueChanged($event, 'doubleCheck')"
+                 *ngIf="!hideDoubleCheck"
+                 disableRipple>Double Check
+    </md-checkbox>
+  </ng-container>
 </div>
 
 <table class="table table-striped Width--100" *ngIf="jsonArray !== 'no'">

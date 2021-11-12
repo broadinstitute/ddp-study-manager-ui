@@ -195,12 +195,21 @@
       <ng-container *ngIf="field.type === 'table'">
         <ng-container *ngIf="viewValue != null">
           <app-field-table [possibleValues]="field.possibleValues" [jsonArray]="viewValue.value" [fieldName]="field.displayName"
-                           [disabled]="readonly" [drugs]="availableDrugs" [cancers]="availableCancers"></app-field-table>
+                           [disabled]="readonly" [drugs]="availableDrugs" [cancers]="availableCancers"
+                           [field]="field" [viewValue]="viewValue" [hideDoubleCheck]="hideDoubleCheck"
+                           (doubleCheckValueChanges)="abstractionValueChanged($event, field,'doubleCheck')"
+                           (noDataValueChanges)="abstractionValueChanged($event, field,'noData')">
+          </app-field-table>
         </ng-container>
         <ng-container *ngIf="viewValue == null">
           <app-field-table [possibleValues]="field.possibleValues" [jsonArray]="field.fieldValue.value" [fieldName]="field.displayName"
                            [disabled]="field.fieldValue.noData || readonly" [drugs]="availableDrugs" [cancers]="availableCancers"
-                           [finished]="patchFinished" (changes)="abstractionValueChanged($event, field, 'value')"></app-field-table>
+                           [field]="field" [viewValue]="viewValue" [hideDoubleCheck]="hideDoubleCheck"
+                           [finished]="patchFinished" (changes)="abstractionValueChanged($event, field, 'value')"
+                           (doubleCheckValueChanges)="abstractionValueChanged($event, field,'doubleCheck')"
+                           (noDataValueChanges)="abstractionValueChanged($event, field,'noData')">
+
+          </app-field-table>
         </ng-container>
       </ng-container>
 
@@ -406,7 +415,7 @@
 
     <td [ngClass]="{'Width--15': true, 'TD--Padding': true, 'Abstraction-Background-Oki': field.qcWrapper.equals && (type === 'abstraction' || type === 'review'), 'Abstraction-Background-Warning': !field.qcWrapper.equals && (type === 'abstraction' || type === 'review'),
           'Abstraction-Background-Check': field.qcWrapper.check && (type === 'abstraction' || type === 'review')}">
-      <ng-container *ngIf="viewValue != null">
+      <ng-container *ngIf="viewValue != null && field.type !== 'table'">
         <md-checkbox color="primary" [checked]="viewValue.noData" [disabled]="readonly"
                      disableRipple>Not found in record
         </md-checkbox>
@@ -415,7 +424,7 @@
                      disableRipple>Double Check
         </md-checkbox>
       </ng-container>
-      <ng-container *ngIf="viewValue == null">
+      <ng-container *ngIf="viewValue == null && field.type !== 'table'">
         <md-checkbox color="primary" [checked]="field.fieldValue.noData"
                      (change)="field.fieldValue.noData = $event.checked; abstractionValueChanged($event, field, 'noData')" [disabled]="readonly"
                      disableRipple>Not found in record
