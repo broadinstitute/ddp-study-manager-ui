@@ -8,7 +8,6 @@ import {ParticipantData} from "../participant-list/models/participant-data.model
 import {PreferredLanguage} from "../participant-list/models/preferred-languages.model";
 import {Participant} from "../participant-list/participant-list.model";
 import {PDFModel} from "../pdf-download/pdf-download.model";
-
 import {ComponentService} from "../services/component.service";
 import {Auth} from "../services/auth.service";
 import {DSMService} from "../services/dsm.service";
@@ -383,13 +382,13 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
           tissues.push( new Tissue( null, oncHis.oncHistoryDetailId, null, null, null, null,
             null, null, null, null, null, null, null, null
             , null, null, null, null, null, null, null, null, null,
-            null, null, null, null ) );
+            null, null, null, null, null, null, null, null ) );
           oncHis.tissues = tissues;
         } else if (oncHis.tissues.length < 1) {
           oncHis.tissues.push( new Tissue( null, oncHis.oncHistoryDetailId, null, null, null, null,
             null, null, null, null, null, null, null, null, null, null
             , null, null, null, null, null, null, null,
-            null, null, null, null ) );
+            null, null, null, null, null, null, null, null ) );
         }
       }
       if (!hasEmptyOncHis) {
@@ -397,7 +396,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
         tissues.push( new Tissue( null, null, null, null, null, null, null,
           null, null, null, null, null, null, null, null, null,
           null, null, null, null, null, null, null,
-          null, null, null, null ) );
+          null, null, null, null, null, null, null, null ) );
 
         let oncHis = new OncHistoryDetail( this.participant.participant.participantId,
           null, null, null, null, null, null, null, null, null, null,

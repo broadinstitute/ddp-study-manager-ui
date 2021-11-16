@@ -86,6 +86,29 @@
         Scroll(s)
       </td>
     </tr>
+    <tr>
+      <td>USS SM-IDS</td>
+      <td>
+        <button mat-mini-fab [disabled]="!editable"
+                (click)="openModal('USS')">
+          <i class="fas fa-trash-alt fa-lg"></i>
+        </button>
+      </td>
+      <td>H&E SM-IDS</td>
+      <td>
+        <button mat-mini-fab [disabled]="!editable"
+                (click)="openModal('HE')">
+          <i class="fas fa-trash-alt fa-lg"></i>
+        </button>
+      </td>
+      <td>scrolls SM-IDS</td>
+      <td colspan="2">
+        <button mat-mini-fab [disabled]="!editable"
+                (click)="openModal('scrolls')">
+          <i class="fas fa-trash-alt fa-lg"></i>
+        </button>
+      </td>
+    </tr>
     <tr *ngIf="tissue.tissueType != null && tissue.tissueType === 'block' ">
       <td class="TD--Padding">Expected Return Date</td>
       <td colspan="3">
@@ -340,3 +363,32 @@
 
   </table>
 </div>
+
+<app-modal>
+  <div class="app-modal-header">
+    SMIDs for {{this.currentSMIDField}}
+  </div>
+  <div class="app-modal-body">
+    <ng-container *ngIf="this.currentSMIDField==='HE'">
+      <table>
+        <tr *ngFor="let smid of getRange(0, this.tissue.hECount).keys(); let i = index;">
+          <td>
+            <mat-form-field [ngClass]="{'Input': true}">
+              <input matInput type="number" min="0" max="10" [disabled]="!editable"
+                     (blur)="currentField(null)">
+
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </ng-container>
+  </div>
+  <div class="app-modal-footer">
+    <button type="button" class="btn btn-default"
+            (click)="saveSMId(); SMIDModal.hide()">Cancel
+    </button>
+<!--    <button type="button" class="btn btn-default"-->
+<!--            (click)="changeToNothing()">Ok-->
+<!--    </button>-->
+  </div>
+</app-modal>

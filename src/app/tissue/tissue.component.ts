@@ -1,5 +1,6 @@
 import {Component, Input, OnInit, ViewChild} from "@angular/core";
 import {FieldSettings} from "../field-settings/field-settings.model";
+import {ModalComponent} from "../modal/modal.component";
 import {OncHistoryDetail} from "../onc-history-detail/onc-history-detail.model";
 import {Participant} from "../participant-list/participant-list.model";
 import {Tissue} from "./tissue.model";
@@ -22,6 +23,8 @@ import {PatchUtil} from "../utils/patch.model";
 export class TissueComponent implements OnInit {
 
   @ViewChild("collaboratorSampleId") collaboratorSampleIdInputField;
+  @ViewChild(ModalComponent)
+  public SMIDModal: ModalComponent;
 
   @Input() participant: Participant;
   @Input() oncHistoryDetail: OncHistoryDetail;
@@ -34,6 +37,7 @@ export class TissueComponent implements OnInit {
   currentPatchField: string;
   patchFinished: boolean = true;
   dup: boolean = false;
+  currentSMIDField: string;
 
   constructor (private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
                private router: Router) {
@@ -227,5 +231,19 @@ export class TissueComponent implements OnInit {
     if ( field != null || (field == null && this.patchFinished) ) {
       this.currentPatchField = field;
     }
+  }
+
+  openModal( name: string ) {
+    this.currentSMIDField=name;
+
+    this.SMIDModal.show();
+  }
+
+  getRange( start, end ) {
+    return [...Array(end - start).keys()];
+  }
+
+  saveSMId() {
+
   }
 }
