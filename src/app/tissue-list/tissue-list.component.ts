@@ -304,9 +304,9 @@ export class TissueListComponent implements OnInit {
 
   //display additional value
   getOncHisAdditionalValue( index: number, colName: string ): string {
-    if (this.tissueListWrappers[ index ].tissueList.oncHistoryDetails.additionalValues != null && this.tissueListWrappers[ index ].tissueList.oncHistoryDetails.additionalValues != undefined) {
-      if (this.tissueListWrappers[ index ].tissueList.oncHistoryDetails.additionalValues[ colName ] != undefined) {
-        return this.tissueListWrappers[ index ].tissueList.oncHistoryDetails.additionalValues[ colName ];
+    if (this.tissueListWrappers[ index ].tissueList.oncHistoryDetails.additionalValuesJson != null && this.tissueListWrappers[ index ].tissueList.oncHistoryDetails.additionalValuesJson != undefined) {
+      if (this.tissueListWrappers[ index ].tissueList.oncHistoryDetails.additionalValuesJson[ colName ] != undefined) {
+        return this.tissueListWrappers[ index ].tissueList.oncHistoryDetails.additionalValuesJson[ colName ];
       }
     }
     return null;

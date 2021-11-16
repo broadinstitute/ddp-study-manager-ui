@@ -63,25 +63,25 @@
           </button>
         </td>
         <td class="DatePicker--Table--Col">
-          <app-field-datepicker [dateString]="oncHis.datePX" [showTodayButton]="false" [allowUnknownDay]="true"
+          <app-field-datepicker [dateString]="oncHis.datePx" [showTodayButton]="false" [allowUnknownDay]="true"
                                 [disabled]="!editable || participantExited"
-                                (dateChanged)="valueChanged($event, 'datePX', i)"
-                                [colorDuringPatch]="isPatchedCurrently('datePX', i)"></app-field-datepicker>
+                                (dateChanged)="valueChanged($event, 'datePx', i)"
+                                [colorDuringPatch]="isPatchedCurrently('datePx', i)"></app-field-datepicker>
         </td>
         <td>
-          <app-lookup [lookupValue]="oncHis.typePX" [lookupType]="'tType'" [multiLineInput]="true"
-                      (lookupResponse)="setTypePx($event, i)" [disabled]="!editable || participantExited" [fieldName]="'typePX'"
-                      [colorDuringPatch]="isPatchedCurrently('typePX', i)"></app-lookup>
+          <app-lookup [lookupValue]="oncHis.typePx" [lookupType]="'type'" [multiLineInput]="true"
+                      (lookupResponse)="setTypePx($event, i)" [disabled]="!editable || participantExited" [fieldName]="'typePx'"
+                      [colorDuringPatch]="isPatchedCurrently('typePx', i)"></app-lookup>
         </td>
         <td>
-          <md-input-container [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently('locationPX', i)}">
+          <md-input-container [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently('locationPx', i)}">
             <input mdInput class="Width--100 Input--Min-WIDTH" maxlength="200" [disabled]="!editable || participantExited"
-                   [(ngModel)]="oncHis.locationPX" (change)="valueChanged($event, 'locationPX', i)"
-                   (blur)="currentField(null, null)" (focus)="currentField('locationPX', i)">
+                   [(ngModel)]="oncHis.locationPx" (change)="valueChanged($event, 'locationPx', i)"
+                   (blur)="currentField(null, null)" (focus)="currentField('locationPx', i)">
           </md-input-container>
         </td>
         <td>
-          <app-lookup [lookupValue]="oncHis.histology" [lookupType]="'tHistology'" [multiLineInput]="true"
+          <app-lookup [lookupValue]="oncHis.histology" [lookupType]="'histology'" [multiLineInput]="true"
                       (lookupResponse)="setHistology($event, i)" [disabled]="!editable || participantExited" [fieldName]="'histology'"
                       [colorDuringPatch]="isPatchedCurrently('histology', i)"></app-lookup>
         </td>
@@ -94,27 +94,27 @@
           </md-input-container>
         </td>
         <td>
-          <app-lookup [lookupValue]="oncHis.facility" [lookupType]="'tFacility'" [fieldName]="'facility'"
+          <app-lookup [lookupValue]="oncHis.facility" [lookupType]="'facility'" [fieldName]="'facility'"
                       (lookupResponse)="setFacility($event, i)" [disabled]="!editable || participantExited"
                       [colorDuringPatch]="isPatchedCurrently('facility', i)"></app-lookup>
         </td>
         <td>
           <md-input-container
-            [ngClass]="{'Input': true, 'Input--Phone-Number': true, 'Color--Field--Patched': isPatchedCurrently('fPhone', i)}">
+            [ngClass]="{'Input': true, 'Input--Phone-Number': true, 'Color--Field--Patched': isPatchedCurrently('phone', i)}">
             <input mdInput maxlength="14" [disabled]="!editable || participantExited"
-                   [(ngModel)]="oncHis.fPhone" (change)="valueChanged($event, 'fPhone', i)"
+                   [(ngModel)]="oncHis.phone" (change)="valueChanged($event, 'phone', i)"
                    [errorStateMatcher]="getUtil().phoneNumberValidator"
-                   (blur)="currentField(null, null)" (focus)="currentField('fPhone', i)">
+                   (blur)="currentField(null, null)" (focus)="currentField('phone', i)">
             <md-error>xxx-xxx-xxxx</md-error>
           </md-input-container>
         </td>
         <td>
           <md-input-container
-            [ngClass]="{'Input': true, 'Input--Phone-Number': true, 'Color--Field--Patched': isPatchedCurrently('fFax', i)}">
+            [ngClass]="{'Input': true, 'Input--Phone-Number': true, 'Color--Field--Patched': isPatchedCurrently('fax', i)}">
             <input mdInput maxlength="14" [disabled]="!editable || participantExited"
-                   [(ngModel)]="oncHis.fFax" (change)="valueChanged($event, 'fFax', i)"
+                   [(ngModel)]="oncHis.fax" (change)="valueChanged($event, 'fax', i)"
                    [errorStateMatcher]="getUtil().phoneNumberValidator"
-                   (blur)="currentField(null, null)" (focus)="currentField('fFax', i)">
+                   (blur)="currentField(null, null)" (focus)="currentField('fax', i)">
             <md-error>xxx-xxx-xxxx</md-error>
           </md-input-container>
         </td>

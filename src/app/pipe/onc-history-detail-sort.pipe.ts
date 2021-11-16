@@ -11,12 +11,12 @@ export class OncHistoryDetailSortPipe implements PipeTransform {
     var reN = /[^0-9]/g;
 
     array.sort((a, b) => {
-      if (a.datePX != null && b.datePX != null && a.datePX != undefined && b.datePX != undefined) {
-        var aA = a.datePX.replace(reA, "");
-        var bA = b.datePX.replace(reA, "");
+      if (a.datePx != null && b.datePx != null && a.datePx != undefined && b.datePx != undefined) {
+        var aA = a.datePx.replace(reA, "");
+        var bA = b.datePx.replace(reA, "");
         if (aA === bA) {
-          var aN = parseInt(a.datePX.replace(reN, ""), 10);
-          var bN = parseInt(b.datePX.replace(reN, ""), 10);
+          var aN = parseInt(a.datePx.replace(reN, ""), 10);
+          var bN = parseInt(b.datePx.replace(reN, ""), 10);
           return aN === bN ? 0 : aN > bN ? 1 : -1;
         }
         else {
@@ -26,10 +26,10 @@ export class OncHistoryDetailSortPipe implements PipeTransform {
       if (b.oncHistoryDetailId == null) {
         return -1;
       }
-      if (a.datePX == null) {
+      if (a.datePx == null) {
         return 1;
       }
-      if (b.datePX == null) {
+      if (b.datePx == null) {
         return -1;
       }
     });

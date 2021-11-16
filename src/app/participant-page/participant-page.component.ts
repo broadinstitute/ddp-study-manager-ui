@@ -581,8 +581,8 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
         }
         else {
           if (firstOncHis.facility !== oncHis.facility ||
-            firstOncHis.fPhone !== oncHis.fPhone ||
-            firstOncHis.fFax !== oncHis.fFax) {
+            firstOncHis.phone !== oncHis.phone ||
+            firstOncHis.fax !== oncHis.fax) {
             doIt = false;
             this.warning = "Tissues are not from the same facility";
           }
@@ -658,18 +658,18 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
           for (let oncHis of oncHistories) {
             if (oncHis.selected) {
               let date = new Date();
-              if (oncHis.tFaxSent == null) {
-                oncHis.tFaxSent = Utils.getFormattedDate( date );
-                oncHis.tFaxSentBy = this.role.userID();
-                this.oncHistoryValueChanged( oncHis.tFaxSent, "tFaxSent", oncHis );
-              } else if (oncHis.tFaxSent2 == null) {
-                oncHis.tFaxSent2 = Utils.getFormattedDate( date );
-                oncHis.tFaxSent2By = this.role.userID();
-                this.oncHistoryValueChanged( oncHis.tFaxSent2, "tFaxSent2", oncHis );
+              if (oncHis.faxSent == null) {
+                oncHis.faxSent = Utils.getFormattedDate( date );
+                oncHis.faxSentBy = this.role.userID();
+                this.oncHistoryValueChanged( oncHis.faxSent, "tFaxSent", oncHis );
+              } else if (oncHis.faxSent2 == null) {
+                oncHis.faxSent2 = Utils.getFormattedDate( date );
+                oncHis.faxSent2By = this.role.userID();
+                this.oncHistoryValueChanged( oncHis.faxSent2, "tFaxSent2", oncHis );
               } else {
-                oncHis.tFaxSent3 = Utils.getFormattedDate( date );
-                oncHis.tFaxSent3By = this.role.userID();
-                this.oncHistoryValueChanged( oncHis.tFaxSent3, "tFaxSent3", oncHis );
+                oncHis.faxSent3 = Utils.getFormattedDate( date );
+                oncHis.faxSent3By = this.role.userID();
+                this.oncHistoryValueChanged( oncHis.faxSent3, "tFaxSent3", oncHis );
               }
               oncHis.changedBy = this.role.userMail();
               oncHis.changed = true;
