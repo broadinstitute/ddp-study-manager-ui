@@ -382,13 +382,13 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
           tissues.push( new Tissue( null, oncHis.oncHistoryDetailId, null, null, null, null,
             null, null, null, null, null, null, null, null
             , null, null, null, null, null, null, null, null, null,
-            null, null, null, null, null, null, null, null ) );
+            null, null, null, null, null, null, null) );
           oncHis.tissues = tissues;
         } else if (oncHis.tissues.length < 1) {
           oncHis.tissues.push( new Tissue( null, oncHis.oncHistoryDetailId, null, null, null, null,
             null, null, null, null, null, null, null, null, null, null
             , null, null, null, null, null, null, null,
-            null, null, null, null, null, null, null, null ) );
+            null, null, null, null, null, null, null ) );
         }
       }
       if (!hasEmptyOncHis) {
@@ -396,7 +396,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
         tissues.push( new Tissue( null, null, null, null, null, null, null,
           null, null, null, null, null, null, null, null, null,
           null, null, null, null, null, null, null,
-          null, null, null, null, null, null, null, null ) );
+          null, null, null, null, null, null, null) );
 
         let oncHis = new OncHistoryDetail( this.participant.participant.participantId,
           null, null, null, null, null, null, null, null, null, null,

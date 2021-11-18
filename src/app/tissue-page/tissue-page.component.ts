@@ -97,7 +97,7 @@ export class TissuePageComponent implements OnInit {
   addTissue() {
     this.oncHistoryDetail.tissues.push( new Tissue( null, this.oncHistoryDetail.oncHistoryDetailId, null, null, null, null,
       null, null, null, null, null, null, null, null, null, null, null, null,
-      null, null, null, null, null, null, null, null, null, null, null, null, null ) );
+      null,  null, null, null, null, null, null, null, null, null, null, null ) );
   }
 
   isPatchedCurrently( field: string ): boolean {

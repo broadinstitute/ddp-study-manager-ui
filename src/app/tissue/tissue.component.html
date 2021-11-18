@@ -34,8 +34,8 @@
       <td>
         <mat-form-field [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently('ussCount')}">
           <input matInput type="number" min="0" max="10" [disabled]="!editable"
-                 (blur)="currentField(null)" (focus)="currentField('ussCount')"
-                 [(ngModel)]="tissue.ussCount" (change)="valueChanged($event, 'ussCount')">
+                 (blur)="currentField(null)" (focus)="currentField('ussCount');"
+                 [(ngModel)]="tissue.ussCount" (change)="valueChanged($event, 'ussCount');">
         </mat-form-field>
         USS (unstained slides)
       </td>
@@ -58,7 +58,7 @@
       <td colspan="3">
         <mat-form-field [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently('blocksCount')}">
           <input matInput type="number" min="0" max="10" [disabled]="!editable"
-                 (blur)="currentField(null)" (focus)="currentField('blocksCount')"
+                 (blur)="currentField(null)" (focus)="currentField('blocksCount');"
                  [(ngModel)]="tissue.blocksCount" (change)="valueChanged($event, 'blocksCount')">
         </mat-form-field>
         Block(s)
@@ -69,7 +69,7 @@
       <td colspan="3">
         <mat-form-field [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently('hECount')}">
           <input matInput type="number" min="0" max="10" [disabled]="!editable"
-                 (blur)="currentField(null)" (focus)="currentField('hECount')"
+                 (blur)="currentField(null)" (focus)="currentField('hECount');"
                  [(ngModel)]="tissue.hECount" (change)="valueChanged($event, 'hECount')">
         </mat-form-field>
         H&E(s)
@@ -80,32 +80,36 @@
       <td colspan="3">
         <mat-form-field [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently('scrollsCount')}">
           <input matInput type="number" min="0" max="10" [disabled]="!editable"
-                 (blur)="currentField(null)" (focus)="currentField('scrollsCount')"
+                 (blur)="currentField(null)" (focus)="currentField('scrollsCount');"
                  [(ngModel)]="tissue.scrollsCount" (change)="valueChanged($event, 'scrollsCount')">
         </mat-form-field>
         Scroll(s)
       </td>
     </tr>
     <tr>
-      <td>USS SM-IDS</td>
-      <td>
-        <button mat-mini-fab [disabled]="!editable"
-                (click)="openModal('USS')">
-          <i class="fas fa-trash-alt fa-lg"></i>
+      <td class="TD--Padding">USS SM-IDS</td>
+      <td colspan="3">
+        <button mat-mini-fab [disabled]="!editable" color="primary" [ngClass]="{'changed':ussChanged}"
+                (click)="openUSSModal()">
+          <i class="fas fa-plus fa-lg"></i>
         </button>
       </td>
-      <td>H&E SM-IDS</td>
-      <td>
-        <button mat-mini-fab [disabled]="!editable"
-                (click)="openModal('HE')">
-          <i class="fas fa-trash-alt fa-lg"></i>
+    </tr>
+    <tr>
+      <td class="TD--Padding">scrolls SM-IDS</td>
+      <td colspan="3">
+        <button mat-mini-fab [disabled]="!editable" color="primary" [ngClass]="{'changed':scrollsChanged}"
+                (click)="openScrollsModal()">
+          <i class="fas fa-plus fa-lg"></i>
         </button>
       </td>
-      <td>scrolls SM-IDS</td>
-      <td colspan="2">
-        <button mat-mini-fab [disabled]="!editable"
-                (click)="openModal('scrolls')">
-          <i class="fas fa-trash-alt fa-lg"></i>
+    </tr>
+    <tr>
+      <td class="TD--Padding">H&E SM-IDS</td>
+      <td colspan="3">
+        <button mat-mini-fab [disabled]="!editable" color="primary" [ngClass]="{'changed':heChanged}"
+                (click)="openHEModal()">
+          <i class="fas fa-plus fa-lg"></i>
         </button>
       </td>
     </tr>
@@ -371,12 +375,42 @@
   <div class="app-modal-body">
     <ng-container *ngIf="this.currentSMIDField==='HE'">
       <table>
-        <tr *ngFor="let smid of getRange(0, this.tissue.hECount).keys(); let i = index;">
+        <tr *ngFor="let smid of this.rangeValue; let i=index;">
           <td>
             <mat-form-field [ngClass]="{'Input': true}">
-              <input matInput type="number" min="0" max="10" [disabled]="!editable"
-                     (blur)="currentField(null)">
+              <input matInput [disabled]="!editable" id="HE{{i}}"
+                     (blur)="currentField(null)"  [(ngModel)]="this.tissue.HESMId[i]"
+                     (change)="changeSmId($event, this.tissue.HESMId, i)"
+                     [value]="getValue(this.tissue.HESMId[i])" (keydown.enter)="goNext('HE', i)">
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </ng-container>
+    <ng-container *ngIf="this.currentSMIDField==='USS'">
+      <table>
+        <tr *ngFor="let i of this.rangeValue;">
+          <td>
+            <mat-form-field [ngClass]="{'Input': true}">
+              <input matInput [disabled]="!editable" id="USS{{i}}"
+                     (blur)="currentField(null)" (change)="changeSmId($event, this.tissue.ussSMId, i)"
+                     [(ngModel)]="this.tissue.ussSMId[i]"
+                     [value]="getValue(this.tissue.ussSMId[i])" (keydown.enter)="goNext('USS', i)">
 
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </ng-container>
+    <ng-container *ngIf="this.currentSMIDField==='scrolls'">
+      <table>
+        <tr *ngFor="let i of this.rangeValue;">
+          <td>
+            <mat-form-field [ngClass]="{'Input': true}" id="scrolls{{i}}">
+              <input matInput [disabled]="!editable"
+                     (blur)="currentField(null)" [(ngModel)]="this.tissue.scrollSMId[i]"
+                     (change)="changeSmId($event, this.tissue.scrollSMId, i)"
+                     [value]="getValue(this.tissue.scrollSMId[i])" (keydown.enter)="goNext('scrolls', i)">
             </mat-form-field>
           </td>
         </tr>
@@ -385,10 +419,10 @@
   </div>
   <div class="app-modal-footer">
     <button type="button" class="btn btn-default"
-            (click)="saveSMId(); SMIDModal.hide()">Cancel
+            (click)="saveSMId(); SMIDModal.hide()">Submit SM IDs
     </button>
-<!--    <button type="button" class="btn btn-default"-->
-<!--            (click)="changeToNothing()">Ok-->
-<!--    </button>-->
+    <button type="button" class="btn btn-default"
+            (click)="exitModal()">cancel
+    </button>
   </div>
 </app-modal>

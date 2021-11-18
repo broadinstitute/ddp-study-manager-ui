@@ -1,19 +1,19 @@
 import {Component, Input, OnInit, ViewChild} from "@angular/core";
+import {Router} from "@angular/router";
 import {FieldSettings} from "../field-settings/field-settings.model";
+import {Lookup} from "../lookup/lookup.model";
 import {ModalComponent} from "../modal/modal.component";
 import {OncHistoryDetail} from "../onc-history-detail/onc-history-detail.model";
 import {Participant} from "../participant-list/participant-list.model";
-import {Tissue} from "./tissue.model";
-import {RoleService} from "../services/role.service";
-import {DSMService} from "../services/dsm.service";
-import {ComponentService} from "../services/component.service";
-import {Lookup} from "../lookup/lookup.model";
-import {Statics} from "../utils/statics";
-import {Result} from "../utils/result.model";
 import {Auth} from "../services/auth.service";
-import {Router} from "@angular/router";
+import {ComponentService} from "../services/component.service";
+import {DSMService} from "../services/dsm.service";
+import {RoleService} from "../services/role.service";
 import {NameValue} from "../utils/name-value.model";
 import {PatchUtil} from "../utils/patch.model";
+import {Result} from "../utils/result.model";
+import {Statics} from "../utils/statics";
+import {Tissue} from "./tissue.model";
 
 @Component({
   selector: "app-tissue",
@@ -38,6 +38,13 @@ export class TissueComponent implements OnInit {
   patchFinished: boolean = true;
   dup: boolean = false;
   currentSMIDField: string;
+  rangeValue: number[];
+  ussChanged: boolean = false;
+  heChanged: boolean = false;
+  scrollsChanged: boolean = false;
+  uss = "USS";
+  he = "HE";
+  scrolls =  "scrolls";
 
   constructor (private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
                private router: Router) {
@@ -120,11 +127,11 @@ export class TissueComponent implements OnInit {
         v = value.checked;
       }
     }
-    if ( v !== null ) {
-      if ( parameterName !== "additionalValues" ) {
-        for ( let oncTissue of this.oncHistoryDetail.tissues ) {
-          if ( oncTissue.tissueId == this.tissue.tissueId ) {
-            oncTissue[parameterName] = v;
+    if (v !== null) {
+      if (parameterName !== "additionalValues" && parameterName.indexOf("SMId") == -1) {
+        for (let oncTissue of this.oncHistoryDetail.tissues) {
+          if (oncTissue.tissueId == this.tissue.tissueId) {
+            oncTissue[ parameterName ] = v;
           }
         }
       }
@@ -181,6 +188,15 @@ export class TissueComponent implements OnInit {
         },
       );
     }
+    if (parameterName === 'scrollsCount'){
+       this.scrollsChanged = true;
+    }
+    if (parameterName === 'ussCount'){
+      this.ussChanged = true;
+    }
+    if (parameterName === 'hECount'){
+      this.heChanged = true;
+    }
   }
 
   deleteTissue () {
@@ -233,17 +249,101 @@ export class TissueComponent implements OnInit {
     }
   }
 
-  openModal( name: string ) {
-    this.currentSMIDField=name;
-
-    this.SMIDModal.show();
-  }
-
   getRange( start, end ) {
-    return [...Array(end - start).keys()];
+    let a = [ ...Array( end - start ).keys() ];
+    return a;
   }
 
   saveSMId() {
-
+    let parameterName: string;
+    let value;
+    if(this.currentSMIDField === this.uss){
+      parameterName = 'ussSMID';
+      value = this.tissue.ussSMId;
+    }else if(this.currentSMIDField === this.he){
+      parameterName = 'heSMID';
+      value = this.tissue.HESMId;
+    }else if(this.currentSMIDField === this.scrolls){
+      parameterName = 'scrollSMID';
+      value = this.tissue.scrollSMId;
+    }
+    console.log(value);
+    let sqlString = JSON.stringify(value);
+    sqlString = ','+sqlString.substr(1, sqlString.length - 1)+',';
+    console.log(sqlString);
+    this.valueChanged(sqlString, parameterName);
   }
+
+
+      changeSmId( event: any, source: string[], i: number ) {
+    let value: string;
+    if (typeof event === "string") {
+      value = event;
+    }
+    else {
+      if (event.srcElement != null && typeof event.srcElement.value === "string") {
+        value = event.srcElement.value;
+      }
+      else if (event.value != null) {
+        value = event.value;
+      }
+      else {
+        console.log( event );
+        return;
+      }
+    }
+    if (source.length - 1 > i) {
+      source[ i ] = value;
+    }
+    else {
+      while (source.length - 1 < i) {
+        source.push( null );
+      }
+      source[ i ] = value;
+    }
+  }
+
+  openUSSModal() {
+    this.ussChanged = false;
+    this.currentSMIDField = this.uss;
+    this.rangeValue = this.getRange( 0, this.tissue.ussCount );
+    this.SMIDModal.show();
+  }
+
+  openHEModal() {
+    this.heChanged = false;
+    this.currentSMIDField = this.he;
+    this.rangeValue = this.getRange( 0, this.tissue.hECount );
+    this.SMIDModal.show();
+  }
+
+  openScrollsModal() {
+    this.scrollsChanged = false;
+    this.currentSMIDField = this.scrolls;
+    this.rangeValue = this.getRange( 0, this.tissue.scrollsCount );
+    this.SMIDModal.show();
+  }
+
+  getValue( s: string ) {
+    if (!s) {
+      return "";
+    }
+    return s;
+  }
+
+  exitModal() {
+    let exit = window.confirm( "Are you sure you want to exit? Any unsaved changes will be lost!" );
+    if (exit) {
+      this.SMIDModal.hide();
+    }
+  }
+
+  goNext( name: string, i: number ) {
+    let nextId = name + ( i + 1 );
+    let nextElement = document.getElementById( nextId );
+    if (nextElement) {
+      nextElement.focus();
+    }
+  }
+
 }

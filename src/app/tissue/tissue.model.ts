@@ -1,3 +1,5 @@
+import {newArray} from "@angular/compiler/src/util";
+
 export class Tissue {
 
   deleted: boolean = false;
@@ -9,7 +11,7 @@ export class Tissue {
               public additionalValues: {}, public expectedReturn: string, public tissueReturnDate: string,
               public returnFedexId: string, public shlWorkNumber: string, public sequenceResults: string, public tumorPercentage: string,
               public scrollsCount: number, public ussCount: number, public blocksCount: number, public hECount: number,
-              public scrollSMId: string[], public ussSMId: string[], public blocksSMId: string[], public HESMId: string[]) {
+              public scrollSMId: string[], public ussSMId: string[], public HESMId: string[]) {
     this.tissueId = tissueId;
     this.oncHistoryDetailId = oncHistoryDetailId;
     this.tNotes = tNotes;
@@ -39,7 +41,6 @@ export class Tissue {
     this.hECount = hECount;
     this.scrollSMId = scrollSMId;
     this.ussSMId = ussSMId;
-    this.blocksSMId = blocksSMId;
     this.HESMId = HESMId;
   }
 
@@ -50,11 +51,14 @@ export class Tissue {
       jsonData = "{" + jsonData.substring(1, jsonData.length - 1) + "}";
       additionalValues = JSON.parse(jsonData);
     }
+
     return new Tissue(json.tissueId, json.oncHistoryDetailId, json.tNotes, json.countReceived, json.tissueType,
       json.tissueSite, json.tumorType, json.hE, json.pathologyReport, json.collaboratorSampleId, json.blockSent,
       json.scrollsReceived, json.skId, json.smId, json.sentGp, json.firstSmId, additionalValues, json.expectedReturn,
       json.tissueReturnDate, json.returnFedexId, json.shlWorkNumber, json.sequenceResults, json.tumorPercentage,
       json.scrollsCount, json.ussCount, json.blocksCount, json.hECount,
-      json.scrollSMId, json.ussSMId, json.blocksSMId, json.HESMId);
+      json.scrollSMId === undefined ? newArray(json.scrollsCount) : json.scrollSMId,
+      json.ussSMId === undefined ? newArray(json.ussCount) : json.ussSMId,
+      json.HESMId === undefined ? newArray(json.hECount) : json.HESMId);
   }
 }
