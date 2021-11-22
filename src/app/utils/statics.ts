@@ -61,6 +61,7 @@ export class Statics {
   public static PARTICIPANT_PAGE_URL: string = Statics.URL + "participantPage";
 
   public static TISSUE_ALIAS = "t";
+  public static SM_ID_ALIAS = "sm";
   public static ONCDETAIL_ALIAS = "oD";
   public static ES_ALIAS = "data";
   public static PT_ALIAS = "p";
@@ -70,7 +71,7 @@ export class Statics {
 
   public static EXITED = "EXITED";
   public static CONSENT_SUSPENDED = "CONSENT_SUSPENDED";
-  
+
   public static RELATIONS = {
     "BROTHER": "Brother",
     "DAUGHTER": "Daughter",

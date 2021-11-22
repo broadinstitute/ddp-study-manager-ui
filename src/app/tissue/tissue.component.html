@@ -89,29 +89,40 @@
     <tr>
       <td class="TD--Padding">USS SM-IDS</td>
       <td colspan="3">
-        <button mat-mini-fab [disabled]="!editable" color="primary" [ngClass]="{'changed':ussChanged}"
+        <button mat-mini-fab [disabled]="!editable" color="primary" [ngClass]="{'changed':!smIdCountMatch(this.tissue.ussSMId, this.tissue.ussCount)}"
                 (click)="openUSSModal()">
           <i class="fas fa-plus fa-lg"></i>
         </button>
+        <span *ngIf="!smIdCountMatch(this.tissue.ussSMId, this.tissue.ussCount)" color="warn">
+          Count and entered SM-IDs do not match! Please open and adjust.
+        </span>
       </td>
     </tr>
     <tr>
       <td class="TD--Padding">scrolls SM-IDS</td>
       <td colspan="3">
-        <button mat-mini-fab [disabled]="!editable" color="primary" [ngClass]="{'changed':scrollsChanged}"
+        <button mat-mini-fab [disabled]="!editable" color="primary" [ngClass]="{'changed':!smIdCountMatch(this.tissue.scrollSMId, this.tissue.scrollsCount)}"
                 (click)="openScrollsModal()">
           <i class="fas fa-plus fa-lg"></i>
         </button>
+        <span *ngIf="!smIdCountMatch(this.tissue.scrollSMId, this.tissue.scrollsCount)" color="warn">
+          Count and entered SM-IDs do not match! Please open and adjust.
+        </span>
       </td>
+
     </tr>
     <tr>
       <td class="TD--Padding">H&E SM-IDS</td>
       <td colspan="3">
-        <button mat-mini-fab [disabled]="!editable" color="primary" [ngClass]="{'changed':heChanged}"
+        <button mat-mini-fab [disabled]="!editable" color="primary" [ngClass]="{'changed':!smIdCountMatch(this.tissue.HESMId, this.tissue.hECount)}"
                 (click)="openHEModal()">
           <i class="fas fa-plus fa-lg"></i>
         </button>
+        <span *ngIf="!smIdCountMatch(this.tissue.HESMId, this.tissue.hECount)" color="warn">
+          Count and entered SM-IDs do not match! Please open and adjust.
+        </span>
       </td>
+
     </tr>
     <tr *ngIf="tissue.tissueType != null && tissue.tissueType === 'block' ">
       <td class="TD--Padding">Expected Return Date</td>
@@ -375,52 +386,77 @@
   <div class="app-modal-body">
     <ng-container *ngIf="this.currentSMIDField==='HE'">
       <table>
-        <tr *ngFor="let smid of this.rangeValue; let i=index;">
-          <td>
+        <tr *ngFor="let smid of this.tissue.HESMId; let i=index;">
+          <td *ngIf="!smid.deleted">
             <mat-form-field [ngClass]="{'Input': true}">
               <input matInput [disabled]="!editable" id="HE{{i}}"
-                     (blur)="currentField(null)"  [(ngModel)]="this.tissue.HESMId[i]"
-                     (change)="changeSmId($event, this.tissue.HESMId, i)"
-                     [value]="getValue(this.tissue.HESMId[i])" (keydown.enter)="goNext('HE', i)">
+                     (blur)="currentField(null)"  [(ngModel)]="this.tissue.HESMId[i].smIdValue"
+                     (change)="changeSmId($event, 'smIdValue', smid.smIdId, 'he', this.tissue.HESMId, i)"
+                     [value]="smid.smIdValue" (keydown.enter)="goNext('HE', i)">
             </mat-form-field>
+          </td>
+          <td *ngIf="!smid.deleted">
+            <button mat-mini-fab color="warn" [disabled]="!editable"
+                    (click)="deleteSMID(this.tissue.HESMId, i)">
+              <i class="fas fa-trash-alt fa-sm"></i>
+            </button>
           </td>
         </tr>
       </table>
     </ng-container>
     <ng-container *ngIf="this.currentSMIDField==='USS'">
       <table>
-        <tr *ngFor="let i of this.rangeValue;">
-          <td>
+        <tr *ngFor="let smid of this.tissue.ussSMId; let i=index;">
+          <td *ngIf="!smid.deleted">
             <mat-form-field [ngClass]="{'Input': true}">
               <input matInput [disabled]="!editable" id="USS{{i}}"
-                     (blur)="currentField(null)" (change)="changeSmId($event, this.tissue.ussSMId, i)"
-                     [(ngModel)]="this.tissue.ussSMId[i]"
-                     [value]="getValue(this.tissue.ussSMId[i])" (keydown.enter)="goNext('USS', i)">
+                     (blur)="currentField(null)" (change)="changeSmId($event, 'smIdValue', smid.smIdId,  'uss', this.tissue.ussSMId, i)"
+                     [(ngModel)]="this.tissue.ussSMId[i].smIdValue"
+                     [value]="smid.smIdValue" (keydown.enter)="goNext('USS', i)">
 
             </mat-form-field>
+          </td>
+          <td  *ngIf="!smid.deleted">
+            <button mat-mini-fab color="warn" [disabled]="!editable"
+                    (click)="deleteSMID(this.tissue.ussSMId, i)">
+              <i class="fas fa-trash-alt fa-sm"></i>
+            </button>
           </td>
         </tr>
       </table>
     </ng-container>
     <ng-container *ngIf="this.currentSMIDField==='scrolls'">
       <table>
-        <tr *ngFor="let i of this.rangeValue;">
-          <td>
+        <tr *ngFor="let smid of this.tissue.scrollSMId; let i=index;">
+          <td  *ngIf="!smid.deleted">
             <mat-form-field [ngClass]="{'Input': true}" id="scrolls{{i}}">
               <input matInput [disabled]="!editable"
-                     (blur)="currentField(null)" [(ngModel)]="this.tissue.scrollSMId[i]"
-                     (change)="changeSmId($event, this.tissue.scrollSMId, i)"
-                     [value]="getValue(this.tissue.scrollSMId[i])" (keydown.enter)="goNext('scrolls', i)">
+                     (blur)="currentField(null)" [(ngModel)]="this.tissue.scrollSMId[i].smIdValue"
+                     (change)="changeSmId($event, 'smIdValue', smid.smIdId, 'scrolls', this.tissue.scrollSMId, i)"
+                     [value]="smid.smIdValue" (keydown.enter)="goNext('scrolls', i)">
             </mat-form-field>
           </td>
+          <td  *ngIf="!smid.deleted">
+            <button mat-mini-fab color="warn" [disabled]="!editable"
+                    (click)="deleteSMID(this.tissue.scrollSMId, i)">
+              <i class="fas fa-trash-alt fa-sm"></i>
+            </button>
+          </td>
+
         </tr>
       </table>
     </ng-container>
+    <ng-container>
+      <button mat-mini-fab color="primary"
+              (click)="addSMId(this.currentSMIDField)">
+        <i class="fas fa-plus fa-lg"></i>
+      </button>
+    </ng-container>
   </div>
   <div class="app-modal-footer">
-    <button type="button" class="btn btn-default"
-            (click)="saveSMId(); SMIDModal.hide()">Submit SM IDs
-    </button>
+<!--    <button type="button" class="btn btn-default"-->
+<!--            (click)="saveSMId(); SMIDModal.hide()">Submit SM IDs-->
+<!--    </button>-->
     <button type="button" class="btn btn-default"
             (click)="exitModal()">cancel
     </button>

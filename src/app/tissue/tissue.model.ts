@@ -1,4 +1,4 @@
-import {newArray} from "@angular/compiler/src/util";
+import {TissueSmId} from "./sm-id.model";
 
 export class Tissue {
 
@@ -11,7 +11,7 @@ export class Tissue {
               public additionalValues: {}, public expectedReturn: string, public tissueReturnDate: string,
               public returnFedexId: string, public shlWorkNumber: string, public sequenceResults: string, public tumorPercentage: string,
               public scrollsCount: number, public ussCount: number, public blocksCount: number, public hECount: number,
-              public scrollSMId: string[], public ussSMId: string[], public HESMId: string[]) {
+              public scrollSMId: TissueSmId[], public ussSMId: TissueSmId[], public HESMId: TissueSmId[]) {
     this.tissueId = tissueId;
     this.oncHistoryDetailId = oncHistoryDetailId;
     this.tNotes = tNotes;
@@ -51,14 +51,12 @@ export class Tissue {
       jsonData = "{" + jsonData.substring(1, jsonData.length - 1) + "}";
       additionalValues = JSON.parse(jsonData);
     }
-
+    console.log(json);
     return new Tissue(json.tissueId, json.oncHistoryDetailId, json.tNotes, json.countReceived, json.tissueType,
       json.tissueSite, json.tumorType, json.hE, json.pathologyReport, json.collaboratorSampleId, json.blockSent,
       json.scrollsReceived, json.skId, json.smId, json.sentGp, json.firstSmId, additionalValues, json.expectedReturn,
       json.tissueReturnDate, json.returnFedexId, json.shlWorkNumber, json.sequenceResults, json.tumorPercentage,
       json.scrollsCount, json.ussCount, json.blocksCount, json.hECount,
-      json.scrollSMId === undefined ? newArray(json.scrollsCount) : json.scrollSMId,
-      json.ussSMId === undefined ? newArray(json.ussCount) : json.ussSMId,
-      json.HESMId === undefined ? newArray(json.hECount) : json.HESMId);
+      TissueSmId.parseArray(json.scrollSMID), TissueSmId.parseArray(json.ussSMID), TissueSmId.parseArray(json.heSMID));
   }
 }
