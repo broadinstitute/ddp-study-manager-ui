@@ -156,7 +156,6 @@ export class TissueComponent implements OnInit {
         }, null, parentName, parentId, tAlias, null,
         localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.participant.participant.ddpParticipantId );
       let patch = patch1.getPatch();
-      console.log( patch );
       this.patchFinished = false;
       this.currentPatchField = parameterName;
       this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
