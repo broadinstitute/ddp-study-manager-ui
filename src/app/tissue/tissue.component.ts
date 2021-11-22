@@ -181,7 +181,6 @@ export class TissueComponent implements OnInit {
           }
           else if (result.code === 200) {
             if (result.body != null && result.body !== "") {
-
               let jsonData: any | any[] = JSON.parse( result.body );
               if (tAlias === "sm") {
                 if (!smId && jsonData.smId) {
@@ -285,7 +284,7 @@ export class TissueComponent implements OnInit {
       value = event.value;
     }
     if (!id) {
-      smIdArray[ index ].smIdId = this.valueChanged( type, "smIdType", "tissueId", this.tissue.tissueId, Statics.SM_ID_ALIAS, id, value, parameterName );
+      smIdArray[ index ].smIdPk = this.valueChanged( type, "smIdType", "tissueId", this.tissue.tissueId, Statics.SM_ID_ALIAS, id, value, parameterName );
     }
     else {
       this.valueChanged( value, parameterName, "tissueId", this.tissue.tissueId, Statics.SM_ID_ALIAS, id );
@@ -327,6 +326,8 @@ export class TissueComponent implements OnInit {
   }
 
   smIdCountMatch( array: any[], num: number ) {
+    if(!array)
+      return num == 0;
     return array.length == num;
   }
 
@@ -347,7 +348,7 @@ export class TissueComponent implements OnInit {
 //  }
   deleteSMID( array: TissueSmId[], i: number ) {
     array[ i ].deleted = true;
-    this.changeSmId(`1`, 'deleted', array[i].smIdId, array[i].smIdType, array, i);
+    this.changeSmId(`1`, 'deleted', array[i].smIdPk, array[i].smIdType, array, i);
     array.splice(i, 1);
   }
 }
