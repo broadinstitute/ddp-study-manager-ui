@@ -390,8 +390,9 @@
           <td *ngIf="!smid.deleted">
             <mat-form-field [ngClass]="{'Input': true}">
               <input matInput [disabled]="!editable" id="HE{{i}}"
+                     [ngClass]="{'Color--Field--Patched': isPatchedCurrently('SMIDHE'+i)}"
                      (blur)="currentField(null)"  [(ngModel)]="this.tissue.HESMId[i].smIdValue"
-                     (change)="changeSmId($event, 'smIdValue', smid.smIdPk, 'he', this.tissue.HESMId, i)"
+                     (change)="changeSmId($event, 'smIdValue', smid.smIdPk, 'he', this.tissue.HESMId, i, 'SMIDHE'+i)"
                      (focus)="currentField('SMIDHE'+i)"
                      [value]="smid.smIdValue" (keydown.enter)="goNext('HE', i)">
               <mat-hint class="ErrorMessageForm" *ngIf="currentPatchField === 'SMIDHE'+i && dup">Value already exists!
@@ -413,7 +414,8 @@
           <td *ngIf="!smid.deleted">
             <mat-form-field [ngClass]="{'Input': true}">
               <input matInput [disabled]="!editable" id="USS{{i}}"
-                     (blur)="currentField(null)" (change)="changeSmId($event, 'smIdValue', smid.smIdPk,  'uss', this.tissue.ussSMId, i)"
+                     [ngClass]="{'Color--Field--Patched': isPatchedCurrently('SMIDUSS'+i)}"
+                     (blur)="currentField(null)" (change)="changeSmId($event, 'smIdValue', smid.smIdPk,  'uss', this.tissue.ussSMId, i, 'SMIDUSS'+i)"
                      [(ngModel)]="this.tissue.ussSMId[i].smIdValue"
                      (focus)="currentField('SMIDUSS'+i)"
                      [value]="smid.smIdValue" (keydown.enter)="goNext('USS', i)">
@@ -436,9 +438,10 @@
           <td  *ngIf="!smid.deleted">
             <mat-form-field [ngClass]="{'Input': true}" id="scrolls{{i}}">
               <input matInput [disabled]="!editable"
+                     [ngClass]="{'Color--Field--Patched': isPatchedCurrently('SMIDScrolls'+i)}"
                      (blur)="currentField(null)" [(ngModel)]="this.tissue.scrollSMId[i].smIdValue"
                      (focus)="currentField('SMIDScrolls'+i)"
-                     (change)="changeSmId($event, 'smIdValue', smid.smIdPk, 'scrolls', this.tissue.scrollSMId, i)"
+                     (change)="changeSmId($event, 'smIdValue', smid.smIdPk, 'scrolls', this.tissue.scrollSMId, i, 'SMIDScrolls'+i )"
                      [value]="smid.smIdValue" (keydown.enter)="goNext('scrolls', i)">
               <mat-hint class="ErrorMessageForm" *ngIf="currentPatchField === 'SMIDScrolls'+i && dup">Value already exists!
               </mat-hint>

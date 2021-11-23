@@ -51,7 +51,6 @@ export class Tissue {
       jsonData = "{" + jsonData.substring(1, jsonData.length - 1) + "}";
       additionalValues = JSON.parse(jsonData);
     }
-    console.log(json);
     return new Tissue(json.tissueId, json.oncHistoryDetailId, json.tNotes, json.countReceived, json.tissueType,
       json.tissueSite, json.tumorType, json.hE, json.pathologyReport, json.collaboratorSampleId, json.blockSent,
       json.scrollsReceived, json.skId, json.smId, json.sentGp, json.firstSmId, additionalValues, json.expectedReturn,
