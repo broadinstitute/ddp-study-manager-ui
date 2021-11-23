@@ -11,7 +11,7 @@ export class AbstractionField {
 
   constructor( public medicalRecordAbstractionFieldId: number, public displayName: string, public type: string, public helpText: string, public orderNumber: number,
                public possibleValues: Value[], public additionalType: string, public hide: boolean,
-               public fieldValue: AbstractionFieldValue, public qcWrapper: QCWrapper ) { //last line are value fields!
+               public fieldValue: AbstractionFieldValue, public qcWrapper: QCWrapper, public fileInfo: boolean ) { //last line are value fields!
     this.medicalRecordAbstractionFieldId = medicalRecordAbstractionFieldId;
     this.displayName = displayName;
     this.helpText = helpText;
@@ -21,6 +21,7 @@ export class AbstractionField {
     this.additionalType = additionalType;
     this.fieldValue = fieldValue;
     this.qcWrapper = qcWrapper;
+    this.fileInfo = fileInfo;
   }
 
   static parse( json ): AbstractionField {
@@ -33,7 +34,7 @@ export class AbstractionField {
       let fieldValue: AbstractionFieldValue = new AbstractionFieldValue( null, null, "", 0, "", "", false, false, null, "", null );
       wrapper = new QCWrapper( fieldValue, fieldValue, false, false );
     }
-    return new AbstractionField( json.medicalRecordAbstractionFieldId, json.displayName, json.type, json.helpText, json.orderNumber, json.possibleValues, json.additionalType, json.hide, fValue, wrapper );
+    return new AbstractionField( json.medicalRecordAbstractionFieldId, json.displayName, json.type, json.helpText, json.orderNumber, json.possibleValues, json.additionalType, json.hide, fValue, wrapper, json.fileInfo );
   }
 
   static removeUnchangedSetting( array: Array<AbstractionField> ): Array<AbstractionField> {
