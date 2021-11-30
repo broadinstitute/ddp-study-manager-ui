@@ -340,12 +340,18 @@ export class TissueComponent implements OnInit {
 
   addSMId( name ) {
     if (name === this.uss) {
+      if(!this.tissue.ussSMId)
+        this.tissue.ussSMId = new Array();
       this.tissue.ussSMId.push( new TissueSmId( null, this.uss, null, this.tissue.tissueId, false ) );
     }
     else if (name === this.scrolls) {
+      if(!this.tissue.scrollSMId)
+        this.tissue.scrollSMId = new Array();
       this.tissue.scrollSMId.push( new TissueSmId( null, this.scrolls, null, this.tissue.tissueId, false ) );
     }
     else if (name === this.he) {
+      if(!this.tissue.HESMId)
+        this.tissue.HESMId = new Array();
       this.tissue.HESMId.push( new TissueSmId( null, this.he, null, this.tissue.tissueId, false ) );
     }
   }

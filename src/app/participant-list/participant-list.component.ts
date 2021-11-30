@@ -306,7 +306,12 @@ export class ParticipantListComponent implements OnInit {
                   this.sourceColumns[ "p" ] = [];
                 }
                 this.sourceColumns[ "p" ].push( filter );
-              } else {
+              } else if (key === "sm") {
+                if (this.sourceColumns[ "t" ] == null || this.sourceColumns[ "t" ] == undefined) {
+                  this.sourceColumns[ "t" ] = [];
+                }
+                this.sourceColumns[ "t" ].push( filter );
+              }else {
                 if (this.sourceColumns[ fieldSetting.fieldType ] == null || this.sourceColumns[ fieldSetting.fieldType ] == undefined) {
                   this.sourceColumns[ fieldSetting.fieldType ] = [];
                 }
@@ -660,6 +665,8 @@ export class ParticipantListComponent implements OnInit {
         this.sourceColumns[ "p" ].push( filter );
       } else if (filter.participantColumn.tableAlias === "inst") {
         this.sourceColumns[ "m" ].push( filter );
+      }  else if (filter.participantColumn.tableAlias === "sm") {
+      this.sourceColumns[ "t" ].push( filter );
       } else if (this.sourceColumns[ filter.participantColumn.tableAlias ] != null && this.sourceColumns[ filter.participantColumn.tableAlias ] != undefined) {
         //TODO - can be changed to add all after all DDPs are migrated
         if (this.hasESData) {
@@ -793,7 +800,10 @@ export class ParticipantListComponent implements OnInit {
                 t = "p";
               } else if (t === "inst") {
                 t = "m";
-              } else if (t === 'participantData') {
+              } else if (t === "sm") {
+              t = "t";
+              }
+              else if (t === 'participantData') {
                 t = filter.participantColumn.object;
               }
               for (let f of this.sourceColumns[t]) {
@@ -839,6 +849,7 @@ export class ParticipantListComponent implements OnInit {
             this.filterQuery = viewFilter.queryItems.replace(",", "");
             // this.selectedColumns = viewFilter.columns;
             let c = {};
+            console.log(viewFilter.columns);
             for (let key of Object.keys(viewFilter.columns)) {
               c[key] = [];
               for (let column of viewFilter.columns[key]) {
@@ -1175,6 +1186,7 @@ export class ParticipantListComponent implements OnInit {
       this.jsonPatch = jsonPatch;
       this.filtered = true;
       this.loadingParticipants = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
+
       this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), jsonPatch, this.parent, null ).subscribe(
         data => {
           if (data != undefined && data != null && data !== "") {
@@ -1352,7 +1364,8 @@ export class ParticipantListComponent implements OnInit {
     this.dataSources.forEach( ( value: string, key: string ) => {
       if (this.selectedColumns != null && this.selectedColumns[ key ] != null) {
         for (let col of this.selectedColumns[ key ]) {
-          columns.push( col.participantColumn.tableAlias + "." + col.participantColumn.name );
+          let name = col.participantColumn.name;
+          columns.push( col.participantColumn.tableAlias + "." + name );
         }
       }
     } );
@@ -1957,7 +1970,10 @@ export class ParticipantListComponent implements OnInit {
 
   hasThisColumnSelected( selectedColumnArray: Array<Filter>, oncColumn: Filter ): boolean {
     let f = selectedColumnArray.find( f => {
-      return f.participantColumn.tableAlias === oncColumn.participantColumn.tableAlias && f.participantColumn.name === oncColumn.participantColumn.name;
+        return f.participantColumn.tableAlias === oncColumn.participantColumn.tableAlias && f.participantColumn.name === oncColumn.participantColumn.name &&
+          (oncColumn.filter2 === undefined || oncColumn.filter2.value === undefined || oncColumn.filter2.value === f.filter2.value);
+
+
     } );
     return f !== undefined;
   }
