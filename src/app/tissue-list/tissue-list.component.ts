@@ -272,9 +272,17 @@ export class TissueListComponent implements OnInit {
                   }
                 }
                 else if (filter.participantColumn.tableAlias !== "data") {
-                  this.allColumns[ key ].push( filter );
-                  let t = filter.participantColumn.object !== null && filter.participantColumn.object !== undefined ? filter.participantColumn.object : filter.participantColumn.tableAlias;
-                  this.allFieldNames.add( t + Statics.DELIMITER_ALIAS + filter.participantColumn.name );
+                  if (filter.participantColumn.tableAlias === "sm") {
+                    if (this.allColumns[ "t" ] == null || this.allColumns[ "t" ] == undefined) {
+                      this.allColumns[ "t" ] = [];
+                    }
+                    this.allColumns[ "t" ].push( filter );
+                  }
+                  else {
+                    this.allColumns[ key ].push( filter );
+                  }
+                    let t = filter.participantColumn.object !== null && filter.participantColumn.object !== undefined ? filter.participantColumn.object : filter.participantColumn.tableAlias;
+                    this.allFieldNames.add( t + Statics.DELIMITER_ALIAS + filter.participantColumn.name );
                 }
               }
             }
