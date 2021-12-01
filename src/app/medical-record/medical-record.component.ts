@@ -132,7 +132,7 @@ export class MedicalRecordComponent implements OnInit {
 
   valueChanged( value: any, parameterName: string ) {
     let v;
-    if (parameterName === "additionalValues") {
+    if (parameterName === "additionalValuesJson") {
       v = JSON.stringify( value );
     }
     else if (typeof value === "string") {
@@ -466,7 +466,7 @@ export class MedicalRecordComponent implements OnInit {
         addArray[ colName ] = v;
         this.medicalRecord.additionalValues = addArray;
       }
-      this.valueChanged( this.medicalRecord.additionalValues, "additionalValues" );
+      this.valueChanged( this.medicalRecord.additionalValues, "additionalValuesJson" );
     }
   }
 
