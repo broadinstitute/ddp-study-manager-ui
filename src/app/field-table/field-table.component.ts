@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from "@angular/core";
+import {AbstractionField, AbstractionFieldValue} from "../medical-record-abstraction/medical-record-abstraction-field.model";
 import {ModalComponent} from "../modal/modal.component";
 import {Value} from "../utils/value.model";
 
@@ -9,7 +10,7 @@ import {Value} from "../utils/value.model";
 } )
 export class FieldTableComponent implements OnInit, OnChanges {
 
-  @ViewChild(ModalComponent)
+  @ViewChild( ModalComponent )
   public universalModal: ModalComponent;
 
   @Input() possibleValues: Value[];
@@ -19,7 +20,12 @@ export class FieldTableComponent implements OnInit, OnChanges {
   @Input() drugs: string[];
   @Input() cancers: string[];
   @Input() finished: boolean;
+  @Input() field: AbstractionField;
+  @Input() viewValue: AbstractionFieldValue;
+  @Input() hideDoubleCheck: boolean = false;
   @Output() changes = new EventEmitter();
+  @Output() noDataValueChanges = new EventEmitter();
+  @Output() doubleCheckValueChanges = new EventEmitter();
 
   multiTypes = [];
   nope: boolean = false;
@@ -89,18 +95,17 @@ export class FieldTableComponent implements OnInit, OnChanges {
         }
       }
     }
-    else {
-      if (change == null) {
-        if (this.multiTypes instanceof Array) {
-          this.multiTypes.splice( index, 1 );
-        }
+    else {if (change == null) {
+      if (this.multiTypes instanceof Array) {
+        this.multiTypes.splice( index, 1 );
       }
-      else if (typeof change === "string") {
-        if (typeof this.multiTypes === "string") {
-          this.multiTypes = [];
-        }
-        this.multiTypes[ index ] = JSON.parse( change );
+    }
+    else if (typeof change === "string") {
+      if (typeof this.multiTypes === "string") {
+        this.multiTypes = [];
       }
+      this.multiTypes[ index ] = JSON.parse( change );
+    }
       if (this.multiTypes instanceof Array && this.multiTypes.length < 1) {
         this.changes.emit( "" );
       }
@@ -122,8 +127,14 @@ export class FieldTableComponent implements OnInit, OnChanges {
       } );
       this.multiTypes.push( multiType );
     }
+    let newOther = {};
+    if (this.possibleValues != null) {
+      this.possibleValues.forEach( value => {
+        newOther[ value.value ] = null;
+      } );
+    }
+    this._other.push(newOther);
   }
-
   changeToNothing() {
     this.jsonArray = this.nope ? "no" : "";
     this.changes.emit( this.jsonArray );
@@ -196,6 +207,14 @@ export class FieldTableComponent implements OnInit, OnChanges {
         }
         this._other[ i ][ value.value ] = val;
       } );
+    }
+  }
+
+  private abstractionValueChanged( value: any, fieldName: string ) {
+    if(fieldName === 'noData'){
+      this.noDataValueChanges.emit(value);
+    } else if (fieldName=== 'doubleCheck'){
+      this.doubleCheckValueChanges.emit(value);
     }
   }
 }
