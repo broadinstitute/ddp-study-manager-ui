@@ -81,6 +81,7 @@ export class TissueListComponent implements OnInit {
     "data": "Participant",
     "oD": "Onc History",
     "t": "Tissue",
+    "sm": "sm id"
   };
 
   selectedFilterName = "";
@@ -256,7 +257,11 @@ export class TissueListComponent implements OnInit {
             if (filter.participantColumn.tableAlias === key) {
               //TODO - can be changed to add all after all DDPs are migrated
               if (this.hasESData) {
-                this.allColumns[ key ].push( filter );
+                if (filter.participantColumn.tableAlias === "sm") {
+                  this.allColumns[ "t" ].push( filter );
+                }else{
+                  this.allColumns[ key ].push( filter );
+                }
                 if (filter.participantColumn.tableAlias !== "data") {
                   let t = filter.participantColumn.object !== null && filter.participantColumn.object !== undefined ? filter.participantColumn.object : filter.participantColumn.tableAlias;
                   this.allFieldNames.add( t + Statics.DELIMITER_ALIAS + filter.participantColumn.name );
@@ -273,9 +278,6 @@ export class TissueListComponent implements OnInit {
                 }
                 else if (filter.participantColumn.tableAlias !== "data") {
                   if (filter.participantColumn.tableAlias === "sm") {
-                    if (this.allColumns[ "t" ] == null || this.allColumns[ "t" ] == undefined) {
-                      this.allColumns[ "t" ] = [];
-                    }
                     this.allColumns[ "t" ].push( filter );
                   }
                   else {
@@ -381,7 +383,6 @@ export class TissueListComponent implements OnInit {
           this.tissueListOncHistories = [];
           jsonData = data;
           this.tissueListWrappers = this.parseTissueListWrapperData( jsonData );
-          console.log( this.tissueListWrappers );
           this.originalTissueListWrappers = this.tissueListWrappers;
 
           if (this.defaultFilter != null && this.defaultFilter.filters != null) {
@@ -504,12 +505,10 @@ export class TissueListComponent implements OnInit {
       this.selectedColumns[ parent ] = [];
     }
     if (this.hasThisColumnSelected( this.selectedColumns[ parent ], column )) {
-      console.log( this.selectedColumns[ parent ] );
       let f = this.selectedColumns[ parent ].find( f => {
         return f.participantColumn.tableAlias === column.participantColumn.tableAlias && f.participantColumn.name === column.participantColumn.name;
       } );
       let index = this.selectedColumns[ parent ].indexOf( f );
-      console.log( index );
       this.selectedColumns[ parent ].splice( index, 1 );
     }
     else {
@@ -807,7 +806,6 @@ export class TissueListComponent implements OnInit {
         }
       }
     }
-    console.log(savedFilter);
     let filters: Filter[];
     this.dsmService.applyFilter( savedFilter, this.realm, this.parent, null ).subscribe(
       data => {
@@ -1514,6 +1512,9 @@ export class TissueListComponent implements OnInit {
       }
       else if (t === "inst") {
         t = "m";
+      }
+      else if (t === "sm") {
+        t = "t";
       }
       for (let f of this.allColumns[ t ]) {
         if (f.participantColumn.name === filter.participantColumn.name) {

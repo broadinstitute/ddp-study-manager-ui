@@ -543,8 +543,9 @@ export class Filter {
     return this;
   }
 
-  public static getFilterText( filter: Filter, parent: string ): {} {
+  public static getFilterText( filter: Filter, p: string ): {} {
     let filterText = {};
+    let parent = filter.participantColumn.tableAlias ? filter.participantColumn.tableAlias : p;
     if (filter.type === Filter.TEXT_TYPE || filter.type === Filter.NUMBER_TYPE || filter.type === Filter.DATE_TYPE || filter.type === Filter.EPOCH_DATE_TYPE
       || filter.type === Filter.COMPOSITE_TYPE || filter.type === Filter.SHORT_DATE_TYPE) {
       if (( filter.value1 !== null && filter.value1 !== undefined && filter.value1 != "" ) ||
@@ -686,7 +687,6 @@ export class Filter {
       filter2, this.range, this.exactMatch, filter1,
       selectedOptions, this.value1 == null ? null : ( " " + this.value1 ).slice( 1 ), this.value2 == null ? null : ( " " + this.value2 ).slice( 1 ), this.sortAsc, this.empty, this.notEmpty, this.singleOption,
       this.additionalType, this.parentName );
-
     return f;
   }
 
