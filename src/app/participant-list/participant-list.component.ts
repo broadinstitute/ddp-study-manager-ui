@@ -1688,7 +1688,7 @@ export class ParticipantListComponent implements OnInit {
           }
           if (this.assignTissue) {
             if (this.assignee.assigneeId === "-1") {
-              pt.participant.assigneeMr = null;
+              pt.participant.assigneeTissue = null;
             } else {
               pt.participant.assigneeTissue = this.assignee.name;
             }
