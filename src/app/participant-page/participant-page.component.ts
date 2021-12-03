@@ -418,7 +418,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   valueChanged( value: any, parameterName: string, tableAlias: string ) {
     let v;
-    if (parameterName === "additionalValues") {
+    if (parameterName === "additionalValuesJson") {
       v = JSON.stringify( value );
     } else if (typeof value === "string") {
       this.participant.participant[ parameterName ] = value;
@@ -1041,8 +1041,8 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
       }
     }
     if (v !== null) {
-      if (this.participant.participant != null && this.participant.participant.additionalValues != null) {
-        this.participant.participant.additionalValues[ colName ] = v;
+      if (this.participant.participant != null && this.participant.participant.additionalValuesJson != null) {
+        this.participant.participant.additionalValuesJson[ colName ] = v;
       } else {
         let participantId = this.participant.data.profile[ "guid" ];
         if (this.participant.data.profile[ "legacyAltPid" ] != null && this.participant.data.profile[ "legacyAltPid" ] != undefined && this.participant.data.profile[ "legacyAltPid" ] !== '') {
@@ -1053,17 +1053,17 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
           false, false, false, false, 0, null);
         let addArray = {};
         addArray[ colName ] = v;
-        this.participant.participant.additionalValues = addArray;
+        this.participant.participant.additionalValuesJson = addArray;
       }
-      this.valueChanged( this.participant.participant.additionalValues, "additionalValues", "r" );
+      this.valueChanged( this.participant.participant.additionalValuesJson, "additionalValuesJson", "r" );
     }
   }
 
   //display additional value
   getAdditionalValue( colName: string ): string {
-    if (this.participant.participant != null && this.participant.participant.additionalValues != null) {
-      if (this.participant.participant.additionalValues[ colName ] != undefined && this.participant.participant.additionalValues[ colName ] != null) {
-        return this.participant.participant.additionalValues[ colName ];
+    if (this.participant.participant != null && this.participant.participant.additionalValuesJson != null) {
+      if (this.participant.participant.additionalValuesJson[ colName ] != undefined && this.participant.participant.additionalValuesJson[ colName ] != null) {
+        return this.participant.participant.additionalValuesJson[ colName ];
       }
     }
     return "";
