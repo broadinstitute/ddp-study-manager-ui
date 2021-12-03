@@ -2,7 +2,7 @@ export class ParticipantDSMInformation {
 
   constructor( public participantId: string, public ddpParticipantId: string, public realm: string,
                public assigneeMr: string, public assigneeTissue: string, public createdOncHistory: string, public reviewedOncHistory: string,
-               public paperCRSent: string, public paperCRReceived: string, public ptNotes: string, public minimalMR: boolean, public abstractionReady: boolean,
+               public paperCRSent: string, public paperCRReceived: string, public ptNotes: string, public minimalMr: boolean, public abstractionReady: boolean,
                public mrNeedsAttention: boolean, public tissueNeedsAttention: boolean, public exitDate: number, public additionalValues: {} ) {
     this.participantId = participantId;
     this.ddpParticipantId = ddpParticipantId;
@@ -14,7 +14,7 @@ export class ParticipantDSMInformation {
     this.paperCRSent = paperCRSent;
     this.paperCRReceived = paperCRReceived;
     this.ptNotes = ptNotes;
-    this.minimalMR = minimalMR;
+    this.minimalMr = minimalMr;
     this.abstractionReady = abstractionReady;
     this.mrNeedsAttention = mrNeedsAttention;
     this.tissueNeedsAttention = tissueNeedsAttention;

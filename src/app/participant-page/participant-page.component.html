@@ -423,9 +423,9 @@ participant.data.dsm['diagnosisYear'] != null">
             </td>
             <td>
               <md-checkbox color="primary" [disabled]="participantExited"
-                           [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('minimalMR')}"
-                           [(ngModel)]="participant.participant.minimalMR"
-                           (change)="valueChanged($event, 'minimalMR', 'r')"
+                           [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('minimalMr')}"
+                           [(ngModel)]="participant.participant.minimalMr"
+                           (change)="valueChanged($event, 'minimalMr', 'r')"
                            disableRipple>
               </md-checkbox>
             </td>
