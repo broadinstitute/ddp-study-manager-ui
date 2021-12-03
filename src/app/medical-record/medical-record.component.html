@@ -265,11 +265,11 @@
             <tr *ngIf="medicalRecord.unableObtain">
               <td colspan="2">
                 <textarea
-                  [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('mrUnableToObtainText')}"
+                  [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('unableObtainText')}"
                   maxlength="1000" [disabled]="participantExited"
-                  [(ngModel)]="medicalRecord.mrUnableToObtainText"
-                  (change)="valueChanged($event, 'mrUnableToObtainText')"
-                  (blur)="currentField(null)" (focus)="currentField('mrUnableToObtainText')"></textarea>
+                  [(ngModel)]="medicalRecord.unableObtainText"
+                  (change)="valueChanged($event, 'unableObtainText')"
+                  (blur)="currentField(null)" (focus)="currentField('unableObtainText')"></textarea>
               </td>
             </tr>
             <tr>

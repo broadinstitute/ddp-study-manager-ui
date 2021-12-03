@@ -28,7 +28,7 @@ export class MedicalRecord {
               public mrNotes?: string, public reviewMedicalRecord?: boolean, public type?: string, public nameDDP?: string,
               public institutionDDP?: string, public streetAddressDDP?: string, public cityDDP?: string, public stateDDP?: string,
               public isDeleted?: boolean, public oncHistoryDetail?: Array<OncHistoryDetail>, public followUps?: FollowUp[], public followUpRequired?: boolean,
-              public followUpRequiredText?: string, public additionalValues?: {}, public mrUnableToObtainText?: string) {
+              public followUpRequiredText?: string, public additionalValues?: {}, public unableObtainText?: string) {
     this.medicalRecordId = medicalRecordId;
     this.participantId = participantId;
     this.institutionId = institutionId;
@@ -76,7 +76,7 @@ export class MedicalRecord {
     this.followUpRequiredText = followUpRequiredText;
     this.additionalValues = additionalValues;
 
-    this.mrUnableToObtainText = mrUnableToObtainText;
+    this.unableObtainText = unableObtainText;
   }
 
   get mrStatus(): string {
