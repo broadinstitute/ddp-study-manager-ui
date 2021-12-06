@@ -3,14 +3,14 @@ import {Injectable} from "@angular/core";
 import {FormControl} from "@angular/forms";
 import {ErrorStateMatcher} from "@angular/material/core";
 import {AbstractionGroup} from "../abstraction-group/abstraction-group.model";
-import { ActivityData } from "../activity-data/activity-data.model";
+import {ActivityData} from "../activity-data/activity-data.model";
 import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
 import {Group} from "../activity-data/models/group.model";
 import {OptionDetail} from "../activity-data/models/option-detail.model";
 import {Option} from "../activity-data/models/option.model";
 import {QuestionAnswer} from "../activity-data/models/question-answer.model";
 import {QuestionDefinition} from "../activity-data/models/question-definition.model";
-import { FieldSettings } from "../field-settings/field-settings.model";
+import {FieldSettings} from "../field-settings/field-settings.model";
 import {Filter} from "../filter-column/filter-column.model";
 import {AbstractionField} from "../medical-record-abstraction/medical-record-abstraction-field.model";
 import {Participant} from "../participant-list/participant-list.model";
@@ -163,14 +163,14 @@ export class Utils {
       let text = "";
       questionDefinition.groups.find( g => {
         if (g.options) {
-          let option = g.options.find(o => o.optionStableId === stableId);
+          let option = g.options.find( o => o.optionStableId === stableId );
           if (option) {
             text = option.optionText;
             return true;
           }
         }
         return false;
-      });
+      } );
       return text;
     }
     return "";
@@ -293,17 +293,18 @@ export class Utils {
 
         for (let i = 0; i < output.length; i++) {
           if (input.length === output.length) {
-            temp.push(input[i] + output[i]);
-          } else {
+            temp.push( input[ i ] + output[ i ] );
+          }
+          else {
             for (let j = 0; j < input.length; j++) {
-              temp.push(input[j] + output[i]);
+              temp.push( input[ j ] + output[ i ] );
             }
           }
         }
 
         if (output.length > 1) {
-          let resultOutputSplitted = Utils.fillEmptyValuesFromCorrespondingOutputArray(output);
-          nonDefaultFieldsResultArray = Utils.mergeDefaultColumnsWithNonDefaultColumns(temp, resultOutputSplitted);
+          let resultOutputSplitted = Utils.fillEmptyValuesFromCorrespondingOutputArray( output );
+          nonDefaultFieldsResultArray = Utils.mergeDefaultColumnsWithNonDefaultColumns( temp, resultOutputSplitted );
         }
 
         // for (let o of output) {
@@ -326,23 +327,23 @@ export class Utils {
   }
 
 
-  private static fillEmptyValuesFromCorrespondingOutputArray(output: string[]) {
-    var resultOutputSplitted = output[0].split(this.COMMA);
-    output.slice(1, output.length).forEach(outputArray => {
-      let tempOutputArray = outputArray.split(this.COMMA);
+  private static fillEmptyValuesFromCorrespondingOutputArray( output: string[] ) {
+    var resultOutputSplitted = output[ 0 ].split( this.COMMA );
+    output.slice( 1, output.length ).forEach( outputArray => {
+      let tempOutputArray = outputArray.split( this.COMMA );
       for (let j = 0; j < tempOutputArray.length; j++) {
-        if (resultOutputSplitted[j] === this.EMPTY_STRING_CSV) {
-          resultOutputSplitted[j] = tempOutputArray[j];
+        if (resultOutputSplitted[ j ] === this.EMPTY_STRING_CSV) {
+          resultOutputSplitted[ j ] = tempOutputArray[ j ];
         }
       }
-    });
+    } );
     return resultOutputSplitted;
   }
 
-  private static mergeDefaultColumnsWithNonDefaultColumns(temp: any[], resultOutputSplitted: string[]) {
-    var tempSplitted: string[] = temp[0].split(this.COMMA);
-    var defaultFields: string[] = tempSplitted.slice(0, tempSplitted.length - resultOutputSplitted.length);
-    return [defaultFields.concat(resultOutputSplitted).join(this.COMMA)];
+  private static mergeDefaultColumnsWithNonDefaultColumns( temp: any[], resultOutputSplitted: string[] ) {
+    var tempSplitted: string[] = temp[ 0 ].split( this.COMMA );
+    var defaultFields: string[] = tempSplitted.slice( 0, tempSplitted.length - resultOutputSplitted.length );
+    return [ defaultFields.concat( resultOutputSplitted ).join( this.COMMA ) ];
   }
 
   public static makeCSVForObjectArray( data: Object, paths: any[], columns: {}, index: number ): string[] {
@@ -450,13 +451,15 @@ export class Utils {
             let value = o[ col.participantColumn.name ];
             if (col.participantColumn.object != null && o[ col.participantColumn.object ] != null) {
               value = o[ col.participantColumn.object ][ col.participantColumn.name ];
-            } else if (o['data'] && o['data'][col.participantColumn.name]) {
-              value = o['data'][col.participantColumn.name];
+            }
+            else if (o[ 'data' ] && o[ 'data' ][ col.participantColumn.name ]) {
+              value = o[ 'data' ][ col.participantColumn.name ];
             }
             if (col.type === Filter.DATE_TYPE) {
               if (!value) {
                 value = "";
-              } else {
+              }
+              else {
                 value = this.getDateFormatted( new Date( value ), Utils.DATE_STRING_IN_CVS );
               }
             }
@@ -471,26 +474,34 @@ export class Utils {
           let value = "";
           if (data != null) {
             //check for survey data
-            let activityData = this.getSurveyData( data, col.participantColumn.tableAlias );
-            if (activityData != null) {
-              if (( col.participantColumn.name === "createdAt" || col.participantColumn.name === "completedAt"
-                || col.participantColumn.name === "lastUpdatedAt" ) && activityData[ col.participantColumn.name ] != null) {
-                value = this.getDateFormatted( new Date( activityData[ col.participantColumn.name ] ), this.DATE_STRING_IN_CVS );
-              }
-              else if (col.participantColumn.name === "status" && activityData[ col.participantColumn.name ] != null) {
-                value = activityData[ col.participantColumn.name ];
-              }
-              else {
-                let questionAnswer = this.getQuestionAnswerByName( activityData.questionsAnswers, col.participantColumn.name );
-                if (questionAnswer != null) {
-                  if (col.type === Filter.DATE_TYPE) {
-                    value = questionAnswer.date;
-                  } else if (col.type === Filter.COMPOSITE_TYPE) {
-                    questionAnswer.answer.map(arr => value += arr.join(', ') + '\n');
-                  } else {
-                    value = questionAnswer.answer; //TODO react to what kind of answer it is and make pretty
+            let activityDataArray: ActivityData[] = this.getSurveyData( data, col.participantColumn.tableAlias );
+            if (activityDataArray != null) {
+              if (activityDataArray.length == 1) {
+                let activityData = activityDataArray[ 0 ];
+                if (( col.participantColumn.name === "createdAt" || col.participantColumn.name === "completedAt"
+                  || col.participantColumn.name === "lastUpdatedAt" ) && activityData[ col.participantColumn.name ] != null) {
+                  value = this.getDateFormatted( new Date( activityData[ col.participantColumn.name ] ), this.DATE_STRING_IN_CVS );
+                }
+                else if (col.participantColumn.name === "status" && activityData[ col.participantColumn.name ] != null) {
+                  value = activityData[ col.participantColumn.name ];
+                }
+                else {
+                  let questionAnswer = this.getQuestionAnswerByName( activityData.questionsAnswers, col.participantColumn.name );
+                  if (questionAnswer != null) {
+                    if (col.type === Filter.DATE_TYPE) {
+                      value = questionAnswer.date;
+                    }
+                    else if (col.type === Filter.COMPOSITE_TYPE) {
+                      questionAnswer.answer.map( arr => value += arr.join( ', ' ) + '\n' );
+                    }
+                    else {
+                      value = questionAnswer.answer; //TODO react to what kind of answer it is and make pretty
+                    }
                   }
                 }
+              }
+              else {
+                  value = this.getActivityValueForMultipleActivities(activityDataArray, col.participantColumn.name);
               }
             }
             else if (col.participantColumn.tableAlias === "invitations") {
@@ -522,8 +533,14 @@ export class Utils {
   }
 
   public static getSurveyData( participant: Participant, code: string ) {
+    let array = [];
     if (participant != null && participant.data != null && participant.data.activities != null) {
-      return participant.data.activities.find( x => x.activityCode === code );
+      for (let x of participant.data.activities) {
+        if (x.activityCode === code) {
+          array.push( x );
+        }
+      }
+      return array;
     }
     return null;
   }
@@ -580,9 +597,9 @@ export class Utils {
   // See https://github.com/angular/components/issues/7694
   phoneNumberValidator(): ErrorStateMatcher {
     return {
-      isErrorState: (control: FormControl | null) => {
+      isErrorState: ( control: FormControl | null ) => {
         if (control?.value) {
-          return !(control.value.match( /^\d{3}-\d{3}-\d{4}$/ ));
+          return !( control.value.match( /^\d{3}-\d{3}-\d{4}$/ ) );
         }
 
         return false;
@@ -685,12 +702,12 @@ export class Utils {
     return null;
   }
 
-  public static getActivityDataValues(fieldSetting: FieldSettings, participant: Participant, activityDefinitions: ActivityDefinition[]) {
-    if (fieldSetting != null && fieldSetting.possibleValues != null && fieldSetting.possibleValues[0] != null && fieldSetting.possibleValues[0].value != null) {
+  public static getActivityDataValues( fieldSetting: FieldSettings, participant: Participant, activityDefinitions: ActivityDefinition[] ) {
+    if (fieldSetting != null && fieldSetting.possibleValues != null && fieldSetting.possibleValues[ 0 ] != null && fieldSetting.possibleValues[ 0 ].value != null) {
       let tmp: string[] = fieldSetting.possibleValues[ 0 ].value.split( '.' );
       if (tmp != null && tmp.length > 1) {
         if (tmp[ 0 ] === 'profile') {
-          return participant.data.profile[tmp[1]];
+          return participant.data.profile[ tmp[ 1 ] ];
         }
         else {
           if (participant != null && participant.data != null && participant.data.activities != null) {
@@ -706,14 +723,14 @@ export class Utils {
                     return "No";
                   }
                   if (questionAnswer.answer instanceof Array) {
-                    return questionAnswer.answer[0];
+                    return questionAnswer.answer[ 0 ];
                   }
                   return questionAnswer.answer;
                 }
                 else if (tmp.length === 3) {
                   if (fieldSetting.possibleValues != null && fieldSetting.possibleValues[ 0 ] != null && fieldSetting.possibleValues[ 0 ].type != null && fieldSetting.possibleValues[ 0 ].type === "RADIO") {
                     if (questionAnswer.answer != null) {
-                      let found = questionAnswer.answer.find( answer => answer === tmp[ 2 ] )
+                      let found = questionAnswer.answer.find( answer => answer === tmp[ 2 ] );
                       if (found != null) {
                         return "Yes";
                       }
@@ -744,5 +761,18 @@ export class Utils {
       }
     }
     return "";
+  }
+
+  private static getActivityValueForMultipleActivities( activityDataArray: ActivityData[], name: string ) {
+    let value = "";
+    for (let activityData of activityDataArray)
+    for (let ans of activityData.questionsAnswers) {
+      if (ans.stableId === name) {
+        for (let answer of ans.answer) {
+          value += answer +", ";
+        }
+      }
+    }
+    return value;
   }
 }

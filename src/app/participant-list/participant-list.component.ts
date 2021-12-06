@@ -1646,9 +1646,7 @@ export class ParticipantListComponent implements OnInit {
         paths.push([source, source]);
       }
     }
-
     Utils.downloadCurrentData( this.participantList, paths, columns, "Participants-"  + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION, false );
-
   }
 
   getOptionDisplay( options: NameValue[], key: string ) {
