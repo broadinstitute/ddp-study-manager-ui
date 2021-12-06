@@ -501,7 +501,7 @@ export class Utils {
                 }
               }
               else {
-                  value = this.getActivityValueForMultipleActivities(activityDataArray, col.participantColumn.name);
+                value = this.getActivityValueForMultipleActivities( activityDataArray, col.participantColumn.name );
               }
             }
             else if (col.participantColumn.tableAlias === "invitations") {
@@ -765,11 +765,17 @@ export class Utils {
 
   private static getActivityValueForMultipleActivities( activityDataArray: ActivityData[], name: string ) {
     let value = "";
-    for (let activityData of activityDataArray)
-    for (let ans of activityData.questionsAnswers) {
-      if (ans.stableId === name) {
-        for (let answer of ans.answer) {
-          value += answer +", ";
+    for (let activityData of activityDataArray) {
+      for (let questionsAnswer of activityData.questionsAnswers) {
+        if (questionsAnswer.stableId === name) {
+          if (questionsAnswer.questionType === "DATE"){
+            value += this.getDateFormatted( new Date( questionsAnswer.date ), this.DATE_STRING_IN_CVS )+", ";
+          }
+          else if (questionsAnswer.answer) {
+            for (let answer of questionsAnswer.answer) {
+              value += answer + ", ";
+            }
+          }
         }
       }
     }
