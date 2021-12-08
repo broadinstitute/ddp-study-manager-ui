@@ -57,6 +57,14 @@ export class DSMService {
     return this.http.put( url, json, this.buildHeader() ).map( ( res: Response ) => res.json() ).catch( this.handleError.bind( this ) );
   }
 
+  sendAnalyticsMetric( realm: string, passed: number ) {
+    let url = this.baseUrl + DSMService.UI + "googleAnalytics";
+    let map: { name: string, value: any }[] = [];
+    map.push( {name: DSMService.REALM, value: realm} );
+    map.push( {name: "timer", value: passed} );
+    return this.http.patch( url, null, this.buildQueryHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError.bind( this ) );
+  }
+
   public checkUpdatingParticipantStatus() {
     let url = this.baseUrl + DSMService.UI + "editParticipantMessageStatus";
     return this.http.get( url, this.buildHeader() ).map( ( res: Response ) => res.json() ).catch( this.handleError.bind( this ) );
@@ -824,4 +832,6 @@ export class DSMService {
       return true;
     }
   }
+
+
 }
