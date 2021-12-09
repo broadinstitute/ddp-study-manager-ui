@@ -89,7 +89,7 @@
     <tr>
       <td class="TD--Padding">USS SM-IDS</td>
       <td colspan="3">
-        <button mat-mini-fab [disabled]="!editable" color="primary" [ngClass]="{'changed':!smIdCountMatch(this.tissue.ussSMId, this.tissue.ussCount)}"
+        <button md-mini-fab [disabled]="!editable" color="primary" [ngClass]="{'changed':!smIdCountMatch(this.tissue.ussSMId, this.tissue.ussCount)}"
                 (click)="openUSSModal()">
           <i class="fas fa-plus fa-lg"></i>
         </button>
@@ -101,7 +101,7 @@
     <tr>
       <td class="TD--Padding">scrolls SM-IDS</td>
       <td colspan="3">
-        <button mat-mini-fab [disabled]="!editable" color="primary" [ngClass]="{'changed':!smIdCountMatch(this.tissue.scrollSMId, this.tissue.scrollsCount)}"
+        <button md-mini-fab [disabled]="!editable" color="primary" [ngClass]="{'changed':!smIdCountMatch(this.tissue.scrollSMId, this.tissue.scrollsCount)}"
                 (click)="openScrollsModal()">
           <i class="fas fa-plus fa-lg"></i>
         </button>
@@ -114,7 +114,7 @@
     <tr>
       <td class="TD--Padding">H&E SM-IDS</td>
       <td colspan="3">
-        <button mat-mini-fab [disabled]="!editable" color="primary" [ngClass]="{'changed':!smIdCountMatch(this.tissue.HESMId, this.tissue.hECount)}"
+        <button md-mini-fab [disabled]="!editable" color="primary" [ngClass]="{'changed':!smIdCountMatch(this.tissue.HESMId, this.tissue.hECount)}"
                 (click)="openHEModal()">
           <i class="fas fa-plus fa-lg"></i>
         </button>
@@ -388,19 +388,19 @@
       <table>
         <tr *ngFor="let smid of this.tissue.HESMId; let i=index;">
           <td *ngIf="!smid.deleted">
-            <mat-form-field [ngClass]="{'Input': true}">
+            <md-input-container [ngClass]="{'Input': true}">
               <input matInput [disabled]="!editable" id="HE{{i}}"
                      [ngClass]="{'Color--Field--Patched': isPatchedCurrently('SMIDHE'+i)}"
                      (blur)="currentField(null)"  [(ngModel)]="this.tissue.HESMId[i].smIdValue"
                      (change)="changeSmId($event, 'smIdValue', smid.smIdPk, 'he', this.tissue.HESMId, i, 'SMIDHE'+i)"
                      (focus)="currentField('SMIDHE'+i)"
                      [value]="smid.smIdValue" (keydown.enter)="goNext('HE', i)">
-              <mat-hint class="ErrorMessageForm" *ngIf="currentPatchField === 'SMIDHE'+i && dup">Value already exists!
-              </mat-hint>
-            </mat-form-field>
+              <md-hint class="ErrorMessageForm" *ngIf="(currentPatchField === ('SMIDHE'+i) && dup)">Value already exists!
+              </md-hint>
+            </md-input-container>
           </td>
           <td *ngIf="!smid.deleted">
-            <button mat-mini-fab color="warn" [disabled]="!editable"
+            <button md-mini-fab color="warn" [disabled]="!editable"
                     (click)="deleteSMID(this.tissue.HESMId, i)">
               <i class="fas fa-trash-alt fa-sm"></i>
             </button>
@@ -412,19 +412,19 @@
       <table>
         <tr *ngFor="let smid of this.tissue.ussSMId; let i=index;">
           <td *ngIf="!smid.deleted">
-            <mat-form-field [ngClass]="{'Input': true}">
+            <md-input-container [ngClass]="{'Input': true}">
               <input matInput [disabled]="!editable" id="USS{{i}}"
                      [ngClass]="{'Color--Field--Patched': isPatchedCurrently('SMIDUSS'+i)}"
                      (blur)="currentField(null)" (change)="changeSmId($event, 'smIdValue', smid.smIdPk,  'uss', this.tissue.ussSMId, i, 'SMIDUSS'+i)"
                      [(ngModel)]="this.tissue.ussSMId[i].smIdValue"
                      (focus)="currentField('SMIDUSS'+i)"
                      [value]="smid.smIdValue" (keydown.enter)="goNext('USS', i)">
-              <mat-hint class="ErrorMessageForm" *ngIf="currentPatchField === 'SMIDUSS'+i && dup">Value already exists!
-              </mat-hint>
-            </mat-form-field>
+              <md-hint class="ErrorMessageForm" *ngIf="(currentPatchField === ('SMIDUSS'+i) && dup)">Value already exists!
+              </md-hint>
+            </md-input-container>
           </td>
           <td  *ngIf="!smid.deleted">
-            <button mat-mini-fab color="warn" [disabled]="!editable"
+            <button md-mini-fab color="warn" [disabled]="!editable"
                     (click)="deleteSMID(this.tissue.ussSMId, i)">
               <i class="fas fa-trash-alt fa-sm"></i>
             </button>
@@ -436,19 +436,19 @@
       <table>
         <tr *ngFor="let smid of this.tissue.scrollSMId; let i=index;">
           <td  *ngIf="!smid.deleted">
-            <mat-form-field [ngClass]="{'Input': true}" id="scrolls{{i}}">
+            <md-input-container [ngClass]="{'Input': true}" id="scrolls{{i}}">
               <input matInput [disabled]="!editable"
                      [ngClass]="{'Color--Field--Patched': isPatchedCurrently('SMIDScrolls'+i)}"
                      (blur)="currentField(null)" [(ngModel)]="this.tissue.scrollSMId[i].smIdValue"
                      (focus)="currentField('SMIDScrolls'+i)"
                      (change)="changeSmId($event, 'smIdValue', smid.smIdPk, 'scrolls', this.tissue.scrollSMId, i, 'SMIDScrolls'+i )"
                      [value]="smid.smIdValue" (keydown.enter)="goNext('scrolls', i)">
-              <mat-hint class="ErrorMessageForm" *ngIf="currentPatchField === 'SMIDScrolls'+i && dup">Value already exists!
-              </mat-hint>
-            </mat-form-field>
+              <md-hint class="ErrorMessageForm" *ngIf="(currentPatchField === ('SMIDScrolls'+i) && dup)">Value already exists!
+              </md-hint>
+            </md-input-container>
           </td>
           <td  *ngIf="!smid.deleted">
-            <button mat-mini-fab color="warn" [disabled]="!editable"
+            <button md-mini-fab color="warn" [disabled]="!editable"
                     (click)="deleteSMID(this.tissue.scrollSMId, i)">
               <i class="fas fa-trash-alt fa-sm"></i>
             </button>
@@ -458,7 +458,7 @@
       </table>
     </ng-container>
     <ng-container>
-      <button mat-mini-fab color="primary"
+      <button md-mini-fab color="primary"
               (click)="addSMId(this.currentSMIDField)">
         <i class="fas fa-plus fa-lg"></i>
       </button>
