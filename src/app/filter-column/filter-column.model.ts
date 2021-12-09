@@ -1,5 +1,3 @@
-import { FilterBrand } from "@angular/cdk";
-import { group } from "@angular/core/src/animation/dsl";
 import {FieldSettings} from "../field-settings/field-settings.model";
 import {NameValue} from "../utils/name-value.model";
 import {Statics} from "../utils/statics";
@@ -210,6 +208,9 @@ export class Filter {
     new NameValue( "qc", "QC" ) ] );
   public static ABSTRACTION_USER = new Filter( ParticipantColumn.ABSTRACTION_USER, Filter.TEXT_TYPE );
 
+  //sm id
+  public static SM_ID_TISSUE_VALUE = new Filter( ParticipantColumn.SM_ID_VALUE, Filter.TEXT_TYPE );
+
   public static ALL_COLUMNS = [
     Filter.REALM, Filter.SHORT_ID, Filter.LEGACY_SHORT_ID, Filter.LEGACY_PARTICIPANT_ID, Filter.PARTICIPANT_ID, Filter.FIRST_NAME, Filter.LAST_NAME,
     Filter.COUNTRY, Filter.ENROLLMENT_STATUS, Filter.EMAIL, Filter.REGISTRATION_DATE, Filter.DO_NOT_CONTACT,
@@ -236,7 +237,7 @@ export class Filter {
     Filter.USS_COUNT, Filter.H_E_COUNT, Filter.BLOCKS_COUNT,
     Filter.COLLABORATOR_SAMPLE, Filter.SAMPLE_SENT, Filter.SAMPLE_RECEIVED, Filter.SAMPLE_DEACTIVATION, Filter.SAMPLE_QUEUE,
     Filter.TRACKING_TO_PARTICIPANT, Filter.TRACKING_RETURN, Filter.MF_BARCODE, Filter.STATUS_OUT, Filter.STATUS_IN, Filter.RESULT_TEST, Filter.CORRECTED_TEST, Filter.TIME_TEST, Filter.CARE_EVOLVE,
-    Filter.ABSTRACTION_ACTIVITY, Filter.ABSTRACTION_STATUS, Filter.ABSTRACTION_USER ];
+    Filter.ABSTRACTION_ACTIVITY, Filter.ABSTRACTION_STATUS, Filter.ABSTRACTION_USER, Filter.SM_ID_TISSUE_VALUE ];
 
   constructor( public participantColumn: ParticipantColumn, public type: string, public options?: NameValue[], public filter2?: NameValue,
                public range?: boolean, public exactMatch?: boolean, public filter1?: NameValue,
@@ -359,7 +360,7 @@ export class Filter {
           }
         }
         for (let key of Object.keys( allColumns )) {
-          for (let filter of allColumns[ key ]) {
+          loop2: for (let filter of allColumns[ key ]) {
             if (filter.participantColumn.name === columnName && filter.participantColumn.tableAlias === tableAlias) {
               if (result[ key ] == undefined || result[ key ] == null) {
                 result[ key ] = [];
@@ -537,8 +538,9 @@ export class Filter {
     return this;
   }
 
-  public static getFilterText( filter: Filter, parent: string ): {} {
+  public static getFilterText( filter: Filter, p: string ): {} {
     let filterText = {};
+    let parent = filter.participantColumn.tableAlias ? filter.participantColumn.tableAlias : p;
     if (filter.type === Filter.TEXT_TYPE || filter.type === Filter.NUMBER_TYPE || filter.type === Filter.DATE_TYPE || filter.type === Filter.EPOCH_DATE_TYPE
       || filter.type === Filter.COMPOSITE_TYPE || filter.type === Filter.SHORT_DATE_TYPE) {
       if (( filter.value1 !== null && filter.value1 !== undefined && filter.value1 != "" ) ||

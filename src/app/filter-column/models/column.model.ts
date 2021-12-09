@@ -132,6 +132,9 @@ export class ParticipantColumn {
   public static CORRECTED_TEST = new ParticipantColumn("Test Corrected", "isCorrected", "k", "testResult");
   public static TIME_TEST = new ParticipantColumn("Test Time Completed", "timeCompleted", "k", "testResult");
 
+  //sm id
+  public static SM_ID_VALUE = new ParticipantColumn("SM-ID value", "smIdValue", "sm");
+
   constructor (public display: string, public name: string, public tableAlias?: string, public object?: string, public esData?: boolean) {
     this.display = display;
     this.name = name;

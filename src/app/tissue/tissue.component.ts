@@ -1,5 +1,7 @@
 import {Component, Input, OnInit, ViewChild} from "@angular/core";
 import {FieldSettings} from "../field-settings/field-settings.model";
+import {Lookup} from "../lookup/lookup.model";
+import {ModalComponent} from "../modal/modal.component";
 import {OncHistoryDetail} from "../onc-history-detail/onc-history-detail.model";
 import {Participant} from "../participant-list/participant-list.model";
 import {Tissue} from "./tissue.model";
@@ -21,7 +23,9 @@ import {PatchUtil} from "../utils/patch.model";
 })
 export class TissueComponent implements OnInit {
 
-  @ViewChild("collaboratorSampleId") collaboratorSampleIdInputField;
+  @ViewChild( "collaboratorSampleId" ) collaboratorSampleIdInputField;
+  @ViewChild( ModalComponent )
+  public SMIDModal: ModalComponent;
 
   @Input() participant: Participant;
   @Input() oncHistoryDetail: OncHistoryDetail;
@@ -34,6 +38,10 @@ export class TissueComponent implements OnInit {
   currentPatchField: string;
   patchFinished: boolean = true;
   dup: boolean = false;
+  currentSMIDField: string;
+  uss = "USS";
+  he = "HE";
+  scrolls = "scrolls";
 
   constructor (private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
                private router: Router) {
@@ -97,10 +105,27 @@ export class TissueComponent implements OnInit {
     return null;
   }
 
-  valueChanged (value: any, parameterName: string) {
+  valueChanged( value: any, parameterName: string, pName?: string, pId?, alias?, smId?, value2?, parameter2? ) {
     let v;
-    if ( parameterName === "additionalValues" ) {
-      v = JSON.stringify(value);
+    let parentName = "oncHistoryDetailId";
+    if (pName) {
+      parentName = pName;
+    }
+    let parentId = this.tissue.oncHistoryDetailId;
+    if (pId) {
+      parentId = pId;
+    }
+    let tAlias = Statics.TISSUE_ALIAS;
+    if (alias) {
+      tAlias = alias;
+    }
+    let id = this.tissueId;
+    if (smId) {
+      id = smId;
+    }
+
+    if (parameterName === "additionalValues") {
+      v = JSON.stringify( value );
     }
     else if ( typeof value === "string" ) {
       v = value;
@@ -116,23 +141,27 @@ export class TissueComponent implements OnInit {
         v = value.checked;
       }
     }
-    if ( v !== null ) {
-      if ( parameterName !== "additionalValues" ) {
-        for ( let oncTissue of this.oncHistoryDetail.tissues ) {
-          if ( oncTissue.tissueId == this.tissue.tissueId ) {
-            oncTissue[parameterName] = v;
+    if (v !== null) {
+      if (tAlias !== "sm") {
+        if (parameterName !== "additionalValues") {
+          for (let oncTissue of this.oncHistoryDetail.tissues) {
+            if (oncTissue.tissueId == this.tissue.tissueId) {
+              oncTissue[ parameterName ] = v;
+            }
           }
         }
+        this.currentPatchField = parameterName;
       }
-      let patch1 = new PatchUtil(this.tissue.tissueId, this.role.userMail(),
+      let patch1 = new PatchUtil( id, this.role.userMail(),
         {
           name: parameterName,
-          value: v,
-        }, null, "oncHistoryDetailId", this.tissue.oncHistoryDetailId, Statics.TISSUE_ALIAS, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.participant.participant.ddpParticipantId);
+          value: v
+        }, null, parentName, parentId, tAlias, null,
+        localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.participant.participant.ddpParticipantId );
       let patch = patch1.getPatch();
       this.patchFinished = false;
-      this.currentPatchField = parameterName;
-      this.dsmService.patchParticipantRecord(JSON.stringify(patch)).subscribe(// need to subscribe, otherwise it will not send!
+
+      this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
         data => {
           let result = Result.parse(data);
           if ( result.code == 200 && result.body != null && result.body !== "" && this.tissue.tissueId == null ) {
@@ -152,12 +181,24 @@ export class TissueComponent implements OnInit {
           else if ( result.code === 500 && result.body != null ) {
             this.dup = true;
           }
-          else if ( result.code === 200 ) {
-            if ( result.body != null && result.body !== "" ) {
-              let jsonData: any | any[] = JSON.parse(result.body);
-              if ( jsonData instanceof Array ) {
-                jsonData.forEach((val) => {
-                  let nameValue = NameValue.parse(val);
+          else if (result.code === 200) {
+            if (result.body != null && result.body !== "") {
+              let jsonData: any | any[] = JSON.parse( result.body );
+              if (tAlias === "sm") {
+                  if (jsonData.smId) {
+                  smId = jsonData.smId;
+                }
+                this.patchFinished = true;
+                this.currentPatchField = null;
+                this.dup = false;
+                if (parameter2 && value2) {
+                  this.valueChanged( value2, parameter2, pName, pId, alias, smId );
+                }
+                return smId;
+              }
+              if (jsonData instanceof Array) {
+                jsonData.forEach( ( val ) => {
+                  let nameValue = NameValue.parse( val );
                   if (nameValue.name && nameValue.name.indexOf( '.' ) != -1) {
                     nameValue.name = nameValue.name.substr( nameValue.name.indexOf( "." ) + 1);
                   }
@@ -230,5 +271,98 @@ export class TissueComponent implements OnInit {
     if ( field != null || (field == null && this.patchFinished) ) {
       this.currentPatchField = field;
     }
+  }
+
+  changeSmId( event: any, parameterName, id, type, smIdArray, index, filedName? ) {
+    let value: any;
+    if (typeof event === "string") {
+      value = event;
+    }
+    else if (event.srcElement != null && typeof event.srcElement.value === "string") {
+      value = event.srcElement.value;
+    }
+    else if (typeof event === "boolean") {
+      value = event;
+    }
+    else if (event.value != null) {
+      value = event.value;
+    }
+    if (filedName) {
+      this.currentPatchField = filedName;
+    }
+    if (!id) {
+      smIdArray[ index ].smIdPk = this.valueChanged( type, "smIdType", "tissueId", this.tissue.tissueId, Statics.SM_ID_ALIAS, id, value, parameterName );
+    }
+    else {
+      this.valueChanged( value, parameterName, "tissueId", this.tissue.tissueId, Statics.SM_ID_ALIAS, id );
+    }
+  }
+
+  openUSSModal() {
+    this.currentSMIDField = this.uss;
+    this.SMIDModal.show();
+  }
+
+  openHEModal() {
+    this.currentSMIDField = this.he;
+    this.SMIDModal.show();
+  }
+
+  openScrollsModal() {
+    this.currentSMIDField = this.scrolls;
+    this.SMIDModal.show();
+  }
+
+  getValue( s: TissueSmId ) {
+    if (!s || !s.smIdValue) {
+      return "";
+    }
+    return s.smIdValue;
+  }
+
+  exitModal() {
+    this.SMIDModal.hide();
+  }
+
+  goNext( name: string, i: number ) {
+    let nextId = name + ( i + 1 );
+    let nextElement = document.getElementById( nextId );
+    if (nextElement) {
+      nextElement.focus();
+    }
+  }
+
+  smIdCountMatch( array: any[], num: number ) {
+    if (!array) {
+      return num == 0;
+    }
+    return array.length == num;
+  }
+
+  addSMId( name ) {
+    if (name === this.uss) {
+      if(!this.tissue.ussSMId)
+        this.tissue.ussSMId = new Array();
+      this.tissue.ussSMId.push( new TissueSmId( null, this.uss, null, this.tissue.tissueId, false ) );
+    }
+    else if (name === this.scrolls) {
+      if(!this.tissue.scrollSMId)
+        this.tissue.scrollSMId = new Array();
+      this.tissue.scrollSMId.push( new TissueSmId( null, this.scrolls, null, this.tissue.tissueId, false ) );
+    }
+    else if (name === this.he) {
+      if(!this.tissue.HESMId)
+        this.tissue.HESMId = new Array();
+      this.tissue.HESMId.push( new TissueSmId( null, this.he, null, this.tissue.tissueId, false ) );
+    }
+  }
+
+//  getColSpan( arr: TissueSmId[], count: number ) {
+//    return this.smIdCountMatch(arr, count) ?  3:  1;
+//  }
+  deleteSMID( array: TissueSmId[], i: number ) {
+    array[ i ].deleted = true;
+    this.changeSmId( `1`, 'deleted', array[ i ].smIdPk, array[ i ].smIdType, array, i );
+    array.splice( i, 1 );
   }
 }

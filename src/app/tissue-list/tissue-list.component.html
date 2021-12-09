@@ -365,6 +365,17 @@
                     (click)="getParticipant(value, 't', value.tissueList.tissue.tissueId)">
                 <span
                   *ngIf="allAdditionalColumns['t'] == undefined || !allAdditionalColumns['t'].includes(col) && col.type !== 'DATE' && col.type !== 'OPTIONS'">
+                  <span *ngIf="col.participantColumn.tableAlias === 'sm'">
+                    <ng-container *ngFor="let smid of value.tissueList.tissue.ussSMId">
+                      {{smid.smIdValue}}
+                    </ng-container>
+                    <ng-container *ngFor="let smid of value.tissueList.tissue.HESMId">
+                      {{smid.smIdValue}}
+                    </ng-container>
+                    <ng-container *ngFor="let smid of value.tissueList.tissue.scrollSMId">
+                      {{smid.smIdValue}}
+                    </ng-container>
+                  </span>
                 {{value.tissueList.tissue[col.participantColumn.name]}}
                 </span>
                   <span *ngIf="col.type === 'DATE' || col.type === 'EPOCHDATE'">

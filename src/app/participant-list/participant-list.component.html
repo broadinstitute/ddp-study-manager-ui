@@ -591,7 +591,20 @@ date.dateFields.month != null && date.dateFields.month !== ''">{{date.dateFields
                             <p class="BIT-OF-MARGIN" *ngIf="tissue.tissueId != null && tissue.tissueId !== ''">
                               <ng-container
                                 *ngIf="col.type !== 'ADDITIONALVALUE' && col.type !== 'DATE' && col.type !== 'OPTIONS' && col.type !== 'CHECKBOX' && col.type !== 'BOOLEAN'">
-                                {{tissue[col.participantColumn.name]}}
+                                <ng-container *ngIf="col.participantColumn.tableAlias === 'sm'">
+                                    <ng-container *ngFor="let smid of tissue.ussSMId">
+                                      {{smid.smIdValue}}
+                                    </ng-container>
+                                  <ng-container *ngFor="let smid of tissue.HESMId">
+                                    {{smid.smIdValue}}
+                                  </ng-container>
+                                  <ng-container *ngFor="let smid of tissue.scrollSMId">
+                                    {{smid.smIdValue}}
+                                  </ng-container>
+                                </ng-container>
+                                <ng-container *ngIf="col.participantColumn.tableAlias !== 'sm'">
+                                  {{tissue[col.participantColumn.name]}}
+                                </ng-container>
                               </ng-container>
                               <ng-container *ngIf="col.type === 'ADDITIONALVALUE' && tissue['additionalValues'] != null
                               && tissue['additionalValues'][col.participantColumn.name] != null">
