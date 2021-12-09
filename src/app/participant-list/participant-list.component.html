@@ -341,7 +341,7 @@
             && col.participantColumn.name !== 'lastUpdatedAt' && col.participantColumn.name !== 'status' && activityData.questionsAnswers != null">
                       <ng-container
                         *ngIf="getQuestionAnswerByName(activityData.questionsAnswers, col.participantColumn.name) as questionAnswer">
-                        <div *ngIf="questionAnswer != null">
+                        <ng-container *ngIf="questionAnswer != null">
                           <ng-container
                             *ngIf="questionAnswer.questionType === 'TEXT' || questionAnswer.questionType === 'NUMERIC'">
                             {{questionAnswer.answer}}
@@ -352,19 +352,25 @@
                           </ng-container>
                           <ng-container
                             *ngIf="questionAnswer.questionType === 'DATE' && questionAnswer.dateFields != null">
-                            <ng-container *ngIf="questionAnswer.dateFields.day != null && questionAnswer.dateFields.day !== '' &&
-questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== ''">
-                              {{questionAnswer.dateFields.month}}/{{questionAnswer.dateFields.day}}/{{questionAnswer.dateFields.year}}
+                            <ng-container *ngIf="pt.data.getMultipleDatesForActivity(activityData, col.participantColumn.name) as answers">
+                            <div class="NO-PADDING-START" *ngFor="let date of answers; let i = index;">
+                            <ng-container *ngIf="date.dateFields.day != null && date.dateFields.day !== '' &&
+date.dateFields.month != null && date.dateFields.month !== ''">
+                              {{date.dateFields.month}}/{{date.dateFields.day}}/{{date.dateFields.year}}
                             </ng-container>
-                            <ng-container *ngIf="(questionAnswer.dateFields.day == null || questionAnswer.dateFields.day === '') &&
-questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '' && questionAnswer.dateFields.year != null && questionAnswer.dateFields.year !== ''">{{questionAnswer.dateFields.month}}/{{questionAnswer.dateFields.year}}
+                            <ng-container *ngIf="(date.dateFields.day == null || date.dateFields.day === '') &&
+date.dateFields.month != null && date.dateFields.month !== '' && date.dateFields.year != null && date.dateFields.year !== ''">
+                              {{date.dateFields.month}}/{{date.dateFields.year}}
                             </ng-container>
-                            <ng-container *ngIf="(questionAnswer.dateFields.day == null || questionAnswer.dateFields.day === '') &&
-questionAnswer.dateFields.month == null || questionAnswer.dateFields.month === ''">{{questionAnswer.dateFields.year}}
+                            <ng-container *ngIf="(date.dateFields.day == null || date.dateFields.day === '') &&
+date.dateFields.month == null || date.dateFields.month === ''">{{date.dateFields.year}}
                             </ng-container>
-                            <ng-container *ngIf="(questionAnswer.dateFields.year == null || questionAnswer.dateFields.year === '') &&
-questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== ''">{{questionAnswer.dateFields.month}}/null
+                            <ng-container *ngIf="(date.dateFields.year == null || date.dateFields.year === '') &&
+date.dateFields.month != null && date.dateFields.month !== ''">{{date.dateFields.month}}/null
                             </ng-container>
+                              <hr *ngIf="i !== answers.length-1" style="border-color: lightgray">
+                            </div>
+                          </ng-container>
                           </ng-container>
                           <ng-container
                             *ngIf="getUtil().getQuestionDefinition(activityDefinitionList, alias, questionAnswer.stableId, activityData.activityVersion) as qDef">
@@ -439,7 +445,7 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                               </ng-container>
                             </ng-container>
                           </ng-container>
-                        </div>
+                        </ng-container>
                       </ng-container>
                     </ng-container>
                   </ng-container>
