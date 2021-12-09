@@ -1,4 +1,5 @@
 import {ActivityData} from "../../activity-data/activity-data.model";
+import {QuestionAnswer} from "../../activity-data/models/question-answer.model";
 import {Address} from "../../address/address.model";
 import {InvitationData} from "../../invitation-data/invitation-data.model";
 import {Computed} from "./computed.model";
@@ -55,5 +56,19 @@ export class Data {
       }
     }
     return new Data( json.profile, json.status, json.statusTimestamp, json.dsm, json.ddp, medicalProviders, json.activities, json.address, json.invitations, json.computed );
+  }
+
+  getMultipleDatesForActivity( activityData: ActivityData, name: string ) {
+    let answers: Array<QuestionAnswer> = new Array();
+    for (let x of this.activities) {
+      if (x.activityCode === activityData.activityCode) {
+        for (let y of x.questionsAnswers) {
+          if (y.stableId === name) {
+            answers.push(y);
+          }
+        }
+      }
+    }
+    return answers.reverse();
   }
 }
