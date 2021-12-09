@@ -5,11 +5,11 @@
     <ul class="nav navbar-nav">
       <li class="dropdown" *ngIf="getAuth().authenticated() && shouldSeeRealmSelection()">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#" (click)="getAuth().getRealmList()">
-          <b>Select realm</b>
+          <b>Select study</b>
           <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
-          <li *ngFor="let realms of getAuth().realmList" [ngClass]="{'active': isRealmChosen(realms.name)}"> <a (click)="selectRealmAndDoNothing(realms.name)"> {{realms.value}} </a> </li>          
+          <li *ngFor="let realms of getAuth().realmList" [ngClass]="{'active': isRealmChosen(realms.name)}"> <a (click)="selectRealmAndDoNothing(realms.name)"> {{realms.value}} </a> </li>
         </ul>
       </li>
       <li class="dropdown" *ngIf="getAuth().authenticated()
