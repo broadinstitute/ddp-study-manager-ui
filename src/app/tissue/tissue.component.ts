@@ -5,6 +5,7 @@ import {ModalComponent} from "../modal/modal.component";
 import {OncHistoryDetail} from "../onc-history-detail/onc-history-detail.model";
 import {Participant} from "../participant-list/participant-list.model";
 import {Tissue} from "./tissue.model";
+import {TissueSmId} from "./sm-id.model";
 import {RoleService} from "../services/role.service";
 import {DSMService} from "../services/dsm.service";
 import {ComponentService} from "../services/component.service";

@@ -1,3 +1,5 @@
+import {TissueSmId} from "./sm-id.model";
+
 export class Tissue {
 
   deleted: boolean = false;
