@@ -11,7 +11,7 @@ export class Tissue {
               public additionalValues: {}, public expectedReturn: string, public tissueReturnDate: string,
               public returnFedexId: string, public shlWorkNumber: string, public sequenceResults: string, public tumorPercentage: string,
               public scrollsCount: number, public ussCount: number, public blocksCount: number, public hECount: number,
-              public scrollSMId: TissueSmId[], public ussSMId: TissueSmId[], public HESMId: TissueSmId[]) {
+              public scrollSMId: Array<TissueSmId>, public ussSMId: Array<TissueSmId>, public HESMId: Array<TissueSmId>) {
     this.tissueId = tissueId;
     this.oncHistoryDetailId = oncHistoryDetailId;
     this.tNotes = tNotes;

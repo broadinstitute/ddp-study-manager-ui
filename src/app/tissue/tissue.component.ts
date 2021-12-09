@@ -105,7 +105,7 @@ export class TissueComponent implements OnInit {
     return null;
   }
 
-  valueChanged( value: any, parameterName: string, pName?: string, pId?, alias?, smId?, value2?, parameter2? ) {
+  valueChanged( value: any, parameterName: string, pName?: string, pId?, alias?, smId?, value2?, parameter2?, smIdArray?, index? ) {
     let v;
     let parentName = "oncHistoryDetailId";
     if (pName) {
@@ -119,11 +119,13 @@ export class TissueComponent implements OnInit {
     if (alias) {
       tAlias = alias;
     }
-    let id = this.tissueId;
+    let id = this.tissue.tissueId;
     if (smId) {
       id = smId;
     }
-
+    if (tAlias === "sm" && !smId) {
+      id = null;
+    }
     if (parameterName === "additionalValues") {
       v = JSON.stringify( value );
     }
@@ -180,13 +182,19 @@ export class TissueComponent implements OnInit {
           }
           else if (result.code === 500 && result.body != null) {
             this.dup = true;
+            if (smIdArray && index && smId) {
+              smIdArray[index].smIdPk=smId;
+            }
           }
           else if (result.code === 200) {
             if (result.body != null && result.body !== "") {
               let jsonData: any | any[] = JSON.parse( result.body );
               if (tAlias === "sm") {
-                  if (jsonData.smId) {
+                if (jsonData.smId) {
                   smId = jsonData.smId;
+                  if (smIdArray && index) {
+                    smIdArray[index].smIdPk=smId;
+                  }
                 }
                 this.patchFinished = true;
                 this.currentPatchField = null;
@@ -290,7 +298,7 @@ export class TissueComponent implements OnInit {
       this.currentPatchField = filedName;
     }
     if (!id) {
-      smIdArray[ index ].smIdPk = this.valueChanged( type, "smIdType", "tissueId", this.tissue.tissueId, Statics.SM_ID_ALIAS, id, value, parameterName );
+      smIdArray[ index ].smIdPk = this.valueChanged( type, "smIdType", "tissueId", this.tissue.tissueId, Statics.SM_ID_ALIAS, id, value, parameterName,smIdArray, index );
     }
     else {
       this.valueChanged( value, parameterName, "tissueId", this.tissue.tissueId, Statics.SM_ID_ALIAS, id );
@@ -340,18 +348,21 @@ export class TissueComponent implements OnInit {
 
   addSMId( name ) {
     if (name === this.uss) {
-      if(!this.tissue.ussSMId)
+      if (!this.tissue.ussSMId) {
         this.tissue.ussSMId = new Array();
+      }
       this.tissue.ussSMId.push( new TissueSmId( null, this.uss, null, this.tissue.tissueId, false ) );
     }
     else if (name === this.scrolls) {
-      if(!this.tissue.scrollSMId)
+      if (!this.tissue.scrollSMId) {
         this.tissue.scrollSMId = new Array();
+      }
       this.tissue.scrollSMId.push( new TissueSmId( null, this.scrolls, null, this.tissue.tissueId, false ) );
     }
     else if (name === this.he) {
-      if(!this.tissue.HESMId)
+      if (!this.tissue.HESMId) {
         this.tissue.HESMId = new Array();
+      }
       this.tissue.HESMId.push( new TissueSmId( null, this.he, null, this.tissue.tissueId, false ) );
     }
   }
