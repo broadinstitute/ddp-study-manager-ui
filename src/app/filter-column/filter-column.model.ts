@@ -360,7 +360,7 @@ export class Filter {
           }
         }
         for (let key of Object.keys( allColumns )) {
-          loop2: for (let filter of allColumns[ key ]) {
+          for (let filter of allColumns[ key ]) {
             if (filter.participantColumn.name === columnName && filter.participantColumn.tableAlias === tableAlias) {
               if (result[ key ] == undefined || result[ key ] == null) {
                 result[ key ] = [];

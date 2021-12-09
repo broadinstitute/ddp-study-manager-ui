@@ -9,7 +9,6 @@ import {TissueSmId} from "./sm-id.model";
 import {RoleService} from "../services/role.service";
 import {DSMService} from "../services/dsm.service";
 import {ComponentService} from "../services/component.service";
-import {Lookup} from "../lookup/lookup.model";
 import {Statics} from "../utils/statics";
 import {Result} from "../utils/result.model";
 import {Auth} from "../services/auth.service";
