@@ -49,7 +49,7 @@ export class ParticipantEventComponent implements OnInit {
       this.checkRight();
     }
     else {
-      this.additionalMessage = "Please select a realm";
+      this.additionalMessage = "Please select a study";
     }
     window.scrollTo(0,0);
   }
@@ -138,7 +138,7 @@ export class ParticipantEventComponent implements OnInit {
       );
     }
     else {
-      this.errorMessage = "Please select a realm and a event type and enter the AltPID for the participant";
+      this.errorMessage = "Please select a study and a event type and enter the AltPID for the participant";
     }
   }
 

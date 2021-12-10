@@ -74,7 +74,7 @@ export class ParticipantExitComponent implements OnInit {
       this.checkRight();
     }
     else {
-      this.additionalMessage = "Please select a realm";
+      this.additionalMessage = "Please select a study";
     }
     window.scrollTo(0,0);
   }
@@ -107,7 +107,7 @@ export class ParticipantExitComponent implements OnInit {
       );
     }
     else {
-      this.errorMessage = "Please select a realm and enter the AltPID for the participant you want to exit.";
+      this.errorMessage = "Please select a study and enter the AltPID for the participant you want to exit.";
     }
   }
 

@@ -85,7 +85,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     if (localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) == null || localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) === undefined) {
-      this.additionalMessage = "Please select a realm";
+      this.additionalMessage = "Please select a study";
     }
     else {
       if (this.auth.authenticated()) {
@@ -187,7 +187,7 @@ export class DashboardComponent implements OnInit {
       }
     }
     else {
-      this.additionalMessage = "Please select a realm";
+      this.additionalMessage = "Please select a study";
     }
   }
 
@@ -237,7 +237,7 @@ export class DashboardComponent implements OnInit {
     }
     else {
       this.loadingDDPData = false;
-      this.additionalMessage = "Please select a realm";
+      this.additionalMessage = "Please select a study";
     }
   }
 
