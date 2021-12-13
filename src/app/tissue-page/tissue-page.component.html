@@ -116,26 +116,26 @@
       <tr>
         <td class="Width--20">Fax Sent</td>
         <td colspan="2">
-          <app-field-datepicker [colorDuringPatch]="isPatchedCurrently('tFaxSent')" [disabled]=" participantExited"
-                                [dateString]="oncHistoryDetail.tFaxSent" (dateChanged)="valueChanged($event, 'tFaxSent')"></app-field-datepicker>
+          <app-field-datepicker [colorDuringPatch]="isPatchedCurrently('faxSent')" [disabled]=" participantExited"
+                                [dateString]="oncHistoryDetail.tFaxSent" (dateChanged)="valueChanged($event, 'faxSent')"></app-field-datepicker>
           <app-field-datepicker
-            *ngIf="((oncHistoryDetail.tFaxSent != null && oncHistoryDetail.tFaxSent !== '') && (oncHistoryDetail.tissueReceived == null || oncHistoryDetail.tissueReceived === '')) || (oncHistoryDetail.tFaxSent2 != null && oncHistoryDetail.tFaxSent2 !== '')"
-            [disabled]=" participantExited" [dateString]="oncHistoryDetail.tFaxSent2"
-            (dateChanged)="valueChanged($event, 'tFaxSent2')"
-            [colorDuringPatch]="isPatchedCurrently('tFaxSent2')"></app-field-datepicker>
+            *ngIf="((oncHistoryDetail.faxSent != null && oncHistoryDetail.faxSent !== '') && (oncHistoryDetail.tissueReceived == null || oncHistoryDetail.tissueReceived === '')) || (oncHistoryDetail.faxSent2 != null && oncHistoryDetail.faxSent2 !== '')"
+            [disabled]=" participantExited" [dateString]="oncHistoryDetail.faxSent2"
+            (dateChanged)="valueChanged($event, 'faxSent2')"
+            [colorDuringPatch]="isPatchedCurrently('faxSent2')"></app-field-datepicker>
           <app-field-datepicker
-            *ngIf="((oncHistoryDetail.tFaxSent2 != null && oncHistoryDetail.tFaxSent2 !== '') && (oncHistoryDetail.tissueReceived == null || oncHistoryDetail.tissueReceived === '')) || (oncHistoryDetail.tFaxSent3 != null && oncHistoryDetail.tFaxSent3 !== '')"
-            [disabled]="participantExited" [dateString]="oncHistoryDetail.tFaxSent3"
-            (dateChanged)="valueChanged($event, 'tFaxSent3')"
-            [colorDuringPatch]="isPatchedCurrently('tFaxSent3')"></app-field-datepicker>
+            *ngIf="((oncHistoryDetail.faxSent2 != null && oncHistoryDetail.faxSent2 !== '') && (oncHistoryDetail.tissueReceived == null || oncHistoryDetail.tissueReceived === '')) || (oncHistoryDetail.faxSent3 != null && oncHistoryDetail.faxSent3 !== '')"
+            [disabled]="participantExited" [dateString]="oncHistoryDetail.faxSent3"
+            (dateChanged)="valueChanged($event, 'faxSent3')"
+            [colorDuringPatch]="isPatchedCurrently('faxSent3')"></app-field-datepicker>
         </td>
       </tr>
       <tr [hidden]="true">
         <td>Fax Confirmed</td>
         <td colspan="2">
-          <app-field-datepicker [dateString]="oncHistoryDetail.tFaxConfirmed"
-                                (dateChanged)="valueChanged($event, 'tFaxConfirmed')" [disabled]="participantExited"
-                                [colorDuringPatch]="isPatchedCurrently('tFaxConfirmed')"></app-field-datepicker>
+          <app-field-datepicker [dateString]="oncHistoryDetail.faxConfirmed"
+                                (dateChanged)="valueChanged($event, 'faxConfirmed')" [disabled]="participantExited"
+                                [colorDuringPatch]="isPatchedCurrently('faxConfirmed')"></app-field-datepicker>
         </td>
       </tr>
       <tr *ngIf="oncHistoryDetail.tFaxSent != null">
@@ -166,7 +166,7 @@
 
         </td>
         <td>
-          <md-checkbox [(ngModel)]="oncHistoryDetail.unableToObtain" (change)="valueChanged($event, 'unableToObtain')"
+          <md-checkbox [(ngModel)]="oncHistoryDetail.unableObtainTissue" (change)="valueChanged($event, 'unableObtainTissue')"
                        [disabled]="participantExited"
                        [color]="isCheckboxPatchedCurrently('unableToObtain')" (blur)="currentField(null)"
                        (focus)="currentField('unableToObtain')"></md-checkbox>

@@ -1230,10 +1230,10 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
                   actionPatch.push( action );
                 }
               }
-              if (participantDataSec != null && participantDataSec.data != null) {
-                participantDataSec.data[ action.name ] = action.value;
-                nameValue.unshift({name: "d.data", value: JSON.stringify(participantDataSec.data)});
-              }
+              // if (participantDataSec != null && participantDataSec.data != null) {
+              //   participantDataSec.data[ action.name ] = action.value;
+              //   nameValue.unshift({name: "d.data", value: JSON.stringify(participantDataSec.data)});
+              // }
             }
           });
         }

@@ -16,7 +16,7 @@ export class OncHistoryDetail {
               public faxSent3: string, public faxSent3By: string, public faxConfirmed3: string,
               public tissueReceived: string, public gender: string,
               public additionalValuesJson: {}, public tissues: Array<Tissue>,
-              public tissueProblemOption: string, public destructionPolicy: string, public unableToObtainTissue: boolean, public numberOfRequests) {
+              public tissueProblemOption: string, public destructionPolicy: string, public unableObtainTissue: boolean, public numberOfRequests) {
     this.participantId = participantId;
     this.oncHistoryDetailId = oncHistoryDetailId;
     this.medicalRecordId = medicalRecordId;
@@ -45,7 +45,7 @@ export class OncHistoryDetail {
     this.tissues = tissues;
     this.tissueProblemOption = tissueProblemOption;
     this.destructionPolicy = destructionPolicy;
-    this.unableToObtainTissue = unableToObtainTissue;
+    this.unableObtainTissue = unableObtainTissue;
   }
 
   static parse(json): OncHistoryDetail {
@@ -72,6 +72,6 @@ export class OncHistoryDetail {
       json.faxSent2, json.faxSent2By, json.faxConfirmed2,
       json.faxSent3, json.faxSent3By, json.faxConfirmed3,
       json.tissueReceived, json.gender, additionalValuesJson, tissues,
-      json.tissueProblemOption, json.destructionPolicy, json.unableToObtainTissue, json.numberOfRequests);
+      json.tissueProblemOption, json.destructionPolicy, json.unableObtainTissue, json.numberOfRequests);
   }
 }
