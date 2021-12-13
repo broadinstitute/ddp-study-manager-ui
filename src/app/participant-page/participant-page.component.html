@@ -1003,6 +1003,26 @@ participant.data.dsm['diagnosisYear'] != null">
             </tab>
 
             <ng-container *ngIf="dynamicFormType(settings); else groupForm">
+              <ng-container *ngFor="let tab of settings['TAB_GROUPED']">
+                <tab heading="{{getDisplayName(tab.columnDisplay, tab.columnName)}}" [active]="tabActive(tab.columnDisplay)" (selectTab)="onSelect($event, tab.columnDisplay)" >
+                  <ng-container *ngFor="let setting of settings[tab.columnName]; let settingIndex = index">
+                    <div *ngIf="setting.displayType === 'GROUP'">
+                      <hr style="border-color: black">
+                      <fieldset style="border: 1px black solid">
+                        <b class="Group--Title">{{setting.columnName}}</b>
+                        <ng-container *ngFor="let field of settings[setting.columnName]; let fieldIndex = index">
+                          <app-form-data [fieldSetting]="field" [participantData]="getParticipantDataFromSingleParticipant(setting)"
+                                         [activityData]="getActivityData(field)" [activityOptions]="getActivityOptions(field)"
+                                         (patchData)="formPatch($event, setting, null, findDataId(setting))"></app-form-data>
+                          <hr *ngIf="fieldIndex !== settings[setting.columnName].length-1" style="border-color: lightgray">
+                        </ng-container>
+                      </fieldset>
+                    </div>
+                  </ng-container>
+                </tab>
+              </ng-container>
+
+
               <ng-container *ngFor="let relative of participant.participantData">
                 <!--RGP tabs from fieldSettings-->
                 <ng-container *ngFor="let tab of settings['TAB_GROUPED']">
