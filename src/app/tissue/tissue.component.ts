@@ -75,23 +75,23 @@ export class TissueComponent implements OnInit {
       }
     }
     if ( v !== null ) {
-      if ( this.tissue.additionalValues != null ) {
-        this.tissue.additionalValues[colName] = v;
+      if ( this.tissue.additionalValuesJson != null ) {
+        this.tissue.additionalValuesJson[colName] = v;
       }
       else {
         let addArray = {};
         addArray[colName] = v;
-        this.tissue.additionalValues = addArray;
+        this.tissue.additionalValuesJson = addArray;
       }
-      this.valueChanged(this.tissue.additionalValues, "additionalValues");
+      this.valueChanged(this.tissue.additionalValuesJson, "additionalValues");
     }
   }
 
   //display additional value
   getAdditionalValue (colName: string): string {
-    if ( this.tissue.additionalValues != null ) {
-      if ( this.tissue.additionalValues[colName] != undefined && this.tissue.additionalValues[colName] != null ) {
-        return this.tissue.additionalValues[colName];
+    if ( this.tissue.additionalValuesJson != null ) {
+      if ( this.tissue.additionalValuesJson[colName] != undefined && this.tissue.additionalValuesJson[colName] != null ) {
+        return this.tissue.additionalValuesJson[colName];
       }
     }
     return null;

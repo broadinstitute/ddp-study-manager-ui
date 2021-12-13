@@ -2,16 +2,16 @@ export class Tissue {
 
   deleted: boolean = false;
 
-  constructor(public tissueId: string, public oncHistoryDetailId: string, public tNotes: string, public countReceived: number,
+  constructor(public tissueId: string, public oncHistoryDetailId: string, public notes: string, public countReceived: number,
               public tissueType: string, public tissueSite: string, public tumorType: string,
               public hE: string, public pathologyReport: string, public collaboratorSampleId: string, public blockSent: string,
               public scrollsReceived: string, public skId: string, public smId: string, public sentGp: string, public firstSmId: string,
-              public additionalValues: {}, public expectedReturn: string, public tissueReturnDate: string,
+              public additionalValuesJson: {}, public expectedReturn: string, public returnDate: string,
               public returnFedexId: string, public shlWorkNumber: string, public sequenceResults: string, public tumorPercentage: string,
               public scrollsCount: number, public ussCount: number, public blocksCount: number, public hECount: number) {
     this.tissueId = tissueId;
     this.oncHistoryDetailId = oncHistoryDetailId;
-    this.tNotes = tNotes;
+    this.notes = notes;
     this.countReceived = countReceived;
     this.tissueType = tissueType;
     this.tissueSite = tissueSite;
@@ -25,9 +25,9 @@ export class Tissue {
     this.smId = smId;
     this.sentGp = sentGp;
     this.firstSmId = firstSmId;
-    this.additionalValues = additionalValues;
+    this.additionalValuesJson = additionalValuesJson;
     this.expectedReturn = expectedReturn;
-    this.tissueReturnDate = tissueReturnDate;
+    this.returnDate = returnDate;
     this.returnFedexId = returnFedexId;
     this.shlWorkNumber = shlWorkNumber;
     this.sequenceResults = sequenceResults;

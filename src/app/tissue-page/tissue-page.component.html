@@ -88,8 +88,8 @@
         </tr>
         <tr *ngFor="let fs of this.settings['oD']">
           <td> {{fs.columnDisplay}}</td>
-          <td *ngIf="oncHistoryDetail.additionalValues !== null && oncHistoryDetail.additionalValues !== undefined">{{oncHistoryDetail.additionalValues[fs.columnName]}}</td>
-          <td *ngIf="oncHistoryDetail.additionalValues == null || oncHistoryDetail.additionalValues == undefined"></td>
+          <td *ngIf="oncHistoryDetail.additionalValuesJson !== null && oncHistoryDetail.additionalValuesJson !== undefined">{{oncHistoryDetail.additionalValuesJson[fs.columnName]}}</td>
+          <td *ngIf="oncHistoryDetail.additionalValuesJson == null || oncHistoryDetail.additionalValuesJson == undefined"></td>
         </tr>
         <tr>
           <td>Facility</td>

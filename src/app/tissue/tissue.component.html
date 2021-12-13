@@ -13,9 +13,9 @@
       <td class="TD--Padding" style="width: 20%">Notes</td>
       <td colspan="3">
         <textarea maxlength="1000"
-                  [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('tNotes')}"
-                  (blur)="currentField(null)" (focus)="currentField('tNotes')" [disabled]="!editable"
-                  [(ngModel)]="tissue.tNotes" (change)="valueChanged($event, 'tNotes')"></textarea>
+                  [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('notes')}"
+                  (blur)="currentField(null)" (focus)="currentField('notes')" [disabled]="!editable"
+                  [(ngModel)]="tissue.notes" (change)="valueChanged($event, 'notes')"></textarea>
       </td>
     </tr>
     <tr *ngIf="getCompService().getRealm().toUpperCase()==='MBC' || tissue.countReceived > 0">
@@ -90,7 +90,6 @@
       <td class="TD--Padding">Expected Return Date</td>
       <td colspan="3">
         <app-field-datepicker [dateString]="tissue.expectedReturn"
-                              [showNAButton]="true"
                               [allowFutureDate]="true"
                               (dateChanged)="valueChanged($event, 'expectedReturn')" [disabled]="!editable"
                               [colorDuringPatch]="isPatchedCurrently('expectedReturn')"></app-field-datepicker>

@@ -313,8 +313,8 @@ export class TissueListComponent implements OnInit {
   }
 
   getTissueAdditionalValue( tissueListIndex, colName: string ): string {
-    if (this.tissueListWrappers[ tissueListIndex ].tissueList.tissue != null && this.tissueListWrappers[ tissueListIndex ].tissueList.tissue.additionalValues != null && Object.keys( this.tissueListWrappers[ tissueListIndex ].tissueList.tissue.additionalValues ).length > 0) {
-      return this.tissueListWrappers[ tissueListIndex ].tissueList.tissue.additionalValues[ colName ] === undefined ? null : this.tissueListWrappers[ tissueListIndex ].tissueList.tissue.additionalValues[ colName ];
+    if (this.tissueListWrappers[ tissueListIndex ].tissueList.tissue != null && this.tissueListWrappers[ tissueListIndex ].tissueList.tissue.additionalValuesJson != null && Object.keys( this.tissueListWrappers[ tissueListIndex ].tissueList.tissue.additionalValuesJson ).length > 0) {
+      return this.tissueListWrappers[ tissueListIndex ].tissueList.tissue.additionalValuesJson[ colName ] === undefined ? null : this.tissueListWrappers[ tissueListIndex ].tissueList.tissue.additionalValuesJson[ colName ];
     }
     return null;
   }
