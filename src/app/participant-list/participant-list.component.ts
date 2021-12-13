@@ -196,6 +196,7 @@ export class ParticipantListComponent implements OnInit {
       jsonData = data;
       jsonData['participants'].forEach((val) => {
         let participant = Participant.parse(val);
+        console.log(participant);
         this.participantList.push(participant);
       });
       this.originalParticipantList = this.participantList;
@@ -716,6 +717,7 @@ export class ParticipantListComponent implements OnInit {
               jsonData = data;
               jsonData['participants'].forEach( ( val ) => {
                 let participant = Participant.parse( val );
+                console.log(participant);
                 this.participantList.push( participant );
               } );
               this.originalParticipantList = this.participantList;
@@ -816,6 +818,7 @@ export class ParticipantListComponent implements OnInit {
           jsonData = data;
           jsonData['participants'].forEach((val) => {
             let participant = Participant.parse(val);
+            console.log(participant);
             this.participantList.push(participant);
           });
           this.originalParticipantList = this.participantList;
@@ -1187,6 +1190,7 @@ export class ParticipantListComponent implements OnInit {
             jsonData = data;
             jsonData['participants'].forEach( ( val ) => {
               let participant = Participant.parse( val );
+              console.log(participant);
               this.participantList.push( participant );
             } );
             this.originalParticipantList = this.participantList;
@@ -1775,8 +1779,10 @@ export class ParticipantListComponent implements OnInit {
       if (data != null) {
         let jsonData: {};
         jsonData = data;
+
         jsonData['participants'].forEach( ( val ) => {
           let participant = Participant.parse( val );
+          console.log(participant);
           this.participantList.push( participant );
         } );
         this.originalParticipantList = this.participantList;
@@ -2200,5 +2206,9 @@ export class ParticipantListComponent implements OnInit {
       this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
      });
      this.orderColumns();
+  }
+
+  isMultipleOrSingleSelectMode( qDef: QuestionDefinition ) {
+    return (qDef.selectMode === 'MULTIPLE' || qDef.selectMode === 'SINGLE');
   }
 }

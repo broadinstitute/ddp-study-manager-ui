@@ -2,7 +2,7 @@ import {ActivityData} from "../../activity-data/activity-data.model";
 import {QuestionAnswer} from "../../activity-data/models/question-answer.model";
 import {Address} from "../../address/address.model";
 import {InvitationData} from "../../invitation-data/invitation-data.model";
-import { Computed } from "./computed.model";
+import {Computed} from "./computed.model";
 import {MedicalProvider} from "./medical-providers.model";
 
 export class Data {
@@ -32,7 +32,19 @@ export class Data {
         for (let y of x.questionsAnswers) {
           if (y.stableId === name) {
             for (let answer of y.answer) {
-              answers.push( answer );
+              if (!y.groupedOptions) {
+                answers.push( answer );
+              }
+              else {
+                let ans = y.groupedOptions[ answer ];
+                if (ans) {
+                  for (let a of ans) {
+                    answers.push( a );
+                  }
+                }else{
+                  answers.push( answer );
+                }
+              }
             }
           }
         }
@@ -47,7 +59,7 @@ export class Data {
       if (x.activityCode === activityData.activityCode) {
         for (let y of x.questionsAnswers) {
           if (y.stableId === name) {
-            answers.push(y);
+            answers.push( y );
           }
         }
       }

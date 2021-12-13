@@ -99,6 +99,7 @@ export class Utils {
   }
 
   isGroupSelected( selected: Array<string>, group: Group ): string {
+    console.log( group );
     return selected.find( answer => {
       if (group.groupStableId === answer) {
         return true;
@@ -123,18 +124,23 @@ export class Utils {
     let text = answer;
     let ans;
     if (qdef.groups) {
-      ans = qdef.groups.find( group => {
-        if (group.groupStableId === answer) {
-          return true;
+      loop1: for (let group of qdef.groups) {
+        for (let g of group.options) {
+          if (g.optionStableId === answer) {
+            ans = g.optionText;
+            break loop1;
+          }
         }
-        return false;
-      } );
 
-      if (ans) {
-        text = ans.groupText;
       }
+      if (ans) {
+        text = ans;
+      }
+
     }
+    console.log( ans );
     if (!ans && qdef.options) {
+      console.log( "not ans" );
       let ans = qdef.options.find( option => {
         if (option.optionStableId === answer) {
           return true;
@@ -142,9 +148,14 @@ export class Utils {
         return false;
       } );
       if (ans) {
+        console.log( ans );
         text = ans.optionText;
       }
     }
+
+    console.log( answer );
+    console.log( qdef );
+    console.log( text );
     return text;
   }
 
@@ -768,8 +779,8 @@ export class Utils {
     for (let activityData of activityDataArray) {
       for (let questionsAnswer of activityData.questionsAnswers) {
         if (questionsAnswer.stableId === name) {
-          if (questionsAnswer.questionType === "DATE"){
-            value += this.getDateFormatted( new Date( questionsAnswer.date ), this.DATE_STRING_IN_CVS )+", ";
+          if (questionsAnswer.questionType === "DATE") {
+            value += this.getDateFormatted( new Date( questionsAnswer.date ), this.DATE_STRING_IN_CVS ) + ", ";
           }
           else if (questionsAnswer.answer) {
             for (let answer of questionsAnswer.answer) {
@@ -780,5 +791,26 @@ export class Utils {
       }
     }
     return value;
+  }
+
+  getCorrectTextAsAnswer( questionAnswer: QuestionAnswer ) {
+    let answers = [];
+    for (let answer of questionAnswer.answer) {
+      if (!questionAnswer.groupedOptions) {
+        answers.push( answer );
+      }
+      else {
+        let ans = questionAnswer.groupedOptions[ answer ];
+        if (ans) {
+          for (let a of ans) {
+            answers.push( a );
+          }
+        }
+        else {
+          answers.push( answer );
+        }
+      }
+    }
+    return answers;
   }
 }
