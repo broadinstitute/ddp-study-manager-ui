@@ -117,7 +117,7 @@
         <td class="Width--20">Fax Sent</td>
         <td colspan="2">
           <app-field-datepicker [colorDuringPatch]="isPatchedCurrently('faxSent')" [disabled]=" participantExited"
-                                [dateString]="oncHistoryDetail.tFaxSent" (dateChanged)="valueChanged($event, 'faxSent')"></app-field-datepicker>
+                                [dateString]="oncHistoryDetail.faxSent" (dateChanged)="valueChanged($event, 'faxSent')"></app-field-datepicker>
           <app-field-datepicker
             *ngIf="((oncHistoryDetail.faxSent != null && oncHistoryDetail.faxSent !== '') && (oncHistoryDetail.tissueReceived == null || oncHistoryDetail.tissueReceived === '')) || (oncHistoryDetail.faxSent2 != null && oncHistoryDetail.faxSent2 !== '')"
             [disabled]=" participantExited" [dateString]="oncHistoryDetail.faxSent2"
@@ -138,7 +138,7 @@
                                 [colorDuringPatch]="isPatchedCurrently('faxConfirmed')"></app-field-datepicker>
         </td>
       </tr>
-      <tr *ngIf="oncHistoryDetail.tFaxSent != null">
+      <tr *ngIf="oncHistoryDetail.faxSent != null">
         <td>Tissue Received</td>
         <td colspan="2">
           <app-field-datepicker [dateString]="oncHistoryDetail.tissueReceived"
@@ -176,11 +176,11 @@
       <tr>
         <td>Notes</td>
         <td colspan="2">
-          <textarea [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('oncHisNotes')}"
+          <textarea [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('notes')}"
                     maxlength="1000"
-                    [(ngModel)]="oncHistoryDetail.oncHisNotes" (change)="valueChanged($event, 'oncHisNotes')"
+                    [(ngModel)]="oncHistoryDetail.notes" (change)="valueChanged($event, 'notes')"
                     [disabled]="!editable || participantExited"
-                    (blur)="currentField(null)" (focus)="currentField('oncHisNotes')"></textarea>
+                    (blur)="currentField(null)" (focus)="currentField('notes')"></textarea>
         </td>
       </tr>
       <tr>

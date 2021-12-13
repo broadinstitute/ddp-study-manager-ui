@@ -154,9 +154,8 @@ export class TissuePageComponent implements OnInit {
         data => {
           if (data) {
             this.oncHistoryDetail[ parameterName ] = v;
-            let jsonData: any | any[] = data.body;
-            if (jsonData instanceof Array) {
-              jsonData.forEach( ( val ) => {
+            if (data instanceof Array) {
+              data.forEach( ( val ) => {
                 let nameValue = NameValue.parse( val );
                 this.oncHistoryDetail[ nameValue.name.substr( nameValue.name.indexOf( "." ) + 1 ) ] = nameValue.value;
               } );
