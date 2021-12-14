@@ -91,13 +91,13 @@ export class ParticipantColumn {
   public static SK_ID = new ParticipantColumn("SK ID", "skId", "t");
   public static SM_ID = new ParticipantColumn("SM ID for H&E", "smId", "t");
   public static SENT_GP = new ParticipantColumn("Date sent to GP", "sentGp", "t");
-  public static TISSUE_RETURNED = new ParticipantColumn("Return Date", "tissueReturnDate", "t");
+  public static TISSUE_RETURNED = new ParticipantColumn("Return Date", "returnDate", "t");
   public static TISSUE_EXPECTED_RETURN = new ParticipantColumn("Expected Return Date", "expectedReturn", "t");
   public static TISSUE_TRACKING_NUMBER = new ParticipantColumn("Tracking Number", "returnFedexId", "t");
   public static TISSUE_SHL_NUMBER = new ParticipantColumn("SHL Work Number", "shlWorkNumber", "t");
   public static TISSUE_FIRST_SM_ID = new ParticipantColumn("First SM ID", "firstSmId", "t");
   public static TISSUE_TUMOR_PERCENT = new ParticipantColumn("Tumor Percentage as reported by SHL", "tumorPercentage", "t");
-  public static TISSUE_SEQUENCE = new ParticipantColumn("Sequencing Results", "sequenceResults", "t");
+  public static TISSUE_SEQUENCE = new ParticipantColumn("Sequencing Results", "tissueSequence", "t");
   public static SCROLLS_COUNT = new ParticipantColumn("Scroll(s)", "scrollsCount", "t");
   public static BLOCKS_COUNT = new ParticipantColumn("Block(s)", "blocksCount", "t");
   public static USS_COUNT = new ParticipantColumn("USS (unstained slides)", "ussCount", "t");

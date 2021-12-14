@@ -7,7 +7,7 @@ export class Tissue {
               public hE: string, public pathologyReport: string, public collaboratorSampleId: string, public blockSent: string,
               public scrollsReceived: string, public skId: string, public smId: string, public sentGp: string, public firstSmId: string,
               public additionalValuesJson: {}, public expectedReturn: string, public returnDate: string,
-              public returnFedexId: string, public shlWorkNumber: string, public sequenceResults: string, public tumorPercentage: string,
+              public returnFedexId: string, public shlWorkNumber: string, public tissueSequence: string, public tumorPercentage: string,
               public scrollsCount: number, public ussCount: number, public blocksCount: number, public hECount: number) {
     this.tissueId = tissueId;
     this.oncHistoryDetailId = oncHistoryDetailId;
@@ -30,7 +30,7 @@ export class Tissue {
     this.returnDate = returnDate;
     this.returnFedexId = returnFedexId;
     this.shlWorkNumber = shlWorkNumber;
-    this.sequenceResults = sequenceResults;
+    this.tissueSequence = tissueSequence;
     this.tumorPercentage = tumorPercentage;
     this.scrollsCount = scrollsCount;
     this.ussCount = ussCount;
@@ -39,16 +39,16 @@ export class Tissue {
   }
 
   static parse(json): Tissue {
-    let additionalValues: {};
-    let jsonData = json.additionalValues;
+    let additionalValuesJson: {};
+    let jsonData = json.additionalValuesJson;
     if (jsonData != null) {
       jsonData = "{" + jsonData.substring(1, jsonData.length - 1) + "}";
-      additionalValues = JSON.parse(jsonData);
+      additionalValuesJson = JSON.parse(jsonData);
     }
     return new Tissue(json.tissueId, json.oncHistoryDetailId, json.tNotes, json.countReceived, json.tissueType,
       json.tissueSite, json.tumorType, json.hE, json.pathologyReport, json.collaboratorSampleId, json.blockSent,
-      json.scrollsReceived, json.skId, json.smId, json.sentGp, json.firstSmId, additionalValues, json.expectedReturn,
-      json.tissueReturnDate, json.returnFedexId, json.shlWorkNumber, json.sequenceResults, json.tumorPercentage,
+      json.scrollsReceived, json.skId, json.smId, json.sentGp, json.firstSmId, additionalValuesJson, json.expectedReturn,
+      json.returnDate, json.returnFedexId, json.shlWorkNumber, json.tissueSequence, json.tumorPercentage,
       json.scrollsCount, json.ussCount, json.blocksCount, json.hECount);
   }
 }

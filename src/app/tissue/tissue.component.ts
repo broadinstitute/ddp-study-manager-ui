@@ -83,7 +83,7 @@ export class TissueComponent implements OnInit {
         addArray[colName] = v;
         this.tissue.additionalValuesJson = addArray;
       }
-      this.valueChanged(this.tissue.additionalValuesJson, "additionalValues");
+      this.valueChanged(this.tissue.additionalValuesJson, "additionalValuesJson");
     }
   }
 
@@ -99,7 +99,7 @@ export class TissueComponent implements OnInit {
 
   valueChanged (value: any, parameterName: string) {
     let v;
-    if ( parameterName === "additionalValues" ) {
+    if ( parameterName === "additionalValuesJson" ) {
       v = JSON.stringify(value);
     }
     else if ( typeof value === "string" ) {
@@ -117,7 +117,7 @@ export class TissueComponent implements OnInit {
       }
     }
     if ( v !== null ) {
-      if ( parameterName !== "additionalValues" ) {
+      if ( parameterName !== "additionalValuesJson" ) {
         for ( let oncTissue of this.oncHistoryDetail.tissues ) {
           if ( oncTissue.tissueId == this.tissue.tissueId ) {
             oncTissue[parameterName] = v;

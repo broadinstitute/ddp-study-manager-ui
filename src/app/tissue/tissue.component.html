@@ -98,13 +98,13 @@
     <tr *ngIf="tissue.tissueType!= null && tissue.tissueType ==='block' ">
       <td class="TD--Padding">Return Date</td>
       <td colspan="3">
-        <app-field-datepicker [dateString]="tissue.tissueReturnDate"
+        <app-field-datepicker [dateString]="tissue.returnDate"
                               [allowFutureDate]="true"
-                              (dateChanged)="valueChanged($event, 'tissueReturnDate')" [disabled]="false"
-                              [colorDuringPatch]="isPatchedCurrently('tissueReturnDate')"></app-field-datepicker>
+                              (dateChanged)="valueChanged($event, 'returnDate')" [disabled]="false"
+                              [colorDuringPatch]="isPatchedCurrently('returnDate')"></app-field-datepicker>
       </td>
     </tr>
-    <tr *ngIf="tissue.tissueType != null && tissue.tissueType ==='block' && tissue.tissueReturnDate != null">
+    <tr *ngIf="tissue.tissueType != null && tissue.tissueType ==='block' && tissue.returnDate != null">
       <td class="TD--Padding">Tracking Number</td>
       <td colspan="3">
         <md-input-container
@@ -322,9 +322,9 @@
         Sequencing Results
       </td>
       <td colspan="3">
-        <md-select [disabled]="!editable" [(ngModel)]="tissue.sequenceResults"
-                   (change)="valueChanged($event, 'sequenceResults')"
-                   [ngClass]="{'Color--Field--Patched': isPatchedCurrently('sequenceResults', i)}"
+        <md-select [disabled]="!editable" [(ngModel)]="tissue.tissueSequence"
+                   (change)="valueChanged($event, 'tissueSequence')"
+                   [ngClass]="{'Color--Field--Patched': isPatchedCurrently('tissueSequence', i)}"
                    placeholder="Sequence Results">
           <md-option value="failureSHL">Failure at SHL</md-option>
           <md-option value="abandonedGP">Abandoned at GP</md-option>

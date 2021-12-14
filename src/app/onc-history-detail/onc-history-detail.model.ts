@@ -59,7 +59,7 @@ export class OncHistoryDetail {
       });
     }
 
-    let data = json.additionalValues;
+    let data = json.additionalValuesJson;
     let additionalValuesJson = {};
     if (data != null) {
       data = "{" + data.substring(1, data.length - 1) + "}";
