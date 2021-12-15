@@ -241,6 +241,8 @@
       <table id="mainTable" class="table table-striped Table--Hover Table--Foot Width--85" style="float: right;"
              *ngIf="!loading">
         <thead>
+        <th *ngIf="hasAssignees()">
+        </th>
         <th>
           DDP
         </th>
