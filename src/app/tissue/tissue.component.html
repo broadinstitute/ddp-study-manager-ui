@@ -389,10 +389,10 @@
         <tr *ngFor="let smid of this.tissue.HESMId; let i=index;">
           <td *ngIf="!smid.deleted">
             <md-checkbox color="primary" disableRipple *ngIf="checkBoxNeeded('HE', i)"
-                         [checked]="smid.isSelected"
+                         [checked]="smid.isSelected" [disabled]="!canChangeThis(i, this.currentSMIDField)"
                          (change)="smid.isSelected = $event.checked; checkboxChecked($event, this.tissue.HESMId, i)"></md-checkbox>
             <md-input-container [ngClass]="{'Input': true}">
-              <input matInput [disabled]="!editable" id="HE{{i}}"
+              <input matInput  [disabled]="!canChangeThis(i, this.currentSMIDField)" id="HE{{i}}"
                      [ngClass]="{'Color--Field--Patched': isPatchedCurrently('SMIDHE'+i)}"
                      (blur)="currentField(null)"  [(ngModel)]="this.tissue.HESMId[i].smIdValue"
                      (change)="changeSmId($event, 'smIdValue', smid.smIdPk, 'he', this.tissue.HESMId, i, 'SMIDHE'+i)"
@@ -403,7 +403,7 @@
             </md-input-container>
           </td>
           <td *ngIf="!smid.deleted">
-            <button md-mini-fab color="warn" [disabled]="!editable"
+            <button md-mini-fab color="warn"  [disabled]="!canChangeThis(i, this.currentSMIDField)"
                     (click)="deleteSMID(this.tissue.HESMId, i)">
               <i class="fas fa-trash-alt fa-sm"></i>
             </button>
@@ -416,10 +416,10 @@
         <tr *ngFor="let smid of this.tissue.ussSMId; let i=index;">
           <td *ngIf="!smid.deleted">
             <md-checkbox color="primary" disableRipple *ngIf="checkBoxNeeded('USS', i)"
-                         [checked]="smid.isSelected"
+                         [checked]="smid.isSelected"   [disabled]="!canChangeThis(i, this.currentSMIDField)"
                          (change)="smid.isSelected = $event.checked; checkboxChecked($event, this.tissue.ussSMId, i)"></md-checkbox>
             <md-input-container [ngClass]="{'Input': true}">
-              <input matInput [disabled]="!editable" id="USS{{i}}"
+              <input matInput   [disabled]="!canChangeThis(i, this.currentSMIDField)" id="USS{{i}}"
                      [ngClass]="{'Color--Field--Patched': isPatchedCurrently('SMIDUSS'+i)}"
                      (blur)="currentField(null)" (change)="changeSmId($event, 'smIdValue', smid.smIdPk,  'uss', this.tissue.ussSMId, i, 'SMIDUSS'+i)"
                      [(ngModel)]="this.tissue.ussSMId[i].smIdValue"
@@ -430,7 +430,7 @@
             </md-input-container>
           </td>
           <td  *ngIf="!smid.deleted">
-            <button md-mini-fab color="warn" [disabled]="!editable"
+            <button md-mini-fab color="warn"   [disabled]="!canChangeThis(i, this.currentSMIDField)"
                     (click)="deleteSMID(this.tissue.ussSMId, i)">
               <i class="fas fa-trash-alt fa-sm"></i>
             </button>
@@ -443,10 +443,10 @@
         <tr *ngFor="let smid of this.tissue.scrollSMId; let i=index;">
           <td  *ngIf="!smid.deleted">
             <md-checkbox color="primary" disableRipple *ngIf="checkBoxNeeded('scrolls', i)"
-                         [checked]="smid.isSelected"
+                         [checked]="smid.isSelected"   [disabled]="!canChangeThis(i, this.currentSMIDField)"
                          (change)="smid.isSelected = $event.checked; checkboxChecked($event, this.tissue.scrollSMId, i)"></md-checkbox>
-            <md-input-container [ngClass]="{'Input': true}" id="scrolls{{i}}">
-              <input matInput [disabled]="!editable"
+            <md-input-container [ngClass]="{'Input': true}">
+              <input matInput   [disabled]="!canChangeThis(i, this.currentSMIDField)" id="scrolls{{i}}"
                      [ngClass]="{'Color--Field--Patched': isPatchedCurrently('SMIDScrolls'+i)}"
                      (blur)="currentField(null)" [(ngModel)]="this.tissue.scrollSMId[i].smIdValue"
                      (focus)="currentField('SMIDScrolls'+i)"
@@ -457,7 +457,7 @@
             </md-input-container>
           </td>
           <td  *ngIf="!smid.deleted">
-            <button md-mini-fab color="warn" [disabled]="!editable"
+            <button md-mini-fab color="warn"   [disabled]="!canChangeThis(i, this.currentSMIDField)"
                     (click)="deleteSMID(this.tissue.scrollSMId, i)">
               <i class="fas fa-trash-alt fa-sm"></i>
             </button>

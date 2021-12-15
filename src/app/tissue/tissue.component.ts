@@ -180,7 +180,6 @@ export class TissueComponent implements OnInit {
         }, nameValues, parentName, parentId, tAlias, null,
         localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.participant.participant.ddpParticipantId );
       let patch = patch1.getPatch();
-      console.log( patch );
       this.patchFinished = false;
 
       this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
@@ -207,8 +206,6 @@ export class TissueComponent implements OnInit {
                 smIdArray[ index ].smIdPk = smId;//for new sm ids
               }
               this.smIdDuplicate[ this.currentSMIDField ].add(this.createDuplicateIndex( index ) );
-              console.log( this.smIdDuplicate );
-
             }
           }
           else if (result.code === 200) {
@@ -223,8 +220,6 @@ export class TissueComponent implements OnInit {
 
                 }
                 this.smIdDuplicate[ this.currentSMIDField ].delete( this.createDuplicateIndex (index));
-                console.log(this.smIdDuplicate);
-
                 this.patchFinished = true;
                 this.currentPatchField = null;
                 this.dup = false;
@@ -358,6 +353,7 @@ export class TissueComponent implements OnInit {
   }
 
   exitModal() {
+
     this.SMIDModal.hide();
   }
 
@@ -490,6 +486,6 @@ export class TissueComponent implements OnInit {
 
   canChangeThis(i, name){
     let index = this.createDuplicateIndex(i, name);
-    return this.smIdDuplicate[name].size === 0 || this.smIdDuplicate[name].has(index);
+    return this.editable && (this.smIdDuplicate[name].size === 0 || this.smIdDuplicate[name].has(index));
   }
 }
