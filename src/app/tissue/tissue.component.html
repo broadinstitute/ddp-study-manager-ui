@@ -86,6 +86,44 @@
         Scroll(s)
       </td>
     </tr>
+    <tr>
+      <td class="TD--Padding">USS SM-IDS</td>
+      <td colspan="3">
+        <button md-mini-fab [disabled]="!editable" color="primary" [ngClass]="{'changed':!smIdCountMatch(this.tissue.ussSMId, this.tissue.ussCount)}"
+                (click)="openUSSModal()">
+          <i class="fas fa-plus fa-lg"></i>
+        </button>
+        <span *ngIf="!smIdCountMatch(this.tissue.ussSMId, this.tissue.ussCount)" color="warn">
+          Count and entered SM-IDs do not match! Please open and adjust.
+        </span>
+      </td>
+    </tr>
+    <tr>
+      <td class="TD--Padding">scrolls SM-IDS</td>
+      <td colspan="3">
+        <button md-mini-fab [disabled]="!editable" color="primary" [ngClass]="{'changed':!smIdCountMatch(this.tissue.scrollSMId, this.tissue.scrollsCount)}"
+                (click)="openScrollsModal()">
+          <i class="fas fa-plus fa-lg"></i>
+        </button>
+        <span *ngIf="!smIdCountMatch(this.tissue.scrollSMId, this.tissue.scrollsCount)" color="warn">
+          Count and entered SM-IDs do not match! Please open and adjust.
+        </span>
+      </td>
+
+    </tr>
+    <tr>
+      <td class="TD--Padding">H&E SM-IDS</td>
+      <td colspan="3">
+        <button md-mini-fab [disabled]="!editable" color="primary" [ngClass]="{'changed':!smIdCountMatch(this.tissue.HESMId, this.tissue.hECount)}"
+                (click)="openHEModal()">
+          <i class="fas fa-plus fa-lg"></i>
+        </button>
+        <span *ngIf="!smIdCountMatch(this.tissue.HESMId, this.tissue.hECount)" color="warn">
+          Count and entered SM-IDs do not match! Please open and adjust.
+        </span>
+      </td>
+
+    </tr>
     <tr *ngIf="tissue.tissueType != null && tissue.tissueType === 'block' ">
       <td class="TD--Padding">Expected Return Date</td>
       <td colspan="3">
@@ -340,3 +378,107 @@
 
   </table>
 </div>
+
+<app-modal>
+  <div class="app-modal-header">
+    SMIDs for {{this.currentSMIDField}}
+  </div>
+  <div class="app-modal-body">
+    <ng-container *ngIf="this.currentSMIDField==='HE'">
+      <table>
+        <tr *ngFor="let smid of this.tissue.HESMId; let i=index;">
+          <td *ngIf="!smid.deleted">
+            <md-checkbox color="primary" disableRipple *ngIf="checkBoxNeeded('HE', i)"
+                         [checked]="smid.isSelected" [disabled]="!canChangeThis(i, this.currentSMIDField)"
+                         (change)="smid.isSelected = $event.checked; checkboxChecked($event, this.tissue.HESMId, i)"></md-checkbox>
+            <md-input-container [ngClass]="{'Input': true}">
+              <input matInput  [disabled]="!canChangeThis(i, this.currentSMIDField)" id="HE{{i}}"
+                     [ngClass]="{'Color--Field--Patched': isPatchedCurrently('SMIDHE'+i)}"
+                     (blur)="currentField(null)"  [(ngModel)]="this.tissue.HESMId[i].smIdValue"
+                     (change)="changeSmId($event, 'smIdValue', smid.smIdPk, 'he', this.tissue.HESMId, i, 'SMIDHE'+i)"
+                     (focus)="currentField('SMIDHE'+i)"
+                     [value]="smid.smIdValue" (keydown.enter)="goNext('HE', i)">
+              <md-hint class="ErrorMessageForm" *ngIf="isDuplicate(this.currentSMIDField, i)">Duplicate Value! Not Saved!
+              </md-hint>
+            </md-input-container>
+          </td>
+          <td *ngIf="!smid.deleted">
+            <button md-mini-fab color="warn"  [disabled]="!canChangeThis(i, this.currentSMIDField)"
+                    (click)="deleteSMID(this.tissue.HESMId, i)">
+              <i class="fas fa-trash-alt fa-sm"></i>
+            </button>
+          </td>
+        </tr>
+      </table>
+    </ng-container>
+    <ng-container *ngIf="this.currentSMIDField==='USS'">
+      <table>
+        <tr *ngFor="let smid of this.tissue.ussSMId; let i=index;">
+          <td *ngIf="!smid.deleted">
+            <md-checkbox color="primary" disableRipple *ngIf="checkBoxNeeded('USS', i)"
+                         [checked]="smid.isSelected"   [disabled]="!canChangeThis(i, this.currentSMIDField)"
+                         (change)="smid.isSelected = $event.checked; checkboxChecked($event, this.tissue.ussSMId, i)"></md-checkbox>
+            <md-input-container [ngClass]="{'Input': true}">
+              <input matInput   [disabled]="!canChangeThis(i, this.currentSMIDField)" id="USS{{i}}"
+                     [ngClass]="{'Color--Field--Patched': isPatchedCurrently('SMIDUSS'+i)}"
+                     (blur)="currentField(null)" (change)="changeSmId($event, 'smIdValue', smid.smIdPk,  'uss', this.tissue.ussSMId, i, 'SMIDUSS'+i)"
+                     [(ngModel)]="this.tissue.ussSMId[i].smIdValue"
+                     (focus)="currentField('SMIDUSS'+i)"
+                     [value]="smid.smIdValue" (keydown.enter)="goNext('USS', i)">
+              <md-hint class="ErrorMessageForm" *ngIf="isDuplicate(this.currentSMIDField,  i)">Duplicate Value! Not Saved!
+              </md-hint>
+            </md-input-container>
+          </td>
+          <td  *ngIf="!smid.deleted">
+            <button md-mini-fab color="warn"   [disabled]="!canChangeThis(i, this.currentSMIDField)"
+                    (click)="deleteSMID(this.tissue.ussSMId, i)">
+              <i class="fas fa-trash-alt fa-sm"></i>
+            </button>
+          </td>
+        </tr>
+      </table>
+    </ng-container>
+    <ng-container *ngIf="this.currentSMIDField==='scrolls'">
+      <table>
+        <tr *ngFor="let smid of this.tissue.scrollSMId; let i=index;">
+          <td  *ngIf="!smid.deleted">
+            <md-checkbox color="primary" disableRipple *ngIf="checkBoxNeeded('scrolls', i)"
+                         [checked]="smid.isSelected"   [disabled]="!canChangeThis(i, this.currentSMIDField)"
+                         (change)="smid.isSelected = $event.checked; checkboxChecked($event, this.tissue.scrollSMId, i)"></md-checkbox>
+            <md-input-container [ngClass]="{'Input': true}">
+              <input matInput   [disabled]="!canChangeThis(i, this.currentSMIDField)" id="scrolls{{i}}"
+                     [ngClass]="{'Color--Field--Patched': isPatchedCurrently('SMIDScrolls'+i)}"
+                     (blur)="currentField(null)" [(ngModel)]="this.tissue.scrollSMId[i].smIdValue"
+                     (focus)="currentField('SMIDScrolls'+i)"
+                     (change)="changeSmId($event, 'smIdValue', smid.smIdPk, 'scrolls', this.tissue.scrollSMId, i, 'SMIDScrolls'+i )"
+                     [value]="smid.smIdValue" (keydown.enter)="goNext('scrolls', i)">
+              <md-hint class="ErrorMessageForm" *ngIf="isDuplicate(this.currentSMIDField,  i)">Duplicate Value! Not Saved!
+              </md-hint>
+            </md-input-container>
+          </td>
+          <td  *ngIf="!smid.deleted">
+            <button md-mini-fab color="warn"   [disabled]="!canChangeThis(i, this.currentSMIDField)"
+                    (click)="deleteSMID(this.tissue.scrollSMId, i)">
+              <i class="fas fa-trash-alt fa-sm"></i>
+            </button>
+          </td>
+
+        </tr>
+      </table>
+    </ng-container>
+    <ng-container>
+      <button md-mini-fab color="primary"
+              (click)="addSMId(this.currentSMIDField)">
+        <i class="fas fa-plus fa-lg"></i>
+      </button>
+    </ng-container>
+  </div>
+  <div class="app-modal-footer">
+    <button type="button" class="btn btn-default"
+            (click)="exitModal()">close
+    </button>
+    <button *ngIf="selectedSmIds && selectedSmIds > 0 && checkBoxNeeded(this.currentSMIDField)" type="button" class="btn btn-default"
+            (click)="exitModalAndDeleteRest(this.currentSMIDField)">Only keep selected SM-IDs
+    </button>
+  </div>
+</app-modal>
