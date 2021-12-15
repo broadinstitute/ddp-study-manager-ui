@@ -388,7 +388,7 @@
       <table>
         <tr *ngFor="let smid of this.tissue.HESMId; let i=index;">
           <td *ngIf="!smid.deleted">
-            <md-checkbox color="primary" disableRipple *ngIf="checkBoxNeeded('HE', smid.smIdPk)"
+            <md-checkbox color="primary" disableRipple *ngIf="checkBoxNeeded('HE', i)"
                          [checked]="smid.isSelected"
                          (change)="smid.isSelected = $event.checked; checkboxChecked($event, this.tissue.HESMId, i)"></md-checkbox>
             <md-input-container [ngClass]="{'Input': true}">
@@ -398,7 +398,7 @@
                      (change)="changeSmId($event, 'smIdValue', smid.smIdPk, 'he', this.tissue.HESMId, i, 'SMIDHE'+i)"
                      (focus)="currentField('SMIDHE'+i)"
                      [value]="smid.smIdValue" (keydown.enter)="goNext('HE', i)">
-              <md-hint class="ErrorMessageForm" *ngIf="isDuplicate(this.currentSMIDField, smid.smIdPk)">Duplicate Value! Not Saved!
+              <md-hint class="ErrorMessageForm" *ngIf="isDuplicate(this.currentSMIDField, i)">Duplicate Value! Not Saved!
               </md-hint>
             </md-input-container>
           </td>
@@ -415,7 +415,7 @@
       <table>
         <tr *ngFor="let smid of this.tissue.ussSMId; let i=index;">
           <td *ngIf="!smid.deleted">
-            <md-checkbox color="primary" disableRipple *ngIf="checkBoxNeeded('USS', smid.smIdPk)"
+            <md-checkbox color="primary" disableRipple *ngIf="checkBoxNeeded('USS', i)"
                          [checked]="smid.isSelected"
                          (change)="smid.isSelected = $event.checked; checkboxChecked($event, this.tissue.ussSMId, i)"></md-checkbox>
             <md-input-container [ngClass]="{'Input': true}">
@@ -425,7 +425,7 @@
                      [(ngModel)]="this.tissue.ussSMId[i].smIdValue"
                      (focus)="currentField('SMIDUSS'+i)"
                      [value]="smid.smIdValue" (keydown.enter)="goNext('USS', i)">
-              <md-hint class="ErrorMessageForm" *ngIf="isDuplicate(this.currentSMIDField, smid.smIdPk)">Duplicate Value! Not Saved!
+              <md-hint class="ErrorMessageForm" *ngIf="isDuplicate(this.currentSMIDField,  i)">Duplicate Value! Not Saved!
               </md-hint>
             </md-input-container>
           </td>
@@ -442,7 +442,7 @@
       <table>
         <tr *ngFor="let smid of this.tissue.scrollSMId; let i=index;">
           <td  *ngIf="!smid.deleted">
-            <md-checkbox color="primary" disableRipple *ngIf="checkBoxNeeded('scrolls', smid.smIdPk)"
+            <md-checkbox color="primary" disableRipple *ngIf="checkBoxNeeded('scrolls', i)"
                          [checked]="smid.isSelected"
                          (change)="smid.isSelected = $event.checked; checkboxChecked($event, this.tissue.scrollSMId, i)"></md-checkbox>
             <md-input-container [ngClass]="{'Input': true}" id="scrolls{{i}}">
@@ -452,7 +452,7 @@
                      (focus)="currentField('SMIDScrolls'+i)"
                      (change)="changeSmId($event, 'smIdValue', smid.smIdPk, 'scrolls', this.tissue.scrollSMId, i, 'SMIDScrolls'+i )"
                      [value]="smid.smIdValue" (keydown.enter)="goNext('scrolls', i)">
-              <md-hint class="ErrorMessageForm" *ngIf="isDuplicate(this.currentSMIDField, smid.smIdPk)">Duplicate Value! Not Saved!
+              <md-hint class="ErrorMessageForm" *ngIf="isDuplicate(this.currentSMIDField,  i)">Duplicate Value! Not Saved!
               </md-hint>
             </md-input-container>
           </td>

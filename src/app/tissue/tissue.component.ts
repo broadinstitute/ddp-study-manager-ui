@@ -180,6 +180,7 @@ export class TissueComponent implements OnInit {
         }, nameValues, parentName, parentId, tAlias, null,
         localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.participant.participant.ddpParticipantId );
       let patch = patch1.getPatch();
+      console.log( patch );
       this.patchFinished = false;
 
       this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
@@ -201,10 +202,14 @@ export class TissueComponent implements OnInit {
           }
           else if (result.code === 500 && result.body != null) {
             this.dup = true;
-            if (smIdArray && index && smId) {
-              smIdArray[ index ].smIdPk = smId;
+            if (tAlias === "sm") {
+              if (smIdArray && index && smId) {
+                smIdArray[ index ].smIdPk = smId;//for new sm ids
+              }
+              this.smIdDuplicate[ this.currentSMIDField ].add(this.createDuplicateIndex( index ) );
+              console.log( this.smIdDuplicate );
+
             }
-            this.smIdDuplicate[ this.currentSMIDField ].add( smId );
           }
           else if (result.code === 200) {
             if (result.body != null && result.body !== "") {
@@ -214,10 +219,11 @@ export class TissueComponent implements OnInit {
                   smId = jsonData.smId;
                   if (smIdArray && index) {
                     smIdArray[ index ].smIdPk = smId;
-
                   }
+
                 }
-                this.smIdDuplicate[ this.currentSMIDField ].delete( smId );
+                this.smIdDuplicate[ this.currentSMIDField ].delete( this.createDuplicateIndex (index));
+                console.log(this.smIdDuplicate);
 
                 this.patchFinished = true;
                 this.currentPatchField = null;
@@ -319,7 +325,10 @@ export class TissueComponent implements OnInit {
       this.currentPatchField = filedName;
     }
     if (!id) {
-      smIdArray[ index ].smIdPk = this.valueChanged( type, "smIdType", "tissueId", this.tissue.tissueId, Statics.SM_ID_ALIAS, id, smIdArray, index, value, parameterName );
+      let smIdPk = this.valueChanged( type, "smIdType", "tissueId", this.tissue.tissueId, Statics.SM_ID_ALIAS, id, smIdArray, index, value, parameterName );
+      if (smIdPk) {
+        smIdArray[ index ].smIdPk = smIdPk;
+      }
     }
     else {
       this.valueChanged( value, parameterName, "tissueId", this.tissue.tissueId, Statics.SM_ID_ALIAS, id, smIdArray, index );
@@ -391,9 +400,11 @@ export class TissueComponent implements OnInit {
 
   deleteSMID( array: TissueSmId[], i: number ) {
     array[ i ].deleted = true;
-    this.changeSmId( `1`, 'deleted', array[ i ].smIdPk, array[ i ].smIdType, array, i );
-    if (this.smIdDuplicate[ this.currentSMIDField ].has( array[ i ].smIdPk )) {
-      this.smIdDuplicate[ this.currentSMIDField ].delete( array[ i ].smIdPk );
+    if (array[ i ].smIdPk) {
+      this.changeSmId( `1`, 'deleted', array[ i ].smIdPk, array[ i ].smIdType, array, i );
+    }
+    if (this.smIdDuplicate[ this.currentSMIDField ].has( this.createDuplicateIndex( i ) )) {
+        this.smIdDuplicate[ this.currentSMIDField ].delete( this.createDuplicateIndex( i ) );
     }
     array.splice( i, 1 );
   }
@@ -444,30 +455,41 @@ export class TissueComponent implements OnInit {
     this.exitModal();
   }
 
-  checkBoxNeeded( name: string, smidpk? ): boolean {
+  checkBoxNeeded( name: string, index ): boolean {
     if (name === this.uss) {
       if (!this.tissue.ussSMId) {
         this.tissue.ussSMId = new Array<TissueSmId>();
       }
-      return ( this.tissue.ussCount < this.tissue.ussSMId.length && !this.smIdDuplicate[ this.uss ].has( smidpk ) );
+      return ( this.tissue.ussCount < this.tissue.ussSMId.length && !this.smIdDuplicate[ this.uss ].has( this.createDuplicateIndex(index, name) ) );
     }
     else if (name === this.scrolls) {
       if (!this.tissue.scrollSMId) {
         this.tissue.scrollSMId = new Array<TissueSmId>();
       }
-      return ( this.tissue.scrollsCount < this.tissue.scrollSMId.length && !this.smIdDuplicate[ this.scrolls ].has( smidpk ) );
+      return ( this.tissue.scrollsCount < this.tissue.scrollSMId.length && !this.smIdDuplicate[ this.scrolls ].has( this.createDuplicateIndex(index, name)  ) );
     }
     else if (name === this.he) {
       if (!this.tissue.HESMId) {
         this.tissue.HESMId = new Array<TissueSmId>();
       }
-      return ( this.tissue.hECount < this.tissue.HESMId.length && !this.smIdDuplicate[ this.he ].has( smidpk ) );
+      return ( this.tissue.hECount < this.tissue.HESMId.length && !this.smIdDuplicate[ this.he ].has( this.createDuplicateIndex(index, name)  ) );
     }
   }
 
 
-  isDuplicate( currentSMIDField: string, i: string ) {
-    return this.smIdDuplicate[ currentSMIDField ].has( i );
+  isDuplicate( currentSMIDField: string,  index ) {
+    return ( this.smIdDuplicate[ currentSMIDField ].has( this.createDuplicateIndex( index, currentSMIDField ) ) );
 
+  }
+
+  createDuplicateIndex( i, name? ) {
+    if(!name)
+      name = this.currentSMIDField;
+    return name + i;
+  }
+
+  canChangeThis(i, name){
+    let index = this.createDuplicateIndex(i, name);
+    return this.smIdDuplicate[name].size === 0 || this.smIdDuplicate[name].has(index);
   }
 }
