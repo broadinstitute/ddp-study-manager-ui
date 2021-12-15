@@ -3,10 +3,11 @@ import {Tissue} from "../tissue/tissue.model";
 
 export class TissueList {
 
-  constructor(public oncHistoryDetails: OncHistoryDetail, public tissue: Tissue, public ddpParticipantId: string) {
+  constructor(public oncHistoryDetails: OncHistoryDetail, public tissue: Tissue, public ddpParticipantId: string, public participantId: string) {
     this.oncHistoryDetails = oncHistoryDetails;
     this.ddpParticipantId = ddpParticipantId;
     this.tissue = tissue;
+    this.participantId = participantId;
   }
 
   static parse(json): TissueList {
@@ -15,6 +16,6 @@ export class TissueList {
     if (json.tissue != null && json.tissue != undefined) {
       tissue = Tissue.parse(json.tissue);
     }
-    return new TissueList(oncHistory, tissue, json.ddpParticipantId);
+    return new TissueList(oncHistory, tissue, json.ddpParticipantId, json.participantId);
   }
 }

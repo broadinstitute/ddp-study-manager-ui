@@ -207,6 +207,13 @@ export class DSMService {
     return this.http.get( url, this.buildHeader() ).map( ( res: Response ) => res.json() ).catch( this.handleError.bind( this ) );
   }
 
+  public getAssignees(realm: string): Observable<any> {
+    let url = this.baseUrl + DSMService.UI + "assignees";
+    let map: { name: string, value: any }[] = [];
+    map.push( {name: DSMService.REALM, value: realm} );
+    return this.http.get(url, this.buildQueryHeader(map)).map(( res: Response ) => res.json() ).catch( this.handleError.bind( this )) ;
+  }
+
   public saveDrug( json: string ): Observable<any> {
     let url = this.baseUrl + DSMService.UI + "drugList";
     let map: { name: string, value: any }[] = [];

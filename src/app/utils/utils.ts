@@ -499,8 +499,10 @@ export class Utils {
           let value = "";
           if (data != null) {
             //check for survey data
-            let activityData = this.getSurveyData( data, col.participantColumn.tableAlias );
-            if (activityData != null) {
+            let activityDataArray: ActivityData[] = this.getSurveyData( data, col.participantColumn.tableAlias );
+            if (activityDataArray != null) {
+              if (activityDataArray.length == 1) {
+                let activityData = activityDataArray[ 0 ];
               if (( col.participantColumn.name === "createdAt" || col.participantColumn.name === "completedAt"
                 || col.participantColumn.name === "lastUpdatedAt" ) && activityData[ col.participantColumn.name ] != null) {
                 value = this.getDateFormatted( new Date( activityData[ col.participantColumn.name ] ), this.DATE_STRING_IN_CVS );
@@ -521,6 +523,9 @@ export class Utils {
                     value = questionAnswer.answer; //TODO react to what kind of answer it is and make pretty
                   }
                 }
+                }
+              }else {
+                value = this.getActivityValueForMultipleActivities( activityDataArray, col.participantColumn.name );
               }
             }
             else if (col.participantColumn.tableAlias === "invitations") {
@@ -552,8 +557,14 @@ export class Utils {
   }
 
   public static getSurveyData( participant: Participant, code: string ) {
+    let array = [];
     if (participant != null && participant.data != null && participant.data.activities != null) {
-      return participant.data.activities.find( x => x.activityCode === code );
+      for (let x of participant.data.activities) {
+        if (x.activityCode === code) {
+          array.push( x );
+        }
+      }
+      return array;
     }
     return null;
   }
@@ -768,5 +779,24 @@ export class Utils {
       }
     }
     return "";
+  }
+
+  private static getActivityValueForMultipleActivities( activityDataArray: ActivityData[], name: string ) {
+    let value = "";
+    for (let activityData of activityDataArray) {
+      for (let questionsAnswer of activityData.questionsAnswers) {
+        if (questionsAnswer.stableId === name) {
+          if (questionsAnswer.questionType === "DATE"){
+            value += this.getDateFormatted( new Date( questionsAnswer.date ), this.DATE_STRING_IN_CVS )+", ";
+          }
+          else if (questionsAnswer.answer) {
+            for (let answer of questionsAnswer.answer) {
+              value += answer + ", ";
+            }
+          }
+        }
+      }
+    }
+    return value;
   }
 }
