@@ -112,6 +112,7 @@ export class ParticipantListComponent implements OnInit {
   hideSamplesTab: boolean = false;
   jsonPatch: any;
   viewFilter: any;
+  private start: number;
 
   constructor( private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
                private router: Router, private auth: Auth, private route: ActivatedRoute, private util: Utils ) {
@@ -136,12 +137,14 @@ export class ParticipantListComponent implements OnInit {
       this.additionalMessage = "Please select a realm";
     } else {
       this.checkRight();
+
     }
     window.scrollTo( 0, 0 );
   }
 
   private checkRight() {
     //assumption for now: profile parameters are always the same, only survey will be dynamic per ddp
+    this.start = new Date().getTime();
     this.loadingParticipants = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
     this.setSelectedFilterName( "" );
     this.currentFilter = null;
@@ -659,6 +662,7 @@ export class ParticipantListComponent implements OnInit {
             this.dataSources.forEach( ( value: string, key: string ) => {
               this.selectedColumns[ key ] = [];
             } );
+            this.sendAnalyticsMetric();
             this.refillWithDefaultColumns();
           },
           err => {
@@ -690,6 +694,8 @@ export class ParticipantListComponent implements OnInit {
         this.selectedColumns[defaultColumn.participantColumn.tableAlias].push(defaultColumn);
       }
     }
+
+
   }
 
   private removeColumnFromSourceColumns (source: string, filter: Filter) {
@@ -795,6 +801,7 @@ export class ParticipantListComponent implements OnInit {
           this.loadedTimeStamp = Utils.getDateFormatted( date, Utils.DATE_STRING_IN_EVENT_CVS );
         }
         this.loadingParticipants = null;
+        this.sendAnalyticsMetric();
       },
       err => {
         if (err._body === Auth.AUTHENTICATION_ERROR) {
@@ -889,6 +896,7 @@ export class ParticipantListComponent implements OnInit {
   }
 
   public clearFilter() {
+    this.start = new Date().getTime();
     this.filterQuery = null;
     this.deselectQuickFilters();
     this.clearManualFilters();
@@ -2124,4 +2132,11 @@ this.orderColumns();
     return false;
   }
 
+  private sendAnalyticsMetric(  ) {
+    let passed = new Date().getTime() - this.start;
+    this.dsmService.sendAnalyticsMetric(this.getRealm(), passed).subscribe(
+      data=>{},
+        err=>{}
+    );
+  }
 }
