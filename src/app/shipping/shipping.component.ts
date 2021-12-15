@@ -106,7 +106,7 @@ export class ShippingComponent implements OnInit {
         this.checkRight();
       }
       else {
-        this.additionalMessage = "Please select a realm";
+        this.additionalMessage = "Please select a study";
       }
     } );
   }
@@ -116,7 +116,7 @@ export class ShippingComponent implements OnInit {
       this.checkRight();
     }
     else {
-      this.additionalMessage = "Please select a realm";
+      this.additionalMessage = "Please select a study";
     }
     window.scrollTo( 0, 0 );
   }
@@ -237,7 +237,7 @@ export class ShippingComponent implements OnInit {
     }
     else {
       this.kitTypes = [];
-      this.additionalMessage = "Please select a realm";
+      this.additionalMessage = "Please select a study";
     }
   }
 
@@ -295,7 +295,7 @@ export class ShippingComponent implements OnInit {
     }
     else {
       this.kitRequests = [];
-      this.additionalMessage = "Please select a realm";
+      this.additionalMessage = "Please select a study";
     }
   }
 

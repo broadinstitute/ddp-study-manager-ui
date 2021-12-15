@@ -95,7 +95,7 @@ export class EmailEventComponent implements OnInit {
       this.checkRight();
     }
     else {
-      this.additionalMessage = "Please select a realm";
+      this.additionalMessage = "Please select a study";
     }
     window.scrollTo(0,0);
   }

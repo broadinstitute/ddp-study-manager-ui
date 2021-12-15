@@ -45,7 +45,7 @@ export class UserSettingComponent implements OnInit {
   ngOnInit() {
     this.additionalMessage = null;
     // if (localStorage.getItem(ComponentService.MENU_SELECTED_REALM) == null || localStorage.getItem(ComponentService.MENU_SELECTED_REALM)
-    // === undefined) { this.additionalMessage = "Please select a realm"; } else {
+    // === undefined) { this.additionalMessage = "Please select a study"; } else {
     this.checkRight();
     this.userSetting = this.role.getUserSetting();
     // }

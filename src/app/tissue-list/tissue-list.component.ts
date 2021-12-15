@@ -219,11 +219,11 @@ export class TissueListComponent implements OnInit {
       //      this.compService.realmMenu = this.realm;
     }
     else {
-      this.errorMessage = "Please select a realm";
+      this.errorMessage = "Please select a study";
     }
     window.scrollTo( 0, 0 );
     if (localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) === null || localStorage.getItem( ComponentService.MENU_SELECTED_REALM ) === undefined) {
-      this.errorMessage = "Please select a realm";
+      this.errorMessage = "Please select a study";
       return;
     }
     else {
