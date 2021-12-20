@@ -1915,8 +1915,7 @@ this.orderColumns();
 
   hasThisColumnSelected( selectedColumnArray: Array<Filter>, oncColumn: Filter ): boolean {
     let f = selectedColumnArray.find( f => {
-        return f.participantColumn.tableAlias === oncColumn.participantColumn.tableAlias && f.participantColumn.name === oncColumn.participantColumn.name &&
-          (oncColumn.filter2 === undefined || oncColumn.filter2.value === undefined || oncColumn.filter2.value === f.filter2.value);
+      return f.participantColumn.tableAlias === oncColumn.participantColumn.tableAlias && f.participantColumn.name === oncColumn.participantColumn.name;
     } );
     return f !== undefined;
   }
