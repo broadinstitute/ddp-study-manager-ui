@@ -361,7 +361,7 @@ export class Utils {
       if (o != null) {
         for (col of columns) {
           if (col.type === "ADDITIONALVALUE") {
-            let fieldName = "additionalValues";
+            let fieldName = "additionalValuesJson";
             if (fieldName !== "") {
               let value = this.getObjectAdditionalValue( o, fieldName, col );
               value = value == undefined ? "" : value.toString();

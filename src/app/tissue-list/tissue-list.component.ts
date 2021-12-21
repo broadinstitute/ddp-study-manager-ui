@@ -1228,7 +1228,7 @@ export class TissueListComponent implements OnInit {
       if (this.selectedColumns[ "t" ] != undefined && this.selectedColumns[ "t" ].length > 0) {
         this.tissueListWrappers.sort( ( a, b ) => {
             if (this.sortColumn.type === "ADDITIONALVALUE") {
-              this.sortField = "additionalValues";
+              this.sortField = "additionalValuesJson";
               if (a.tissueList.oncHistoryDetails[ this.sortField ] == null || a.tissueList.oncHistoryDetails[ this.sortField ] === undefined || a.tissueList.oncHistoryDetails[ this.sortField ][ fieldName ] == undefined || a.tissueList.oncHistoryDetails[ this.sortField ][ fieldName ] == "") {
                 return 1;
               }
@@ -1266,7 +1266,7 @@ export class TissueListComponent implements OnInit {
       else {
         this.tissueListOncHistories.sort( ( a, b ) => {
             if (this.sortColumn.type === "ADDITIONALVALUE") {
-              this.sortField = "additionalValues";
+              this.sortField = "additionalValuesJson";
               if (a.tissueList.oncHistoryDetails[ this.sortField ] == null || a.tissueList.oncHistoryDetails[ this.sortField ] === undefined || a.tissueList.oncHistoryDetails[ this.sortField ][ fieldName ] == undefined || a.tissueList.oncHistoryDetails[ this.sortField ][ fieldName ] == "") {
                 return 1;
               }
@@ -1304,7 +1304,7 @@ export class TissueListComponent implements OnInit {
     else if (this.sortParent === "t") {
       this.tissueListWrappers.sort( ( a, b ) => {
           if (this.sortColumn.type === "ADDITIONALVALUE") {
-            this.sortField = "additionalValues";
+            this.sortField = "additionalValuesJson";
             if (a.tissueList.tissue == undefined || a.tissueList.tissue[ this.sortField ] == undefined) {
               return 1;
             }

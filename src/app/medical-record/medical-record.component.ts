@@ -458,23 +458,23 @@ export class MedicalRecordComponent implements OnInit {
       }
     }
     if (v !== null) {
-      if (this.medicalRecord.additionalValues != null) {
-        this.medicalRecord.additionalValues[ colName ] = v;
+      if (this.medicalRecord.additionalValuesJson != null) {
+        this.medicalRecord.additionalValuesJson[ colName ] = v;
       }
       else {
         let addArray = {};
         addArray[ colName ] = v;
-        this.medicalRecord.additionalValues = addArray;
+        this.medicalRecord.additionalValuesJson = addArray;
       }
-      this.valueChanged( this.medicalRecord.additionalValues, "additionalValuesJson" );
+      this.valueChanged( this.medicalRecord.additionalValuesJson, "additionalValuesJson" );
     }
   }
 
   //display additional value
   getAdditionalValue( colName: string ): string {
-    if (this.medicalRecord.additionalValues != null) {
-      if (this.medicalRecord.additionalValues[ colName ] != undefined && this.medicalRecord.additionalValues[ colName ] != null) {
-        return this.medicalRecord.additionalValues[ colName ];
+    if (this.medicalRecord.additionalValuesJson != null) {
+      if (this.medicalRecord.additionalValuesJson[ colName ] != undefined && this.medicalRecord.additionalValuesJson[ colName ] != null) {
+        return this.medicalRecord.additionalValuesJson[ colName ];
       }
     }
     return null;

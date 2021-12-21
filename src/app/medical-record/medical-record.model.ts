@@ -28,7 +28,7 @@ export class MedicalRecord {
               public mrNotes?: string, public reviewMedicalRecord?: boolean, public type?: string, public nameDDP?: string,
               public institutionDDP?: string, public streetAddressDDP?: string, public cityDDP?: string, public stateDDP?: string,
               public isDeleted?: boolean, public oncHistoryDetail?: Array<OncHistoryDetail>, public followUps?: FollowUp[], public followUpRequired?: boolean,
-              public followUpRequiredText?: string, public additionalValues?: {}, public unableObtainText?: string) {
+              public followUpRequiredText?: string, public additionalValuesJson?: {}, public unableObtainText?: string) {
     this.medicalRecordId = medicalRecordId;
     this.participantId = participantId;
     this.institutionId = institutionId;
@@ -74,7 +74,7 @@ export class MedicalRecord {
 
     this.followUpRequired = followUpRequired;
     this.followUpRequiredText = followUpRequiredText;
-    this.additionalValues = additionalValues;
+    this.additionalValuesJson = additionalValuesJson;
 
     this.unableObtainText = unableObtainText;
   }
@@ -203,11 +203,11 @@ export class MedicalRecord {
           json.fReceived == undefined ? null : json.fReceived ) );
       } );
     }
-    let data = json.additionalValues;
-    let additionalValues = {};
+    let data = json.additionalValuesJson;
+    let additionalValuesJson = {};
     if (data != null) {
       data = "{" + data.substring(1, data.length - 1) + "}";
-      additionalValues = JSON.parse(data);
+      additionalValuesJson = JSON.parse(data);
     }
     return new MedicalRecord( json.medicalRecordId, json.participantId, json.institutionId, json.ddpInstitutionId, json.name,
       json.contact, json.phone, json.fax,
@@ -220,7 +220,7 @@ export class MedicalRecord {
       json.mrNotes, json.reviewMedicalRecord, json.type, json.nameDDP,
       json.institutionDDP, json.streetAddressDDP, json.cityDDP, json.stateDDP,
       json.isDeleted, json.oncHistoryDetails, result,
-      json.followUpRequired, json.followUpRequiredText, additionalValues );
+      json.followUpRequired, json.followUpRequiredText, additionalValuesJson );
   }
 
 

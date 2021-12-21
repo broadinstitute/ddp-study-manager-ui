@@ -591,7 +591,7 @@ export class Filter {
     else if (filter.type === Filter.ADDITIONAL_VALUE_TYPE) {
       if (( filter.value1 !== null && filter.value1 !== "" && filter.value1 !== undefined ) || ( filter.empty || filter.notEmpty )) {
         filterText = this.getFilterJson( parent,
-          new NameValue( "additionalValues", filter.value1 ),
+          new NameValue( "additionalValuesJson", filter.value1 ),
           filter.filter2, null,
           filter.exactMatch, filter.type, filter.range, filter.empty, filter.notEmpty, filter.participantColumn );
       }
