@@ -59,13 +59,13 @@ export class ParticipantColumn {
 
   //oncHistory columns
   public static ACCESSION_NUMBER = new ParticipantColumn("Accession Number", "accessionNumber", "oD");
-  public static DATE_PX = new ParticipantColumn("Date of PX", "datePX", "oD");
-  public static TYPE_PX = new ParticipantColumn("Type of PX", "typePX", "oD");
+  public static DATE_PX = new ParticipantColumn("Date of PX", "datePx", "oD");
+  public static TYPE_PX = new ParticipantColumn("Type of PX", "typePx", "oD");
   public static FACILITY = new ParticipantColumn("Facility", "facility", "oD");
   public static FACILITY_PHONE = new ParticipantColumn("Facility Phone", "fPhone", "oD");
   public static FACILITY_FAX = new ParticipantColumn("Facility Fax", "fFax", "oD");
   public static HISTOLOGY = new ParticipantColumn("Histology", "histology", "oD");
-  public static LOCATION_PX = new ParticipantColumn("Location of PX", "locationPX", "oD");
+  public static LOCATION_PX = new ParticipantColumn("Location of PX", "locationPx", "oD");
   public static ONC_HISTORY_NOTES = new ParticipantColumn("OncHistory Notes", "oncHisNotes", "oD");
   public static ONC_HISTORY_REQUEST = new ParticipantColumn("Request Status", "request", "oD");
   public static TISSUE_FAX = new ParticipantColumn("Tissue Request Date", "tFaxSent", "oD");
