@@ -746,8 +746,8 @@ participant.data.dsm['diagnosisYear'] != null">
                     <td (click)="openMedicalRecord(mr)">{{getUtil().getYesNo(mr.crRequired)}}</td>
                     <td (click)="openMedicalRecord(mr)">{{getUtil().getYesNo(mr.followUpRequired)}}</td>
                     <td>
-                      <button md-mini-fab [color]="getButtonColorStyle(mr.mrNotes)" placement="left"
-                              tooltip='{{mr.mrNotes}}'
+                      <button md-mini-fab [color]="getButtonColorStyle(mr.notes)" placement="left"
+                              tooltip='{{mr.notes}}'
                               (click)="openNoteModal(mr); universalModal.show()">
                         <i class="fas fa-comment-alt fa-lg" data-fa-transform="down-2"></i>
                       </button>
@@ -1108,7 +1108,7 @@ participant.data.dsm['diagnosisYear'] != null">
     <div class="app-modal-body">
       <ng-container *ngIf="source === 'normal'">
       <textarea class="Width--100" maxlength="1000" [disabled]="participantExited"
-                *ngIf="noteMedicalRecord != null" [(ngModel)]="noteMedicalRecord.mrNotes"></textarea>
+                *ngIf="noteMedicalRecord != null" [(ngModel)]="noteMedicalRecord.notes"></textarea>
       </ng-container>
       <ng-container *ngIf="source === 'warning'">
         {{warning}}

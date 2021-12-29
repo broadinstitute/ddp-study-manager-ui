@@ -621,7 +621,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
 
   saveNote() {
     let patch1 = new PatchUtil( this.noteMedicalRecord.medicalRecordId, this.role.userMail(),
-      {name: "mrNotes", value: this.noteMedicalRecord.mrNotes}, null, null, null, Statics.MR_ALIAS,  null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.participant.participant.ddpParticipantId );
+      {name: "notes", value: this.noteMedicalRecord.notes}, null, null, null, Statics.MR_ALIAS,  null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.participant.participant.ddpParticipantId );
     let patch = patch1.getPatch();
 
 

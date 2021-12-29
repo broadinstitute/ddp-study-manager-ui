@@ -25,7 +25,7 @@ export class MedicalRecord {
               public mrReceived?: string, public mrDocument?: string, public mrDocumentFileNames?: string,
               public mrProblem?: boolean, public mrProblemText?: string, public unableObtain?: boolean, public duplicate?: boolean,
               public international?: boolean, public crRequired?: boolean, public pathologyPresent?: string,
-              public mrNotes?: string, public reviewMedicalRecord?: boolean, public type?: string, public nameDDP?: string,
+              public notes?: string, public reviewMedicalRecord?: boolean, public type?: string, public nameDDP?: string,
               public institutionDDP?: string, public streetAddressDDP?: string, public cityDDP?: string, public stateDDP?: string,
               public isDeleted?: boolean, public oncHistoryDetail?: Array<OncHistoryDetail>, public followUps?: FollowUp[], public followUpRequired?: boolean,
               public followUpRequiredText?: string, public additionalValuesJson?: {}, public unableObtainText?: string) {
@@ -56,7 +56,7 @@ export class MedicalRecord {
     this.international = international;
     this.crRequired = crRequired;
     this.pathologyPresent = pathologyPresent;
-    this.mrNotes = mrNotes;
+    this.notes = notes;
     this.reviewMedicalRecord = reviewMedicalRecord;
     this.type = type;
 
@@ -217,7 +217,7 @@ export class MedicalRecord {
       json.mrReceived, json.mrDocument, json.mrDocumentFileNames,
       json.mrProblem, json.mrProblemText, json.unableObtain, json.duplicate, json.international, json.crRequired,
       json.pathologyPresent,
-      json.mrNotes, json.reviewMedicalRecord, json.type, json.nameDDP,
+      json.notes, json.reviewMedicalRecord, json.type, json.nameDDP,
       json.institutionDDP, json.streetAddressDDP, json.cityDDP, json.stateDDP,
       json.isDeleted, json.oncHistoryDetails, result,
       json.followUpRequired, json.followUpRequiredText, additionalValuesJson );

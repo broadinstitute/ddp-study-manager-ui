@@ -51,7 +51,7 @@ export class ParticipantColumn {
   public static MR_INTERNATIONAL = new ParticipantColumn("International", "international", "m");
   public static MR_PAPER_CR = new ParticipantColumn("Paper C/R required", "crRequired", "m");
   public static PATHOLOGY_RESENT = new ParticipantColumn("Pathology Present", "pathologyPresent", "m");
-  public static MR_NOTES = new ParticipantColumn("MR Notes", "mrNotes", "m");
+  public static MR_NOTES = new ParticipantColumn("MR Notes", "notes", "m");
   public static MR_REVIEW = new ParticipantColumn("MR Review", "reviewMedicalRecord", "m");
   public static MR_FOLLOW_UP = new ParticipantColumn("Follow-Up ", "followUps", "m");
   public static MR_FOLLOW_REQUIRED = new ParticipantColumn("Follow-Up required", "followUpRequired", "m");

@@ -461,9 +461,9 @@
         <td>Notes</td>
         <td colspan="3">
           <textarea maxlength="1000" [disabled]="participantExited"
-                    [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('mrNotes')}"
-                    [(ngModel)]="medicalRecord.mrNotes" (change)="valueChanged($event, 'mrNotes')"
-                    (blur)="currentField(null)" (focus)="currentField('mrNotes')"></textarea>
+                    [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('notes')}"
+                    [(ngModel)]="medicalRecord.notes" (change)="valueChanged($event, 'notes')"
+                    (blur)="currentField(null)" (focus)="currentField('notes')"></textarea>
         </td>
       </tr>
       <tr *ngFor="let fieldSetting of settings['m']">
