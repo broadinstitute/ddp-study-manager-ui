@@ -203,7 +203,7 @@ export class MedicalRecord {
           json.fReceived == undefined ? null : json.fReceived ) );
       } );
     }
-    let data = json.additionalValuesJson;
+    let data = json.dynamicFields;
     let additionalValuesJson = {};
     if (data != null) {
       data = "{" + data.substring(1, data.length - 1) + "}";

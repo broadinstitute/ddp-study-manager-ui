@@ -40,7 +40,7 @@ export class Tissue {
 
   static parse(json): Tissue {
     let additionalValuesJson: {};
-    let jsonData = json.additionalValuesJson;
+    let jsonData = json.dynamicFields;
     if (jsonData != null) {
       jsonData = "{" + jsonData.substring(1, jsonData.length - 1) + "}";
       additionalValuesJson = JSON.parse(jsonData);

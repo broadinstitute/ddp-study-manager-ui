@@ -23,7 +23,7 @@ export class ParticipantDSMInformation {
   }
 
   static parse( json ): ParticipantDSMInformation {
-    let data = json.additionalValuesJson;
+    let data = json.dynamicFields;
     let additionalValuesJson = {};
     if (data != null) {
       data = "{" + data.substring(1, data.length - 1) + "}";
