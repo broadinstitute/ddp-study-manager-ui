@@ -373,10 +373,10 @@ participant.data.dsm['diagnosisYear'] != null">
             <td class="Width--20">Participant Notes</td>
             <td class="Width--80">
             <textarea maxlength="1000" [disabled]="participantExited"
-                      [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('ptNotes')}"
-                      (blur)="currentField(null)" (focus)="currentField('ptNotes')"
-                      [(ngModel)]="participant.participant.ptNotes"
-                      (change)="valueChanged($event, 'ptNotes', 'r')"></textarea>
+                      [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('notes')}"
+                      (blur)="currentField(null)" (focus)="currentField('notes')"
+                      [(ngModel)]="participant.participant.notes"
+                      (change)="valueChanged($event, 'notes', 'r')"></textarea>
             </td>
           </tr>
           <ng-container *ngIf="showParticipantRecord">

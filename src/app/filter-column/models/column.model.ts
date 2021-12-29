@@ -25,7 +25,7 @@ export class ParticipantColumn {
   public static ONC_HISTORY_REVIEWED = new ParticipantColumn("Onc History Reviewed", "reviewedOncHistory", "o");
   public static PAPER_CR_SENT = new ParticipantColumn("Paper C/R Sent", "paperCRSent", "r");
   public static PAPER_CR_RECEIVED = new ParticipantColumn("Paper C/R Received", "paperCRReceived", "r");
-  public static PARTICIPANT_NOTES = new ParticipantColumn("Participant Notes", "ptNotes", "r");
+  public static PARTICIPANT_NOTES = new ParticipantColumn("Participant Notes", "notes", "r");
   public static MINIMAL_RECORDS = new ParticipantColumn("Incomplete/Minimal Medical Records", "minimalMR", "r");
   public static ABSTRACTION_READY = new ParticipantColumn("Ready for Abstraction", "abstractionReady", "r");
   public static ASSIGNEE_MR = new ParticipantColumn("MR Assignee", "assigneeMr", "p");
