@@ -1648,9 +1648,7 @@ export class ParticipantListComponent implements OnInit {
         paths.push(["abstractionActivities", source]);
         paths.push(["abstractionSummary", source]);
       } else if (source === "invitations") {
-        paths.push(["invitations", source]);
-      } else if (source === "proxy") {
-        paths.push(["proxyData", source]);
+        paths.push( [ "invitations", source ] );
       } else if (source.includes("GROUP")) {
         paths.push(["participantData", source]);
       } else if (source === "proxy") {
@@ -1970,10 +1968,7 @@ export class ParticipantListComponent implements OnInit {
 
   hasThisColumnSelected( selectedColumnArray: Array<Filter>, oncColumn: Filter ): boolean {
     let f = selectedColumnArray.find( f => {
-        return f.participantColumn.tableAlias === oncColumn.participantColumn.tableAlias && f.participantColumn.name === oncColumn.participantColumn.name &&
-          (oncColumn.filter2 === undefined || oncColumn.filter2.value === undefined || oncColumn.filter2.value === f.filter2.value);
-
-
+      return f.participantColumn.tableAlias === oncColumn.participantColumn.tableAlias && f.participantColumn.name === oncColumn.participantColumn.name;
     } );
     return f !== undefined;
   }
