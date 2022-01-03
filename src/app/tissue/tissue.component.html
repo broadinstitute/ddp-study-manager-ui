@@ -477,7 +477,7 @@
     <button type="button" class="btn btn-default"
             (click)="exitModal()">close
     </button>
-    <button *ngIf="selectedSmIds && selectedSmIds > 0 && checkBoxNeeded(this.currentSMIDField)" type="button" class="btn btn-default"
+    <button *ngIf="selectedSmIds && selectedSmIds > 0 " type="button" class="btn btn-default"
             (click)="exitModalAndDeleteRest(this.currentSMIDField)">Only keep selected SM-IDs
     </button>
   </div>

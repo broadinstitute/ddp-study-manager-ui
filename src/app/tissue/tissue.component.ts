@@ -316,10 +316,8 @@ export class TissueComponent implements OnInit {
       this.currentPatchField = filedName;
     }
     if (!id) {
-      let smIdPk = this.valueChanged( type, "smIdType", "tissueId", this.tissue.tissueId, Statics.SM_ID_ALIAS, id, smIdArray, index, value, parameterName );
-      if (smIdPk) {
-        smIdArray[ index ].smIdPk = smIdPk;
-      }
+      this.valueChanged( type, "smIdType", "tissueId", this.tissue.tissueId, Statics.SM_ID_ALIAS, id, smIdArray, index, value, parameterName );
+
     }
     else {
       this.valueChanged( value, parameterName, "tissueId", this.tissue.tissueId, Statics.SM_ID_ALIAS, id, smIdArray, index );
