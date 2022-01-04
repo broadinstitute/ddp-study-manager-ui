@@ -1,4 +1,6 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
+import {Assignee} from "../assignee/assignee.model";
+import {AssigneeParticipant} from "../participant-list/models/assignee-participant.model";
 import {Participant} from "../participant-list/participant-list.model";
 import {RoleService} from "../services/role.service";
 import {DSMService} from "../services/dsm.service";
@@ -43,6 +45,8 @@ export class TissueListComponent implements OnInit {
   parent = "tissueList";
   loadedTimeStamp: string;
   selectedTissueStatus: string;
+  assignees: Array<Assignee> = [];
+  assignee: Assignee;
 
   showFilters = false;
   showCustomizeViewTable = false;
@@ -54,6 +58,9 @@ export class TissueListComponent implements OnInit {
   edit: boolean = true;
   newFilterModal = false;
   openTissueModal = false;
+  openAssigneeModal = false;
+  assignTissue: boolean = false;
+  isAssignButtonDisabled: boolean = true;
 
 
   sortField: string = null;
@@ -169,6 +176,10 @@ export class TissueListComponent implements OnInit {
     }
   }
 
+  assigneeSelected( evt: any ) {
+    this.assignee = evt;
+  }
+
   private checkRight( defaultFilter: boolean ) {
     let allowedToSeeInformation = false;
     this.resetEverything( true );
@@ -186,6 +197,7 @@ export class TissueListComponent implements OnInit {
             this.getDefaultFilterName();
             this.getAllFilters( true );
             this.getTissueListData( defaultFilter );
+            this.getAssignees(localStorage.getItem( ComponentService.MENU_SELECTED_REALM ));
           }
         } );
         if (!allowedToSeeInformation) {
@@ -635,6 +647,15 @@ export class TissueListComponent implements OnInit {
     this.showModal = true;
     this.newFilterModal = true;
     this.openTissueModal = false;
+    this.openAssigneeModal = false
+    this.modal.show();
+  }
+
+  showAssignModal(){
+    this.showModal = true;
+    this.newFilterModal = false;
+    this.openTissueModal = false;
+    this.openAssigneeModal = true
     this.modal.show();
   }
 
@@ -1377,8 +1398,6 @@ export class TissueListComponent implements OnInit {
     this.defaultFilterName = this.role.getUserSetting().defaultTissueFilter;
   }
 
-  //  }
-
 
   private getRequestStatusDisplay( request: string ): string {
     switch ( request ) {
@@ -1544,5 +1563,76 @@ export class TissueListComponent implements OnInit {
     this.selectedColumns["oD"]=this.defaultOncHistoryColumns;
     this.selectedColumns["t"]=this.defaultTissueColumns;
     return this.selectedColumns;
+  }
+
+  assign() {
+    this.additionalMessage = null;
+    if (this.assignee != null && this.tissueListWrappers.length > 0) {
+      let assignParticipants: Array<AssigneeParticipant> = [];
+      for (let tissue of this.tissueListWrappers) {
+        if (tissue.isSelected) {
+
+          assignParticipants.push( new AssigneeParticipant( tissue.tissueList.participantId, this.assignee.assigneeId,
+            this.assignee.email, tissue.data.profile[ "shortId" ] ) );
+        }
+      }
+      this.deselect();
+      this.dsmService.assignParticipant( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), false,
+        this.assignTissue, JSON.stringify( assignParticipants ) ).subscribe(// need to subscribe, otherwise it will not send!
+        data => {
+          let result = Result.parse( data );
+          if (result.code !== 200) {
+            this.additionalMessage = result.body;
+          }
+          this.assignTissue = false;
+        },
+        err => {
+          if (err._body === Auth.AUTHENTICATION_ERROR) {
+            this.router.navigate( [Statics.HOME_URL] );
+          }
+          this.additionalMessage = "Error - Assigning Tissues, Please contact your DSM developer";
+        }
+      );
+    }
+    this.modal.hide();
+    window.scrollTo( 0, 0 );
+  }
+
+  deselect() {
+    for (let tissueListWrapper of this.tissueListWrappers) {
+      if (tissueListWrapper.isSelected) {
+        tissueListWrapper.isSelected = false;
+      }
+    }
+  }
+
+  checkboxChecked() {
+    this.isAssignButtonDisabled = true;
+    for (let tissueListWrapper of this.tissueListWrappers) {
+      if (tissueListWrapper.isSelected) {
+        this.isAssignButtonDisabled = false;
+        break;
+      }
+    }
+  }
+
+  hasAssignees() {
+    return Array.isArray(this.assignees) && this.assignees.length > 0;
+  }
+
+  private getAssignees( realm: string ) {
+    this.dsmService.getAssignees(realm).subscribe(
+      data =>{
+        this.assignees.push( new Assignee( "-1", "Remove Assignee", "" ) );
+        data.forEach( ( val ) => {
+          this.assignees.push( Assignee.parse( val ) );
+        } );
+        },
+      err =>{console.log(err);}
+    );
+  }
+
+  private getColSpan(){
+
   }
 }

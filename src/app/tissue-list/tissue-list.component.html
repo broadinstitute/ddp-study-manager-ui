@@ -291,6 +291,11 @@
             <!--<tr [ngClass]="'class'+i%2">-->
             <tr *ngIf="value != null && value != undefined">
               <ng-container>
+                <td *ngIf="hasAssignees()">
+                  <mat-checkbox color="primary" disableRipple
+                                [checked]="value.isSelected"
+                                (change)="value.isSelected = $event.checked; checkboxChecked()"></mat-checkbox>
+                </td>
                 <td>
                   {{value.data['ddp']}}
                 </td>
@@ -462,6 +467,13 @@
             <b># of Procedures: {{tissueListOncHistories.length}}</b>
           </td>
         </tr>
+        <tr *ngIf="hasAssignees()">
+          <td [attr.colspan]="(selectedColumns['data'] == undefined? 0: selectedColumns['data'].length)+(selectedColumns['oD']== undefined? 0 : selectedColumns['oD'].length)+selectedColumns['t'].length">
+            <button mat-raised-button color="primary"
+                    (click)="showAssignModal()" [disabled]="isAssignButtonDisabled">Assign
+            </button>
+          </td>
+        </tr>
         </tfoot>
       </table>
     </div>
@@ -471,7 +483,14 @@
 <app-modal>
   <div class="app-modal-header" *ngIf="newFilterModal">Please enter a name for your filter</div>
   <div class="app-modal-header" *ngIf="openTissueModal">Opening tissue page...</div>
+  <div *ngIf="openAssigneeModal">Select the person you want to assign the participant</div>
   <div class="app-modal-body">
+    <ng-container *ngIf="openAssigneeModal">
+      <mat-checkbox color="primary" disableRipple
+                    [(ngModel)]="assignTissue">Assign to request Tissue
+      </mat-checkbox>
+      <app-assignee (selectedAssignee)="assigneeSelected($event)" [assignees]="assignees"></app-assignee>
+    </ng-container>
     <ng-container *ngIf="newFilterModal">
       <ng-container>
         <mat-form-field class="Input">
@@ -502,6 +521,14 @@
         OK
       </button>
 
+    </ng-container>
+    <ng-container *ngIf="openAssigneeModal">
+      <button type="button" class="btn btn-default"
+              (click)="modal.hide(); isAssignButtonDisabled = false">Close
+      </button>
+      <button type="button" class="btn btn-primary"
+              (click)="assign()" [disabled]="!assignTissue">Assign
+      </button>
     </ng-container>
   </div>
 </app-modal>

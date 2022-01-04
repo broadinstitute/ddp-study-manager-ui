@@ -242,6 +242,15 @@ export class DSMService {
     );
   }
 
+  public getAssignees(realm: string): Observable<any> {
+    let url = this.baseUrl + DSMService.UI + "assignees";
+    let map: { name: string, value: any }[] = [];
+    map.push( {name: DSMService.REALM, value: realm} );
+    return this.http.get(url, this.buildQueryHeader(map)).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
   public saveDrug( json: string ): Observable<any> {
     let url = this.baseUrl + DSMService.UI + "drugList";
     let map: { name: string, value: any }[] = [];
@@ -1002,5 +1011,6 @@ export class DSMService {
       return true;
     }
   }
+
 
 }
