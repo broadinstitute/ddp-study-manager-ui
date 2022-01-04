@@ -99,7 +99,6 @@ export class Utils {
   }
 
   isGroupSelected( selected: Array<string>, group: Group ): string {
-    console.log( group );
     return selected.find( answer => {
       if (group.groupStableId === answer) {
         return true;
@@ -117,7 +116,7 @@ export class Utils {
     } );
   }
 
-  getAnswerGroupOrOptionText( answer: any, qdef: QuestionDefinition ): string {
+   static getAnswerGroupOrOptionText( answer: any, qdef: QuestionDefinition ): string {
     if (answer instanceof Array) {
       answer = answer[ 0 ];
     }
@@ -138,9 +137,7 @@ export class Utils {
       }
 
     }
-    console.log( ans );
     if (!ans && qdef.options) {
-      console.log( "not ans" );
       let ans = qdef.options.find( option => {
         if (option.optionStableId === answer) {
           return true;
@@ -148,14 +145,10 @@ export class Utils {
         return false;
       } );
       if (ans) {
-        console.log( ans );
         text = ans.optionText;
       }
     }
 
-    console.log( answer );
-    console.log( qdef );
-    console.log( text );
     return text;
   }
 
@@ -191,12 +184,12 @@ export class Utils {
     return optionDetails.find( x => x.option === stableId );
   }
 
-  getQuestionDefinition( activities: Array<ActivityDefinition>, activity: string, stableId: string, version: string ) {
+  static getQuestionDefinition( activities: Array<ActivityDefinition>, activity: string, stableId: string, version: string ) {
     let questions = activities.find( x => x.activityCode === activity && x.activityVersion === version ).questions;
     if (questions != null) {
       return questions.find( x => x.stableId === stableId );
     }
-    return "";
+    return null;
   }
 
   getAbstractionGroup( groups: Array<AbstractionGroup>, groupId: string ) {
@@ -255,7 +248,7 @@ export class Utils {
     }
   }
 
-  public static downloadCurrentData( data: any[], paths: any[], columns: {}, fileName: string, isSurveyData ?: boolean ) {
+  public static downloadCurrentData( data: any[], paths: any[], columns: {}, fileName: string, isSurveyData ?: boolean, activityDefinitionList? ) {
     let headers = "";
     for (let path of paths) {
       for (let i = 1; i < path.length; i += 2) {
@@ -271,7 +264,7 @@ export class Utils {
         }
       }
     }
-    let csv = this.makeCSV( data, paths, columns );
+    let csv = this.makeCSV( data, paths, columns, activityDefinitionList );
     csv = headers + "\r\n" + csv;
     let blob = new Blob( [ csv ], {type: "text/csv;charset=utf-8;"} );
     if (navigator.msSaveBlob) { // IE 10+
@@ -292,14 +285,14 @@ export class Utils {
     }
   }
 
-  private static makeCSV( data: any[], paths: any[], columns: {} ): string {
+  private static makeCSV( data: any[], paths: any[], columns: {} , activityDefinitionList?): string {
     let input = [];
     let result = [];
     for (let d of data) {
       let input = [];
       for (let path of paths) {
         let nonDefaultFieldsResultArray: string[] = null;
-        let output = this.makeCSVForObjectArray( d, path, columns, 0 );
+        let output = this.makeCSVForObjectArray( d, path, columns, 0 , activityDefinitionList);
         let temp = [];
 
         for (let i = 0; i < output.length; i++) {
@@ -357,7 +350,7 @@ export class Utils {
     return [ defaultFields.concat( resultOutputSplitted ).join( this.COMMA ) ];
   }
 
-  public static makeCSVForObjectArray( data: Object, paths: any[], columns: {}, index: number ): string[] {
+  public static makeCSVForObjectArray( data: Object, paths: any[], columns: {}, index: number, activityDefinitionList? ): string[] {
     let result: string[] = [];
     if (index > paths.length - 1) {
       return null;
@@ -372,8 +365,8 @@ export class Utils {
       }
       if (objects != null) {
         for (let o of objects) {
-          let oString = this.makeCSVString( o, columns[ paths[ index + 1 ] ], data );
-          let a = this.makeCSVForObjectArray( o, paths, columns, index + 2 );
+          let oString = this.makeCSVString( o, columns[ paths[ index + 1 ] ], data, activityDefinitionList );
+          let a = this.makeCSVForObjectArray( o, paths, columns, index + 2, activityDefinitionList );
           if (a != null && a.length > 0) {
             for (let t of a) {
               result.push( oString + t );
@@ -399,7 +392,7 @@ export class Utils {
     return "";
   }
 
-  private static makeCSVString( o: Object, columns: any[], data?: any ): string {
+  private static makeCSVString( o: Object, columns: any[], data?: any, activityDefinitionList? ): string {
     let str = "";
     let col: Filter;
     if (columns != null) {
@@ -497,7 +490,7 @@ export class Utils {
                   value = activityData[ col.participantColumn.name ];
                 }
                 else {
-                  let questionAnswer = this.getQuestionAnswerByName( activityData.questionsAnswers, col.participantColumn.name );
+                  let questionAnswer:QuestionAnswer = this.getQuestionAnswerByName( activityData.questionsAnswers, col.participantColumn.name );
                   if (questionAnswer != null) {
                     if (col.type === Filter.DATE_TYPE) {
                       value = questionAnswer.date;
@@ -506,7 +499,10 @@ export class Utils {
                       questionAnswer.answer.map( arr => value += arr.join( ', ' ) + '\n' );
                     }
                     else {
-                      value = questionAnswer.answer; //TODO react to what kind of answer it is and make pretty
+                      let qDef:QuestionDefinition = Utils.getQuestionDefinition(activityDefinitionList, col.participantColumn.tableAlias, questionAnswer.stableId, activityData.activityVersion)
+                      let answers = Utils.getCorrectTextAsAnswerForCSV(questionAnswer, qDef);
+                      answers.forEach(ans => value+= (ans+", "));
+                       //TODO react to what kind of answer it is and make pretty
                     }
                   }
                 }
@@ -556,7 +552,7 @@ export class Utils {
     return null;
   }
 
-  public static getQuestionAnswerByName( questionsAnswers: Array<QuestionAnswer>, name: string ) {
+  public static getQuestionAnswerByName( questionsAnswers: Array<QuestionAnswer>, name: string ):QuestionAnswer {
     return questionsAnswers.find( x => x.stableId === name );
   }
 
@@ -784,13 +780,47 @@ export class Utils {
           }
           else if (questionsAnswer.answer) {
             for (let answer of questionsAnswer.answer) {
-              value += answer + ", ";
+              if (!questionsAnswer.groupedOptions) {
+                value += answer + ", ";
+              }
+              else {
+                let ans = questionsAnswer.groupedOptions[ answer ];
+                if (ans) {
+                  for (let a of ans) {
+                    value += a + ", "; ;
+                  }
+                }else{
+                  value += answer + ", ";
+                }
+              }
             }
+
           }
         }
       }
     }
     return value;
+  }
+
+  public  static getCorrectTextAsAnswerForCSV( questionAnswer: QuestionAnswer, qDef : QuestionDefinition ):string[] {
+    let answers = [];
+    for (let answer of questionAnswer.answer) {
+      if (!questionAnswer.groupedOptions) {
+        answers.push( answer );
+      }
+      else {
+        let ans = questionAnswer.groupedOptions[ answer ];
+        if (ans) {
+          for (let a of ans) {
+            answers.push( this.getAnswerGroupOrOptionText(a, qDef) );
+          }
+        }
+        else {
+          answers.push( this.getAnswerGroupOrOptionText(answer, qDef)  );
+        }
+      }
+    }
+    return answers;
   }
 
   getCorrectTextAsAnswer( questionAnswer: QuestionAnswer ) {

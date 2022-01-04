@@ -22,4 +22,8 @@ export class ActivityDataComponent implements OnInit {
   getUtil(): Utils {
     return this.util;
   }
+
+  getUtilStatic(){
+    return Utils;
+  }
 }

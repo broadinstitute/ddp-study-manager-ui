@@ -196,7 +196,6 @@ export class ParticipantListComponent implements OnInit {
       jsonData = data;
       jsonData['participants'].forEach((val) => {
         let participant = Participant.parse(val);
-        console.log(participant);
         this.participantList.push(participant);
       });
       this.originalParticipantList = this.participantList;
@@ -717,7 +716,6 @@ export class ParticipantListComponent implements OnInit {
               jsonData = data;
               jsonData['participants'].forEach( ( val ) => {
                 let participant = Participant.parse( val );
-                console.log(participant);
                 this.participantList.push( participant );
               } );
               this.originalParticipantList = this.participantList;
@@ -818,7 +816,6 @@ export class ParticipantListComponent implements OnInit {
           jsonData = data;
           jsonData['participants'].forEach((val) => {
             let participant = Participant.parse(val);
-            console.log(participant);
             this.participantList.push(participant);
           });
           this.originalParticipantList = this.participantList;
@@ -1190,7 +1187,6 @@ export class ParticipantListComponent implements OnInit {
             jsonData = data;
             jsonData['participants'].forEach( ( val ) => {
               let participant = Participant.parse( val );
-              console.log(participant);
               this.participantList.push( participant );
             } );
             this.originalParticipantList = this.participantList;
@@ -1595,6 +1591,10 @@ export class ParticipantListComponent implements OnInit {
     return this.util;
   }
 
+  getUtilStatic(){
+    return Utils;
+  }
+
   getLanguageName(languageCode: string): string {
       let language = this.preferredLanguages.find( obj => {
         return obj.languageCode === languageCode;
@@ -1650,7 +1650,7 @@ export class ParticipantListComponent implements OnInit {
         paths.push([source, source]);
       }
     }
-    Utils.downloadCurrentData( this.participantList, paths, columns, "Participants-"  + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION, false );
+    Utils.downloadCurrentData( this.participantList, paths, columns, "Participants-"  + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION, false, this.activityDefinitionList );
   }
 
   getOptionDisplay( options: NameValue[], key: string ) {
@@ -1782,7 +1782,6 @@ export class ParticipantListComponent implements OnInit {
 
         jsonData['participants'].forEach( ( val ) => {
           let participant = Participant.parse( val );
-          console.log(participant);
           this.participantList.push( participant );
         } );
         this.originalParticipantList = this.participantList;

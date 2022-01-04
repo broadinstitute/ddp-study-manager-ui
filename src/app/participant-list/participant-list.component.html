@@ -387,7 +387,7 @@ date.dateFields.month != null && date.dateFields.month !== ''">{{date.dateFields
                           <ng-container
                             *ngIf="questionAnswer.questionType === 'PICKLIST' && questionAnswer.answer != null">
                             <ng-container
-                              *ngIf="getUtil().getQuestionDefinition(activityDefinitionList, alias, questionAnswer.stableId, activityData.activityVersion) as qDef">
+                              *ngIf="getUtilStatic().getQuestionDefinition(activityDefinitionList, alias, questionAnswer.stableId, activityData.activityVersion) as qDef">
                               <ng-container *ngIf="qDef.selectMode === 'MULTIPLE'">
                                 <ng-container *ngIf="qDef.options !== null">
                                   <ul *ngFor="let o of qDef.options">
@@ -426,7 +426,7 @@ date.dateFields.month != null && date.dateFields.month !== ''">{{date.dateFields
                                 <ng-container *ngIf="pt.data.getMultipleAnswersForPickList(activityData, col.participantColumn.name) as answers">
                                   <div class="NO-PADDING-START" >
                                     <div *ngFor="let answer of answers; let i=index;" >
-                                      <div *ngIf="getUtil().getAnswerGroupOrOptionText(answer, qDef) as txt">
+                                      <div *ngIf="getUtilStatic().getAnswerGroupOrOptionText(answer, qDef) as txt">
                                         {{txt}}
                                         <hr *ngIf="i !== answers.length-1" style="border-color: lightgray">
                                       </div>
