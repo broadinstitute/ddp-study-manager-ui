@@ -228,8 +228,9 @@ export class OncHistoryDetailComponent implements OnInit {
 
   //display additional value
   getAdditionalValue( index: number, colName: string ): string {
-    if (this.oncHistory[ index ].additionalValuesJson != null && this.oncHistory[ index ].additionalValuesJson[ colName ] != undefined) {
-      return this.oncHistory[ index ].additionalValuesJson[ colName ];
+    let camelCaseColumnName = Utils.convertUnderScoresToCamelCase(colName);
+    if (this.oncHistory[ index ].additionalValuesJson != null && this.oncHistory[ index ].additionalValuesJson[ camelCaseColumnName ] != undefined) {
+      return this.oncHistory[ index ].additionalValuesJson[ camelCaseColumnName ];
     }
     return null;
   }

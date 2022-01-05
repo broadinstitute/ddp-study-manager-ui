@@ -1062,8 +1062,9 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   //display additional value
   getAdditionalValue( colName: string ): string {
     if (this.participant.participant != null && this.participant.participant.additionalValuesJson != null) {
-      if (this.participant.participant.additionalValuesJson[ colName ] != undefined && this.participant.participant.additionalValuesJson[ colName ] != null) {
-        return this.participant.participant.additionalValuesJson[ colName ];
+      let camelCaseColumnName = Utils.convertUnderScoresToCamelCase(colName);
+      if (this.participant.participant.additionalValuesJson[ camelCaseColumnName ] != undefined && this.participant.participant.additionalValuesJson[ camelCaseColumnName ] != null) {
+        return this.participant.participant.additionalValuesJson[ camelCaseColumnName ];
       }
     }
     return "";

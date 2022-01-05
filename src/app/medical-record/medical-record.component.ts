@@ -473,8 +473,9 @@ export class MedicalRecordComponent implements OnInit {
   //display additional value
   getAdditionalValue( colName: string ): string {
     if (this.medicalRecord.additionalValuesJson != null) {
-      if (this.medicalRecord.additionalValuesJson[ colName ] != undefined && this.medicalRecord.additionalValuesJson[ colName ] != null) {
-        return this.medicalRecord.additionalValuesJson[ colName ];
+      let camelCaseColumnName = Utils.convertUnderScoresToCamelCase(colName);
+      if (this.medicalRecord.additionalValuesJson[ camelCaseColumnName ] != undefined && this.medicalRecord.additionalValuesJson[ camelCaseColumnName ] != null) {
+        return this.medicalRecord.additionalValuesJson[ camelCaseColumnName ];
       }
     }
     return null;
