@@ -449,7 +449,7 @@ export class DSMService {
     return this.http.post( url, file, this.buildQueryUploadHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError.bind( this ) );
   }
 
-  public uploadDuplicateParticipant( realm: string, kitType: string, jsonParticipants: string, reason: string, carrier: string ): Observable<any> {
+  public uploadDuplicateParticipant( realm: string, kitType: string, jsonParticipants: string, reason: string, carrier: string, skipAddressValidation: boolean ): Observable<any> {
     let url = this.baseUrl + DSMService.UI + "kitUpload";
     let map: { name: string, value: any }[] = [];
     map.push( {name: DSMService.REALM, value: realm} );
@@ -459,6 +459,7 @@ export class DSMService {
     map.push( {name: "Content-Type", value: "application/json; charset=utf-8"} );
     map.push( {name: "reason", value: reason} );
     map.push( {name: "carrier", value: carrier} );
+    map.push( {name: "skipAddressValidation", value: skipAddressValidation} );
 
     return this.http.post( url, jsonParticipants, this.buildQueryUploadHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError.bind( this ) );
   }

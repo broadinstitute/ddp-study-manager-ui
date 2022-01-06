@@ -283,7 +283,7 @@ export class UploadComponent implements OnInit {
       }
     }
     let jsonParticipants = JSON.stringify( array );
-    this.dsmService.uploadDuplicateParticipant( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.kitType.name, jsonParticipants, this.selectedReason, this.selectedCarrier ).subscribe(
+    this.dsmService.uploadDuplicateParticipant( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.kitType.name, jsonParticipants, this.selectedReason, this.selectedCarrier, this.skipAddressValidation ).subscribe(
       data => {
         this.loading = false;
         if (typeof data === "string") {
