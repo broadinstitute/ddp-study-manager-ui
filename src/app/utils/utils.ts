@@ -135,7 +135,6 @@ export class Utils {
       if (ans) {
         text = ans;
       }
-
     }
     if (!ans && qdef.options) {
       let ans = qdef.options.find( option => {
@@ -148,7 +147,6 @@ export class Utils {
         text = ans.optionText;
       }
     }
-
     return text;
   }
 
@@ -480,6 +478,7 @@ export class Utils {
             //check for survey data
             let activityDataArray: ActivityData[] = this.getSurveyData( data, col.participantColumn.tableAlias );
             if (activityDataArray != null) {
+              console.log(activityDataArray);
               if (activityDataArray.length == 1) {
                 let activityData = activityDataArray[ 0 ];
                 if (( col.participantColumn.name === "createdAt" || col.participantColumn.name === "completedAt"
@@ -505,10 +504,11 @@ export class Utils {
                        //TODO react to what kind of answer it is and make pretty
                     }
                   }
+                  console.log(value);
                 }
               }
               else {
-                value = this.getActivityValueForMultipleActivities( activityDataArray, col.participantColumn.name );
+                value = this.getActivityValueForMultipleActivities( activityDataArray, col.participantColumn.name , activityDefinitionList, col.participantColumn.tableAlias);
               }
             }
             else if (col.participantColumn.tableAlias === "invitations") {
@@ -770,28 +770,32 @@ export class Utils {
     return "";
   }
 
-  private static getActivityValueForMultipleActivities( activityDataArray: ActivityData[], name: string ) {
+  private static getActivityValueForMultipleActivities( activityDataArray: ActivityData[], name: string, activityDefinitionList: any, tableAlias: string ) {
     let value = "";
     for (let activityData of activityDataArray) {
       for (let questionsAnswer of activityData.questionsAnswers) {
+
         if (questionsAnswer.stableId === name) {
+          console.log(questionsAnswer);
           if (questionsAnswer.questionType === "DATE") {
             value += this.getDateFormatted( new Date( questionsAnswer.date ), this.DATE_STRING_IN_CVS ) + ", ";
           }
-          else if (questionsAnswer.answer) {
+        else if (questionsAnswer.answer) {
+            let qDef:QuestionDefinition = Utils.getQuestionDefinition(activityDefinitionList, tableAlias, questionsAnswer.stableId, activityData.activityVersion)
             for (let answer of questionsAnswer.answer) {
-              if (!questionsAnswer.groupedOptions) {
-                value += answer + ", ";
-              }
-              else {
-                let ans = questionsAnswer.groupedOptions[ answer ];
-                if (ans) {
-                  for (let a of ans) {
-                    value += a + ", "; ;
+              if(questionsAnswer.groupedOptions && questionsAnswer.groupedOptions[ answer ]) {
+                let groupedOptionAnswers = questionsAnswer.groupedOptions[ answer ];
+                console.log(groupedOptionAnswers);
+                if (groupedOptionAnswers) {
+                  for (let ans of groupedOptionAnswers) {
+                    value += this.getAnswerGroupOrOptionText(ans, qDef) + ", "; ;
                   }
                 }else{
-                  value += answer + ", ";
+                  value += this.getAnswerGroupOrOptionText(answer, qDef) + ", ";
                 }
+              }else{
+                  value += this.getAnswerGroupOrOptionText(answer, qDef) + ", ";
+                  console.log(value);
               }
             }
 
@@ -806,6 +810,10 @@ export class Utils {
     let answers = [];
     for (let answer of questionAnswer.answer) {
       if (!questionAnswer.groupedOptions) {
+        let ans = this.getAnswerGroupOrOptionText(answer, qDef);
+        console.log(ans);
+        if(ans)
+          answer = ans;
         answers.push( answer );
       }
       else {

@@ -196,6 +196,7 @@ export class ParticipantListComponent implements OnInit {
       jsonData = data;
       jsonData['participants'].forEach((val) => {
         let participant = Participant.parse(val);
+        console.log(participant);
         this.participantList.push(participant);
       });
       this.originalParticipantList = this.participantList;
@@ -716,6 +717,7 @@ export class ParticipantListComponent implements OnInit {
               jsonData = data;
               jsonData['participants'].forEach( ( val ) => {
                 let participant = Participant.parse( val );
+                console.log(participant);
                 this.participantList.push( participant );
               } );
               this.originalParticipantList = this.participantList;
@@ -816,6 +818,7 @@ export class ParticipantListComponent implements OnInit {
           jsonData = data;
           jsonData['participants'].forEach((val) => {
             let participant = Participant.parse(val);
+            console.log(participant);
             this.participantList.push(participant);
           });
           this.originalParticipantList = this.participantList;
@@ -1187,6 +1190,7 @@ export class ParticipantListComponent implements OnInit {
             jsonData = data;
             jsonData['participants'].forEach( ( val ) => {
               let participant = Participant.parse( val );
+              console.log(participant);
               this.participantList.push( participant );
             } );
             this.originalParticipantList = this.participantList;
@@ -1782,6 +1786,7 @@ export class ParticipantListComponent implements OnInit {
 
         jsonData['participants'].forEach( ( val ) => {
           let participant = Participant.parse( val );
+          console.log(participant);
           this.participantList.push( participant );
         } );
         this.originalParticipantList = this.participantList;
