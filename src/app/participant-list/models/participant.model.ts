@@ -2,7 +2,7 @@ export class ParticipantDSMInformation {
 
   constructor( public participantId: string, public ddpParticipantId: string, public realm: string,
                public assigneeMr: string, public assigneeTissue: string, public createdOncHistory: string, public reviewedOncHistory: string,
-               public paperCRSent: string, public paperCRReceived: string, public notes: string, public minimalMr: boolean, public abstractionReady: boolean,
+               public crSent: string, public crReceived: string, public notes: string, public minimalMr: boolean, public abstractionReady: boolean,
                public mrNeedsAttention: boolean, public tissueNeedsAttention: boolean, public exitDate: number, public additionalValuesJson: {} ) {
     this.participantId = participantId;
     this.ddpParticipantId = ddpParticipantId;
@@ -11,8 +11,8 @@ export class ParticipantDSMInformation {
     this.assigneeTissue = assigneeTissue;
     this.createdOncHistory = createdOncHistory;
     this.reviewedOncHistory = reviewedOncHistory;
-    this.paperCRSent = paperCRSent;
-    this.paperCRReceived = paperCRReceived;
+    this.crSent = crSent;
+    this.crReceived = crReceived;
     this.notes = notes;
     this.minimalMr = minimalMr;
     this.abstractionReady = abstractionReady;
@@ -30,7 +30,7 @@ export class ParticipantDSMInformation {
       additionalValuesJson = JSON.parse(data);
     }
     return new ParticipantDSMInformation( json.participantId, json.ddpParticipantId, json.realm, json.assigneeMr, json.assigneeTissue,
-      json.createdOncHistory, json.reviewedOncHistory, json.paperCRSent, json.paperCRReceived,
+      json.createdOncHistory, json.reviewedOncHistory, json.crSent, json.crReceived,
       json.notes, json.minimalMR, json.abstractionReady, json.mrNeedsAttention, json.tissueNeedsAttention, json.exitDate, additionalValuesJson );
   }
 

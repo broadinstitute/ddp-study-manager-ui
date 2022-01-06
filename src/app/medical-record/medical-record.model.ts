@@ -27,8 +27,8 @@ export class MedicalRecord {
               public international?: boolean, public crRequired?: boolean, public pathologyPresent?: string,
               public notes?: string, public reviewMedicalRecord?: boolean, public type?: string, public nameDDP?: string,
               public institutionDDP?: string, public streetAddressDDP?: string, public cityDDP?: string, public stateDDP?: string,
-              public isDeleted?: boolean, public oncHistoryDetail?: Array<OncHistoryDetail>, public followUps?: FollowUp[], public followUpRequired?: boolean,
-              public followUpRequiredText?: string, public additionalValuesJson?: {}, public unableObtainText?: string) {
+              public isDeleted?: boolean, public oncHistoryDetail?: Array<OncHistoryDetail>, public followUps?: FollowUp[], public followupRequired?: boolean,
+              public followupRequiredText?: string, public additionalValuesJson?: {}, public unableObtainText?: string) {
     this.medicalRecordId = medicalRecordId;
     this.participantId = participantId;
     this.institutionId = institutionId;
@@ -72,8 +72,8 @@ export class MedicalRecord {
 
     this.followUps = followUps == undefined ? [] : followUps;
 
-    this.followUpRequired = followUpRequired;
-    this.followUpRequiredText = followUpRequiredText;
+    this.followupRequired = followupRequired;
+    this.followupRequiredText = followupRequiredText;
     this.additionalValuesJson = additionalValuesJson;
 
     this.unableObtainText = unableObtainText;
@@ -220,7 +220,7 @@ export class MedicalRecord {
       json.notes, json.reviewMedicalRecord, json.type, json.nameDDP,
       json.institutionDDP, json.streetAddressDDP, json.cityDDP, json.stateDDP,
       json.isDeleted, json.oncHistoryDetails, result,
-      json.followUpRequired, json.followUpRequiredText, additionalValuesJson, json.unableObtainText );
+      json.followupRequired, json.followupRequiredText, additionalValuesJson, json.unableObtainText );
   }
 
 

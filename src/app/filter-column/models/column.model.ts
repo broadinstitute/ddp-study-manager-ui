@@ -23,8 +23,8 @@ export class ParticipantColumn {
 
   public static ONC_HISTORY_CREATED = new ParticipantColumn("Onc History Created", "createdOncHistory", "o");
   public static ONC_HISTORY_REVIEWED = new ParticipantColumn("Onc History Reviewed", "reviewedOncHistory", "o");
-  public static PAPER_CR_SENT = new ParticipantColumn("Paper C/R Sent", "paperCRSent", "r");
-  public static PAPER_CR_RECEIVED = new ParticipantColumn("Paper C/R Received", "paperCRReceived", "r");
+  public static PAPER_CR_SENT = new ParticipantColumn("Paper C/R Sent", "crSent", "r");
+  public static PAPER_CR_RECEIVED = new ParticipantColumn("Paper C/R Received", "crReceived", "r");
   public static PARTICIPANT_NOTES = new ParticipantColumn("Participant Notes", "notes", "r");
   public static MINIMAL_RECORDS = new ParticipantColumn("Incomplete/Minimal Medical Records", "minimalMR", "r");
   public static ABSTRACTION_READY = new ParticipantColumn("Ready for Abstraction", "abstractionReady", "r");
@@ -54,8 +54,8 @@ export class ParticipantColumn {
   public static MR_NOTES = new ParticipantColumn("MR Notes", "notes", "m");
   public static MR_REVIEW = new ParticipantColumn("MR Review", "reviewMedicalRecord", "m");
   public static MR_FOLLOW_UP = new ParticipantColumn("Follow-Up ", "followUps", "m");
-  public static MR_FOLLOW_REQUIRED = new ParticipantColumn("Follow-Up required", "followUpRequired", "m");
-  public static MR_FOLLOW_REQUIRED_TEXT = new ParticipantColumn("Follow-Up required Text", "followUpRequiredText", "m");
+  public static MR_FOLLOW_REQUIRED = new ParticipantColumn("Follow-Up required", "followupRequired", "m");
+  public static MR_FOLLOW_REQUIRED_TEXT = new ParticipantColumn("Follow-Up required Text", "followupRequiredText", "m");
 
   //oncHistory columns
   public static ACCESSION_NUMBER = new ParticipantColumn("Accession Number", "accessionNumber", "oD");

@@ -299,21 +299,21 @@
             </tr>
             <tr>
               <td>
-                <md-checkbox [(ngModel)]="medicalRecord.followUpRequired"
-                             (change)="valueChanged($event, 'followUpRequired')"
-                             [color]="isCheckboxPatchedCurrently('followUpRequired')" (blur)="currentField(null)"
-                             (focus)="currentField('followUpRequired')" [disabled]="participantExited"></md-checkbox>
+                <md-checkbox [(ngModel)]="medicalRecord.followupRequired"
+                             (change)="valueChanged($event, 'followupRequired')"
+                             [color]="isCheckboxPatchedCurrently('followupRequired')" (blur)="currentField(null)"
+                             (focus)="currentField('followupRequired')" [disabled]="participantExited"></md-checkbox>
               </td>
               <td>Follow-Up required</td>
             </tr>
-            <tr *ngIf="medicalRecord.followUpRequired">
+            <tr *ngIf="medicalRecord.followupRequired">
               <td colspan="2">
                 <textarea
-                  [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('followUpRequiredText')}"
+                  [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('followupRequiredText')}"
                   maxlength="1000" [disabled]="participantExited"
-                  [(ngModel)]="medicalRecord.followUpRequiredText"
-                  (change)="valueChanged($event, 'followUpRequiredText')"
-                  (blur)="currentField(null)" (focus)="currentField('followUpRequiredText')"></textarea>
+                  [(ngModel)]="medicalRecord.followupRequiredText"
+                  (change)="valueChanged($event, 'followupRequiredText')"
+                  (blur)="currentField(null)" (focus)="currentField('followupRequiredText')"></textarea>
               </td>
             </tr>
           </table>

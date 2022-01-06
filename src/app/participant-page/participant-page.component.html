@@ -384,17 +384,17 @@ participant.data.dsm['diagnosisYear'] != null">
               <td>Paper C/R Sent</td>
               <td>
                 <div class="Float--left">
-                  <app-field-datepicker [dateString]="participant.participant.paperCRSent"
+                  <app-field-datepicker [dateString]="participant.participant.crSent"
                                         [disabled]="participantExited"
-                                        [colorDuringPatch]="isPatchedCurrently('paperCRSent')"
-                                        (dateChanged)="valueChanged($event, 'paperCRSent', 'r')"></app-field-datepicker>
+                                        [colorDuringPatch]="isPatchedCurrently('crSent')"
+                                        (dateChanged)="valueChanged($event, 'crSent', 'r')"></app-field-datepicker>
                 </div>
-                <div *ngIf="participant.participant.paperCRSent != null" class="Float--left Router--Outlet">Paper C/R
+                <div *ngIf="participant.participant.crSent != null" class="Float--left Router--Outlet">Paper C/R
                   Received
-                  <app-field-datepicker [dateString]="participant.participant.paperCRReceived"
+                  <app-field-datepicker [dateString]="participant.participant.crReceived"
                                         [disabled]="participantExited"
-                                        [colorDuringPatch]="isPatchedCurrently('paperCRReceived')"
-                                        (dateChanged)="valueChanged($event, 'paperCRReceived', 'r')"></app-field-datepicker>
+                                        [colorDuringPatch]="isPatchedCurrently('crReceived')"
+                                        (dateChanged)="valueChanged($event, 'crReceived', 'r')"></app-field-datepicker>
                 </div>
               </td>
             </tr>
