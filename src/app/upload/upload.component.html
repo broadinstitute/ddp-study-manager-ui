@@ -54,7 +54,14 @@
     </div>
   </div>
   <br/>
-  <div *ngIf="allOptionesSelected()" class="Width--80">
+  <div *ngIf="hasRole().allowedToUploadKitInvalidAddress()">
+    <div>
+      <md-checkbox disableRipple color="primary"
+                   [(ngModel)]="skipAddressValidation">Skip address validation on upload</md-checkbox>
+    </div>
+  </div>
+  <br/>
+  <div *ngIf="allOptionsSelected()" class="Width--80">
     <app-filepicker [id]="'kitUploadFile'" [fileFormat]="'txt'" (fileSelected)="fileSelected($event)"></app-filepicker>
     <button type="button" md-raised-button color="primary"
             (click)="upload()"

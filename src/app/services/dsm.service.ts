@@ -429,7 +429,7 @@ export class DSMService {
     return this.http.get( url, this.buildQueryHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError.bind( this ) );
   }
 
-  public uploadTxtFile( realm: string, kitType: string, file: File, reason: string, carrier: string ): Observable<any> {
+  public uploadTxtFile( realm: string, kitType: string, file: File, reason: string, carrier: string, skipAddressValidation: boolean ): Observable<any> {
     let url = this.baseUrl + DSMService.UI + "kitUpload";
     let map: { name: string, value: any }[] = [];
     map.push( {name: DSMService.REALM, value: realm} );
@@ -437,6 +437,7 @@ export class DSMService {
     map.push( {name: "userId", value: this.role.userID()} );
     map.push( {name: "reason", value: reason} );
     map.push( {name: "carrier", value: carrier} );
+    map.push( {name: "skipAddressValidation", value: skipAddressValidation} );
 
     return this.http.post( url, file, this.buildQueryUploadHeader( map ) ).map( ( res: Response ) => res.json() ).catch( this.handleError.bind( this ) );
   }

@@ -3,6 +3,7 @@ import {ActivatedRoute} from "@angular/router";
 
 import {DSMService} from "../services/dsm.service";
 import {Auth} from "../services/auth.service";
+import {RoleService} from "../services/role.service";
 import {Utils} from "../utils/utils";
 import {UploadParticipant, UploadResponse} from "./upload.model";
 import {KitType} from "../utils/kit-type.model";
@@ -49,7 +50,10 @@ export class UploadComponent implements OnInit {
   allowedToSeeInformation: boolean = false;
   specialMessage: string;
 
-  constructor( private dsmService: DSMService, private auth: Auth, private compService: ComponentService, private route: ActivatedRoute ) {
+  skipAddressValidation: boolean = false;
+
+  constructor( private dsmService: DSMService, private auth: Auth, private compService: ComponentService, private route: ActivatedRoute,
+               private role: RoleService ) {
     if (!auth.authenticated()) {
       auth.logout();
     }
@@ -197,7 +201,7 @@ export class UploadComponent implements OnInit {
     this.failedParticipants = [];
     this.loading = true;
     let jsonData: any[];
-    this.dsmService.uploadTxtFile( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.kitType.name, this.file, this.selectedReason, this.selectedCarrier ).subscribe(
+    this.dsmService.uploadTxtFile( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.kitType.name, this.file, this.selectedReason, this.selectedCarrier, this.skipAddressValidation ).subscribe(
       data => {
         this.loading = false;
         // console.log(`received: ${JSON.stringify(data, null, 2)}`);
@@ -322,9 +326,13 @@ export class UploadComponent implements OnInit {
     return this.compService;
   }
 
-  allOptionesSelected() {
+  allOptionsSelected() {
     this.uploadPossible = this.kitType != null && ( this.uploadReasons.length == 0 || this.selectedReason !== null ) &&
       ( this.carriers.length == 0 || this.selectedCarrier !== null );
     return this.uploadPossible;
+  }
+
+  hasRole(): RoleService {
+    return this.role;
   }
 }
