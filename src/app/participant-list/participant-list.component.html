@@ -392,7 +392,7 @@ date.dateFields.month != null && date.dateFields.month !== ''">{{date.dateFields
                                 <ng-container *ngIf="qDef.options !== null">
                                   <ul *ngFor="let o of qDef.options">
                                     <li *ngIf="getUtil().isOptionSelected(questionAnswer.answer, o.optionStableId)"><b>{{o.optionText}}</b>
-                                      <ng-container *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, o.optionStableId) as oDetail">
+                                      <ng-container *ngIf="getUtilStatic().getOptionDetails(questionAnswer.optionDetails, o.optionStableId) as oDetail">
                                         <div>{{oDetail.details}}
                                         </div>
                                       </ng-container>
@@ -411,7 +411,7 @@ date.dateFields.month != null && date.dateFields.month !== ''">{{date.dateFields
                                       <ng-container *ngIf="questionAnswer.groupedOptions[group.groupStableId] !== null">
                                         <ul *ngFor="let gAnswer of questionAnswer.groupedOptions[group.groupStableId]">
                                           <li *ngIf="getUtil().getAnswerText(gAnswer, group.options) as option"><b>{{option.optionText}}</b>
-                                            <ng-container *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, gAnswer) as oDetail">
+                                            <ng-container *ngIf="getUtilStatic().getOptionDetails(questionAnswer.optionDetails, gAnswer) as oDetail">
                                               <div>{{oDetail.details}}
                                               </div>
                                             </ng-container>
@@ -430,7 +430,7 @@ date.dateFields.month != null && date.dateFields.month !== ''">{{date.dateFields
                                         {{txt}}
                                         <hr *ngIf="i !== answers.length-1" style="border-color: lightgray">
                                       </div>
-                                      <div *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, answer) as oDetail">
+                                      <div *ngIf="getUtilStatic().getOptionDetails(questionAnswer.optionDetails, answer) as oDetail">
                                         {{oDetail.details}}
                                         <hr *ngIf="i !== answers.length-1" style="border-color: lightgray">
                                       </div>
