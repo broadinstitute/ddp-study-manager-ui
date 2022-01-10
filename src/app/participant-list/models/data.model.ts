@@ -32,7 +32,19 @@ export class Data {
         for (let y of x.questionsAnswers) {
           if (y.stableId === name) {
             for (let answer of y.answer) {
-              answers.push( answer );
+              if (!y.groupedOptions) {
+                answers.push( answer );
+              }
+              else {
+                let ans = y.groupedOptions[ answer ];
+                if (ans) {
+                  for (let a of ans) {
+                    answers.push( a );
+                  }
+                }else{
+                  answers.push( answer );
+                }
+              }
             }
           }
         }
