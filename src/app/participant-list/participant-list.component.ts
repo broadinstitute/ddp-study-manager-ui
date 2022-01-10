@@ -296,7 +296,7 @@ export class ParticipantListComponent implements OnInit {
                   } );
                 }
               }
-              let filter = new Filter( new ParticipantColumn( fieldSetting.columnDisplay, fieldSetting.columnName, key ), Filter.ADDITIONAL_VALUE_TYPE, options, new NameValue( fieldSetting.columnName, null ),
+              let filter = new Filter( new ParticipantColumn( fieldSetting.columnDisplay, Utils.convertUnderScoresToCamelCase(fieldSetting.columnName), key ), Filter.ADDITIONAL_VALUE_TYPE, options, new NameValue( fieldSetting.columnName, null ),
                 false, true, null, null, null, null, false, false, false, false, fieldSetting.displayType );
               if (this.settings[ key ] == null || this.settings[ key ] == undefined) {
                 this.settings[ key ] = [];

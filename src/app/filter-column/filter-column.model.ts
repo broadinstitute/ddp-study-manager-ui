@@ -1,4 +1,5 @@
 import { FilterBrand } from "@angular/cdk";
+import { ArrayType } from "@angular/compiler/src/output/output_ast";
 import { group } from "@angular/core/src/animation/dsl";
 import {FieldSettings} from "../field-settings/field-settings.model";
 import {NameValue} from "../utils/name-value.model";
@@ -589,13 +590,20 @@ export class Filter {
       }
     }
     else if (filter.type === Filter.ADDITIONAL_VALUE_TYPE) {
-      if (( filter.value1 !== null && filter.value1 !== "" && filter.value1 !== undefined ) || ( filter.empty || filter.notEmpty )) {
+      if (( filter.value1 ) || ( filter.empty || filter.notEmpty )) {
         filterText = this.getFilterJson( parent,
           new NameValue( "additionalValuesJson", filter.value1 ),
           filter.filter2, null,
           filter.exactMatch, filter.type, filter.range, filter.empty, filter.notEmpty, filter.participantColumn );
-      }
-      else {
+      } else if (filter.selectedOptions.length > 0) {
+        let selectedOptions = <Array<boolean>> filter.selectedOptions
+        let trueIndex = selectedOptions.indexOf(true);
+        let chosenValue = filter.options[trueIndex].value;
+        filterText = this.getFilterJson( parent,
+          new NameValue( "additionalValuesJson", chosenValue ),
+          filter.filter2, null,
+          filter.exactMatch, filter.type, filter.range, filter.empty, filter.notEmpty, filter.participantColumn );
+      } else {
         return null;
       }
     }
