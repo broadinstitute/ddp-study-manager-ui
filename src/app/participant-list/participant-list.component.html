@@ -377,12 +377,13 @@ date.dateFields.month != null && date.dateFields.month !== ''">{{date.dateFields
                       </ng-container>
                           <ng-container
                             *ngIf="questionAnswer.questionType === 'COMPOSITE' && questionAnswer.answer != null">
-                            <div *ngFor="let answer of questionAnswer.answer; let i = index">
-                              <div *ngFor="let compPart of answer" class="TD--Padding-Left-Bigger">
-                                {{getUtil().getNiceUserText(compPart)}}
-                              </div>
+                            <ng-container
+                              *ngIf="getUtilStatic().getQuestionDefinition(activityDefinitionList, alias, questionAnswer.stableId, activityData.activityVersion) as qDef">
+                            <div *ngFor="let answer of getUtilStatic().getNiceTextForCSVCompositeType(questionAnswer, qDef ); let i = index">
+                              {{answer}}
                               <hr *ngIf="i !== questionAnswer.answer.length-1" style="border-color: lightgray">
                             </div>
+                            </ng-container>
                           </ng-container>
                           <ng-container
                             *ngIf="questionAnswer.questionType === 'PICKLIST' && questionAnswer.answer != null">
@@ -428,6 +429,13 @@ date.dateFields.month != null && date.dateFields.month !== ''">{{date.dateFields
                                     <div *ngFor="let answer of answers; let i=index;" >
                                       <div *ngIf="getUtilStatic().getAnswerGroupOrOptionText(answer, qDef) as txt">
                                         {{txt}}
+                                        <ul *ngIf="pt.data.getGroupedOptionsForAnswer(activityData, col.participantColumn.name, answer) as groups">
+                                          <li *ngFor="let group of groups">
+                                            <div *ngIf="getUtilStatic().getAnswerGroupOrOptionText(group, qDef) as groupText">
+                                              {{groupText}}
+                                            </div>
+                                          </li>
+                                        </ul>
                                         <hr *ngIf="i !== answers.length-1" style="border-color: lightgray">
                                       </div>
                                       <div *ngIf="getUtilStatic().getOptionDetails(questionAnswer.optionDetails, answer) as oDetail">

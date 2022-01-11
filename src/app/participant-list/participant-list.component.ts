@@ -908,7 +908,6 @@ export class ParticipantListComponent implements OnInit {
           }
         } );
         this.savedFilters.sort( ( f1, f2 ) => f1.filterName.localeCompare( f2.filterName ) );
-        // console.log(this.savedFilters);
       },
       err => {
         this.showSavedFilters = false;
@@ -1016,7 +1015,6 @@ export class ParticipantListComponent implements OnInit {
       }
     } );
     this.resetPagination();
-    // console.log( this.savedFilters );
   }
 
   private resetPagination() {
@@ -1832,7 +1830,8 @@ export class ParticipantListComponent implements OnInit {
   }
 
   getQuestionAnswerByName( questionsAnswers: Array<QuestionAnswer>, name: string ) {
-    return questionsAnswers.find( x => x.stableId === name );
+    let a = questionsAnswers.find( x => x.stableId === name );
+    return  a;
   }
 
   updateParticipant( participant: Participant ) {
