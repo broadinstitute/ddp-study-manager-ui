@@ -1,13 +1,13 @@
 <span class="Display--Inline-Block">
   <b *ngIf="fieldName != null">{{fieldName}}</b>
-  <md-input-container class="DatePicker--Input">
-    <input mdInput maxlength="10" [ngClass]="{'Input': true, 'Color--Field--Patched': colorDuringPatch}"
+  <mat-form-field class="DatePicker--Input">
+    <input matInput maxlength="10" [ngClass]="{'Input': true, 'Color--Field--Patched': colorDuringPatch}"
            placeholder="{{getDateFormatPlaceholder(dateFormat)}}"
            [(ngModel)]="_dateString" (change)="check()"
            [disabled]="disabled" autocomplete="off"
            (blur)="colorDuringPatch = false" (focus)="colorDuringPatch = true">
-    <md-hint class="ErrorMessageForm" *ngIf="error !== null">{{error}}</md-hint>
-  </md-input-container>
+    <mat-hint class="ErrorMessageForm" *ngIf="error !== null">{{error}}</mat-hint>
+  </mat-form-field>
   <ng-container *ngIf="allowUnknownDay">*</ng-container>
   <div class="Calendar--Popup"
        *ngIf="showDatePicker">
@@ -29,10 +29,10 @@
           *ngIf="showTodayButton"
           (click)="setToday()"
           [disabled]="disabled">Today</button>
-  <md-checkbox color="primary" [checked]="estimated" [disabled]="disabled" *ngIf="addCheckboxEstimated"
+  <mat-checkbox color="primary" [checked]="estimated" [disabled]="disabled" *ngIf="addCheckboxEstimated"
                (change)="estimated = $event.checked; estimatedChanged()"
                disableRipple>Estimated
-  </md-checkbox>
+  </mat-checkbox>
 
   <button *ngIf="showNAButton"
     [ngClass]="{'btn':true, 'btn-xs':true, 'Button--Background--Color':true}"

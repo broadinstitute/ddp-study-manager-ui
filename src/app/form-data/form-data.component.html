@@ -5,26 +5,26 @@
     </td>
     <td>
       <ng-container *ngIf="fieldSetting.displayType === 'NUMBER'">
-        <md-input-container [ngClass]="{'Width--100': true, 'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}">
-          <input mdInput type="number"
+        <mat-form-field [ngClass]="{'Width--100': true, 'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}">
+          <input matInput type="number"
                  placeholder="{{fieldSetting.columnDisplay}}"
                  [ngModel]="participantData" (change)="valueChanged($event)"
                  [readonly] = "fieldSetting.readonly">
-        </md-input-container>
+        </mat-form-field>
       </ng-container>
 
       <ng-container *ngIf="fieldSetting.displayType === 'CHECKBOX'">
-        <md-checkbox [color]="isCheckboxPatchedCurrently(fieldSetting.columnName)" [disabled]="fieldSetting.readonly" disableRipple
+        <mat-checkbox [color]="isCheckboxPatchedCurrently(fieldSetting.columnName)" [disabled]="fieldSetting.readonly" disableRipple
                      (change)="valueChanged($event)">
-        </md-checkbox>
+        </mat-checkbox>
       </ng-container>
 
       <ng-container *ngIf="fieldSetting.displayType === 'OPTIONS'">
-        <md-select [ngClass]="{'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}" placeholder="{{fieldSetting.columnDisplay}}"
+        <mat-select [ngClass]="{'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}" placeholder="{{fieldSetting.columnDisplay}}"
                   [ngModel]="getActivityAnswer()"
                   [disabled]="fieldSetting.readonly"
                   (change)="valueChanged($event)">
-          <md-option *ngFor="let value of fieldSetting.possibleValues" [value]="value.value">
+          <mat-option *ngFor="let value of fieldSetting.possibleValues" [value]="value.value">
             <ng-container *ngIf="value.name !== undefined">
               {{value.name}}
             </ng-container>
@@ -34,15 +34,15 @@
             <ng-container *ngIf="value.name === undefined && value.value === undefined">
               {{value}}
             </ng-container>
-          </md-option>
-        </md-select>
+          </mat-option>
+        </mat-select>
       </ng-container>
 
       <ng-container *ngIf="fieldSetting.displayType === 'BUTTON_SELECT'">
-        <md-button-toggle-group
+        <mat-button-toggle-group
           [ngClass]="{'Color--Button-Select--Patched': isPatchedCurrently(fieldSetting.columnName)}"
           [disabled]="fieldSetting.readonly">
-          <md-button-toggle *ngFor="let value of fieldSetting.possibleValues" [value]="value.value" (change)="valueChanged($event)">
+          <mat-button-toggle *ngFor="let value of fieldSetting.possibleValues" [value]="value.value" (change)="valueChanged($event)">
             <ng-container *ngIf="value.name !== undefined">
               {{value.name}}
             </ng-container>
@@ -52,12 +52,13 @@
             <ng-container *ngIf="value.name === undefined && value.value === undefined">
               {{value}}
             </ng-container>
-          </md-button-toggle>
-        </md-button-toggle-group>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
       </ng-container>
 
       <ng-container *ngIf="fieldSetting.displayType === 'TEXTAREA'">
-        <textarea maxlength="10000" placeholder="{{fieldSetting.columnDisplay}}"
+        <textarea maxlength="50000" placeholder="{{fieldSetting.columnDisplay}}"
+                  rows="10"
                   [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}" [value]="participantData"
                   [readonly] = "fieldSetting.readonly"
                   (change)="valueChanged($event)"></textarea>
@@ -65,35 +66,35 @@
 
       <ng-container *ngIf="fieldSetting.displayType === 'TEXT'
        || ((fieldSetting.displayType === 'ACTIVITY' || fieldSetting.displayType === 'ACTIVITY_STAFF') && fieldSetting.possibleValues != null && fieldSetting.possibleValues[0] != null && fieldSetting.possibleValues[0].type !== 'RADIO' && fieldSetting.possibleValues[0].type !== 'DATE')">
-        <md-input-container
+        <mat-form-field
           [ngClass]="{'Width--100': true, 'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}">
-          <input mdInput maxlength="200" autocomplete="off" [disabled]="fieldSetting.displayType === 'ACTIVITY'"
+          <input matInput maxlength="200" autocomplete="off" [disabled]="fieldSetting.displayType === 'ACTIVITY'"
                  [ngModel]="getActivityAnswer()" (change)="valueChanged($event)"
                  placeholder="{{fieldSetting.columnDisplay}}"
                  [readonly] = "fieldSetting.readonly">
-        </md-input-container>
+        </mat-form-field>
       </ng-container>
 
       <fieldset [disabled]="fieldSetting.readonly">
         <ng-container *ngIf="fieldSetting.displayType === 'RADIO'
         || ((fieldSetting.displayType === 'ACTIVITY' || fieldSetting.displayType === 'ACTIVITY_STAFF') && fieldSetting.possibleValues != null && fieldSetting.possibleValues[0] != null && fieldSetting.possibleValues[0].type != null && fieldSetting.possibleValues[0].type === 'RADIO')">
-          <md-radio-group [disabled]="fieldSetting.displayType === 'ACTIVITY'"
+          <mat-radio-group [disabled]="fieldSetting.displayType === 'ACTIVITY'"
                           [value]="getActivityAnswer()" (change)="valueChanged($event)">
             <div *ngFor="let radio of getOptions()">
               <ng-container *ngIf="radio.name !== undefined">
-                <md-radio-button color="primary" disableRipple
-                                value="{{radio.value}}">{{radio.name}}</md-radio-button>
+                <mat-radio-button color="primary" disableRipple
+                                value="{{radio.value}}">{{radio.name}}</mat-radio-button>
               </ng-container>
               <ng-container *ngIf="radio.name === undefined && radio.value !== undefined">
-                <md-radio-button color="primary" disableRipple
-                                value="{{radio.value}}">{{radio.value}}</md-radio-button>
+                <mat-radio-button color="primary" disableRipple
+                                value="{{radio.value}}">{{radio.value}}</mat-radio-button>
               </ng-container>
               <ng-container *ngIf="radio.name === undefined && radio.value === undefined">
-                <md-radio-button color="primary" disableRipple
-                                value="{{radio}}">{{radio}}</md-radio-button>
+                <mat-radio-button color="primary" disableRipple
+                                value="{{radio}}">{{radio}}</mat-radio-button>
               </ng-container>
             </div>
-          </md-radio-group>
+          </mat-radio-group>
         </ng-container>
       </fieldset>
 

@@ -1,12 +1,12 @@
 import {Injectable} from "@angular/core";
-import {JwtHelper} from "angular2-jwt";
+import { JwtHelperService } from "@auth0/angular-jwt";
 
 @Injectable()
 export class SessionService {
 
   static DSM_TOKEN_NAME = "dsm_token";
 
-  private jwtHelper: JwtHelper = new JwtHelper();
+  private jwtHelper = new JwtHelperService();
   private isLoggedIn: boolean = false;
   private authExpiration: Date;
 

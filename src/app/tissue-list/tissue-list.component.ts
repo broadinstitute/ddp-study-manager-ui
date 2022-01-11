@@ -14,7 +14,6 @@ import {Result} from "../utils/result.model";
 import {PatchUtil} from "../utils/patch.model";
 import {ModalComponent} from "../modal/modal.component";
 import {Utils} from "../utils/utils";
-import {Http} from "@angular/http";
 import {TissueListWrapper} from "./tissue-list-wrapper.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
 
@@ -25,7 +24,7 @@ import {FieldSettings} from "../field-settings/field-settings.model";
 } )
 export class TissueListComponent implements OnInit {
 
-  @ViewChild( ModalComponent )
+  @ViewChild(ModalComponent)
   public modal: ModalComponent;
 
   tissueListWrappers: TissueListWrapper[] = [];
@@ -104,7 +103,7 @@ export class TissueListComponent implements OnInit {
   showHelp: boolean;
 
   constructor( public role: RoleService, private dsmService: DSMService, private compService: ComponentService,
-               private router: Router, private auth: Auth, private route: ActivatedRoute, http: Http ) {
+               private router: Router, private auth: Auth, private route: ActivatedRoute) {
     if (!auth.authenticated()) {
       auth.logout();
     }
@@ -1005,14 +1004,14 @@ export class TissueListComponent implements OnInit {
             } );
           }
           else {
-            this.tissueListWrappers[ index ].tissueList.oncHistoryDetails.oncHistoryDetailId = data.oncHistoryDetailId;
+            this.tissueListWrappers[ index ].tissueList.oncHistoryDetails.oncHistoryDetailId = data['oncHistoryDetailId'];
             //set oncHistoryDetailId to tissue as well
             for (let tissue of this.tissueListWrappers[ index ].tissueList.oncHistoryDetails.tissues) {
               tissue.oncHistoryDetailId = this.tissueListWrappers[ index ].tissueList.oncHistoryDetails.oncHistoryDetailId;
             }
             //set other workflow values
-            if (data.NameValue != null) {
-              let innerJson: any | any[] = JSON.parse( data.NameValue );
+            if (data['NameValue'] != null) {
+              let innerJson: any | any[] = JSON.parse( data['NameValue'] );
               if (innerJson instanceof Array) {
                 innerJson.forEach( ( val ) => {
                   let nameValue = NameValue.parse( val );

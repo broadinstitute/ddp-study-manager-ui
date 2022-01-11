@@ -1,6 +1,3 @@
-import { FilterBrand } from "@angular/cdk";
-import { ArrayType } from "@angular/compiler/src/output/output_ast";
-import { group } from "@angular/core/src/animation/dsl";
 import {FieldSettings} from "../field-settings/field-settings.model";
 import {NameValue} from "../utils/name-value.model";
 import {Statics} from "../utils/statics";

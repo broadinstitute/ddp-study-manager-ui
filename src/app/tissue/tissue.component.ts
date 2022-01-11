@@ -135,7 +135,7 @@ export class TissueComponent implements OnInit {
       this.dsmService.patchParticipantRecord(JSON.stringify(patch)).subscribe(// need to subscribe, otherwise it will not send!
         data => {
           if ( data && this.tissue.tissueId == null ) {
-            this.tissue.tissueId = data.tissueId;
+            this.tissue.tissueId = data['tissueId'];
             this.patchFinished = true;
             this.currentPatchField = null;
             this.dup = false;
@@ -150,6 +150,9 @@ export class TissueComponent implements OnInit {
             if ( data instanceof Array ) {
               data.forEach((val) => {
                 let nameValue = NameValue.parse(val);
+                if (nameValue.name && nameValue.name.indexOf( '.' ) != -1) {
+                  nameValue.name = nameValue.name.substr( nameValue.name.indexOf( "." ) + 1);
+                }
                 this.oncHistoryDetail[nameValue.name] = nameValue.value;
               });
             }
@@ -209,10 +212,7 @@ export class TissueComponent implements OnInit {
   }
 
   isPatchedCurrently (field: string): boolean {
-    if ( this.currentPatchField === field ) {
-      return true;
-    }
-    return false;
+    return this.currentPatchField === field;
   }
 
   currentField (field: string) {

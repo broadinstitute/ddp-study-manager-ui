@@ -1,6 +1,7 @@
 import {DatePipe} from "@angular/common";
 import {Injectable} from "@angular/core";
 import {FormControl} from "@angular/forms";
+import {ErrorStateMatcher} from "@angular/material/core";
 import {AbstractionGroup} from "../abstraction-group/abstraction-group.model";
 import { ActivityData } from "../activity-data/activity-data.model";
 import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
@@ -15,7 +16,7 @@ import {AbstractionField} from "../medical-record-abstraction/medical-record-abs
 import {Participant} from "../participant-list/participant-list.model";
 import {NameValue} from "./name-value.model";
 
-var fileSaver = require( "file-saver/FileSaver.js" );
+var fileSaver = require( "file-saver" );
 const Json2csvParser = require( "json2csv" ).Parser;
 
 @Injectable()
@@ -113,6 +114,38 @@ export class Utils {
       }
       return false;
     } );
+  }
+
+  getAnswerGroupOrOptionText( answer: any, qdef: QuestionDefinition ): string {
+    if (answer instanceof Array) {
+      answer = answer[ 0 ];
+    }
+    let text = answer;
+    let ans;
+    if (qdef.groups) {
+      ans = qdef.groups.find( group => {
+        if (group.groupStableId === answer) {
+          return true;
+        }
+        return false;
+      } );
+
+      if (ans) {
+        text = ans.groupText;
+      }
+    }
+    if (!ans && qdef.options) {
+      let ans = qdef.options.find( option => {
+        if (option.optionStableId === answer) {
+          return true;
+        }
+        return false;
+      } );
+      if (ans) {
+        text = ans.optionText;
+      }
+    }
+    return text;
   }
 
   isOptionSelected( selected: Array<string>, optionStableId: string ) {
@@ -257,15 +290,15 @@ export class Utils {
         let nonDefaultFieldsResultArray: string[] = null;
         let output = this.makeCSVForObjectArray( d, path, columns, 0 );
         let temp = [];
-        
+
         for (let i = 0; i < output.length; i++) {
           if (input.length === output.length) {
             temp.push(input[i] + output[i]);
           } else {
             for (let j = 0; j < input.length; j++) {
-              temp.push(input[j] + output[i]);              
+              temp.push(input[j] + output[i]);
             }
-          }         
+          }
         }
 
         if (output.length > 1) {
@@ -540,15 +573,21 @@ export class Utils {
     fileSaver.saveAs( data, fileName );
   }
 
-  phoneNumberValidator( control: FormControl ) {
-    let validationError = {"invalidPhoneNumber": true};
-    if (!control || !control.value) {
-      return null;
-    }
-    if (control.value.match( /^\d{3}-\d{3}-\d{4}$/ )) {
-      return null;
-    }
-    return validationError;
+  // breaking change after Angular update to v.10
+  // Instead of passing a validating function,
+  // we should now pass a class instance (object) of type ErrorStateMatcher
+  // that has an isErrorState method.
+  // See https://github.com/angular/components/issues/7694
+  phoneNumberValidator(): ErrorStateMatcher {
+    return {
+      isErrorState: (control: FormControl | null) => {
+        if (control?.value) {
+          return !(control.value.match( /^\d{3}-\d{3}-\d{4}$/ ));
+        }
+
+        return false;
+      }
+    };
   }
 
   public static parseDate( dateString: string, format: string, allowUnknownDay: boolean ): string | Date {

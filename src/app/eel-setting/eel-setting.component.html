@@ -49,9 +49,9 @@
                 {{setting.templateId}}
               </td>
               <td>
-                <md-input-container class="Width--100">
-                  <input mdInput type="text" [(ngModel)]="setting.name" maxlength="200">
-                </md-input-container>
+                <mat-form-field class="Width--100">
+                  <input matInput type="text" [(ngModel)]="setting.name" maxlength="200">
+                </mat-form-field>
               </td>
               <td>
                 <select [(ngModel)]="setting.workflowId" class="SelectText">

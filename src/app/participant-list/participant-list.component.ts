@@ -37,7 +37,7 @@ import { ParticipantData } from "./models/participant-data.model";
 } )
 export class ParticipantListComponent implements OnInit {
 
-  @ViewChild( ModalComponent )
+  @ViewChild(ModalComponent)
   public modal: ModalComponent;
 
   modalAnchor: string;
@@ -549,6 +549,8 @@ export class ParticipantListComponent implements OnInit {
         }
         if (jsonData.hasAddressTab) {
           this.addContactInformationColumns();
+        }else{
+          this.showContactInformation = false;
         }
         if (jsonData.hasComputedObject) {
           this.addAutomatedScoringColumns();
@@ -2193,6 +2195,6 @@ export class ParticipantListComponent implements OnInit {
       let tmp = filter.participantColumn.object != null ? filter.participantColumn.object : filter.participantColumn.tableAlias;
       this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
      });
-     this.orderColumns(); 
+     this.orderColumns();
   }
 }

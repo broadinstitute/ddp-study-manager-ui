@@ -25,7 +25,7 @@
 <div *ngIf="errorMessage == null && allowedToSeeInformation && !loadingDDPData">
 
   <div *ngIf="dashboardVersion != null && dashboardVersion === UNSENTOVERVIEW && ddp != null" class="Width--100">
-    <button class="Float--right" md-raised-button (click)="reloadUnsent()" color="primary" [disabled]="loadingDDPData">Reload Overview</button>
+    <button class="Float--right" mat-raised-button (click)="reloadUnsent()" color="primary" [disabled]="loadingDDPData">Reload Overview</button>
   </div>
 
   <div *ngIf="dashboardVersion != null && dashboardVersion === UNSENTOVERVIEW && ddp != null" class="Width--80">
@@ -62,7 +62,7 @@
             <td colspan="2" class="Width--50"><b>{{sKit.realm}} {{sKit.kitType}}</b></td>
             <td></td>
             <td>
-              <button class="Float--right" type="button" md-raised-button color="primary"
+              <button class="Float--right" type="button" mat-raised-button color="primary"
                       *ngIf="getRole().allowedToHandleSamples()"
                       [disabled]="sKit.kitsNoLabel === '0' || allLabelTriggered"
                       (click)="triggerLabelCreation(sKit.realm, sKit.kitType)">Create Labels
@@ -114,7 +114,7 @@
         <app-field-datepicker [dateString]="startDate" (dateChanged)="startChanged($event)"></app-field-datepicker>
         end date of period
         <app-field-datepicker [dateString]="endDate" (dateChanged)="endChanged($event)"></app-field-datepicker>
-        <button class="Float--right" type="button" md-raised-button color="primary"
+        <button class="Float--right" type="button" mat-raised-button color="primary"
                 (click)="reload()">Reload
         </button>
 
@@ -364,14 +364,14 @@
             </td>
             <td>
               <ng-container *ngIf="!showMedicalRecordRequestDetails">
-                <button md-mini-fab color=""
+                <button mat-mini-fab color=""
                         (click)="showMedicalRecordRequestDetails = !showMedicalRecordRequestDetails">
                   <i class="fas fa-plus fa-lg"></i>
                 </button>
                 <span>  Show MR Request Details</span>
               </ng-container>
               <ng-container *ngIf="showMedicalRecordRequestDetails">
-                <button md-mini-fab color=""
+                <button mat-mini-fab color=""
                         (click)="showMedicalRecordRequestDetails = !showMedicalRecordRequestDetails">
                   <i class="fas fa-minus fa-lg"></i>
                 </button>
@@ -693,14 +693,14 @@
             </td>
             <td>
               <ng-container *ngIf="!showTissueRequestDetails">
-                <button md-mini-fab color=""
+                <button mat-mini-fab color=""
                         (click)="showTissueRequestDetails = !showTissueRequestDetails">
                   <i class="fas fa-plus fa-lg"></i>
                 </button>
                 <span>  Show Tissue Request Details</span>
               </ng-container>
               <ng-container *ngIf="showTissueRequestDetails">
-                <button md-mini-fab color=""
+                <button mat-mini-fab color=""
                         (click)="showTissueRequestDetails = !showTissueRequestDetails">
                   <i class="fas fa-minus fa-lg"></i>
                 </button>
@@ -903,14 +903,14 @@
             <td></td>
             <td>
               <ng-container *ngIf="!showTissueProblemDetails">
-                <button md-mini-fab color=""
+                <button mat-mini-fab color=""
                         (click)="showTissueProblemDetails = !showTissueProblemDetails">
                   <i class="fas fa-plus fa-lg"></i>
                 </button>
                 <span>  Show Tissue Problem Details</span>
               </ng-container>
               <ng-container *ngIf="showTissueProblemDetails">
-                <button md-mini-fab color=""
+                <button mat-mini-fab color=""
                         (click)="showTissueProblemDetails = !showTissueProblemDetails">
                   <i class="fas fa-minus fa-lg"></i>
                 </button>
@@ -1041,14 +1041,14 @@
               </td>
               <td>
                 <ng-container *ngIf="!showActivityDetails[dashboardValue]">
-                  <button md-mini-fab color=""
+                  <button mat-mini-fab color=""
                           (click)="showActivityDetails[dashboardValue] = !showActivityDetails[dashboardValue]">
                     <i class="fas fa-plus fa-lg"></i>
                   </button>
                   <span>  Show "{{activity}}" Details</span>
                 </ng-container>
                 <ng-container *ngIf="showActivityDetails[dashboardValue]">
-                  <button md-mini-fab color=""
+                  <button mat-mini-fab color=""
                           (click)="showActivityDetails[dashboardValue] = !showActivityDetails[dashboardValue]">
                     <i class="fas fa-minus fa-lg"></i>
                   </button>
@@ -1131,10 +1131,10 @@
         <tr>
           <td colspan="4">
             <br/>
-            <md-select placeholder="Select source" [(ngModel)]="downloadSource" class="Input--Bigger-WIDTH">
-              <md-option *ngFor="let key of getSourceKeys()" [value]="key">{{dataSources.get(key)}}</md-option>
-            </md-select>
-            <button type="button" md-raised-button color="primary"
+            <mat-select placeholder="Select source" [(ngModel)]="downloadSource" class="Input--Bigger-WIDTH">
+              <mat-option *ngFor="let key of getSourceKeys()" [value]="key">{{dataSources.get(key)}}</mat-option>
+            </mat-select>
+            <button type="button" mat-raised-button color="primary"
                     (click)="dataExport(downloadSource)"
                     [disabled]="participantList.length == 0 || downloadSource == null">Export Data
             </button>

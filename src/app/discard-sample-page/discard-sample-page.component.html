@@ -91,11 +91,11 @@
           <ng-container *ngIf="sample.pathBSPScreenshot != null">
             {{sample.pathBSPScreenshot}}
 
-            <button md-mini-fab tooltip='View File' color="primary"
+            <button mat-mini-fab tooltip='View File' color="primary"
                     (click)="show(sample.pathBSPScreenshot, preview)">
               <i class="fas fa-eye fa-sm"></i>
             </button>
-            <button md-mini-fab color="warn" tooltip='Delete File'
+            <button mat-mini-fab color="warn" tooltip='Delete File'
                     *ngIf="sample.userConfirm == null"
                     (click)="deleteFile('pathBSPScreenshot', confirmDelete)">
               <i class="fas fa-trash-alt fa-sm"></i>
@@ -116,11 +116,11 @@
         <td>
           <ng-container *ngIf="sample.pathSampleImage != null">
             {{sample.pathSampleImage}}
-            <button md-mini-fab tooltip='View File' color="primary"
+            <button mat-mini-fab tooltip='View File' color="primary"
                     (click)="show(sample.pathSampleImage, preview)">
               <i class="fas fa-eye fa-sm"></i>
             </button>
-            <button md-mini-fab color="warn" tooltip='Delete File'
+            <button mat-mini-fab color="warn" tooltip='Delete File'
                     *ngIf="sample.userConfirm == null"
                     (click)="deleteFile('pathSampleImage', confirmDelete)">
               <i class="fas fa-trash-alt fa-sm"></i>
@@ -143,7 +143,7 @@
             {{sample.userConfirm}}
           </ng-container>
           <ng-container *ngIf="sample.userConfirm == null && !hasRole().allowedToExitParticipant()">
-            <button md-raised-button color="primary"
+            <button mat-raised-button color="primary"
                     (click)="confirm()" [disabled]="sample.pathBSPScreenshot == null || sample.pathSampleImage == null">Confirm</button>
           </ng-container>
         </td>
@@ -167,7 +167,7 @@
 
   <div class="Width--100 Float--left">
     <div>
-      <button md-raised-button color="primary"
+      <button mat-raised-button color="primary"
               *ngIf="hasRole().allowedToDiscardSamples() && sample.isSetToDiscard()"
               (click)="discard()" [disabled]="sample.discardDate == null">Sample Was Destroyed</button>
       <br/>

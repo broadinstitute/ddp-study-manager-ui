@@ -1,30 +1,29 @@
 import {BrowserModule} from "@angular/platform-browser";
-import {NgModule} from "@angular/core";
+import {ErrorHandler, NgModule} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {HttpModule} from "@angular/http";
+import { HttpClientModule } from "@angular/common/http";
 import {RouterModule} from "@angular/router";
-import {DataTableModule} from "angular2-datatable";
-import {
-  AccordionModule,
-  CollapseModule,
-  DatepickerModule,
-  ModalModule,
-  SortableModule,
-  TabsModule,
-  TooltipModule,
-  TypeaheadModule
-} from "ngx-bootstrap";
-import {
-  MdAutocompleteModule,
-  MdButtonModule,
-  MdButtonToggleModule,
-  MdCheckboxModule,
-  MdInputModule,
-  MdRadioModule,
-  MdSelectModule,
-  MdDialogModule
-} from "@angular/material";
+import {DataTableModule} from "@pascalhonegger/ng-datatable";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatButtonModule} from "@angular/material/button";
+import {MatInputModule} from "@angular/material/input";
+import {MatSelectModule} from "@angular/material/select";
+import {MatRadioModule} from "@angular/material/radio";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatIconModule} from "@angular/material/icon";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+
+import {AccordionModule} from "ngx-bootstrap/accordion";
+import {CollapseModule} from "ngx-bootstrap/collapse";
+import {DatepickerModule} from "ngx-bootstrap/datepicker";
+import {ModalModule} from "ngx-bootstrap/modal";
+import {SortableModule} from "ngx-bootstrap/sortable";
+import {TabsModule} from "ngx-bootstrap/tabs";
+import {TooltipModule} from "ngx-bootstrap/tooltip";
+import {TypeaheadModule} from "ngx-bootstrap/typeahead";
+
 import {CookieModule} from "ngx-cookie";
 import {NgxPaginationModule} from "ngx-pagination";
 
@@ -116,6 +115,7 @@ import { InvitationDataComponent } from './invitation-data/invitation-data.compo
 import { ParticipantUpdateResultDialogComponent } from './dialogs/participant-update-result-dialog.component';
 import { FormDataComponent } from './form-data/form-data.component';
 import { AddFamilyMemberComponent } from './popups/add-family-member/add-family-member.component';
+import { FieldTableComponent } from './field-table/field-table.component';
 
 @NgModule( {
   declarations: [
@@ -194,26 +194,29 @@ import { AddFamilyMemberComponent } from './popups/add-family-member/add-family-
     InvitationDataComponent,
     ParticipantUpdateResultDialogComponent,
     FormDataComponent,
-    AddFamilyMemberComponent
+    AddFamilyMemberComponent,
+    FieldTableComponent
+
   ],
   entryComponents: [ParticipantUpdateResultDialogComponent, AddFamilyMemberComponent],
   imports: [
     BrowserModule,
     FormsModule,
     RouterModule.forRoot( AppRoutes, {enableTracing: true} ),
-    HttpModule,
+    HttpClientModule,
     ReactiveFormsModule,
 
-    MdCheckboxModule,
-    MdButtonModule,
-    MdInputModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    MatInputModule,
+    MatSelectModule,
+    MatRadioModule,
+    MatButtonToggleModule,
+    MatAutocompleteModule,
+    MatDialogModule,
+    MatIconModule,
     BrowserAnimationsModule,
-    MdSelectModule,
-    MdRadioModule,
-    MdButtonToggleModule,
     NgxPageScrollModule,
-    MdAutocompleteModule,
-    MdDialogModule,
 
     DataTableModule,
     NgxPaginationModule,
@@ -227,7 +230,7 @@ import { AddFamilyMemberComponent } from './popups/add-family-member/add-family-
     CookieModule.forRoot(),
     AccordionModule.forRoot(),
     TypeaheadModule.forRoot(),
-    DragulaModule
+    DragulaModule.forRoot()
   ],
   providers: [
     Auth,
@@ -240,7 +243,8 @@ import { AddFamilyMemberComponent } from './popups/add-family-member/add-family-
     Statics,
     Language,
     StackdriverErrorReporterService,
-    LoggingService
+    LoggingService,
+    { provide: ErrorHandler, useClass: StackdriverErrorReporterService }
   ],
   bootstrap: [ AppComponent ]
 } )

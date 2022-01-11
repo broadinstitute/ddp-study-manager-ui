@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild, OnDestroy } from "@angular/core";
-import { MdDialog } from '@angular/material';
-import {TabDirective} from "ngx-bootstrap";
+import { MatDialog } from "@angular/material/dialog";
+import {TabDirective} from "ngx-bootstrap/tabs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
@@ -30,7 +30,7 @@ import { AddFamilyMemberComponent } from "../popups/add-family-member/add-family
 import { Sample } from "../participant-list/models/sample.model";
 import { ParticipantDSMInformation } from "../participant-list/models/participant.model";
 
-var fileSaver = require( "file-saver/FileSaver.js" );
+var fileSaver = require( "file-saver" );
 
 @Component( {
   selector: "app-participant-page",
@@ -39,7 +39,7 @@ var fileSaver = require( "file-saver/FileSaver.js" );
 } )
 export class ParticipantPageComponent implements OnInit, OnDestroy {
 
-  @ViewChild( ModalComponent )
+  @ViewChild(ModalComponent)
   public universalModal: ModalComponent;
 
   @Input() parentList: string;
@@ -119,7 +119,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
   message: string = null;
   bundle: boolean = false;
   constructor( private auth: Auth, private compService: ComponentService, private dsmService: DSMService, private router: Router,
-               private role: RoleService, private util: Utils, private route: ActivatedRoute, public dialog: MdDialog) {
+               private role: RoleService, private util: Utils, private route: ActivatedRoute, public dialog: MatDialog) {
     if (!auth.authenticated()) {
       auth.logout();
     }
@@ -453,8 +453,8 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
               } );
             }
             else {
-              if (data.participantId != null && data.participantId != undefined) {
-                this.participant.participant.participantId = data.participantId;
+              if (data['participantId']) {
+                this.participant.participant.participantId = data['participantId'];
               }
             }
           }
@@ -694,7 +694,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     window.scrollTo( 0, 0 );
   }
 
-  downloadFile( data: Response, type: string ) {
+  downloadFile( data: any, type: string ) {
     var blob = new Blob( [data], {type: "application/pdf"} );
 
     let shortId = this.participant.data.profile[ "hruid" ];
@@ -1262,9 +1262,9 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
         this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
           data => {
             if (data) {
-              if (data.participantDataId !== undefined && data.participantDataId !== "") {
+              if (data['participantDataId']) {
                 if (participantData != null) {
-                  participantData.dataId = data.participantDataId;
+                  participantData.dataId = data['participantDataId'];
                 }
               }
           }
@@ -1310,9 +1310,12 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
     return Math.abs(diffDate.getUTCFullYear() - 1970);
   }
 
-  findDataId(): string {
-    if (this.participant && this.participant.participantData && this.participant.participantData[0]) {
-      return this.participant.participantData[0].dataId;
+  findDataId(fieldSetting: FieldSettings): string {
+    if (this.participant && this.participant.participantData) {
+      let participantDataOfFieldSetting = this.participant.participantData.find(participantData => participantData.fieldTypeId === fieldSetting.fieldType);
+      if (participantDataOfFieldSetting) {
+        return participantDataOfFieldSetting.dataId;
+      }
     }
     return "";
   }

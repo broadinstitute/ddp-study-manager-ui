@@ -3,11 +3,11 @@ import {ModalComponent} from "../modal/modal.component";
 import {Value} from "../utils/value.model";
 
 @Component( {
-  selector: "app-field-multi-type-array",
-  templateUrl: "./field-multi-type-array.component.html",
-  styleUrls: [ "./field-multi-type-array.component.css" ]
+  selector: 'app-field-table',
+  templateUrl: './field-table.component.html',
+  styleUrls: [ './field-table.component.css' ]
 } )
-export class FieldMultiTypeArrayComponent implements OnInit, OnChanges {
+export class FieldTableComponent implements OnInit, OnChanges {
 
   @ViewChild(ModalComponent)
   public universalModal: ModalComponent;
@@ -24,7 +24,16 @@ export class FieldMultiTypeArrayComponent implements OnInit, OnChanges {
   multiTypes = [];
   nope: boolean = false;
 
+  multiOptions: string = "multi_options";
+  options: string = "options";
+  otherString: string = "other";
+
+  showDelete: boolean = false;
+  currentPatchField: string;
+  _other: any[] = [];
+
   constructor() {
+    this.setMultiTypes();
   }
 
   ngOnInit() {
@@ -32,7 +41,7 @@ export class FieldMultiTypeArrayComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges( changes: SimpleChanges ) {
-    this.setMultiTypes();
+//    this.setMultiTypes();
   }
 
   setMultiTypes() {
@@ -54,6 +63,7 @@ export class FieldMultiTypeArrayComponent implements OnInit, OnChanges {
     else {
       this.nope = true;
     }
+    this.setOthers();
   }
 
   valuesChanged( change: any, fieldName: string, index: number ) {
@@ -124,4 +134,68 @@ export class FieldMultiTypeArrayComponent implements OnInit, OnChanges {
     this.nope = false;
   }
 
+  isPatchedCurrently( field: string, row: number ): boolean {
+    if (this.currentPatchField === field + row) {
+      return true;
+    }
+    return false;
+  }
+
+  multiTypeValueChanged( event: any, multiType: {}, displayName: string, field: Value, i: number ) {
+    let v;
+    if (typeof event === "string") {
+      v = event;
+    }
+    else {
+      if (event.srcElement != null && typeof event.srcElement.value === "string") {
+        v = event.srcElement.value;
+      }
+      else if (event.value != null) {
+        v = event.value;
+      }
+      else if (event.checked != null) {
+        v = event.checked;
+      }
+      else if (event.source.value != null && event.source.selected) {
+        v = event.source.value;
+      }
+    }
+    multiType[ displayName ] = v;
+    this.currentPatchField = displayName + i;
+
+    if (displayName === this.otherString) {
+      this._other[ i ][ field.value ] = v;
+      multiType[ this.otherString ] = this._other[ i ];
+      this.currentPatchField = this.otherString + "_" + displayName + i;
+    }
+    else if (field.type === this.multiOptions || field.type2 === this.multiOptions || field.type === this.options || field.type2 === this.options) {
+      if (multiType[ displayName ] === this.otherString) {
+        this._other[ i ][ displayName ] = v;
+      }
+      else {
+        this._other[ i ][ displayName ] = null;
+      }
+      multiType[ this.otherString ] = this._other[ i ];
+    }
+    this.valuesChanged( multiType, null, i );
+  }
+
+  currentField( field: string, row: number ) {
+    if (field != null || ( field == null )) {
+      this.currentPatchField = field + row;
+    }
+  }
+
+  private setOthers() {
+    for (let i = 0; i < this.multiTypes.length; i += 1) {
+      this._other[ i ] = {};
+      this.possibleValues.forEach( value => {
+        let val = null;
+        if (this.multiTypes[ i ][ this.otherString ] !== undefined) {
+          val = this.multiTypes[ i ][ this.otherString ][ value.value ];
+        }
+        this._other[ i ][ value.value ] = val;
+      } );
+    }
+  }
 }

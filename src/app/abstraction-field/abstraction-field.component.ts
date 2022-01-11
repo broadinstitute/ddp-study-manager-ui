@@ -22,7 +22,7 @@ import {ModalComponent} from "../modal/modal.component";
 } )
 export class AbstractionFieldComponent implements OnInit {
 
-  @ViewChild( ModalComponent )
+  @ViewChild(ModalComponent)
   public noteModal: ModalComponent;
 
   @Input() participant: Participant;
@@ -259,7 +259,7 @@ export class AbstractionFieldComponent implements OnInit {
           ddpParticipantId: this.participant.participant.ddpParticipantId
         };
       }
-      // value of field changed
+      // value of field changed, used for table
       else if (fieldName === "value") {
         patch = {
           id: field.fieldValue.primaryKeyId,
@@ -310,8 +310,8 @@ export class AbstractionFieldComponent implements OnInit {
                 this.setOtherOptionText();
               }
               if (data) {
-                if (data.primaryKeyId !== undefined && data.primaryKeyId !== "") {
-                  field.fieldValue.primaryKeyId = data.primaryKeyId;
+                if (data['primaryKeyId']) {
+                  field.fieldValue.primaryKeyId = data['primaryKeyId'];
                 }
                 if (data instanceof Array) {
                   data.forEach( ( val ) => {
@@ -358,8 +358,8 @@ export class AbstractionFieldComponent implements OnInit {
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
       data => {
           if (data) {
-            if (data.primaryKeyId !== undefined && data.primaryKeyId !== "") {
-              field.fieldValue.primaryKeyId = data.primaryKeyId;
+            if (data['primaryKeyId']) {
+              field.fieldValue.primaryKeyId = data['primaryKeyId'];
             }
           }
       },

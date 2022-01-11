@@ -1,0 +1,168 @@
+<div class="TD--Padding-Bottom">
+  <mat-checkbox color="primary" [disabled]="disabled"
+               (change)="valuesChanged($event, 'no', null)" [(ngModel)]="nope"
+               disableRipple>No {{fieldName}}
+  </mat-checkbox>
+</div>
+
+<table class="table table-striped Width--100" *ngIf="jsonArray !== 'no'">
+  <thead>
+    <tr>
+      <th *ngFor="let field of possibleValues">
+        {{field.value}}
+      </th>
+    </tr>
+
+  </thead>
+  <tbody>
+  <tr *ngFor="let row of multiTypes; let i = index">
+    <ng-container *ngIf="!row.del">
+      <td *ngFor="let field of possibleValues">
+
+        <ng-container *ngIf="field.type === 'drugs'">
+          <mat-select *ngIf="field.type2 === options"
+                     [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently(field.value, i)}"
+                     [(ngModel)]="row[field.value]" [disabled]="disabled"
+                     (change)="multiTypeValueChanged($event, row, field.value, field, i); ">
+            <mat-option *ngFor="let drug of drugs" [value]="drug">
+              {{drug}}
+            </mat-option>
+            <mat-option value="other"> Other</mat-option>
+          </mat-select>
+          <mat-select *ngIf="field.type2 === multiOptions"
+                     [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently(field.value, i)}"
+                     [(ngModel)]="row[field.value]" [disabled]="disabled"
+                     (change)="multiTypeValueChanged($event, row, field.value, field, i)" multiple>
+            <mat-option *ngFor="let drug of drugs" [value]="drug" >
+              {{drug}}
+            </mat-option>
+            <mat-option value="other"> Other</mat-option>
+          </mat-select>
+
+          <app-field-typeahead *ngIf="field.type2 === 'text'" [dataSource]="drugs" [drug]="multiTypes[i][field.value]" [disabled]="disabled" [fieldName]="field.value"
+                               (drugSelected)="multiTypeValueChanged($event, row, field.value, field, i)"></app-field-typeahead>
+
+        </ng-container>
+
+        <ng-container *ngIf="field.type === 'cancers'">
+          <mat-select *ngIf="field.type2 === options"
+                     [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently(field.value, i)}"
+                     [(ngModel)]="row[field.value]" [disabled]="disabled"
+                     (change)="multiTypeValueChanged($event, row, field.value, field, i)">
+            <mat-option *ngFor="let cancer of cancers" [value]="cancer">
+              {{cancer}}
+            </mat-option>
+            <mat-option value="other"> Other</mat-option>
+          </mat-select>
+          <mat-select *ngIf="field.type2 === multiOptions"
+                     [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently(field.value, i)}"
+                     [(ngModel)]="row[field.value]" [disabled]="disabled"
+                     (change)="multiTypeValueChanged($event, row, field.value, field, i)" multiple>
+            <mat-option *ngFor="let cancer of cancers" [value]="cancer" >
+              {{cancer}}
+            </mat-option>
+            <mat-option value="other"> Other</mat-option>
+          </mat-select>
+
+          <app-field-typeahead *ngIf="field.type2 === 'text'" [dataSource]="cancers" [drug]="row[field.value]" [disabled]="disabled" [fieldName]="field.value"
+                               (drugSelected)="multiTypeValueChanged($event, row, field.value, field, i)"></app-field-typeahead>
+        </ng-container>
+
+        <mat-form-field *ngIf="field.type === 'text'"
+                            [ngClass]="{'Width--100': true, 'Input': true, 'Color--Field--Patched': isPatchedCurrently(field.value, i)}">
+          <input matInput maxlength="200" [disabled]="disabled" autocomplete="off"
+                 [(ngModel)]="row[field.value]"
+                 (change)="multiTypeValueChanged($event, row, field.value, field, i)"
+                 (blur)="currentField(null, i)" (focus)="currentField(field.value, i)">
+        </mat-form-field>
+
+        <app-field-datepicker *ngIf="field.type === 'date'" [dateString]="row[field.value]" [disabled]="disabled" [addCheckboxEstimated]="true"
+                              [showNAButton]="true" [showNotFoundButton]="true" [allowUnknownDay]="true" [showCalendarButton]="false"
+                              [colorDuringPatch]="isPatchedCurrently(field.value, i)"
+                              (dateChanged)="multiTypeValueChanged($event, row, field.value, field, i)"></app-field-datepicker>
+
+        <mat-form-field *ngIf="field.type === 'number'"
+                            [ngClass]="{'Width--100': true, 'Input': true, 'Color--Field--Patched': isPatchedCurrently(field.value, i)}">
+          <input matInput type="number" [disabled]="disabled"
+                 [(ngModel)]="row[field.value]"
+                 (change)="multiTypeValueChanged($event, row, field.value, field, i)"
+                 (blur)="currentField(null, i)" (focus)="currentField(field.value, i)">
+        </mat-form-field>
+
+        <textarea *ngIf="field.type === 'textarea'" maxlength="1000"
+                  [ngClass]="{'Width--100': true, 'Input': true, 'Color--Field--Patched': isPatchedCurrently(field.value, i)}"
+                  [(ngModel)]="row[field.value]" [disabled]="disabled"
+                  (change)="multiTypeValueChanged($event, row, field.value, field, i)"
+                  (blur)="currentField(null, row)" (focus)="currentField(field.value, i)"></textarea>
+
+        <b *ngIf="field.type === 'button_select'">{{field.value}}</b>
+
+        <mat-button-toggle-group *ngIf="field.type === 'button_select'"
+                                [ngClass]="{'Color--Button-Select--Patched': isPatchedCurrently(field.value, i)}"
+                                [disabled]="disabled" [(ngModel)]="row[field.value]">
+          <mat-button-toggle *ngFor="let noName of field.values" [value]="noName.value"
+                            (change)="multiTypeValueChanged($event, row, field.value, field, i)">
+            {{noName.value}}
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <mat-select *ngIf="field.type === options"
+                   [ngClass]="{'TD--Padding-Top': true, 'Input': true, 'Color--Field--Patched': isPatchedCurrently(field.value, i)}"
+                   [(ngModel)]="row[field.value]" [disabled]="disabled"
+                   (change)="multiTypeValueChanged($event, row, field.value, field, i)">
+          <mat-option *ngFor="let noName of field.values" [value]="noName.value">
+            {{noName.value}}
+          </mat-option>
+          <mat-option value="other"> Other</mat-option>
+        </mat-select>
+
+        <mat-select *ngIf="field.type === multiOptions"
+                   [ngClass]="{'TD--Padding-Top': true, 'Input': true, 'Color--Field--Patched': isPatchedCurrently(field.value, i)}"
+                   [(ngModel)]="row[field.value]" [disabled]="disabled"
+                   (change)="multiTypeValueChanged($event, row, field.value, field, i)" multiple>
+          <mat-option *ngFor="let noName of field.values" [value]="noName.value">
+            {{noName.value}}
+          </mat-option>
+          <mat-option value="other"> Other</mat-option>
+        </mat-select>
+
+        <mat-form-field *ngIf="_other[i][field.value] != null && (field.type === options || field.type2 === options || field.type === multiOptions || field.type2 === multiOptions)"
+                            [ngClass]="{'Width--100': true, 'Input': true, 'Color--Field--Patched': isPatchedCurrently(otherString + '_' + field.value, i)}">
+          <input matInput maxlength="200" [disabled]="disabled" autocomplete="off"
+                 [(ngModel)]="_other[i][field.value]" placeholder="{{field.value}} - Other"
+                 (change)="multiTypeValueChanged($event, row, otherString, field, i)"
+                 (blur)="currentField(null, i)" (focus)="currentField(otherString + '_' + field.value, i)">
+        </mat-form-field>
+
+        <mat-checkbox *ngIf="field.type === 'checkbox'" disableRipple color="primary"
+                     [ngModel]="row[field.value]" [disabled]="disabled"
+                     (change)="multiTypeValueChanged($event, row, field.value, field, i)">
+        </mat-checkbox>
+
+      </td>
+    </ng-container>
+  </tr>
+  </tbody>
+  <button mat-mini-fab color="primary" [disabled]="disabled" tooltip="Add {{fieldName}}"
+          (click)="addAction()">
+    <i class="fas fa-plus fa-lg"></i>
+  </button>
+  <span><b>  Add another {{fieldName}}</b></span>
+</table>
+
+<app-modal>
+  <div class="app-modal-header">
+    Warning
+  </div>
+  <div class="app-modal-body">
+    Do you want to delete all previous entered {{fieldName}}?
+  </div>
+  <div class="app-modal-footer">
+    <button type="button" class="btn btn-default"
+            (click)="abort(); universalModal.hide()">Cancel
+    </button>
+    <button type="button" class="btn btn-default"
+            (click)="changeToNothing()">Ok
+    </button>
+  </div>
+</app-modal>

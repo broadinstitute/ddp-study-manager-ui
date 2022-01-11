@@ -6,7 +6,7 @@ import {MedicalRecordLog} from "../medical-record/model/medical-record-log.model
 })
 export class MedicalRecordLogSortPipe implements PipeTransform {
 
-  transform(array: MedicalRecordLog[], args: string): MedicalRecordLog[] {
+  transform(array: MedicalRecordLog[]): MedicalRecordLog[] {
     array.sort((a, b) => {
       if (a.medicalRecordLogId < b.medicalRecordLogId) {
         return 1;

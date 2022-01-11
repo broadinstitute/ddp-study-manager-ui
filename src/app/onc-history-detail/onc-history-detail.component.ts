@@ -1,7 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
-import {IntervalObservable} from "rxjs/observable/IntervalObservable";
-import {Participant} from "../participant-list/participant-list.model";
+import {Router} from "@angular/router";
+import {interval} from "rxjs";
 
+import {Participant} from "../participant-list/participant-list.model";
 import {OncHistoryDetail} from "./onc-history-detail.model";
 import {DSMService} from "../services/dsm.service";
 import {ComponentService} from "../services/component.service";
@@ -14,7 +15,7 @@ import {Statics} from "../utils/statics";
 import {Auth} from "../services/auth.service";
 import {Result} from "../utils/result.model";
 import {PatchUtil} from "../utils/patch.model";
-import {Router} from "@angular/router";
+
 
 @Component( {
   selector: "app-onc-history-detail",
@@ -23,7 +24,7 @@ import {Router} from "@angular/router";
 } )
 export class OncHistoryDetailComponent implements OnInit {
 
-  @ViewChild( ModalComponent )
+  @ViewChild(ModalComponent)
   public oncHisNoteModal: ModalComponent;
 
   @Input() participant: Participant;
@@ -122,7 +123,7 @@ export class OncHistoryDetailComponent implements OnInit {
       this.patch( patch, index );
     }
     else {
-      var subscription = IntervalObservable.create( 250 ).subscribe( n => {
+      const subscription = interval( 250 ).subscribe( n => {
         if (this.oncHistory[ index ].oncHistoryDetailId != null) {
           subscription.unsubscribe();
           patch.id = this.oncHistory[ index ].oncHistoryDetailId;
@@ -151,7 +152,7 @@ export class OncHistoryDetailComponent implements OnInit {
             } );
           }
           else {
-            this.oncHistory[ index ].oncHistoryDetailId = data.oncHistoryDetailId;
+            this.oncHistory[ index ].oncHistoryDetailId = data['oncHistoryDetailId'];
             if (!this.editable) {
               this.editable = true;
             }
@@ -160,8 +161,8 @@ export class OncHistoryDetailComponent implements OnInit {
               tissue.oncHistoryDetailId = this.oncHistory[ index ].oncHistoryDetailId;
             }
             //set other workflow fieldValue
-            if (data.NameValue != null) {
-              let innerJson: any | any[] = JSON.parse( data.NameValue );
+            if (data['NameValue'] != null) {
+              let innerJson: any | any[] = JSON.parse( data['NameValue'] );
               //should be only needed for setting oncHistoryDetails on pt level to created
               if (innerJson instanceof Array) {
                 innerJson.forEach( ( val ) => {

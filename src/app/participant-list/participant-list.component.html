@@ -43,7 +43,7 @@
     <div *ngIf="getRealm() != null && loadingParticipants === null && participantList != null">
       <div class="Width--15 Float--left">
         <div>
-          <button md-mini-fab [color]="getButtonColorStyle(showFilters)"
+          <button mat-mini-fab [color]="getButtonColorStyle(showFilters)"
                   (click)="showFiltersTable()">
             <!--<i class="fas fa-dataFilter"></i>-->
             <i class="fas fa-search"></i>
@@ -53,8 +53,8 @@
         <div *ngIf="(errorMessage === null || errorMessage === '') ">
           <br>
           <div id="searchTable" *ngIf="showFilters" class="table">
-            <button md-raised-button color="primary" (click)="doFilter()">Search</button>
-            <button md-raised-button color="primary" (click)="clearManualFilters()">Clear</button>
+            <button mat-raised-button color="primary" (click)="doFilter()">Search</button>
+            <button mat-raised-button color="primary" (click)="clearManualFilters()">Clear</button>
 
             <ng-container *ngFor="let key of getKeys()">
               <ng-container *ngIf="key !== 'a'">
@@ -66,12 +66,12 @@
               </ng-container>
             </ng-container>
 
-            <button md-raised-button color="primary" (click)="doFilter()">Search</button>
-            <button md-raised-button color="primary" (click)="clearManualFilters()">Clear</button>
+            <button mat-raised-button color="primary" (click)="doFilter()">Search</button>
+            <button mat-raised-button color="primary" (click)="clearManualFilters()">Clear</button>
           </div>
         </div>
         <div>
-          <button md-mini-fab color="Color--primary"
+          <button mat-mini-fab color="Color--primary"
                   (click)="clearFilter()">
             <i class="fas fa-sync-alt"></i>
           </button>
@@ -79,7 +79,7 @@
         </div>
         <br>
         <div>
-          <button md-mini-fab [color]="getButtonColorStyle(showCustomizeViewTable)"
+          <button mat-mini-fab [color]="getButtonColorStyle(showCustomizeViewTable)"
                   (click)="showCustomizeView()">
             <i class="fas fa-server"></i>
           </button>
@@ -98,11 +98,11 @@
               <ul class="dropdown-menu" aria-labelledby="dropdownMenuProfile" id="{{key}}"
                   (click)="onclickDropDown($event)">
                 <li *ngFor="let column of sourceColumns[key]">
-                  <md-checkbox color="primary" disableRipple
+                  <mat-checkbox color="primary" disableRipple
                                (change)="addOrRemoveColumn(column, key)"
                                [checked]="selectedColumns[key] != null && hasThisColumnSelected(selectedColumns[key],column)">
                     {{column.participantColumn.display}}
-                  </md-checkbox>
+                  </mat-checkbox>
                 </li>
               </ul>
             </div>
@@ -110,7 +110,7 @@
         </div>
         <br>
         <div>
-          <button md-mini-fab color="Color--primary"
+          <button mat-mini-fab color="Color--primary"
                   (click)="openModal('saveFilter')">
             <i class="fas fa-save"></i>
           </button>
@@ -118,7 +118,7 @@
         </div>
         <br>
         <div>
-          <button md-mini-fab [color]="getButtonColorStyle(showSavedFilters)"
+          <button mat-mini-fab [color]="getButtonColorStyle(showSavedFilters)"
                   (click)="showSavedFiltersPanel()">
             <i class="fas fa-filter"></i>
           </button>
@@ -137,27 +137,27 @@
                   {{savedFilter.filterName}}
                 </td>
                 <td>
-                  <button md-icon-button [color]="getFilterButtonColorStyle(isSelectedFilter(savedFilter.filterName))"
+                  <button mat-icon-button [color]="getFilterButtonColorStyle(isSelectedFilter(savedFilter.filterName))"
                           (click)="selectFilter(savedFilter)">
-                    <md-icon>
+                    <mat-icon>
                       <i class="fas fa-filter fa-sm"></i>
-                    </md-icon>
+                    </mat-icon>
                   </button>
                 </td>
                 <td class="TD--Padding-Left-TINY">
-                  <button md-icon-button [color]="getFilterButtonColorStyle(savedFilter.shared)"
+                  <button mat-icon-button [color]="getFilterButtonColorStyle(savedFilter.shared)"
                           (click)="shareFilter(savedFilter, i)">
-                    <md-icon>
+                    <mat-icon>
                       <i class="fas fa-share-square"></i>
-                    </md-icon>
+                    </mat-icon>
                   </button>
                 </td>
                 <td class="TD--Padding-Left-TINY">
                   <button color="warn"
-                          md-icon-button (click)="deleteView(savedFilter)">
-                    <md-icon>
+                          mat-icon-button (click)="deleteView(savedFilter)">
+                    <mat-icon>
                       <i class="fas fa-trash-alt fa-sm"></i>
-                    </md-icon>
+                    </mat-icon>
                   </button>
                 </td>
               </tr>
@@ -175,11 +175,11 @@
                   {{savedFilter.filterName}}
                 </td>
                 <td>
-                  <button md-icon-button [color]="getFilterButtonColorStyle(isSelectedFilter(savedFilter.filterName))"
+                  <button mat-icon-button [color]="getFilterButtonColorStyle(isSelectedFilter(savedFilter.filterName))"
                           (click)="selectFilter(savedFilter)">
-                    <md-icon>
+                    <mat-icon>
                       <i class="fas fa-filter fa-sm"></i>
-                    </md-icon>
+                    </mat-icon>
                   </button>
                 </td>
               </tr>
@@ -195,20 +195,20 @@
         <div class="Float--left Width--100">
           <div>
           <span *ngFor="let qFilter of quickFilters">
-            <button md-mini-fab [color]="getButtonColorStyle(qFilter.selected)" (click)="selectFilter(qFilter)">
+            <button mat-mini-fab [color]="getButtonColorStyle(qFilter.selected)" (click)="selectFilter(qFilter)">
               <span tooltip="{{qFilter.filterName}}">
                 <i class="{{qFilter.icon}}" [ngClass]="{'fa-inverse': qFilter.selected}"></i>
               </span>
             </button>
           </span>
             <span class="Float--right">
-            <button md-mini-fab color="Color--primary"
+            <button mat-mini-fab color="Color--primary"
                     (click)="showHelp = !showHelp" [color]="getButtonColorStyle(showHelp)">
               <span tooltip="Search Help">
                 <i class="fas fa-info"></i>
               </span>
             </button>
-            <button md-mini-fab color="Color--primary"
+            <button mat-mini-fab color="Color--primary"
                     (click)="downloadCurrentData()">
               <span tooltip="Download List">
                 <i class="fas fa-file-download fa-lg"></i>
@@ -247,9 +247,9 @@
                         currentPage: activePage, totalItems: getPaginationParticipantListSize() }">
             <!--checkbox to assign or trigger blood kits-->
             <td *ngIf="hasAssignees()">
-              <md-checkbox color="primary" disableRipple *ngIf="pt.participant != null"
+              <mat-checkbox color="primary" disableRipple *ngIf="pt.participant != null"
                            [checked]="pt.isSelected"
-                           (change)="pt.isSelected = $event.checked; checkboxChecked()"></md-checkbox>
+                           (change)="pt.isSelected = $event.checked; checkboxChecked()"></mat-checkbox>
             </td>
 
             <!--profile values or dsm values-->
@@ -417,15 +417,22 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                                 </ng-container>
                               </ng-container>
                               <ng-container *ngIf="qDef.selectMode === 'SINGLE'">
-                                <ng-container *ngIf="questionAnswer.answer[0] != null">
-                                  <div class="TD--Padding-Left-Bigger">{{getUtil().getOptionOrGroupText(qDef, questionAnswer.answer[0])}}</div>
-                                  <ng-container *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, questionAnswer.answer[0]) as oDetail">
-                                    <div>{{oDetail.details}}
+                                <ng-container *ngIf="pt.data.getMultipleAnswersForPickList(activityData, col.participantColumn.name) as answers">
+                                  <div class="NO-PADDING-START" >
+                                    <div *ngFor="let answer of answers; let i=index;" >
+                                      <div *ngIf="getUtil().getAnswerGroupOrOptionText(answer, qDef) as txt">
+                                        {{txt}}
+                                        <hr *ngIf="i !== answers.length-1" style="border-color: lightgray">
+                                      </div>
+                                      <div *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, answer) as oDetail">
+                                        {{oDetail.details}}
+                                        <hr *ngIf="i !== answers.length-1" style="border-color: lightgray">
+                                      </div>
                                     </div>
-                                  </ng-container>
-                                </ng-container>
+                                  </div>
                               </ng-container>
                             </ng-container>
+                          </ng-container>
                           </ng-container>
                         </div>
                       </ng-container>
@@ -764,7 +771,7 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
           </tr>
           <tr *ngIf="hasAssignees()">
             <td [attr.colspan]="getColSpan()">
-              <button md-raised-button color="primary"
+              <button mat-raised-button color="primary"
                       (click)="openModal('assignParticipant')" [disabled]="isAssignButtonDisabled">Assign
               </button>
             </td>
@@ -784,21 +791,21 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
     </div>
     <div class="app-modal-body">
       <ng-container *ngIf="modalAnchor === 'saveFilter'">
-        <md-input-container class="Input Input--Bigger-WIDTH">
-          <input mdInput type="text" maxlength="200" autocomplete="off" placeholder="Filter Name"
+        <mat-form-field class="Input Input--Bigger-WIDTH">
+          <input matInput type="text" maxlength="200" autocomplete="off" placeholder="Filter Name"
                  [(ngModel)]="filterName">
-          <md-hint class="ErrorMessageForm" *ngIf="dup">Name not unique</md-hint>
-          <md-hint class="ErrorMessageForm" *ngIf="plus">Name can't contain +</md-hint>
-        </md-input-container>
+          <mat-hint class="ErrorMessageForm" *ngIf="dup">Name not unique</mat-hint>
+          <mat-hint class="ErrorMessageForm" *ngIf="plus">Name can't contain +</mat-hint>
+        </mat-form-field>
       </ng-container>
       <ng-container *ngIf="modalAnchor === 'assignParticipant'">
-        <md-checkbox color="primary" disableRipple
+        <mat-checkbox color="primary" disableRipple
                      [(ngModel)]="assignMR">Assign to request MR
-        </md-checkbox>
+        </mat-checkbox>
         <br/>
-        <md-checkbox color="primary" disableRipple
+        <mat-checkbox color="primary" disableRipple
                      [(ngModel)]="assignTissue">Assign to request Tissue
-        </md-checkbox>
+        </mat-checkbox>
         <app-assignee (selectedAssignee)="assigneeSelected($event)" [assignees]="assignees"></app-assignee>
       </ng-container>
     </div>

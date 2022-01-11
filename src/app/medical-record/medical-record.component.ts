@@ -1,5 +1,4 @@
 import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
-import {Response} from "@angular/http";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FollowUp} from "../follow-up/follow-up.model";
 import {Lookup} from "../lookup/lookup.model";
@@ -20,7 +19,7 @@ import {Utils} from "../utils/utils";
 import {MedicalRecord} from "./medical-record.model";
 import {MedicalRecordLog} from "./model/medical-record-log.model";
 
-var fileSaver = require( "file-saver/FileSaver.js" );
+var fileSaver = require( "file-saver" );
 
 @Component( {
   selector: "app-medical-record",
@@ -29,10 +28,10 @@ var fileSaver = require( "file-saver/FileSaver.js" );
 } )
 export class MedicalRecordComponent implements OnInit {
 
-  @ViewChild( OncHistoryDetailComponent )
+  @ViewChild(OncHistoryDetailComponent)
   private oncHistoryDetailComponent: OncHistoryDetailComponent;
 
-  @ViewChild( ModalComponent )
+  @ViewChild(ModalComponent)
   public modal: ModalComponent;
 
   @Input() participant: Participant;
@@ -255,30 +254,33 @@ export class MedicalRecordComponent implements OnInit {
     else {
       this.downloading = true;
       this.message = "Downloading... This might take a while";
-      this.dsmService.downloadPDF( this.participant.participant.ddpParticipantId, this.medicalRecord.medicalRecordId,
-        this.startDate, this.endDate, this.mrCoverPdfSettings, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), configName, this.pdfs, null ).subscribe(
-        data => {
-          let tmp = configName;
-          if (tmp == null) {
-            tmp = "all";
+      this.dsmService.downloadPDF(this.participant.participant.ddpParticipantId, this.medicalRecord.medicalRecordId,
+        this.startDate, this.endDate, this.mrCoverPdfSettings, localStorage.getItem(ComponentService.MENU_SELECTED_REALM),
+        configName, this.pdfs, null
+      )
+        .subscribe(
+          data => {
+            let tmp = configName;
+            if (tmp == null) {
+              tmp = "all";
+            }
+            this.downloadFile(data, "_" + tmp);
+            this.downloading = false;
+            this.message = "Download finished.";
+          },
+          err => {
+            if (err._body === Auth.AUTHENTICATION_ERROR) {
+              this.router.navigate([Statics.HOME_URL]);
+            }
+            this.message = "Failed to download pdf.";
+            this.downloading = false;
           }
-          this.downloadFile( data, "_" + tmp );
-          this.downloading = false;
-          this.message = "Download finished.";
-        },
-        err => {
-          if (err._body === Auth.AUTHENTICATION_ERROR) {
-            this.router.navigate( [ Statics.HOME_URL ] );
-          }
-          this.message = "Failed to download pdf.";
-          this.downloading = false;
-        }
-      );
+        );
     }
     this.modal.hide();
   }
 
-  downloadFile( data: Response, type: string ) {
+  downloadFile( data: any, type: string ) {
     var blob = new Blob( [ data ], {type: "application/pdf"} );
     fileSaver.saveAs( blob, this.participant.data.profile[ "hruid" ] + type + Statics.PDF_FILE_EXTENSION );
   }

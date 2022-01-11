@@ -67,57 +67,57 @@
       <ng-container *ngFor="let setting of mf.data; let i = index">
         <tr>
           <td>
-            <md-input-container class="Input">
-              <input mdInput class="Input--Min-WIDTH" maxlength="45"
+            <mat-form-field class="Input">
+              <input matInput class="Input--Min-WIDTH" maxlength="45"
                      [(ngModel)]="setting.name" (change)="checkName(i); onChange(i)">
-              <md-hint class="ErrorMessageForm" *ngIf="setting.notUniqueError">Name not unique</md-hint>
-            </md-input-container>
+              <mat-hint class="ErrorMessageForm" *ngIf="setting.notUniqueError">Name not unique</mat-hint>
+            </mat-form-field>
           </td>
           <td>
-            <md-input-container>
-              <input mdInput type="text" [(ngModel)]="setting.description" (change)="onChange(i)" class="Input--Bigger-WIDTH" maxlength="500">
-            </md-input-container>
+            <mat-form-field>
+              <input matInput type="text" [(ngModel)]="setting.description" (change)="onChange(i)" class="Input--Bigger-WIDTH" maxlength="500">
+            </mat-form-field>
           </td>
           <td>
-            <md-checkbox color="primary" [checked]="setting.defaultPage" (change)="setting.defaultPage = $event.checked; check(i)" disableRipple></md-checkbox>
+            <mat-checkbox color="primary" [checked]="setting.defaultPage" (change)="setting.defaultPage = $event.checked; check(i)" disableRipple></mat-checkbox>
           </td>
           <td>
-            <md-input-container>
-              <input mdInput type="text" [(ngModel)]="setting.labelOnPage" (change)="onChange(i)" class="Width--100" maxlength="100">
-            </md-input-container>
+            <mat-form-field>
+              <input matInput type="text" [(ngModel)]="setting.labelOnPage" (change)="onChange(i)" class="Width--100" maxlength="100">
+            </mat-form-field>
           </td>
           <td>
-            <md-input-container>
-              <input mdInput type="text" [(ngModel)]="setting.labelHeight" (change)="onChange(i)" class="Width--100" maxlength="100">
-            </md-input-container>
+            <mat-form-field>
+              <input matInput type="text" [(ngModel)]="setting.labelHeight" (change)="onChange(i)" class="Width--100" maxlength="100">
+            </mat-form-field>
           </td>
           <td>
-            <md-input-container>
-              <input mdInput type="text" [(ngModel)]="setting.labelWidth" (change)="onChange(i)" class="Width--100" maxlength="100">
-            </md-input-container>
+            <mat-form-field>
+              <input matInput type="text" [(ngModel)]="setting.labelWidth" (change)="onChange(i)" class="Width--100" maxlength="100">
+            </mat-form-field>
           </td>
           <td>
-            <md-input-container>
-              <input mdInput type="text" [(ngModel)]="setting.topMargin" (change)="onChange(i)" class="Width--100" maxlength="100">
-            </md-input-container>
+            <mat-form-field>
+              <input matInput type="text" [(ngModel)]="setting.topMargin" (change)="onChange(i)" class="Width--100" maxlength="100">
+            </mat-form-field>
           </td>
           <td>
-            <md-input-container>
-              <input mdInput type="text" [(ngModel)]="setting.rightMargin" (change)="onChange(i)" class="Width--100" maxlength="100">
-            </md-input-container>
+            <mat-form-field>
+              <input matInput type="text" [(ngModel)]="setting.rightMargin" (change)="onChange(i)" class="Width--100" maxlength="100">
+            </mat-form-field>
           </td>
           <td>
-            <md-input-container>
-              <input mdInput type="text" [(ngModel)]="setting.bottomMargin" (change)="onChange(i)" class="Width--100" maxlength="100">
-            </md-input-container>
+            <mat-form-field>
+              <input matInput type="text" [(ngModel)]="setting.bottomMargin" (change)="onChange(i)" class="Width--100" maxlength="100">
+            </mat-form-field>
           </td>
           <td>
-            <md-input-container>
-              <input mdInput type="text" [(ngModel)]="setting.leftMargin" (change)="onChange(i)" class="Width--100" maxlength="100">
-            </md-input-container>
+            <mat-form-field>
+              <input matInput type="text" [(ngModel)]="setting.leftMargin" (change)="onChange(i)" class="Width--100" maxlength="100">
+            </mat-form-field>
           </td>
           <td>
-            <button md-mini-fab color="warn"
+            <button mat-mini-fab color="warn"
                     *ngIf="i < pageSettings.length-1"
                     (click)="deletePageSetting(i)">
               <i class="fas fa-trash-alt fa-lg"></i>

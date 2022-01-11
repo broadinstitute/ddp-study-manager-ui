@@ -25,9 +25,9 @@
   <div class="Width--60">
     <div *ngIf="kitTypes != null && kitTypes.length > 1">
       <div *ngFor="let type of kitTypes">
-        <md-checkbox color="primary" [checked]="type.selected || kitTypes.length == 1"
+        <mat-checkbox color="primary" [checked]="type.selected || kitTypes.length == 1"
                      (change)="type.selected = $event.checked; typeChecked(type)"
-                     disableRipple>{{type.displayName}}</md-checkbox>
+                     disableRipple>{{type.displayName}}</mat-checkbox>
       </div>
     </div>
   </div>
@@ -37,9 +37,9 @@
       <b>Select reason to upload this batch</b>
     </div>
     <div>
-      <md-select [(ngModel)]="this.selectedReason">
-        <md-option *ngFor="let uploadReason of this.uploadReasons" value="{{uploadReason}}">{{uploadReason}}</md-option>
-      </md-select>
+      <mat-select [(ngModel)]="this.selectedReason">
+        <mat-option *ngFor="let uploadReason of this.uploadReasons" value="{{uploadReason}}">{{uploadReason}}</mat-option>
+      </mat-select>
     </div>
   </div>
   <br>
@@ -48,15 +48,15 @@
       <b>Select Shipping Carrier</b>
     </div>
     <div>
-      <md-select [(ngModel)]="this.selectedCarrier">
-        <md-option *ngFor="let carrier of this.carriers" value="{{carrier}}">{{carrier}}</md-option>
-      </md-select>
+      <mat-select [(ngModel)]="this.selectedCarrier">
+        <mat-option *ngFor="let carrier of this.carriers" value="{{carrier}}">{{carrier}}</mat-option>
+      </mat-select>
     </div>
   </div>
   <br/>
   <div *ngIf="allOptionesSelected()" class="Width--80">
     <app-filepicker [id]="'kitUploadFile'" [fileFormat]="'txt'" (fileSelected)="fileSelected($event)"></app-filepicker>
-    <button type="button" md-raised-button color="primary"
+    <button type="button" mat-raised-button color="primary"
             (click)="upload()"
             [disabled]="!(uploadPossible && file != null) || loading">Upload Kits
     </button>
@@ -74,7 +74,7 @@
       </div>
     </div>
     <div class="Float--left Width--20">
-      <button type="button" md-raised-button (click)="downloadFailed()" color="primary">Download list of failed</button>
+      <button type="button" mat-raised-button (click)="downloadFailed()" color="primary">Download list of failed</button>
     </div>
   </div>
 
@@ -120,17 +120,17 @@
     <div class="app-modal-body">
       <div *ngFor="let duplicateParticipant of duplicateParticipants">
         Participant already has a kit.
-        <md-checkbox color="primary" [checked]="duplicateParticipant.selected"
+        <mat-checkbox color="primary" [checked]="duplicateParticipant.selected"
                      (change)="duplicateParticipant.selected = $event.checked" disableRipple>
           {{duplicateParticipant.participantId}} {{duplicateParticipant.shortId}} {{duplicateParticipant.firstName}} {{duplicateParticipant.lastName}}
-        </md-checkbox>
+        </mat-checkbox>
       </div>
       <div *ngFor="let duplicateParticipant of specialKits">
         {{specialMessage}}
-        <md-checkbox color="primary" [checked]="duplicateParticipant.selected"
+        <mat-checkbox color="primary" [checked]="duplicateParticipant.selected"
                      (change)="duplicateParticipant.selected = $event.checked" disableRipple>
           {{duplicateParticipant.participantId}} {{duplicateParticipant.shortId}} {{duplicateParticipant.firstName}} {{duplicateParticipant.lastName}}
-        </md-checkbox>
+        </mat-checkbox>
       </div>
     </div>
     <div class="app-modal-footer">
