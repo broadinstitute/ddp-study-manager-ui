@@ -584,7 +584,6 @@ export class Utils {
         if (control?.value) {
           return !(control.value.match( /^\d{3}-\d{3}-\d{4}$/ ));
         }
-
         return false;
       }
     };

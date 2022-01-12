@@ -103,7 +103,7 @@
             [ngClass]="{'Input': true, 'Input--Phone-Number': true, 'Color--Field--Patched': isPatchedCurrently('phone', i)}">
             <input matInput maxlength="14" [disabled]="!editable || participantExited"
                    [(ngModel)]="oncHis.phone" (change)="valueChanged($event, 'phone', i)"
-                   [errorStateMatcher]="getUtil().phoneNumberValidator"
+                   [errorStateMatcher]="getUtil().phoneNumberValidator()"
                    (blur)="currentField(null, null)" (focus)="currentField('phone', i)">
             <mat-error>xxx-xxx-xxxx</mat-error>
           </mat-form-field>
@@ -113,7 +113,7 @@
             [ngClass]="{'Input': true, 'Input--Phone-Number': true, 'Color--Field--Patched': isPatchedCurrently('fax', i)}">
             <input matInput maxlength="14" [disabled]="!editable || participantExited"
                    [(ngModel)]="oncHis.fax" (change)="valueChanged($event, 'fax', i)"
-                   [errorStateMatcher]="getUtil().phoneNumberValidator"
+                   [errorStateMatcher]="getUtil().phoneNumberValidator()"
                    (blur)="currentField(null, null)" (focus)="currentField('fax', i)">
             <mat-error>xxx-xxx-xxxx</mat-error>
           </mat-form-field>
