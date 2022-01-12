@@ -86,7 +86,7 @@
             </ng-container>
             <ng-container *ngIf="hasRole().allowedToExitParticipant() && s.isActionStillChangeable()">
               <mat-select class="Input--Min-WIDTH"
-                         [(ngModel)]="s.action" (change)="triggerAction(i)">
+                         [(ngModel)]="s.action" (selectionChange)="triggerAction(i)">
                 <mat-option value="hold">Hold</mat-option>
                 <mat-option value="discard">Discard</mat-option>
               </mat-select>

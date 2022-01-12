@@ -50,7 +50,7 @@
           <td class="Width--50">{{kit.kitType}}</td>
           <td class="Width--50">
             <mat-select class="Input--Min-WIDTH"
-                       [(ngModel)]="kit.action" (change)="saveStatusKits(kit)">
+                       [(ngModel)]="kit.action" (selectionChange)="saveStatusKits(kit)">
               <mat-option value="hold">Hold</mat-option>
               <mat-option value="discard">Discard</mat-option>
             </mat-select>

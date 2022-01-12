@@ -15,7 +15,7 @@
                 </mat-form-field>
               </td>
               <td class="Abstraction--Setup--TD Width--10">
-                <mat-select class="Input--Min-WIDTH" placeholder="Field Type" [(ngModel)]="field.type" (change)="formChanged(field)" [disabled]="!field.newAdded">
+                <mat-select class="Input--Min-WIDTH" placeholder="Field Type" [(ngModel)]="field.type" (selectionChange)="formChanged(field)" [disabled]="!field.newAdded">
                   <mat-option value="button_select"> Button-Select</mat-option>
                   <mat-option value="checkbox">
                     <mat-icon>
@@ -56,7 +56,7 @@
               </td>
               <td class="Abstraction--Setup--TD Width--60">
                 <ng-container *ngIf="field.type === 'cancers' || field.type === 'drugs'">
-                  <mat-select class="Input--Min-WIDTH" placeholder="Input Type" [(ngModel)]="field.additionalType" (change)="formChanged(field)" [disabled]="!field.newAdded">
+                  <mat-select class="Input--Min-WIDTH" placeholder="Input Type" [(ngModel)]="field.additionalType" (selectionChange)="formChanged(field)" [disabled]="!field.newAdded">
                     <mat-option value="multi_options"> Multi-Select</mat-option>
                     <mat-option value="options"> Select</mat-option>
                     <mat-option value="text"> Text</mat-option>
@@ -85,7 +85,7 @@
                              [(ngModel)]="value.value">
                     </mat-form-field>
 
-                    <mat-select class="Input--Abstraction" placeholder="Field Type" [(ngModel)]="value.type" (change)="createMultiValue(value)"
+                    <mat-select class="Input--Abstraction" placeholder="Field Type" [(ngModel)]="value.type" (selectionChange)="createMultiValue(value)"
                                [disabled]="!field.newAdded">
                       <mat-option value="button_select"> Button-Select</mat-option>
                       <mat-option value="checkbox">
@@ -122,7 +122,7 @@
                         Text</mat-option>
                     </mat-select>
                     <ng-container *ngIf="value.type === 'cancers' || value.type === 'drugs'">
-                      <mat-select class="Input--Min-WIDTH" placeholder="Input Type" [(ngModel)]="value.type2" (change)="formChanged(field)" [disabled]="!field.newAdded">
+                      <mat-select class="Input--Min-WIDTH" placeholder="Input Type" [(ngModel)]="value.type2" (selectionChange)="formChanged(field)" [disabled]="!field.newAdded">
                         <mat-option value="multi_options"> Multi-Select</mat-option>
                         <mat-option value="options"> Select</mat-option>
                         <mat-option value="text"> Text</mat-option>

@@ -31,7 +31,7 @@ export class ParticipantDSMInformation {
     }
     return new ParticipantDSMInformation( json.participantId, json.ddpParticipantId, json.realm, json.assigneeMr, json.assigneeTissue,
       json.createdOncHistory, json.reviewedOncHistory, json.crSent, json.crReceived,
-      json.notes, json.minimalMR, json.abstractionReady, json.mrNeedsAttention, json.tissueNeedsAttention, json.exitDate, additionalValuesJson );
+      json.notes, json.minimalMr, json.abstractionReady, json.mrNeedsAttention, json.tissueNeedsAttention, json.exitDate, additionalValuesJson );
   }
 
 

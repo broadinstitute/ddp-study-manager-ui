@@ -475,7 +475,7 @@ participant.data.dsm['diagnosisYear'] != null">
                           (change)="onAdditionalValueChange($event, fieldSetting.columnName)"></textarea>
                 <mat-select *ngIf="fieldSetting.displayType === 'OPTIONS'" placeholder="{{fieldSetting.columnDisplay}}"
                            [ngModel]="getAdditionalValue(fieldSetting.columnName)"
-                           (change)="onAdditionalValueChange($event, fieldSetting.columnName)"
+                           (selectionChange)="onAdditionalValueChange($event, fieldSetting.columnName)"
                            [disabled]="participantExited"
                            [ngClass]="{'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}">
                   <mat-option *ngFor="let op of fieldSetting.possibleValues" [value]="op.value">{{op.value}}</mat-option>

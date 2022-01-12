@@ -427,7 +427,7 @@
           <br/>
           <mat-select placeholder="MR Document" [ngClass]="{'Color--Field--Patched': isPatchedCurrently('mrDocument')}"
                      [(ngModel)]="medicalRecord.mrDocument" [disabled]="participantExited"
-                     (change)="valueChanged($event, 'mrDocument')"
+                     (selectionChange)="valueChanged($event, 'mrDocument')"
                      (blur)="currentField(null)" (focus)="currentField('mrDocument')">
             <mat-option value="Full">Full</mat-option>
             <mat-option value="Partial">Partial</mat-option>
@@ -449,7 +449,7 @@
           <mat-select placeholder="Pathology present"
                      [ngClass]="{'Color--Field--Patched': isPatchedCurrently('pathologyPresent')}"
                      [(ngModel)]="medicalRecord.pathologyPresent" [disabled]="participantExited"
-                     (change)="valueChanged($event, 'pathologyPresent')" (blur)="currentField(null)"
+                     (selectionChange)="valueChanged($event, 'pathologyPresent')" (blur)="currentField(null)"
                      (focus)="currentField('pathologyPresent')">
             <mat-option value="yes">Yes</mat-option>
             <mat-option value="no">No</mat-option>
@@ -490,7 +490,7 @@
                     value="{{getAdditionalValue(fieldSetting.columnName)}}" (change)="onAdditionalValueChange($event, fieldSetting.columnName)"></textarea>
           <mat-select *ngIf="fieldSetting.displayType === 'OPTIONS'" placeholder="{{fieldSetting.columnDisplay}}"
                      [ngModel]="getAdditionalValue(fieldSetting.columnName)"
-                     (change)="onAdditionalValueChange($event, fieldSetting.columnName)" [disabled]="participantExited"
+                     (selectionChange)="onAdditionalValueChange($event, fieldSetting.columnName)" [disabled]="participantExited"
                      [ngClass]="{'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}">
             <mat-option *ngFor="let op of fieldSetting.possibleValues" [value]="op.value">{{op.value}}</mat-option>
           </mat-select>

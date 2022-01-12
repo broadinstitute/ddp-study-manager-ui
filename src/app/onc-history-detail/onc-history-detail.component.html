@@ -150,7 +150,7 @@
                       value="{{getAdditionalValue(i, col.columnName)}}" (change)="onAdditionalColChange($event, i, col.columnName)"></textarea>
             <mat-select *ngIf="col.displayType === 'OPTIONS'"
                        [ngModel]="getAdditionalValue(i, col.columnName)"
-                       (change)="onAdditionalColChange($event, i, col.columnName)" [disabled]="!editable || participantExited"
+                       (selectionChange)="onAdditionalColChange($event, i, col.columnName)" [disabled]="!editable || participantExited"
                        [ngClass]="{'Color--Field--Patched': isPatchedCurrently(col.columnName, i)}">
               <mat-option *ngFor="let op of col.possibleValues" [value]="op.value">{{op.value}}</mat-option>
             </mat-select>
@@ -171,7 +171,7 @@
           </button>
         </td>
         <td *ngIf="oncHis.request !== 'unableToObtain'">
-          <mat-select [(ngModel)]="oncHis.request" (change)="onRequestChange(i)" [disabled]="!editable || participantExited"
+          <mat-select [(ngModel)]="oncHis.request" (selectionChange)="onRequestChange(i)" [disabled]="!editable || participantExited"
                      [ngClass]="{'Color--Field--Patched': isPatchedCurrently('request', i)}">
             <mat-option value="review">Needs Review</mat-option>
             <mat-option value="no">Don't Request</mat-option>

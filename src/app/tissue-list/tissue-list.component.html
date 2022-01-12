@@ -335,7 +335,7 @@
                   <span *ngIf="col.participantColumn.name === 'request'  ">
                 <div class="btn-group">
                 <mat-select [(ngModel)]="value.tissueList.oncHistoryDetails[col.participantColumn.name]"
-                           (change)="onRequestChange(i)">
+                           (selectionChange)="onRequestChange(i)">
                 <mat-option value="review">Needs Review</mat-option>
                 <mat-option value="no">Don't Request</mat-option>
                 <mat-option value="hold">On Hold</mat-option>
@@ -425,7 +425,7 @@
                 <span *ngIf="col.participantColumn.name === 'request'  ">
         <div class="btn-group">
         <mat-select [(ngModel)]="value.tissueList.oncHistoryDetails[col.participantColumn.name]"
-                   (change)="onRequestChange(i)">
+                   (selectionChange)="onRequestChange(i)">
         <mat-option value="review">Needs Review</mat-option>
         <mat-option value="no">Don't Request</mat-option>
         <mat-option value="hold">On Hold</mat-option>

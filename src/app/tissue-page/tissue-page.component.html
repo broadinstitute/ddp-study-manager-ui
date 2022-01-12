@@ -152,7 +152,7 @@
           <mat-select [ngClass]="{ 'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently('tissueProblemOption')}"
                      placeholder="Tissue problems" [(ngModel)]="oncHistoryDetail.tissueProblemOption"
                      [disabled]="!editable || participantExited"
-                     (change)="valueChanged($event, 'tissueProblemOption')"
+                     (selectionChange)="valueChanged($event, 'tissueProblemOption')"
                      (blur)="currentField(null)" (focus)="currentField('tissueProblemOption')">
             <mat-option value="insufficientPath">Insufficient material per path</mat-option>
             <mat-option value="insufficientSHL">Insufficient material per SHL</mat-option>
@@ -219,7 +219,7 @@
           <mat-select placeholder="Gender"
                      [ngClass]="{'Input--Min-WIDTH': true, 'Color--Field--Patched': isPatchedCurrently('gender')}"
                      [(ngModel)]="oncHistoryDetail.gender" [disabled]="!editable || participantExited"
-                     (change)="valueChanged($event, 'gender')"
+                     (selectionChange)="valueChanged($event, 'gender')"
                      (blur)="currentField(null)" (focus)="currentField('gender')">
             <mat-option value="male">Male</mat-option>
             <mat-option value="female">Female</mat-option>

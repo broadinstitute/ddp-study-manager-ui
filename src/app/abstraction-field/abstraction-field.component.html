@@ -91,7 +91,7 @@
         <ng-container *ngIf="viewValue == null">
           <mat-select placeholder="{{field.displayName}}" *ngIf="field.additionalType === 'options'"
                      [(ngModel)]="field.fieldValue.value" [disabled]="field.fieldValue.noData || readonly"
-                     (change)="abstractionValueChanged($event, field, 'value')">
+                     (selectionChange)="abstractionValueChanged($event, field, 'value')">
             <mat-option *ngFor="let drug of availableDrugs" [value]="drug">
               {{drug}}
             </mat-option>
@@ -100,7 +100,7 @@
 
           <mat-select placeholder="{{field.displayName}}" *ngIf="field.additionalType === 'multi_options'"
                      [(ngModel)]="field.fieldValue.value" [disabled]="field.fieldValue.noData || readonly"
-                     (change)="abstractionValueChanged($event, field, 'value')" multiple>
+                     (selectionChange)="abstractionValueChanged($event, field, 'value')" multiple>
             <mat-option *ngFor="let drug of availableDrugs" [value]="drug" [disabled]="!patchFinished">
               {{drug}}
             </mat-option>
@@ -110,7 +110,7 @@
                               [ngClass]="{'Width--100': true, 'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(field.displayName, 'value')}">
             <input matInput maxlength="200" [disabled]="field.fieldValue.noData || readonly" autocomplete="off"
                    [(ngModel)]="_other" placeholder="Other"
-                   (change)="abstractionValueChanged($event, field, 'other')"
+                   (selectionChange)="abstractionValueChanged($event, field, 'other')"
                    (blur)="currentField(null, null)" (focus)="currentField(field.displayName, 'value')">
           </mat-form-field>
 
@@ -149,7 +149,7 @@
         <ng-container *ngIf="viewValue == null">
           <mat-select placeholder="{{field.displayName}}" *ngIf="field.additionalType === 'options'"
                      [(ngModel)]="field.fieldValue.value" [disabled]="field.fieldValue.noData || readonly"
-                     (change)="abstractionValueChanged($event, field, 'value')">
+                     (selectionChange)="abstractionValueChanged($event, field, 'value')">
             <mat-option *ngFor="let cancer of availableCancers" [value]="cancer">
               {{cancer}}
             </mat-option>
@@ -158,7 +158,7 @@
 
           <mat-select placeholder="{{field.displayName}}" *ngIf="field.additionalType === 'multi_options'"
                      [(ngModel)]="field.fieldValue.value" [disabled]="field.fieldValue.noData || readonly"
-                     (change)="abstractionValueChanged($event, field, 'value')" multiple>
+                     (selectionChange)="abstractionValueChanged($event, field, 'value')" multiple>
             <mat-option *ngFor="let cancer of availableCancers" [value]="cancer" [disabled]="!patchFinished">
               {{cancer}}
             </mat-option>
@@ -318,7 +318,7 @@
           <mat-select [ngClass]="{'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(field.displayName, 'value')}"
                      placeholder="{{field.displayName}}"
                      [(ngModel)]="field.fieldValue.value" [disabled]="field.fieldValue.noData || readonly"
-                     (change)="abstractionValueChanged($event, field, 'value')">
+                     (selectionChange)="abstractionValueChanged($event, field, 'value')">
             <mat-option *ngFor="let value of field.possibleValues" [value]="value.value">
               {{value.value}}
             </mat-option>
@@ -353,7 +353,7 @@
           <mat-select [ngClass]="{'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(field.displayName, 'value')}"
                      placeholder="{{field.displayName}}"
                      [(ngModel)]="field.fieldValue.value" [disabled]="field.fieldValue.noData || readonly"
-                     (change)="abstractionValueChanged($event, field, 'value')" multiple>
+                     (selectionChange)="abstractionValueChanged($event, field, 'value')" multiple>
             <mat-option *ngFor="let value of field.possibleValues" [value]="value.value" [disabled]="!patchFinished">
               {{value.value}}
             </mat-option>

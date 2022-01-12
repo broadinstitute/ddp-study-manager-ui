@@ -83,7 +83,7 @@
             </td>
             <td>
               <mat-select class="Input--Min-WIDTH" maxlength="100" placeholder="Display Type" floatPlaceholder="never"
-                         [(ngModel)]="setting.displayType" (change)="onDisplayTypeChange(i)">
+                         [(ngModel)]="setting.displayType" (selectionChange)="onDisplayTypeChange(i)">
                 <mat-option value="CHECKBOX">
                   <mat-icon>
                     <i class="fas fa-check-square fa-sm"></i>
