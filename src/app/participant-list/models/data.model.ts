@@ -32,17 +32,30 @@ export class Data {
         for (let y of x.questionsAnswers) {
           if (y.stableId === name) {
             for (let answer of y.answer) {
-              if (!y.groupedOptions) {
                 answers.push( answer );
-              }
-              else {
-                let ans = y.groupedOptions[ answer ];
-                if (ans) {
-                  for (let a of ans) {
-                    answers.push( a );
                   }
-                }else{
-                  answers.push( answer );
+              }
+            }
+          }
+        }
+    return answers.reverse();
+  }
+
+  public getGroupedOptionsForAnswer(activityData: ActivityData, name: string, questionAnswer:string) {
+    let answers: Array<string> = new Array();
+    for (let x of this.activities) {
+      if (x.activityCode === activityData.activityCode) {
+        for (let y of x.questionsAnswers) {
+          if (y.stableId === name) {
+            for (let answer of y.answer) {
+              if (answer === questionAnswer) {
+                if (y.groupedOptions) {
+                  let ans = y.groupedOptions[ answer ];
+                  if (ans) {
+                    for (let a of ans) {
+                      answers.push( a );
+                    }
+                  }
                 }
               }
             }

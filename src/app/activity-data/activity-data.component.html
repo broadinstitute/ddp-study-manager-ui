@@ -109,9 +109,18 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                     <ng-container *ngIf="getUtil().getCorrectTextAsAnswer(questionAnswer) as answers">
                       <ul class="NO-PADDING-START" >
                         <li class="LIST-SEPARATOR" *ngFor="let answer of answers" >
+                          <ng-container>
                           <p class="BIT-OF-MARGIN">
                             {{getUtilStatic().getAnswerGroupOrOptionText( answer, qDef)}}
                           </p>
+                          <ul *ngIf="this.getUtil().getGroupedOptionsForAnswer(this.activity, questionAnswer.stableId, answer) as groups">
+                            <li *ngFor="let group of groups">
+                              <div *ngIf="getUtilStatic().getAnswerGroupOrOptionText(group, qDef) as groupText">
+                                {{groupText}}
+                              </div>
+                            </li>
+                          </ul>
+                          </ng-container>
                           <p class="BIT-OF-MARGIN" *ngIf="getUtilStatic().getOptionDetails(questionAnswer.optionDetails, answer) as oDetail">
                             {{oDetail.details}}
                           </p>
