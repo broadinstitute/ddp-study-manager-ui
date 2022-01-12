@@ -196,6 +196,7 @@ export class ParticipantListComponent implements OnInit {
       jsonData = data;
       jsonData['participants'].forEach((val) => {
         let participant = Participant.parse(val);
+        console.log(participant);
         this.participantList.push(participant);
       });
       this.originalParticipantList = this.participantList;
@@ -716,6 +717,7 @@ export class ParticipantListComponent implements OnInit {
               jsonData = data;
               jsonData['participants'].forEach( ( val ) => {
                 let participant = Participant.parse( val );
+                console.log(participant);
                 this.participantList.push( participant );
               } );
               this.originalParticipantList = this.participantList;
@@ -816,6 +818,7 @@ export class ParticipantListComponent implements OnInit {
           jsonData = data;
           jsonData['participants'].forEach((val) => {
             let participant = Participant.parse(val);
+            console.log(participant);
             this.participantList.push(participant);
           });
           this.originalParticipantList = this.participantList;
@@ -1097,6 +1100,7 @@ export class ParticipantListComponent implements OnInit {
           data => {
             if (data != null && data[ 0 ] != null) {
               let pt: Participant = Participant.parse( data[ 0 ] );
+              console.log(participant);
               if (pt == null || pt == undefined) {
                 this.errorMessage = "Participant not found";
               } else {
@@ -1187,6 +1191,7 @@ export class ParticipantListComponent implements OnInit {
             jsonData = data;
             jsonData['participants'].forEach( ( val ) => {
               let participant = Participant.parse( val );
+              console.log(participant);
               this.participantList.push( participant );
             } );
             this.originalParticipantList = this.participantList;
@@ -1779,6 +1784,7 @@ export class ParticipantListComponent implements OnInit {
         jsonData = data;
         jsonData['participants'].forEach( ( val ) => {
           let participant = Participant.parse( val );
+          console.log(participant);
           this.participantList.push( participant );
         } );
         this.originalParticipantList = this.participantList;

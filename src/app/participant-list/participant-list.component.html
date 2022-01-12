@@ -59,7 +59,7 @@
             <ng-container *ngFor="let key of getKeys()">
               <ng-container *ngIf="key !== 'a'">
                 <table *ngFor="let filter of selectedColumns[key]" style="border: none">
-                  <ng-container *ngIf="filter.participantColumn.name !== 'ddp'">
+                  <ng-container *ngIf="filter.participantColumn.name !== 'ddp' && filter.searchable">
                     <app-filter-column [dataFilter]="filter" [editable]="true"></app-filter-column>
                   </ng-container>
                 </table>
@@ -441,6 +441,12 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                 </ng-container>
                 <ng-container *ngIf="!col.participantColumn.esData">
                   <div *ngIf="alias === 'data' && pt.data != null">
+                    <ng-container *ngIf="col.participantColumn.name === 'activityStatus' && !col.searchable">
+                      <ng-container *ngFor="let activityData of pt.data.activities">
+                        {{activityData.status}}
+                        <br>
+                      </ng-container>
+                    </ng-container>
                     <ng-container *ngIf="col.type === 'DATE'">
                       <ng-container *ngIf="col.participantColumn.object != null && pt.data[col.participantColumn.object] != null">
                         {{pt.data[col.participantColumn.object][col.participantColumn.name] | date:'medium'}}
