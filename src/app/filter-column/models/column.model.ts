@@ -79,7 +79,7 @@ export class ParticipantColumn {
 
   //tissue column
   public static COUNT_RECEIVED = new ParticipantColumn("Count Received", "countReceived", "t");
-  public static TISSUE_NOTES = new ParticipantColumn("Tissue Notes", "tNotes", "t");
+  public static TISSUE_NOTES = new ParticipantColumn("Tissue Notes", "notes", "t");
   public static TISSUE_TYPE = new ParticipantColumn("Tissue Type", "tissueType", "t");
   public static TISSUE_SITE = new ParticipantColumn("Tissue Site", "tissueSite", "t");
   public static TUMOR_TYPE = new ParticipantColumn("Tumor Type", "tumorType", "t");
