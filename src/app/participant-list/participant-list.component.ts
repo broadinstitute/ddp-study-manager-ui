@@ -1534,9 +1534,6 @@ export class ParticipantListComponent implements OnInit {
     return this.util;
   }
 
-  getUtilStatic(){
-    return Utils;
-  }
   getLanguageName(languageCode: string): string {
       let language = this.preferredLanguages.find( obj => {
         return obj.languageCode === languageCode;
@@ -1593,7 +1590,7 @@ export class ParticipantListComponent implements OnInit {
       }
     }
 
-    Utils.downloadCurrentData( this.participantList, paths, columns, "Participants-" + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION, false, this.activityDefinitionList );
+    Utils.downloadCurrentData( this.participantList, paths, columns, "Participants-"  + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION, false );
 
   }
 
@@ -2154,9 +2151,5 @@ this.orderColumns();
       data=>{},
         err=>{}
     );
-  }
-
-  isMultipleOrSingleSelectMode( qDef: QuestionDefinition ) {
-    return (qDef.selectMode === 'MULTIPLE' || qDef.selectMode === 'SINGLE');
   }
 }
