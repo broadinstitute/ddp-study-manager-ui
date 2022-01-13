@@ -812,7 +812,7 @@ export class Utils {
     if (questionAnswer != null) {
       let qDef: QuestionDefinition = Utils.getQuestionDefinition( activityDefinitionList, col.participantColumn.tableAlias, questionAnswer.stableId, activityData.activityVersion );
       if (col.type === Filter.DATE_TYPE) {
-        value += this.getDateFormatted( new Date( questionAnswer.date ), this.DATE_STRING_IN_CVS ) + ", ";
+        value += questionAnswer.date + ", ";
       }
       else if (col.type === Filter.COMPOSITE_TYPE) {
         let answers = Utils.getNiceTextForCSVCompositeType( questionAnswer, qDef );
