@@ -109,7 +109,7 @@ export class DSMService {
     let userId = this.role.userID();
     map.push( {name: DSMService.REALM, value: realm} );
     map.push( {name: "userId", value: userId} );
-    map.push( {name: "parent", value: parent} );
+    if (parent) map.push( {name: "parent", value: parent} );
     return this.http.get(url, this.buildQueryHeader(map)).pipe(
       catchError(this.handleError.bind(this))
     );
