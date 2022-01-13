@@ -816,11 +816,12 @@ export class ParticipantListComponent implements OnInit {
           this.copyParticipantList = [];
           let jsonData: {};
           jsonData = data;
+          if(jsonData['participants']){
           jsonData['participants'].forEach((val) => {
             let participant = Participant.parse(val);
             console.log(participant);
             this.participantList.push(participant);
-          });
+          });}
           this.originalParticipantList = this.participantList;
           this.participantsSize = jsonData['totalCount'];
           if (viewFilter != null) {

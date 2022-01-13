@@ -442,9 +442,19 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                 <ng-container *ngIf="!col.participantColumn.esData">
                   <div *ngIf="alias === 'data' && pt.data != null">
                     <ng-container *ngIf="col.participantColumn.name === 'activityStatus' && !col.searchable">
+                      <ng-container *ngIf="pt.data.activities">
                       <ng-container *ngFor="let activityData of pt.data.activities">
-                        {{activityData.status}}
-                        <br>
+                        <ng-container *ngIf="activityData.status === 'COMPLETE'">
+                          <i class="fas fa-circle"></i>
+                        </ng-container>
+                        <ng-container *ngIf="activityData.status === 'CREATED'">
+                          <i class="far fa-circle"></i>
+                        </ng-container>
+                        <ng-container *ngIf="activityData.status === 'IN_PROGRESS'">
+                          <i class="fas fa-adjust"></i>
+                        </ng-container>
+<!--                        {{activityData.status}}-->
+                      </ng-container>
                       </ng-container>
                     </ng-container>
                     <ng-container *ngIf="col.type === 'DATE'">
