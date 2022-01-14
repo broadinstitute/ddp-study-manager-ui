@@ -26,43 +26,31 @@ export class Data {
   }
 
   getMultipleAnswersForPickList( activityData: ActivityData, name: string ) {
-    let answers: Array<string> = new Array();
+    let answers: Array<QuestionAnswer> = new Array();
     for (let x of this.activities) {
       if (x.activityCode === activityData.activityCode) {
-        for (let y of x.questionsAnswers) {
-          if (y.stableId === name) {
-            for (let answer of y.answer) {
-                answers.push( answer );
-                  }
-              }
-            }
+        for (let questionAnswer of x.questionsAnswers) {
+          if (questionAnswer.stableId === name) {
+            answers.push( questionAnswer );
           }
         }
+      }
+    }
     return answers.reverse();
   }
 
-  public getGroupedOptionsForAnswer(activityData: ActivityData, name: string, questionAnswer:string) {
+  public getGroupedOptionsForAnswer(name: string, questionAnswer:QuestionAnswer) {
     let answers: Array<string> = new Array();
-    for (let x of this.activities) {
-      if (x.activityCode === activityData.activityCode) {
-        for (let y of x.questionsAnswers) {
-          if (y.stableId === name) {
-            for (let answer of y.answer) {
-              if (answer === questionAnswer) {
-                if (y.groupedOptions) {
-                  let ans = y.groupedOptions[ answer ];
+            for (let answer of questionAnswer.answer) {
+                if (questionAnswer.groupedOptions) {
+                  let ans = questionAnswer.groupedOptions[ answer ];
                   if (ans) {
                     for (let a of ans) {
                       answers.push( a );
                     }
                   }
                 }
-              }
             }
-          }
-        }
-      }
-    }
     return answers.reverse();
   }
 
