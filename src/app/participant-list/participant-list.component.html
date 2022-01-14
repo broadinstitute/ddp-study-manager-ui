@@ -423,7 +423,7 @@ date.dateFields.month != null && date.dateFields.month !== ''">{{date.dateFields
                                       <ng-container *ngFor="let answer of questionAnswer.answer">
                                       <div *ngIf="getUtilStatic().getAnswerGroupOrOptionText(answer, qDef) as txt">
                                         {{txt}}
-                                        <ul *ngIf="pt.data.getGroupedOptionsForAnswer( answer, questionAnswer) as groups">
+                                        <ul *ngIf="pt.data.getGroupedOptionsForAnswer( questionAnswer) as groups">
                                           <li *ngFor="let group of groups">
                                             <div *ngIf="getUtilStatic().getAnswerGroupOrOptionText(group, qDef) as groupText">
                                               {{groupText}}

@@ -39,18 +39,18 @@ export class Data {
     return answers.reverse();
   }
 
-  public getGroupedOptionsForAnswer(name: string, questionAnswer:QuestionAnswer) {
+  public getGroupedOptionsForAnswer( questionAnswer:QuestionAnswer) {
     let answers: Array<string> = new Array();
-            for (let answer of questionAnswer.answer) {
-                if (questionAnswer.groupedOptions) {
-                  let ans = questionAnswer.groupedOptions[ answer ];
-                  if (ans) {
-                    for (let a of ans) {
-                      answers.push( a );
-                    }
-                  }
-                }
-            }
+    for (let answer of questionAnswer.answer) {
+      if (questionAnswer.groupedOptions) {
+        let ans = questionAnswer.groupedOptions[ answer ];
+        if (ans) {
+          for (let a of ans) {
+            answers.push( a );
+          }
+        }
+      }
+    }
     return answers.reverse();
   }
 
