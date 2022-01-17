@@ -546,7 +546,7 @@ export class Filter {
             filter.filter2.value = filter.value2;
           }
           else {
-            filter.filter2 = new NameValue( filter.participantColumn.name, null );
+            filter.filter2 = new NameValue( filter.participantColumn.name, filter.value2 );
             //            filter.filter2.name = filter.participantColumn.name;
           }
         }
