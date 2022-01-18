@@ -134,7 +134,6 @@ export class Utils {
             break loop1;
           }
         }
-
       }
       if (ans) {
         text = ans;
@@ -522,26 +521,11 @@ export class Utils {
                 }
                 else {
                   let questionAnswer: QuestionAnswer = this.getQuestionAnswerByName( activityData.questionsAnswers, col.participantColumn.name );
-                  if (questionAnswer != null) {
-                    if (col.type === Filter.DATE_TYPE) {
-                      value = questionAnswer.date;
-                    }
-                    else if (col.type === Filter.COMPOSITE_TYPE) {
-
-                      let qDef: QuestionDefinition = Utils.getQuestionDefinition( activityDefinitionList, col.participantColumn.tableAlias, questionAnswer.stableId, activityData.activityVersion );
-                      let answers = Utils.getNiceTextForCSVCompositeType( questionAnswer, qDef );
-                      answers.forEach( ans => value += ( ans + ", " ) + '\n' );
-                    }
-                    else {
-                      let qDef: QuestionDefinition = Utils.getQuestionDefinition( activityDefinitionList, col.participantColumn.tableAlias, questionAnswer.stableId, activityData.activityVersion );
-                      let answers = Utils.getCorrectTextAsAnswerForCSV( questionAnswer, qDef );
-                      answers.forEach( ans => value += ( ans + ", " ) + '\n' );
-                    }
-                  }
+                  value += this.getTextForQuestionAnswer(questionAnswer, col, activityDefinitionList, activityData);
                 }
               }
               else {
-                value = this.getActivityValueForMultipleActivities( activityDataArray, col.participantColumn.name, activityDefinitionList, col.participantColumn.tableAlias );
+                value = this.getActivityValueForMultipleActivities( activityDataArray, col.participantColumn.name, activityDefinitionList, col );
               }
             }
             else if (col.participantColumn.tableAlias === "invitations") {
@@ -803,38 +787,34 @@ export class Utils {
     return "";
   }
 
-  private static getActivityValueForMultipleActivities( activityDataArray: ActivityData[], name: string, activityDefinitionList: any, tableAlias: string ) {
+  private static getTextForQuestionAnswer(questionAnswer: QuestionAnswer, col, activityDefinitionList, activityData){
+    let value = "";
+    if (questionAnswer != null) {
+      let qDef: QuestionDefinition = Utils.getQuestionDefinition( activityDefinitionList, col.participantColumn.tableAlias, questionAnswer.stableId, activityData.activityVersion );
+      if (col.type === Filter.DATE_TYPE) {
+        value += this.getDateFormatted( new Date( questionAnswer.date ), this.DATE_STRING_IN_CVS ) + ", ";
+      }
+      else if (col.type === Filter.COMPOSITE_TYPE) {
+        let answers = Utils.getNiceTextForCSVCompositeType( questionAnswer, qDef );
+        answers.forEach( ans => value += ( ans + ", " ) + '\n' );
+      }
+      else {
+        let answers = Utils.getCorrectTextAsAnswerForCSV( questionAnswer, qDef );
+        answers.forEach( ans => value += ans + '\n' );
+      }
+    }
+    return value;
+  }
+
+  private static getActivityValueForMultipleActivities( activityDataArray: ActivityData[], name: string, activityDefinitionList: any, col ) {
     let value = "";
     for (let activityData of activityDataArray) {
       for (let questionsAnswer of activityData.questionsAnswers) {
-
         if (questionsAnswer.stableId === name) {
-          if (questionsAnswer.questionType === "DATE") {
-            value += this.getDateFormatted( new Date( questionsAnswer.date ), this.DATE_STRING_IN_CVS ) + ", ";
-          }
-          else if (questionsAnswer.answer) {
-            let qDef: QuestionDefinition = Utils.getQuestionDefinition( activityDefinitionList, tableAlias, questionsAnswer.stableId, activityData.activityVersion );
-            for (let answer of questionsAnswer.answer) {
-              if (questionsAnswer.groupedOptions && questionsAnswer.groupedOptions[ answer ]) {
-                let groupedOptionAnswers = questionsAnswer.groupedOptions[ answer ];
-                if (groupedOptionAnswers) {
-                  value += this.getAnswerGroupOrOptionText( answer, qDef ) + ", \n";
-                  for (let ans of groupedOptionAnswers) {
-                    value += this.getAnswerGroupOrOptionText( ans, qDef ) + ", ";
-                  }
-                }
-                else {
-                  value += this.getAnswerGroupOrOptionText( answer, qDef ) + ", \n";
-                }
-              }
-              else {
-                value += this.getAnswerGroupOrOptionText( answer, qDef ) + ", \n";
-              }
-            }
-
-          }
+          value += this.getTextForQuestionAnswer(questionsAnswer, col, activityDefinitionList, activityData);
         }
       }
+      value += '\n';
     }
     return value;
   }
@@ -853,7 +833,7 @@ export class Utils {
         answer = answer[ 0 ];
       }
       if ((questionAnswer.groupedOptions || questionAnswer.nestedOptions) && (questionAnswer.groupedOptions[ answer ] || questionAnswer.nestedOptions[ answer ])) {
-        activityAnswers += "("
+        activityAnswers += "(";
           let ans = questionAnswer.groupedOptions[ answer ];
         if (ans) {
           for (let a of ans) {
@@ -869,7 +849,7 @@ export class Utils {
             }
           }
         }
-        activityAnswers += "),"
+        activityAnswers += "),";
       }
       if (questionAnswer.optionDetails) {
 
@@ -893,60 +873,68 @@ export class Utils {
   getCorrectTextAsAnswer( questionAnswer: QuestionAnswer ) {
     let answers = [];
     for (let answer of questionAnswer.answer) {
-      if (!questionAnswer.groupedOptions) {
-        answers.push( answer );
-      }
-      else {
-        let ans = questionAnswer.groupedOptions[ answer ];
-        if (ans) {
-          for (let a of ans) {
-            answers.push( a );
-          }
-        }
-        else {
-          answers.push( answer );
-        }
-      }
+      answers.push( answer );
     }
     return answers;
   }
 
   public static getNiceTextForCSVCompositeType( questionAnswer: QuestionAnswer, qdef: QuestionDefinition ): string[] {
-    let answers = [];
-    for (let answer of questionAnswer.answer) {
-      if (answer instanceof Array) {
-        answer = answer[ 0 ];
-      }
-      let text = answer;
-      let ans;
-      if (qdef.childQuestions) {
-        loop1: for (let childq of qdef.childQuestions) {
-          if (childq.groups) {
-            for (let g of childq.groups) {
-              for (let option of g.options) {
-                if (option.optionStableId === answer) {
-                  ans = option.optionText;
+      let answers = [];
+      for (let answer of questionAnswer.answer) {
+        if (answer instanceof Array) {
+          answer = answer[ 0 ];
+        }
+        let text = answer;
+        let ans;
+        if (qdef.childQuestions) {
+          loop1: for (let childq of qdef.childQuestions) {
+            if (childq.groups) {
+              for (let g of childq.groups) {
+                for (let option of g.options) {
+                  if (option.optionStableId === answer) {
+                    ans = option.optionText;
+                    break loop1;
+                  }
+                }
+              }
+            }
+            if (!ans && childq.options) {
+              for (let g of childq.options) {
+                if (g.optionStableId === answer) {
+                  ans = g.optionText;
                   break loop1;
                 }
               }
             }
           }
-          if (!ans && childq.options) {
-            for (let g of childq.options) {
-              if (g.optionStableId === answer) {
-                ans = g.optionText;
-                break loop1;
+          if (ans) {
+            text = ans;
+          }
+        }
+        answers.push( text );
+      }
+
+      return answers;
+  }
+
+  getGroupedOptionsForAnswer( activityData: ActivityData, name: any, questionAnswer: any ) {
+    let answers: Array<string> = new Array();
+    for (let y of activityData.questionsAnswers) {
+      if (y.stableId === name) {
+        for (let answer of y.answer) {
+          if (answer === questionAnswer) {
+            if (y.groupedOptions) {
+              let ans = y.groupedOptions[ answer ];
+              if (ans) {
+                for (let a of ans) {
+                  answers.push( a );
+                }
               }
             }
           }
         }
-        if (ans) {
-          text = ans;
-        }
       }
-      answers.push( text );
     }
-
-    return answers;
+    return answers.reverse();
   }
 }

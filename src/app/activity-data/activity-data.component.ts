@@ -26,4 +26,8 @@ export class ActivityDataComponent implements OnInit {
   getUtilStatic(){
     return Utils;
   }
+
+  getActivityName( activityDefinition: ActivityDefinition ) {
+    return activityDefinition.activityName;
+  }
 }
