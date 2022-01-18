@@ -419,10 +419,11 @@ date.dateFields.month != null && date.dateFields.month !== ''">{{date.dateFields
                               <ng-container *ngIf="qDef.selectMode === 'SINGLE'">
                                 <ng-container *ngIf="pt.data.getMultipleAnswersForPickList(activityData, col.participantColumn.name) as answers">
                                   <div class="NO-PADDING-START" >
-                                    <div *ngFor="let answer of answers; let i=index;" >
+                                    <div *ngFor="let questionAnswer of answers; let i=index;" >
+                                      <ng-container *ngFor="let answer of questionAnswer.answer">
                                       <div *ngIf="getUtilStatic().getAnswerGroupOrOptionText(answer, qDef) as txt">
                                         {{txt}}
-                                        <ul *ngIf="pt.data.getGroupedOptionsForAnswer(activityData, col.participantColumn.name, answer) as groups">
+                                        <ul *ngIf="pt.data.getGroupedOptionsForAnswer( questionAnswer) as groups">
                                           <li *ngFor="let group of groups">
                                             <div *ngIf="getUtilStatic().getAnswerGroupOrOptionText(group, qDef) as groupText">
                                               {{groupText}}
@@ -430,11 +431,13 @@ date.dateFields.month != null && date.dateFields.month !== ''">{{date.dateFields
                                           </li>
                                         </ul>
                                         <hr *ngIf="i !== answers.length-1" style="border-color: lightgray">
+
                                       </div>
                                       <div *ngIf="getUtilStatic().getOptionDetails(questionAnswer.optionDetails, answer) as oDetail">
                                         {{oDetail.details}}
                                         <hr *ngIf="i !== answers.length-1" style="border-color: lightgray">
                                       </div>
+                                      </ng-container>
                                     </div>
                                   </div>
                                 </ng-container>
