@@ -225,7 +225,8 @@ export class Filter {
         "ERROR": "Error"};
       for(let i=0; i< activityDataArray.length; i++){
         let activityData = activityDataArray[i];
-        str += activityData.activityCode+" : "+niceText[activityData.status]+", ";
+        let acDef = Utils.getActivityDefinition(activityDefinitionList, activityData.activityCode, activityData.activityVersion);
+        str += acDef.activityName+" : "+niceText[activityData.status]+", ";
       }
       return str;
   },false);
