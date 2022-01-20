@@ -1,13 +1,14 @@
 import {ActivityData} from "../../activity-data/activity-data.model";
 import {Address} from "../../address/address.model";
 import {InvitationData} from "../../invitation-data/invitation-data.model";
+import {Utils} from "../../utils/utils";
 import { Computed } from "./computed.model";
 import {MedicalProvider} from "./medical-providers.model";
 
 export class Data {
 
   constructor( public profile: Object, public status: string, public statusTimestamp: number, public dsm: Object, public ddp: string, public medicalProviders: Array<MedicalProvider>,
-               public activities: Array<ActivityData>, public address: Address, public invitations: Array<InvitationData>, public computed?: Computed ) {
+               public activities: ActivityData[], public address: Address, public invitations: InvitationData[], public computed?: Computed ) {
     this.profile = profile;
     this.status = status;
     this.statusTimestamp = statusTimestamp;
@@ -25,7 +26,7 @@ export class Data {
   }
 
   getMultipleAnswersForPickList( activityData: ActivityData, name: string ) {
-    let answers: Array<string> = new Array();
+    let answers: string[] = [];
     for (let x of this.activities) {
       if (x.activityCode === activityData.activityCode) {
         for (let y of x.questionsAnswers) {
@@ -42,7 +43,7 @@ export class Data {
 
   static parse( json ): Data {
     let jsonData: any[];
-    let medicalProviders: Array<MedicalProvider> = null;
+    let medicalProviders: MedicalProvider[] = null;
     if (json.medicalProviders != null) {
       jsonData = json.medicalProviders;
       if (json != null && jsonData != null) {

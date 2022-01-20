@@ -72,6 +72,7 @@ export class ParticipantListComponent implements OnInit {
   showParticipantInformation: boolean = false;
   showTissue: boolean = false;
   selectedTab: string;
+  selectedActivity: string;
   selectedMR = "";
   selectedOncOrTissue = "";
 
@@ -1074,7 +1075,7 @@ export class ParticipantListComponent implements OnInit {
     this.savedSelectedColumns = this.selectedColumns;
   }
 
-  openParticipant( participant: Participant, colSource: string ) {
+  openParticipant( event, participant: Participant, colSource: string, selectedActivity? ) {
     if (participant != null) {
       let tabAnchor = "Survey Data";
       if (colSource === "m" || participant.data.activities == null) {
@@ -1094,6 +1095,10 @@ export class ParticipantListComponent implements OnInit {
         if (proband && proband.dataId) {
           tabAnchor = proband.dataId;
         }
+      }
+      console.log(tabAnchor)
+      if(tabAnchor === "Survey Data") {
+        this.selectedActivity = selectedActivity;
       }
       if (this.filtered && participant.participant != null && participant.participant.ddpParticipantId != null) {
         this.loadingParticipants = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
@@ -1595,6 +1600,10 @@ export class ParticipantListComponent implements OnInit {
 
   getUtil(): Utils {
     return this.util;
+  }
+
+  getUtilStatic(){
+    return Utils;
   }
 
   getLanguageName(languageCode: string): string {
@@ -2210,4 +2219,5 @@ export class ParticipantListComponent implements OnInit {
      });
      this.orderColumns();
   }
+
 }
