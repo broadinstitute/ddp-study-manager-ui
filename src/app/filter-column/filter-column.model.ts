@@ -1,6 +1,9 @@
+import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
+import {Participant} from "../participant-list/participant-list.model";
 import {NameValue} from "../utils/name-value.model";
 import {Statics} from "../utils/statics";
+import {Utils} from "../utils/utils";
 import {Value} from "../utils/value.model";
 import {ParticipantColumn} from "./models/column.model";
 
@@ -207,7 +210,25 @@ export class Filter {
     new NameValue( "review", "Second Abstraction" ),
     new NameValue( "qc", "QC" ) ] );
   public static ABSTRACTION_USER = new Filter( ParticipantColumn.ABSTRACTION_USER, Filter.TEXT_TYPE );
-  public static ACTIVITY_STATUS = new Filter(ParticipantColumn.ACTIVITY_STATUS, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, false);
+  public static ACTIVITY_STATUS = new Filter(ParticipantColumn.ACTIVITY_STATUS, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+    (participant: Participant,  activityDefinitionList: ActivityDefinition[])=>{
+    let str = "";
+      let activityDataArray = participant.data.activities;
+      activityDataArray.sort((ac1, ac2)=>{
+        let acDef1 = Utils.getActivityDefinition(activityDefinitionList, ac1.activityCode, ac1.activityVersion);
+        let acDef2 = Utils.getActivityDefinition(activityDefinitionList, ac2.activityCode, ac2.activityVersion);
+        return acDef1.displayOrder - acDef2.displayOrder;}
+        );
+      let niceText = { "COMPLETE": "Completed" ,
+        "CREATED" : "Created" ,
+        "IN_PROGRESS" : "In Progress",
+        "ERROR": "Error"};
+      for(let i=0; i< activityDataArray.length; i++){
+        let activityData = activityDataArray[i];
+        str += activityData.activityCode+" : "+niceText[activityData.status]+", ";
+      }
+      return str;
+  },false);
 
   public static ALL_COLUMNS = [
     Filter.REALM, Filter.SHORT_ID, Filter.LEGACY_SHORT_ID, Filter.LEGACY_PARTICIPANT_ID, Filter.PARTICIPANT_ID, Filter.FIRST_NAME, Filter.LAST_NAME,
@@ -241,7 +262,7 @@ export class Filter {
                public range?: boolean, public exactMatch?: boolean, public filter1?: NameValue,
                public selectedOptions?: any, public value1?: any, public value2?: any, public sortAsc?: boolean,
                public empty?: boolean, public notEmpty?: boolean, public singleOption?: boolean, public additionalType?: string,
-               public parentName?: string, public searchable: boolean = true ) {
+               public parentName?: string, public func?: (a: any, b: any) => string, public searchable: boolean = true ) {
     this.participantColumn = participantColumn;
     this.type = type;
     if (options != null) {

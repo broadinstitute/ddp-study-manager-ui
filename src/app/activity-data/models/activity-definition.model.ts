@@ -17,7 +17,6 @@ export class ActivityDefinition {
   }
 
   static parse( json ): ActivityDefinition {
-    console.log(json);
     return new ActivityDefinition( json.activityCode, json.activityName, json.activityVersion, json.questions, json.displayOrder, json.showActivityStatus );
   }
 }

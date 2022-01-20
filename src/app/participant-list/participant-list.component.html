@@ -16,7 +16,7 @@
 <ng-container *ngIf="showTissue">
   <app-tissue-page [participant]="participant" [oncHistoryDetail]="oncHistoryDetail"
                    [settings]="settings"
-                   (leaveTissue)="openParticipant($event, participant, 'Onc History')"
+                   (leaveTissue)="openParticipant( participant, 'Onc History')"
                    (leaveParticipant)="showTissue=false"></app-tissue-page>
 </ng-container>
 
@@ -256,7 +256,7 @@
             <!--profile values or dsm values-->
             <ng-container *ngFor="let alias of getKeys()">
               <td *ngFor="let col of selectedColumns[alias]"
-                  (click)="openParticipant($event, pt, alias)">
+                  (click)="openParticipant( pt, alias)">
                 <ng-container *ngIf="col.participantColumn.esData && pt.proxyData != null">
                   <ng-container *ngIf="col.participantColumn.tableAlias === 'proxy'">
                     <ul class="NO-PADDING-START">
@@ -467,18 +467,23 @@ date.dateFields.month != null && date.dateFields.month !== ''">{{date.dateFields
                             *ngIf="getUtilStatic().getActivityDefinition(activityDefinitionList,  activityData.activityCode, activityData.activityVersion) as acDef">
                             <ng-container *ngIf="acDef.showActivityStatus"  >
                               <ng-container *ngIf="activityData.status === 'COMPLETE'">
-                                <span tooltip="{{activityData.activityCode}}" id="{{'act1'+activityData.activityCode}}" (click)="openParticipant($event, pt, col, activityData.activityCode)">
+                                <span tooltip="{{activityData.activityCode}}"  (click)="openParticipant(pt, col, activityData.activityCode)">
                                 <i class="fas fa-circle"></i>
                                   </span>
                               </ng-container>
                               <ng-container *ngIf="activityData.status === 'CREATED'">
-                                <span tooltip="{{activityData.activityCode}}" id="{{'act2'+activityData.activityCode}}" (click)="openParticipant($event, pt, col, activityData.activityCode)">
+                                <span tooltip="{{activityData.activityCode}}"  (click)="openParticipant(pt, col, activityData.activityCode)">
                                 <i class="far fa-circle"></i>
                                 </span>
                               </ng-container>
                               <ng-container *ngIf="activityData.status === 'IN_PROGRESS'">
-                                <span tooltip="{{activityData.activityCode}}" id="{{'act3'+activityData.activityCode}}" (click)="openParticipant($event, pt, col, activityData.activityCode)">
+                                <span tooltip="{{activityData.activityCode}}" (click)="openParticipant(pt, col, activityData.activityCode)">
                                 <i class="fas fa-adjust"></i>
+                                </span>
+                              </ng-container>
+                              <ng-container *ngIf="activityData.status === 'ERROR'">
+                                <span tooltip="{{activityData.activityCode}}"  (click)="openParticipant(pt, col, activityData.activityCode)" style="color: red">
+                                <i class="fas fa-circle"></i>
                                 </span>
                               </ng-container>
                             </ng-container>

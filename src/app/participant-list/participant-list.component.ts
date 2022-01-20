@@ -820,7 +820,6 @@ export class ParticipantListComponent implements OnInit {
           if(jsonData['participants']){
           jsonData['participants'].forEach((val) => {
             let participant = Participant.parse(val);
-            console.log(participant);
             this.participantList.push(participant);
           });}
           this.originalParticipantList = this.participantList;
@@ -1073,7 +1072,7 @@ export class ParticipantListComponent implements OnInit {
     this.savedSelectedColumns = this.selectedColumns;
   }
 
-  openParticipant( event, participant: Participant, colSource: string, selectedActivity? ) {
+  openParticipant( participant: Participant, colSource: string, selectedActivity? ) {
     if (participant != null) {
       let tabAnchor = "Survey Data";
       if (colSource === "m" || participant.data.activities == null) {
