@@ -1093,7 +1093,6 @@ export class ParticipantListComponent implements OnInit {
           tabAnchor = proband.dataId;
         }
       }
-      console.log(tabAnchor)
       if(tabAnchor === "Survey Data") {
         this.selectedActivity = selectedActivity;
       }
