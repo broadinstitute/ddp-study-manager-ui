@@ -343,9 +343,9 @@
 
                     <ng-container *ngIf="col.participantColumn.name !== 'createdAt' && col.participantColumn.name !== 'completedAt'
             && col.participantColumn.name !== 'lastUpdatedAt' && col.participantColumn.name !== 'status' && activityData.questionsAnswers != null">
-                      <ng-container
-                        *ngIf="getQuestionAnswerByName(activityData.questionsAnswers, col.participantColumn.name) as questionAnswer">
-                        <div *ngIf="questionAnswer != null">
+                      <ng-container *ngIf="getQuestionAnswerByName(activityData.questionsAnswers, col.participantColumn.name) as questionAnswer">
+
+                        <ng-container *ngIf="questionAnswer != null">
                           <ng-container
                             *ngIf="questionAnswer.questionType === 'TEXT' || questionAnswer.questionType === 'NUMERIC'">
                             {{questionAnswer.answer}}
@@ -356,43 +356,45 @@
                           </ng-container>
                           <ng-container
                             *ngIf="questionAnswer.questionType === 'DATE' && questionAnswer.dateFields != null">
-                            <ng-container *ngIf="questionAnswer.dateFields.day != null && questionAnswer.dateFields.day !== '' &&
-questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== ''">
-                              {{questionAnswer.dateFields.month}}/{{questionAnswer.dateFields.day}}
-                              /{{questionAnswer.dateFields.year}}
+                            <ng-container *ngIf="pt.data.getMultipleDatesForActivity(activityData, col.participantColumn.name) as answers">
+                              <div  class="NO-PADDING-START" *ngFor="let date of answers; let i = index;">
+                            <ng-container *ngIf="date.dateFields.day != null && date.dateFields.day !== '' &&
+date.dateFields.month != null && date.dateFields.month !== ''">
+                              {{date.dateFields.month}}/{{date.dateFields.day}}/{{date.dateFields.year}}
                             </ng-container>
-                            <ng-container *ngIf="(questionAnswer.dateFields.day == null || questionAnswer.dateFields.day === '') &&
-questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '' && questionAnswer.dateFields.year != null && questionAnswer.dateFields.year !== ''">{{questionAnswer.dateFields.month}}
-                              /{{questionAnswer.dateFields.year}}
+                            <ng-container *ngIf="(date.dateFields.day == null || date.dateFields.day === '') &&
+date.dateFields.month != null && date.dateFields.month !== '' && date.dateFields.year != null && date.dateFields.year !== ''">
+                              {{date.dateFields.month}}/{{date.dateFields.year}}
                             </ng-container>
-                            <ng-container *ngIf="(questionAnswer.dateFields.day == null || questionAnswer.dateFields.day === '') &&
-questionAnswer.dateFields.month == null || questionAnswer.dateFields.month === ''">{{questionAnswer.dateFields.year}}
+                            <ng-container *ngIf="(date.dateFields.day == null || date.dateFields.day === '') &&
+date.dateFields.month == null || date.dateFields.month === ''">{{date.dateFields.year}}
                             </ng-container>
-                            <ng-container *ngIf="(questionAnswer.dateFields.year == null || questionAnswer.dateFields.year === '') &&
-questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== ''">{{questionAnswer.dateFields.month}}
-                              /null
+                            <ng-container *ngIf="(date.dateFields.year == null || date.dateFields.year === '') &&
+date.dateFields.month != null && date.dateFields.month !== ''">{{date.dateFields.month}}/null
                             </ng-container>
+                                <hr *ngIf="i !== answers.length-1" style="border-color: lightgray">
+                          </div>
                           </ng-container>
+                      </ng-container>
                           <ng-container
                             *ngIf="questionAnswer.questionType === 'COMPOSITE' && questionAnswer.answer != null">
-                            <div *ngFor="let answer of questionAnswer.answer; let i = index">
-                              <div *ngFor="let compPart of answer" class="TD--Padding-Left-Bigger">
-                                {{getUtil().getNiceUserText(compPart)}}
-                              </div>
+                            <ng-container
+                              *ngIf="getUtilStatic().getQuestionDefinition(activityDefinitionList, alias, questionAnswer.stableId, activityData.activityVersion) as qDef">
+                            <div *ngFor="let answer of getUtilStatic().getNiceTextForCSVCompositeType(questionAnswer, qDef ); let i = index">
+                              {{answer}}
                               <hr *ngIf="i !== questionAnswer.answer.length-1" style="border-color: lightgray">
                             </div>
+                            </ng-container>
                           </ng-container>
                           <ng-container
                             *ngIf="questionAnswer.questionType === 'PICKLIST' && questionAnswer.answer != null">
                             <ng-container
-                              *ngIf="getUtil().getQuestionDefinition(activityDefinitionList, alias, questionAnswer.stableId, activityData.activityVersion) as qDef">
+                              *ngIf="getUtilStatic().getQuestionDefinition(activityDefinitionList, alias, questionAnswer.stableId, activityData.activityVersion) as qDef">
                               <ng-container *ngIf="qDef.selectMode === 'MULTIPLE'">
                                 <ng-container *ngIf="qDef.options !== null">
                                   <ul *ngFor="let o of qDef.options">
-                                    <li *ngIf="getUtil().isOptionSelected(questionAnswer.answer, o.optionStableId)">
-                                      <b>{{o.optionText}}</b>
-                                      <ng-container
-                                        *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, o.optionStableId) as oDetail">
+                                    <li *ngIf="getUtil().isOptionSelected(questionAnswer.answer, o.optionStableId)"><b>{{o.optionText}}</b>
+                                      <ng-container *ngIf="getUtilStatic().getOptionDetails(questionAnswer.optionDetails, o.optionStableId) as oDetail">
                                         <div>{{oDetail.details}}
                                         </div>
                                       </ng-container>
@@ -413,10 +415,8 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                                       <b>{{group.groupText}}</b>
                                       <ng-container *ngIf="questionAnswer.groupedOptions[group.groupStableId] !== null">
                                         <ul *ngFor="let gAnswer of questionAnswer.groupedOptions[group.groupStableId]">
-                                          <li *ngIf="getUtil().getAnswerText(gAnswer, group.options) as option">
-                                            <b>{{option.optionText}}</b>
-                                            <ng-container
-                                              *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, gAnswer) as oDetail">
+                                          <li *ngIf="getUtil().getAnswerText(gAnswer, group.options) as option"><b>{{option.optionText}}</b>
+                                            <ng-container *ngIf="getUtilStatic().getOptionDetails(questionAnswer.optionDetails, gAnswer) as oDetail">
                                               <div>{{oDetail.details}}
                                               </div>
                                             </ng-container>
@@ -428,16 +428,21 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                                 </ng-container>
                               </ng-container>
                               <ng-container *ngIf="qDef.selectMode === 'SINGLE'">
-                                <ng-container
-                                  *ngIf="pt.data.getMultipleAnswersForPickList(activityData, col.participantColumn.name) as answers">
-                                  <div class="NO-PADDING-START">
-                                    <div *ngFor="let answer of answers; let i=index;">
-                                      <div *ngIf="getUtil().getAnswerGroupOrOptionText(answer, qDef) as txt">
+                                <ng-container *ngIf="pt.data.getMultipleAnswersForPickList(activityData, col.participantColumn.name) as answers">
+                                  <div class="NO-PADDING-START" >
+                                    <div *ngFor="let answer of answers; let i=index;" >
+                                      <div *ngIf="getUtilStatic().getAnswerGroupOrOptionText(answer, qDef) as txt">
                                         {{txt}}
+                                        <ul *ngIf="pt.data.getGroupedOptionsForAnswer(activityData, col.participantColumn.name, answer) as groups">
+                                          <li *ngFor="let group of groups">
+                                            <div *ngIf="getUtilStatic().getAnswerGroupOrOptionText(group, qDef) as groupText">
+                                              {{groupText}}
+                                            </div>
+                                          </li>
+                                        </ul>
                                         <hr *ngIf="i !== answers.length-1" style="border-color: lightgray">
                                       </div>
-                                      <div
-                                        *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, answer) as oDetail">
+                                      <div *ngIf="getUtilStatic().getOptionDetails(questionAnswer.optionDetails, answer) as oDetail">
                                         {{oDetail.details}}
                                         <hr *ngIf="i !== answers.length-1" style="border-color: lightgray">
                                       </div>
@@ -447,7 +452,7 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                               </ng-container>
                             </ng-container>
                           </ng-container>
-                        </div>
+                        </ng-container>
                       </ng-container>
                     </ng-container>
                   </ng-container>

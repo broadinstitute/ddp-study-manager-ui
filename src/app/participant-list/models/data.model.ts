@@ -1,7 +1,7 @@
 import {ActivityData} from "../../activity-data/activity-data.model";
+import {QuestionAnswer} from "../../activity-data/models/question-answer.model";
 import {Address} from "../../address/address.model";
 import {InvitationData} from "../../invitation-data/invitation-data.model";
-import {Utils} from "../../utils/utils";
 import { Computed } from "./computed.model";
 import {MedicalProvider} from "./medical-providers.model";
 
@@ -32,8 +32,47 @@ export class Data {
         for (let y of x.questionsAnswers) {
           if (y.stableId === name) {
             for (let answer of y.answer) {
-              answers.push( answer );
+                answers.push( answer );
             }
+          }
+        }
+      }
+    }
+    return answers.reverse();
+  }
+
+  public getGroupedOptionsForAnswer(activityData: ActivityData, name: string, questionAnswer:string){
+    let answers: Array<string> = new Array();
+    for (let x of this.activities) {
+      if (x.activityCode === activityData.activityCode) {
+        for (let y of x.questionsAnswers) {
+          if (y.stableId === name) {
+            for (let answer of y.answer) {
+              if (answer === questionAnswer) {
+                if (y.groupedOptions) {
+                  let ans = y.groupedOptions[ answer ];
+                  if (ans) {
+                    for (let a of ans) {
+                      answers.push( a );
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return answers.reverse();
+  }
+
+  getMultipleDatesForActivity( activityData: ActivityData, name: string ) {
+    let answers: Array<QuestionAnswer> = new Array();
+    for (let x of this.activities) {
+      if (x.activityCode === activityData.activityCode) {
+        for (let y of x.questionsAnswers) {
+          if (y.stableId === name) {
+            answers.push( y );
           }
         }
       }
@@ -43,7 +82,7 @@ export class Data {
 
   static parse( json ): Data {
     let jsonData: any[];
-    let medicalProviders: MedicalProvider[] = null;
+    let medicalProviders: Array<MedicalProvider> = null;
     if (json.medicalProviders != null) {
       jsonData = json.medicalProviders;
       if (json != null && jsonData != null) {
