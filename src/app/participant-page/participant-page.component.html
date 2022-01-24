@@ -136,7 +136,16 @@
           </tr>
           <tr>
             <td>Do Not Contact</td>
-            <td>{{getUtil().getYesNo(participant.data.profile['doNotContact'])}}</td>
+            <td *ngIf="hasRole().allowedToEditParticipant()">
+              <md-checkbox [(ngModel)]="updatedDNC" color="primary" disableRipple></md-checkbox>
+              <button md-raised-button color="primary"
+                      [disabled]="updatedDNC === participant.data.profile['doNotContact']"
+                      (click)="updateDNC()">Update
+              </button>
+            </td>
+            <td *ngIf="!hasRole().allowedToEditParticipant()">
+              {{getUtil().getYesNo(participant.data.profile['doNotContact'])}}
+            </td>
           </tr>
           <tr>
             <td>Date of Birth</td>
