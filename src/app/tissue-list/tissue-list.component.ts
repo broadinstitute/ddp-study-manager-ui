@@ -1,5 +1,6 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {Assignee} from "../assignee/assignee.model";
+import {ParticipantColumn} from "../filter-column/models/column.model";
 import {AssigneeParticipant} from "../participant-list/models/assignee-participant.model";
 import {Participant} from "../participant-list/participant-list.model";
 import {RoleService} from "../services/role.service";
@@ -84,7 +85,7 @@ export class TissueListComponent implements OnInit {
   allColumns = {};
   allAdditionalColumns = {};
   selectedColumns = {};
-  dataSources = [ Statics.ES_ALIAS, Statics.ONCDETAIL_ALIAS, Statics.TISSUE_ALIAS ];
+  dataSources = [ Statics.ES_ALIAS, Statics.ONCDETAIL_ALIAS, Statics.TISSUE_ALIAS];
   dataSourceNames = {
     "data": "Participant",
     "oD": "Onc History",
@@ -176,6 +177,7 @@ export class TissueListComponent implements OnInit {
     for (let col of this.allColumns[ Statics.ONCDETAIL_ALIAS ]) {
       this.allFieldNames.add( col.participantColumn.tableAlias + Statics.DELIMITER_ALIAS + col.participantColumn.name );
     }
+
   }
 
   assigneeSelected( evt: any ) {
@@ -302,16 +304,17 @@ export class TissueListComponent implements OnInit {
               }
             }
           }
-        } );
-        // for ( let col of this.allColumns[Statics.TISSUE_ALIAS] ) {
-        //   this.allFieldNames.add(col.participantColumn.tableAlias + Statics.DELIMITER_ALIAS + col.participantColumn.name);
-        // }
-        // for ( let col of this.allColumns[Statics.ONCDETAIL_ALIAS] ) {
-        //   this.allFieldNames.add(col.participantColumn.tableAlias + Statics.DELIMITER_ALIAS + col.participantColumn.name);
-        // }
-        // for ( let col of this.allColumns["data"] ) {
-        //   let t = col.participantColumn.object !== null && col.participantColumn.object !== undefined ? col.participantColumn.object :
-        // col.participantColumn.tableAlias; this.allFieldNames.add(t + Statics.DELIMITER_ALIAS + col.participantColumn.name); }
+        }
+        );
+        let assigneesMap = [];
+        if (this.assignees) {
+          this.assignees.forEach( assignee => {
+            if (assignee.assigneeId !== "-1") {
+              assigneesMap.push( new NameValue( assignee.assigneeId, assignee.name ) );
+            }
+          } );
+        }
+        this.allColumns["data"].push(new Filter( ParticipantColumn.ASSIGNEE_TISSUE, Filter.OPTION_TYPE, assigneesMap ));
         for (let data of this.dataSources) {
           this.allColumns[ data ].sort( ( a, b ) => {
             return a.participantColumn.display.localeCompare( b.participantColumn.display );
@@ -499,6 +502,7 @@ export class TissueListComponent implements OnInit {
   }
 
   showFiltersTable() {
+
     this.showCustomizeViewTable = false;
     this.showSavedFilters = false;
     this.showFilters = !this.showFilters;
@@ -527,6 +531,7 @@ export class TissueListComponent implements OnInit {
     else {
       this.selectedColumns[ parent ].push( column );
     }
+    console.log(this.selectedColumns);
   }
 
   public reload( defaultFilter ) {
@@ -694,6 +699,7 @@ export class TissueListComponent implements OnInit {
       "quickFilterName": this.currentQuickFilterName,
       "queryItems": this.filterQuery,
     };
+    console.log(jsonData);
     let jsonPatch = JSON.stringify( jsonData );
     this.currentView = jsonPatch;
     this.dsmService.saveCurrentFilter( jsonPatch, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.parent ).subscribe(
@@ -1538,6 +1544,9 @@ export class TissueListComponent implements OnInit {
       else if (t === "sm") {
         t = "t";
       }
+      else if (t === "p") {
+        t = "data";
+      }
       for (let f of this.allColumns[ t ]) {
         if (f.participantColumn.name === filter.participantColumn.name) {
           let index = this.allColumns[ t ].indexOf( f );
@@ -1640,11 +1649,16 @@ export class TissueListComponent implements OnInit {
                 this.assignees.push( Assignee.parse( val ) );
               } );
             },
-            err =>{console.log(err);}
+            err =>{
+              console.log(err);
+            }
     );
   }
 
-  private getColSpan(){
-
+  getAssigneeById( assigneeId: any ) {
+    for (let assignee of this.assignees){
+      if(assignee.assigneeId === assigneeId)
+        return assignee.name;
+    }
   }
 }
