@@ -201,7 +201,6 @@ export class TissueListComponent implements OnInit {
             this.getDefaultFilterName();
             this.getAllFilters( true );
             this.getTissueListData( defaultFilter );
-            this.getAssignees(localStorage.getItem( ComponentService.MENU_SELECTED_REALM ));
           }
         } );
         if (!allowedToSeeInformation) {
@@ -306,20 +305,8 @@ export class TissueListComponent implements OnInit {
           }
         }
         );
-        let assigneesMap = [];
-        if (this.assignees) {
-          this.assignees.forEach( assignee => {
-            if (assignee.assigneeId !== "-1") {
-              assigneesMap.push( new NameValue( assignee.assigneeId, assignee.name ) );
-            }
-          } );
-        }
-        this.allColumns["data"].push(new Filter( ParticipantColumn.ASSIGNEE_TISSUE, Filter.OPTION_TYPE, assigneesMap ));
-        for (let data of this.dataSources) {
-          this.allColumns[ data ].sort( ( a, b ) => {
-            return a.participantColumn.display.localeCompare( b.participantColumn.display );
-          } );
-        }
+        this.getAssignees(localStorage.getItem( ComponentService.MENU_SELECTED_REALM ));
+
       },
       err => {
         this.errorMessage = "Could not getting the field settings for this realm. Please contact your DSM developer\n " + err;
@@ -568,7 +555,7 @@ export class TissueListComponent implements OnInit {
       }
       for (let filter of this.selectedColumns[ array ]) {
         let filterText = Filter.getFilterText( filter, array );
-        if (filterText != null && array === Statics.ES_ALIAS) {
+        if (filterText != null && array === Statics.ES_ALIAS && filter.participantColumn.name != ParticipantColumn.ASSIGNEE_TISSUE.name) {
           filterText[ "exactMatch" ] = true;
           filterText[ "parentName" ] = filter.participantColumn.object;
         }
@@ -857,7 +844,11 @@ export class TissueListComponent implements OnInit {
         if (savedFilter != null) {
           for (let filter of savedFilter.filters) {
             if (filter.type === Filter.OPTION_TYPE) {
-              filter.selectedOptions = filter.getSelectedOptionsBoolean();
+                if (filter.participantColumn.name === ParticipantColumn.ASSIGNEE_TISSUE.name) {
+                  filter = this.adjustAssigneeSavedFilterColumn(filter);
+                }else {
+                  filter.selectedOptions = filter.getSelectedOptionsBoolean();
+                }
             }
           }
         }
@@ -1644,10 +1635,19 @@ export class TissueListComponent implements OnInit {
   private getAssignees( realm: string ) {
     this.dsmService.getAssignees(realm).subscribe(
             data =>{
+              this.assignees = [];
               this.assignees.push( new Assignee( "-1", "Remove Assignee", "" ) );
               data.forEach( ( val ) => {
                 this.assignees.push( Assignee.parse( val ) );
               } );
+              let assigneesMap = this.getAssigneeAsNameValue();
+              if(!this.allColumns["data"].find( f => f.participantColumn.name === ParticipantColumn.ASSIGNEE_TISSUE.name))
+                this.allColumns["data"].push(new Filter( ParticipantColumn.ASSIGNEE_TISSUE, Filter.OPTION_TYPE, assigneesMap ));
+              for (let data of this.dataSources) {
+                this.allColumns[ data ].sort( ( a, b ) => {
+                  return a.participantColumn.display.localeCompare( b.participantColumn.display );
+                } );
+              }
             },
             err =>{
               console.log(err);
@@ -1660,5 +1660,36 @@ export class TissueListComponent implements OnInit {
       if(assignee.assigneeId === assigneeId)
         return assignee.name;
     }
+  }
+
+  getAssigneeAsNameValue(){
+    let assigneesMap = [];
+    if (this.assignees) {
+      this.assignees.forEach( assignee => {
+        if (assignee.assigneeId !== "-1") {
+          assigneesMap.push( new NameValue( assignee.assigneeId, assignee.name ) );
+        }
+      } );
+    }
+    return assigneesMap;
+  }
+
+  adjustAssigneeSavedFilterColumn(filter: Filter){
+    let assigneesMap = this.getAssigneeAsNameValue();
+    let selectedOptions= filter.getSelectedOptionsBoolean(assigneesMap);
+    filter.selectedOptions = selectedOptions;
+    let f = this.selectedColumns['data'].find(filter => filter.participantColumn.name === ParticipantColumn.ASSIGNEE_TISSUE.name);
+    if(f){
+      let index = this.selectedColumns['data'].indexOf(f);
+      this.selectedColumns['data'].splice(index, 1);
+      f.selectedOptions = selectedOptions;
+      this.selectedColumns['data'].push(f);
+      for (let data of this.dataSources) {
+        this.selectedColumns[ data ].sort( ( a, b ) => {
+          return a.participantColumn.display.localeCompare( b.participantColumn.display );
+        } );
+      }
+    }
+    return filter;
   }
 }

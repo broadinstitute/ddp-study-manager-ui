@@ -1,3 +1,4 @@
+import {matchesElement} from "@angular/animations/browser/src/render/shared";
 import {FieldSettings} from "../field-settings/field-settings.model";
 import {NameValue} from "../utils/name-value.model";
 import {Statics} from "../utils/statics";
@@ -282,8 +283,11 @@ export class Filter {
     return selected;
   }
 
-  public getSelectedOptionsBoolean(): Array<boolean> {
+  public getSelectedOptionsBoolean(selectedOptions?: any[]): Array<boolean> {
     let selected = [];
+    if(!this.options && selectedOptions){
+        this.options = selectedOptions;
+      }
     if (this.selectedOptions != null && this.options != undefined) {
       for (let o of this.options) {
         selected.push( this.selectedOptions.includes( o.name ) );
