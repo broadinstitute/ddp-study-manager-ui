@@ -518,7 +518,6 @@ export class TissueListComponent implements OnInit {
     else {
       this.selectedColumns[ parent ].push( column );
     }
-    console.log(this.selectedColumns);
   }
 
   public reload( defaultFilter ) {
@@ -686,7 +685,6 @@ export class TissueListComponent implements OnInit {
       "quickFilterName": this.currentQuickFilterName,
       "queryItems": this.filterQuery,
     };
-    console.log(jsonData);
     let jsonPatch = JSON.stringify( jsonData );
     this.currentView = jsonPatch;
     this.dsmService.saveCurrentFilter( jsonPatch, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.parent ).subscribe(
