@@ -1256,6 +1256,7 @@ export class ParticipantPageComponent implements OnInit, OnDestroy {
           realm:  localStorage.getItem( ComponentService.MENU_SELECTED_REALM ),
           nameValues: nameValue,
           actions: actionPatch,
+          tableAlias: "d",
           ddpParticipantId: participantId
         };
 
