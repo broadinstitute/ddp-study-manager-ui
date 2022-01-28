@@ -222,6 +222,11 @@ export class Utils {
     return null;
   }
 
+  static getActivityDefinition( activities: ActivityDefinition[], activityCode: string, version: string ) {
+    return  activities.find( x => x.activityCode === activityCode && x.activityVersion === version );
+
+  }
+
   getAbstractionGroup( groups: Array<AbstractionGroup>, groupId: string ) {
     return groups.find( x => x.abstractionGroupId.toString() === groupId );
   }
@@ -428,7 +433,11 @@ export class Utils {
     if (columns != null) {
       if (o != null) {
         for (col of columns) {
-          if (col.type === "ADDITIONALVALUE") {
+          if(!col.searchable){
+              let value = col.func(data,  activityDefinitionList);
+              str = str + "\"" + value + "\"" + ",";
+          }
+          else if (col.type === "ADDITIONALVALUE") {
             let fieldName = "additionalValues";
             if (fieldName !== "") {
               let value = this.getObjectAdditionalValue( o, fieldName, col );
@@ -556,7 +565,7 @@ export class Utils {
     return str;
   }
 
-  public static getSurveyData( participant: Participant, code: string ) {
+  public static getSurveyData( participant: Participant, code: string ) : Array<ActivityData>{
     let array = [];
     if (participant != null && participant.data != null && participant.data.activities != null) {
       for (let x of participant.data.activities) {

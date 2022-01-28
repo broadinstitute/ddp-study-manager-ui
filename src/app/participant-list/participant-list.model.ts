@@ -1,7 +1,9 @@
 import {AbstractionGroup} from "../abstraction-group/abstraction-group.model";
+import {ActivityDefinition} from "../activity-data/models/activity-definition.model";
 import {Abstraction} from "../medical-record-abstraction/medical-record-abstraction.model";
 import {MedicalRecord} from "../medical-record/medical-record.model";
 import {OncHistoryDetail} from "../onc-history-detail/onc-history-detail.model";
+import {Utils} from "../utils/utils";
 import {ParticipantData} from "./models/participant-data.model";
 import {Sample} from "./models/sample.model";
 import {Data} from "./models/data.model";
@@ -196,5 +198,12 @@ export class Participant {
     }
 
     return new Participant( esData, participant, medicalRecords, samples, oncHistoryDetails, json.abstractionActivities, abstractionSummary, participantData, abstraction, review, qc, finalA, proxyData );
+  }
+  public getActivitiesSorted(activityDefinitionList: ActivityDefinition[]){
+    return this.data.activities.sort((ac1, ac2)=>{
+      let acDef1 = Utils.getActivityDefinition(activityDefinitionList, ac1.activityCode, ac1.activityVersion);
+      let acDef2 = Utils.getActivityDefinition(activityDefinitionList, ac2.activityCode, ac2.activityVersion);
+      return acDef1.displayOrder - acDef2.displayOrder;
+    })
   }
 }

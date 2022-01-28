@@ -373,7 +373,6 @@ export class TissueListComponent implements OnInit {
           this.tissueListOncHistories = [];
           jsonData = data;
           this.tissueListWrappers = this.parseTissueListWrapperData( jsonData );
-          console.log( this.tissueListWrappers );
           this.originalTissueListWrappers = this.tissueListWrappers;
 
           if (this.defaultFilter != null && this.defaultFilter.filters != null) {
@@ -496,12 +495,10 @@ export class TissueListComponent implements OnInit {
       this.selectedColumns[ parent ] = [];
     }
     if (this.hasThisColumnSelected( this.selectedColumns[ parent ], column )) {
-      console.log( this.selectedColumns[ parent ] );
       let f = this.selectedColumns[ parent ].find( f => {
         return f.participantColumn.tableAlias === column.participantColumn.tableAlias && f.participantColumn.name === column.participantColumn.name;
       } );
       let index = this.selectedColumns[ parent ].indexOf( f );
-      console.log( index );
       this.selectedColumns[ parent ].splice( index, 1 );
     }
     else {
@@ -799,7 +796,6 @@ export class TissueListComponent implements OnInit {
         }
       }
     }
-    console.log(savedFilter);
     let filters: Filter[];
     this.dsmService.applyFilter( savedFilter, this.realm, this.parent, null ).subscribe(
       data => {

@@ -72,6 +72,7 @@ export class ParticipantListComponent implements OnInit {
   showParticipantInformation: boolean = false;
   showTissue: boolean = false;
   selectedTab: string;
+  selectedActivity: string;
   selectedMR = "";
   selectedOncOrTissue = "";
 
@@ -814,10 +815,11 @@ export class ParticipantListComponent implements OnInit {
           this.copyParticipantList = [];
           let jsonData: {};
           jsonData = data;
+          if(jsonData['participants']){
           jsonData['participants'].forEach((val) => {
             let participant = Participant.parse(val);
             this.participantList.push(participant);
-          });
+          });}
           this.originalParticipantList = this.participantList;
           this.participantsSize = jsonData['totalCount'];
           if (viewFilter != null) {
@@ -1068,7 +1070,7 @@ export class ParticipantListComponent implements OnInit {
     this.savedSelectedColumns = this.selectedColumns;
   }
 
-  openParticipant( participant: Participant, colSource: string ) {
+  openParticipant( participant: Participant, colSource: string, selectedActivity? ) {
     if (participant != null) {
       let tabAnchor = "Survey Data";
       if (colSource === "m" || participant.data.activities == null) {
@@ -1088,6 +1090,9 @@ export class ParticipantListComponent implements OnInit {
         if (proband && proband.dataId) {
           tabAnchor = proband.dataId;
         }
+      }
+      if(tabAnchor === "Survey Data") {
+        this.selectedActivity = selectedActivity;
       }
       if (this.filtered && participant.participant != null && participant.participant.ddpParticipantId != null) {
         this.loadingParticipants = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
@@ -1777,7 +1782,6 @@ export class ParticipantListComponent implements OnInit {
       if (data != null) {
         let jsonData: {};
         jsonData = data;
-
         jsonData['participants'].forEach( ( val ) => {
           let participant = Participant.parse( val );
           this.participantList.push( participant );
