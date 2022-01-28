@@ -133,7 +133,6 @@ export class PdfDownloadComponent implements OnInit {
               this.participantPDFs.push(participantPdf);
             } );
           }
-          console.log(this.participantPDFs);
           this.loading = false;
         },
         err => {
