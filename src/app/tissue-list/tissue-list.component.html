@@ -295,33 +295,41 @@
               <ng-container>
                 <td *ngIf="hasAssignees()">
                   <md-checkbox color="primary" disableRipple
-                                [checked]="value.isSelected"
-                                (change)="value.isSelected = $event.checked; checkboxChecked()"></md-checkbox>
+                               [checked]="value.isSelected"
+                               (change)="value.isSelected = $event.checked; checkboxChecked()"></md-checkbox>
                 </td>
                 <td>
                   {{value.data['ddp']}}
                 </td>
                 <td *ngFor="let col of selectedColumns['data']" [height]="40" (click)="getParticipant(value, 'oD')">
-                  <span *ngIf="col.participantColumn.object === null || col.participantColumn.object === undefined">
-                    <span *ngIf="col.type ==='DATE' || col.type === 'EPOCHDATE'">
-                    {{value.data[col.participantColumn.name] | dateFormatPipe}}
-                      </span>
-                    <span *ngIf="col.type !=='DATE' && col.type !== 'EPOCHDATE'">
-                    {{value.data[col.participantColumn.name]}}
-                      </span>
-                  </span>
-                  <span
-                    *ngIf="col.participantColumn.object !== null && col.participantColumn.object !== undefined && value.data[col.participantColumn.object] === undefined">
-                  </span>
-                  <span
-                    *ngIf="col.participantColumn.object !== null && col.participantColumn.object !== undefined && value.data[col.participantColumn.object] !== undefined">
-                    <span *ngIf="col.type ==='DATE' || col.type === 'EPOCHDATE'">
-                    {{value.data[col.participantColumn.object][col.participantColumn.name] | dateFormatPipe}}
-                      </span>
-                    <span *ngIf="col.type !=='DATE' && col.type !== 'EPOCHDATE'">
-                    {{value.data[col.participantColumn.object][col.participantColumn.name]}}
+                  <span *ngIf="col.participantColumn.tableAlias === 'p'">
+                    <span *ngIf="col.participantColumn.name.indexOf('assignee') !== -1">
+                      {{getAssigneeById(value.tissueList.participant[col.participantColumn.name])}}
                     </span>
+                    {{value.tissueList.participant[col.participantColumn.name]}}
                   </span>
+                  <ng-container *ngIf="col.participantColumn.tableAlias !== 'p'">
+                    <span *ngIf="col.participantColumn.object === null || col.participantColumn.object === undefined">
+                      <span *ngIf="col.type ==='DATE' || col.type === 'EPOCHDATE'">
+                      {{value.data[col.participantColumn.name] | dateFormatPipe}}
+                      </span>
+                      <span *ngIf="col.type !=='DATE' && col.type !== 'EPOCHDATE'">
+                      {{value.data[col.participantColumn.name]}}
+                      </span>
+                    </span>
+                    <span
+                      *ngIf="col.participantColumn.object !== null && col.participantColumn.object !== undefined && value.data[col.participantColumn.object] === undefined">
+                    </span>
+                    <span
+                      *ngIf="col.participantColumn.object !== null && col.participantColumn.object !== undefined && value.data[col.participantColumn.object] !== undefined">
+                      <span *ngIf="col.type ==='DATE' || col.type === 'EPOCHDATE'">
+                        {{value.data[col.participantColumn.object][col.participantColumn.name] | dateFormatPipe}}
+                      </span>
+                      <span *ngIf="col.type !=='DATE' && col.type !== 'EPOCHDATE'">
+                        {{value.data[col.participantColumn.object][col.participantColumn.name]}}
+                      </span>
+                    </span>
+                  </ng-container>
                 </td>
               </ng-container>
               <ng-container>
@@ -378,7 +386,7 @@
                       {{smid.smIdValue}}
                     </ng-container>
                   </span>
-                {{value.tissueList.tissue[col.participantColumn.name]}}
+                  {{value.tissueList.tissue[col.participantColumn.name]}}
                 </span>
                   <span *ngIf="col.type === 'DATE' || col.type === 'EPOCHDATE'">
                 {{value.tissueList.tissue[col.participantColumn.name] | dateFormatPipe}}
@@ -481,7 +489,8 @@
           </td>
         </tr>
         <tr *ngIf="hasAssignees()">
-          <td [attr.colspan]="(selectedColumns['data'] == undefined? 0: selectedColumns['data'].length)+(selectedColumns['oD']== undefined? 0 : selectedColumns['oD'].length)+selectedColumns['t'].length">
+          <td
+            [attr.colspan]="(selectedColumns['data'] == undefined? 0: selectedColumns['data'].length)+(selectedColumns['oD']== undefined? 0 : selectedColumns['oD'].length)+selectedColumns['t'].length">
             <button md-raised-button color="primary"
                     (click)="showAssignModal()" [disabled]="isAssignButtonDisabled">Assign
             </button>
@@ -500,7 +509,7 @@
   <div class="app-modal-body">
     <ng-container *ngIf="openAssigneeModal">
       <md-checkbox color="primary" disableRipple
-                    [(ngModel)]="assignTissue">Assign to request Tissue
+                   [(ngModel)]="assignTissue">Assign to request Tissue
       </md-checkbox>
       <app-assignee (selectedAssignee)="assigneeSelected($event)" [assignees]="assignees"></app-assignee>
     </ng-container>
