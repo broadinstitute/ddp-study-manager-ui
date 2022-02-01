@@ -509,7 +509,7 @@ export class Filter {
     return null;
   }
 
-  private static replace( value: string ): string {
+  private static replace( value: string): string {
     if (value != null && typeof value === "string" && value.indexOf( "'" ) > -1) {
       value = value.replace( "'", "" );
       return this.replace( value );
@@ -596,7 +596,11 @@ export class Filter {
     }
     else if (filter.type === Filter.ADDITIONAL_VALUE_TYPE) {
       let selectedOptions = filter.selectedOptions? filter.getSelectedOptionsName() : null;
+
       if (( filter.value1 !== null && filter.value1 !== "" && filter.value1 !== undefined ) || ( filter.empty || filter.notEmpty ) || (filter.selectedOptions)) {
+        if (filter.value1 && typeof filter.value1 === 'number'){
+          filter.value1 = filter.value1.toString();
+        }
         filterText = this.getFilterJson( parent,
           new NameValue( "additionalValues", filter.value1 ),
           filter.filter2, selectedOptions,
