@@ -216,9 +216,9 @@ export class Utils {
   }
 
   static getQuestionDefinition( activities: Array<ActivityDefinition>, activity: string, stableId: string, version: string ) {
-    let questions = activities.find( x => x.activityCode === activity && x.activityVersion === version ).questions;
-    if (questions != null) {
-      return questions.find( x => x.stableId === stableId );
+    let questions = activities.find( x => x.activityCode === activity && x.activityVersion === version );
+    if (questions && questions.questions) {
+      return questions.questions.find( x => x.stableId === stableId );
     }
     return null;
   }
