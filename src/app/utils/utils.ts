@@ -216,8 +216,9 @@ export class Utils {
   }
 
   static getQuestionDefinition( activities: Array<ActivityDefinition>, activity: string, stableId: string, version: string ) {
-    if(!activities)
+    if (!activities) {
       return null;
+    }
     let questions = activities.find( x => x.activityCode === activity && x.activityVersion === version );
     if (questions && questions.questions) {
       return questions.questions.find( x => x.stableId === stableId );
