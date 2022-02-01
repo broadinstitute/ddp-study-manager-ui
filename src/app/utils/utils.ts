@@ -123,7 +123,7 @@ export class Utils {
     }
     let text = answer;
     let ans;
-    if (qdef.groups) {
+    if (qdef && qdef.groups) {
       loop1: for (let group of qdef.groups) {
         if (group.groupStableId === answer) {
           ans = group.groupText;
@@ -140,7 +140,7 @@ export class Utils {
         text = ans;
       }
     }
-    if (!ans && qdef.options) {
+    if (!ans && qdef && qdef.options) {
       let ans = qdef.options.find( option => {
         if (option.optionStableId === answer) {
           return true;
@@ -160,7 +160,7 @@ export class Utils {
     }
     let text = answer;
     let ans;
-    if (qdef.options) {
+    if (qdef && qdef.options) {
       let option = qdef.options.find( option => {
         if (option.optionStableId === answer) {
           return true;
@@ -216,9 +216,12 @@ export class Utils {
   }
 
   static getQuestionDefinition( activities: Array<ActivityDefinition>, activity: string, stableId: string, version: string ) {
-    let questions = activities.find( x => x.activityCode === activity && x.activityVersion === version ).questions;
-    if (questions != null) {
-      return questions.find( x => x.stableId === stableId );
+    if (!activities) {
+      return null;
+    }
+    let questions = activities.find( x => x.activityCode === activity && x.activityVersion === version );
+    if (questions && questions.questions) {
+      return questions.questions.find( x => x.stableId === stableId );
     }
     return null;
   }
@@ -910,7 +913,7 @@ export class Utils {
       }
       let text = answer;
       let ans;
-      if (qdef.childQuestions) {
+      if (qdef && qdef.childQuestions) {
         loop1: for (let childq of qdef.childQuestions) {
           if (childq.groups) {
             for (let g of childq.groups) {
