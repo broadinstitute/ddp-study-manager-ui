@@ -458,7 +458,7 @@ export class Filter {
             let newFilter = new Filter( filter.participantColumn, filter.type, f.options, filter.filter2, filter.range, filter.exactMatch, filter.filter1,
               selectedOptions, ( filter.filter1 == null || filter.filter1 == undefined ) ? null : filter.filter1.value,
               ( filter.filter2 == null || filter.filter2 == undefined ) ? null : filter.filter2.value, null,
-              filter.empty, filter.notEmpty, f.singleOption, f.additionalType );
+              filter.empty, filter.notEmpty, f.singleOption, f.additionalType, f.participantColumn.tableAlias );
             filters.push( newFilter );
             break;
           }
@@ -595,10 +595,11 @@ export class Filter {
       }
     }
     else if (filter.type === Filter.ADDITIONAL_VALUE_TYPE) {
-      if (( filter.value1 !== null && filter.value1 !== "" && filter.value1 !== undefined ) || ( filter.empty || filter.notEmpty )) {
+      let selectedOptions = filter.selectedOptions? filter.getSelectedOptionsName() : null;
+      if (( filter.value1 !== null && filter.value1 !== "" && filter.value1 !== undefined ) || ( filter.empty || filter.notEmpty ) || (filter.selectedOptions)) {
         filterText = this.getFilterJson( parent,
           new NameValue( "additionalValues", filter.value1 ),
-          filter.filter2, null,
+          filter.filter2, selectedOptions,
           filter.exactMatch, filter.type, filter.range, filter.empty, filter.notEmpty, filter.participantColumn );
       }
       else {

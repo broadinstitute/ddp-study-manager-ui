@@ -721,7 +721,6 @@ export class ParticipantListComponent implements OnInit {
     } else {
       this.filtered = false;
     }
-    // console.log(viewFilter);
     this.dsmService.applyFilter( viewFilter, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.parent, null ).subscribe(
       data => {
         if (data != null) {
@@ -1092,7 +1091,6 @@ export class ParticipantListComponent implements OnInit {
         this.createFilterJson( json, key );
       }
     );
-    // console.log(json);
     //nothing to filter on the server
     if (json.length != 0) {
       this.filterQuery = null;
