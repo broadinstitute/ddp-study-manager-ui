@@ -28,8 +28,8 @@ export class ParticipantColumn {
   public static PARTICIPANT_NOTES = new ParticipantColumn("Participant Notes", "notes", "r");
   public static MINIMAL_RECORDS = new ParticipantColumn("Incomplete/Minimal Medical Records", "minimalMR", "r");
   public static ABSTRACTION_READY = new ParticipantColumn("Ready for Abstraction", "abstractionReady", "r");
-  public static ASSIGNEE_MR = new ParticipantColumn("MR Assignee", "assigneeMr", "p");
-  public static ASSIGNEE_TISSUE = new ParticipantColumn("Tissue Assignee", "assigneeTissue", "p");
+  public static ASSIGNEE_MR = new ParticipantColumn("MR Assignee", "assigneeIdMr", "p");
+  public static ASSIGNEE_TISSUE = new ParticipantColumn("Tissue Assignee", "assigneeIdTissue", "p");
   public static EXIT_DATE = new ParticipantColumn("Date Withdrawn", "exitDate", "ex");
 
   //mr columns

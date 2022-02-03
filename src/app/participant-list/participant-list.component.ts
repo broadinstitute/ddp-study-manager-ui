@@ -1675,16 +1675,16 @@ export class ParticipantListComponent implements OnInit {
         if (pt.isSelected) {
           if (this.assignMR) {
             if (this.assignee.assigneeId === "-1") {
-              pt.participant.assigneeMr = null;
+              pt.participant.assigneeIdMr = null;
             } else {
-              pt.participant.assigneeMr = this.assignee.name;
+              pt.participant.assigneeIdMr = this.assignee.name;
             }
           }
           if (this.assignTissue) {
             if (this.assignee.assigneeId === "-1") {
-              pt.participant.assigneeMr = null;
+              pt.participant.assigneeIdMr = null;
             } else {
-              pt.participant.assigneeTissue = this.assignee.name;
+              pt.participant.assigneeIdTissue = this.assignee.name;
             }
           }
           assignParticipants.push( new AssigneeParticipant( pt.participant.participantId, this.assignee.assigneeId,
