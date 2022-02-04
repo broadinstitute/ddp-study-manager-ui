@@ -591,7 +591,7 @@ export class Filter {
         filterText = this.getFilterJson( parent,
           new NameValue( "additionalValuesJson", filter.value1 ),
           filter.filter2, null,
-          filter.exactMatch, filter.type, filter.range, filter.empty, filter.notEmpty, filter.participantColumn );
+          filter.exactMatch, filter.type, filter.range, filter.empty, filter.notEmpty, filter.participantColumn, filter.additionalType );
       } else if (filter.selectedOptions.length > 0) {
         let selectedOptions = <Array<boolean>> filter.selectedOptions
         let trueIndex = selectedOptions.indexOf(true);
@@ -599,7 +599,7 @@ export class Filter {
         filterText = this.getFilterJson( parent,
           new NameValue( "additionalValuesJson", chosenValue ),
           filter.filter2, null,
-          filter.exactMatch, filter.type, filter.range, filter.empty, filter.notEmpty, filter.participantColumn );
+          filter.exactMatch, filter.type, filter.range, filter.empty, filter.notEmpty, filter.participantColumn, filter.additionalType );
       } else {
         return null;
       }
@@ -652,7 +652,7 @@ export class Filter {
     return filter;
   }
 
-  public static getFilterJson( parent, filter1, filter2, selectedOptions, exact, type, range, empty, notEmpty, participantColumn ) {
+  public static getFilterJson( parent, filter1, filter2, selectedOptions, exact, type, range, empty, notEmpty, participantColumn, additionalType? ) {
     let filterText = {
       "parentName": parent,
       "filter1": filter1,
@@ -663,7 +663,8 @@ export class Filter {
       "range": range,
       "empty": empty,
       "notEmpty": notEmpty,
-      "participantColumn": participantColumn
+      "participantColumn": participantColumn,
+      "additionalType": additionalType
     };
     return filterText;
   }
