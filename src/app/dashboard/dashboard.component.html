@@ -307,8 +307,8 @@
         <tr *ngIf="!hideMRTissueWorkflowCounter">
           <td>PT with minimal mr</td>
           <td>
-            <ng-container *ngIf="ddp.dashboardValues['minimalMR'] !== null && ddp.dashboardValues['minimalMR'] !== undefined">
-              {{ddp.dashboardValues['minimalMR']}} pts
+            <ng-container *ngIf="ddp.dashboardValues['minimalMr'] !== null && ddp.dashboardValues['minimalMr'] !== undefined">
+              {{ddp.dashboardValues['minimalMr']}} pts
             </ng-container>
           </td>
           <td></td>
@@ -675,20 +675,20 @@
               <ng-container *ngIf="showTissueRequestDetails">1</ng-container>
             </td>
             <td>
-              <ng-container *ngIf="ddp.dashboardValuesDetailed['tFaxSent'] !== null && ddp.dashboardValuesDetailed['tFaxSent'] !== undefined">
-                {{ddp.dashboardValuesDetailed['tFaxSent']}} sets/
+              <ng-container *ngIf="ddp.dashboardValuesDetailed['faxSent'] !== null && ddp.dashboardValuesDetailed['faxSent'] !== undefined">
+                {{ddp.dashboardValuesDetailed['faxSent']}} sets/
               </ng-container>
-              <ng-container *ngIf="ddp.dashboardValues['tFaxSent'] !== null && ddp.dashboardValues['tFaxSent'] !== undefined">
-                {{ddp.dashboardValues['tFaxSent']}}
+              <ng-container *ngIf="ddp.dashboardValues['faxSent'] !== null && ddp.dashboardValues['faxSent'] !== undefined">
+                {{ddp.dashboardValues['faxSent']}}
                 pts
               </ng-container>
             </td>
             <td>
-              <ng-container *ngIf="ddp.dashboardValuesPeriodDetailed['tFaxSent'] !== null && ddp.dashboardValuesPeriodDetailed['tFaxSent'] !== undefined">
-                {{ddp.dashboardValuesPeriodDetailed['tFaxSent']}} sets/
+              <ng-container *ngIf="ddp.dashboardValuesPeriodDetailed['faxSent'] !== null && ddp.dashboardValuesPeriodDetailed['faxSent'] !== undefined">
+                {{ddp.dashboardValuesPeriodDetailed['faxSent']}} sets/
               </ng-container>
-              <ng-container *ngIf="ddp.dashboardValuesPeriod['tFaxSent'] !== null && ddp.dashboardValuesPeriod['tFaxSent'] !== undefined">
-                {{ddp.dashboardValuesPeriod['tFaxSent']}} pts
+              <ng-container *ngIf="ddp.dashboardValuesPeriod['faxSent'] !== null && ddp.dashboardValuesPeriod['faxSent'] !== undefined">
+                {{ddp.dashboardValuesPeriod['faxSent']}} pts
               </ng-container>
             </td>
             <td>
@@ -711,38 +711,38 @@
           <tr *ngIf="showTissueRequestDetails">
             <td class="TD--Padding-BIG">Tissue Request 2</td>
             <td>
-              <ng-container *ngIf="ddp.dashboardValuesDetailed['tFaxSent2'] !== null && ddp.dashboardValuesDetailed['tFaxSent2'] !== undefined">
-                {{ddp.dashboardValuesDetailed['tFaxSent2']}} sets/
+              <ng-container *ngIf="ddp.dashboardValuesDetailed['faxSent2'] !== null && ddp.dashboardValuesDetailed['faxSent2'] !== undefined">
+                {{ddp.dashboardValuesDetailed['faxSent2']}} sets/
               </ng-container>
-              <ng-container *ngIf="ddp.dashboardValues['tFaxSent2'] !== null && ddp.dashboardValues['tFaxSent2'] !== undefined">
-                {{ddp.dashboardValues['tFaxSent2']}} pts
+              <ng-container *ngIf="ddp.dashboardValues['faxSent2'] !== null && ddp.dashboardValues['faxSent2'] !== undefined">
+                {{ddp.dashboardValues['faxSent2']}} pts
               </ng-container>
             </td>
             <td>
-              <ng-container *ngIf="ddp.dashboardValuesPeriodDetailed['tFaxSent2'] !== null && ddp.dashboardValuesPeriodDetailed['tFaxSent2'] !== undefined">
-                {{ddp.dashboardValuesPeriodDetailed['tFaxSent2']}} sets/
+              <ng-container *ngIf="ddp.dashboardValuesPeriodDetailed['faxSent2'] !== null && ddp.dashboardValuesPeriodDetailed['faxSent2'] !== undefined">
+                {{ddp.dashboardValuesPeriodDetailed['faxSent2']}} sets/
               </ng-container>
-              <ng-container *ngIf="ddp.dashboardValuesPeriod['tFaxSent2'] !== null && ddp.dashboardValuesPeriod['tFaxSent2'] !== undefined">
-                {{ddp.dashboardValuesPeriod['tFaxSent2']}} pts
+              <ng-container *ngIf="ddp.dashboardValuesPeriod['faxSent2'] !== null && ddp.dashboardValuesPeriod['faxSent2'] !== undefined">
+                {{ddp.dashboardValuesPeriod['faxSent2']}} pts
               </ng-container>
             </td>
           </tr>
           <tr *ngIf="showTissueRequestDetails">
             <td class="TD--Padding-BIG">Tissue Request 3</td>
             <td>
-              <ng-container *ngIf="ddp.dashboardValuesDetailed['tFaxSent3'] !== null && ddp.dashboardValuesDetailed['tFaxSent3'] !== undefined">
-                {{ddp.dashboardValuesDetailed['tFaxSent3']}} sets/
+              <ng-container *ngIf="ddp.dashboardValuesDetailed['faxSent3'] !== null && ddp.dashboardValuesDetailed['faxSent3'] !== undefined">
+                {{ddp.dashboardValuesDetailed['faxSent3']}} sets/
               </ng-container>
-              <ng-container *ngIf="ddp.dashboardValues['tFaxSent3'] !== null && ddp.dashboardValues['tFaxSent3'] !== undefined">
-                {{ddp.dashboardValues['tFaxSent3']}} pts
+              <ng-container *ngIf="ddp.dashboardValues['faxSent3'] !== null && ddp.dashboardValues['faxSent3'] !== undefined">
+                {{ddp.dashboardValues['faxSent3']}} pts
               </ng-container>
             </td>
             <td>
-              <ng-container *ngIf="ddp.dashboardValuesPeriodDetailed['tFaxSent3'] !== null && ddp.dashboardValuesPeriodDetailed['tFaxSent3'] !== undefined">
-                {{ddp.dashboardValuesPeriodDetailed['tFaxSent3']}} sets/
+              <ng-container *ngIf="ddp.dashboardValuesPeriodDetailed['faxSent3'] !== null && ddp.dashboardValuesPeriodDetailed['faxSent3'] !== undefined">
+                {{ddp.dashboardValuesPeriodDetailed['faxSent3']}} sets/
               </ng-container>
-              <ng-container *ngIf="ddp.dashboardValuesPeriod['tFaxSent3'] !== null && ddp.dashboardValuesPeriod['tFaxSent3'] !== undefined">
-                {{ddp.dashboardValuesPeriod['tFaxSent3']}} pts
+              <ng-container *ngIf="ddp.dashboardValuesPeriod['faxSent3'] !== null && ddp.dashboardValuesPeriod['faxSent3'] !== undefined">
+                {{ddp.dashboardValuesPeriod['faxSent3']}} pts
               </ng-container>
             </td>
           </tr>
@@ -757,10 +757,10 @@
               </ng-container>
               <ng-container *ngIf="ddp.dashboardValues['tissueReceived'] !== null && ddp.dashboardValues['tissueReceived'] !== undefined
               && ddp.dashboardValuesDetailed['tissueReceived'] !== null && ddp.dashboardValuesDetailed['tissueReceived'] !== undefined
-              && ddp.dashboardValues['tFaxSent'] !== null && ddp.dashboardValues['tFaxSent'] !== undefined
-              && ddp.dashboardValuesDetailed['tFaxSent'] !== null && ddp.dashboardValuesDetailed['tFaxSent'] !== undefined">
-                ({{getPercentage(ddp.dashboardValuesDetailed['tissueReceived'], ddp.dashboardValuesDetailed['tFaxSent'] )}}% sets/
-                {{getPercentage(ddp.dashboardValues['tissueReceived'], ddp.dashboardValues['tFaxSent'] )}}% pts)
+              && ddp.dashboardValues['faxSent'] !== null && ddp.dashboardValues['faxSent'] !== undefined
+              && ddp.dashboardValuesDetailed['faxSent'] !== null && ddp.dashboardValuesDetailed['faxSent'] !== undefined">
+                ({{getPercentage(ddp.dashboardValuesDetailed['tissueReceived'], ddp.dashboardValuesDetailed['faxSent'] )}}% sets/
+                {{getPercentage(ddp.dashboardValues['tissueReceived'], ddp.dashboardValues['faxSent'] )}}% pts)
               </ng-container>
             </td>
             <td>
@@ -773,10 +773,10 @@
               </ng-container>
               <ng-container *ngIf="ddp.dashboardValuesPeriodDetailed['tissueReceived'] !== null && ddp.dashboardValuesPeriodDetailed['tissueReceived'] !== undefined
               && ddp.dashboardValuesDetailed['tissueReceived'] !== null && ddp.dashboardValuesDetailed['tissueReceived'] !== undefined
-              && ddp.dashboardValuesPeriodDetailed['tFaxSent'] !== null && ddp.dashboardValuesPeriodDetailed['tFaxSent'] !== undefined
-              && ddp.dashboardValuesDetailed['tFaxSent'] !== null && ddp.dashboardValuesDetailed['tFaxSent'] !== undefined">
-                ({{getPercentage(ddp.dashboardValuesPeriodDetailed['tissueReceived'], ddp.dashboardValuesPeriodDetailed['tFaxSent'] )}}% sets/
-                {{getPercentage(ddp.dashboardValuesPeriod['tissueReceived'], ddp.dashboardValuesPeriod['tFaxSent'] )}}% pts)
+              && ddp.dashboardValuesPeriodDetailed['faxSent'] !== null && ddp.dashboardValuesPeriodDetailed['faxSent'] !== undefined
+              && ddp.dashboardValuesDetailed['faxSent'] !== null && ddp.dashboardValuesDetailed['faxSent'] !== undefined">
+                ({{getPercentage(ddp.dashboardValuesPeriodDetailed['tissueReceived'], ddp.dashboardValuesPeriodDetailed['faxSent'] )}}% sets/
+                {{getPercentage(ddp.dashboardValuesPeriod['tissueReceived'], ddp.dashboardValuesPeriod['faxSent'] )}}% pts)
               </ng-container>
             </td>
           </tr>

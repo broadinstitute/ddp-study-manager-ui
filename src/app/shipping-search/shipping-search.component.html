@@ -76,7 +76,7 @@
             <mfDefaultSorter by="trackingNumberTo">Tracking Number</mfDefaultSorter>
           </th>
           <th *ngIf="showColumn('trackingUrlReturn')">
-            <mfDefaultSorter by="trackingNumberReturn">Tracking Return</mfDefaultSorter>
+            <mfDefaultSorter by="trackingReturnId">Tracking Return</mfDefaultSorter>
           </th>
           <th *ngIf="showColumn('scanDate')">
             <mfDefaultSorter by="scanDate">Sent</mfDefaultSorter>
@@ -118,8 +118,8 @@
           <ng-container *ngIf="kitRequest.trackingUrlTo == null">{{kitRequest.trackingNumberTo}}</ng-container>
         </td>
         <td *ngIf="showColumn('trackingUrlReturn')">
-          <ng-container *ngIf="kitRequest.trackingUrlReturn != null"><a href="{{kitRequest.trackingUrlReturn}}" target="_blank">{{kitRequest.trackingNumberReturn}}</a></ng-container>
-          <ng-container *ngIf="kitRequest.trackingUrlReturn == null">{{kitRequest.trackingNumberReturn}}</ng-container>
+          <ng-container *ngIf="kitRequest.trackingUrlReturn != null"><a href="{{kitRequest.trackingUrlReturn}}" target="_blank">{{kitRequest.trackingReturnId}}</a></ng-container>
+          <ng-container *ngIf="kitRequest.trackingUrlReturn == null">{{kitRequest.trackingReturnId}}</ng-container>
         </td>
         <td *ngIf="showColumn('scanDate')">
           <ng-container *ngIf="kitRequest.scanDate === 0"> - </ng-container>

@@ -39,18 +39,18 @@
 
   <div class="Float--left Width--100">
 
-    <div *ngIf="kitType !== null && kitType.externalShipper && (shippingPage === UPLOADED || queueToPrint())">
+    <div *ngIf="kitTypeName !== null && kitTypeName.externalShipper && (shippingPage === UPLOADED || queueToPrint())">
       <h3>Kits will get sent externally</h3>
     </div>
 
-    <div *ngIf="!loading && kitRequests.length === 0 && kitType !== null">
-      <ng-container *ngIf="!(kitType.externalShipper && (shippingPage === UPLOADED || queueToPrint()))">
+    <div *ngIf="!loading && kitRequests.length === 0 && kitTypeName !== null">
+      <ng-container *ngIf="!(kitTypeName.externalShipper && (shippingPage === UPLOADED || queueToPrint()))">
         <h4>There are no kit requests</h4>
       </ng-container>
     </div>
 
-    <div class="Width--100" *ngIf="kitType !== null">
-      <ng-container *ngIf="!(kitType.externalShipper && queueToPrint())">
+    <div class="Width--100" *ngIf="kitTypeName !== null">
+      <ng-container *ngIf="!(kitTypeName.externalShipper && queueToPrint())">
         <button class="Float--right" mat-raised-button (click)="reload()" color="primary" [disabled]="loading">Reload Kit List</button>
       </ng-container>
     </div>
@@ -63,7 +63,7 @@
              [mfSortBy]="sort_field" [(mfSortOrder)]="sort_dir">
         <thead>
         <tr>
-          <th *ngIf="getRole().allowedToHandleSamples() && (queueToPrint() || shippingPage === UPLOADED) && !kitType.externalShipper" class="Line--Break">Print Kit
+          <th *ngIf="getRole().allowedToHandleSamples() && (queueToPrint() || shippingPage === UPLOADED) && !kitTypeName.externalShipper" class="Line--Break">Print Kit
 <mat-checkbox color="primary" disableRipple [checked]="allSelected" (change)="allSelected = $event.checked; allChecked()"></mat-checkbox></th>
           <th>
             <mfDefaultSorter by="collaboratorParticipantId">Short ID</mfDefaultSorter>
@@ -71,29 +71,29 @@
           <th *ngIf="(shippingPage === UPLOADED || shippingPage === QUEUE || shippingPage === ERROR) && showPreferredLanguage()">
             <mfDefaultSorter by="preferredLanguage">Preferred Language</mfDefaultSorter>
           </th>
-          <th *ngIf="shippingPage !== DEACTIVATED && !kitType.externalShipper">
+          <th *ngIf="shippingPage !== DEACTIVATED && !kitTypeName.externalShipper">
             <mfDefaultSorter by="shippingId">Shipping ID</mfDefaultSorter>
           </th>
-          <th *ngIf="shippingPage !== DEACTIVATED && kitType.externalShipper">
+          <th *ngIf="shippingPage !== DEACTIVATED && kitTypeName.externalShipper">
             <mfDefaultSorter by="shippingId">External Shipping ID</mfDefaultSorter>
           </th>
-          <th *ngIf="shippingPage !== DEACTIVATED && kitType.externalShipper">
+          <th *ngIf="shippingPage !== DEACTIVATED && kitTypeName.externalShipper">
             <mfDefaultSorter by="shippingId">External Shipping Status</mfDefaultSorter>
           </th>
           <th *ngIf="shippingPage === ERROR">
             <mfDefaultSorter by="message">Error Reason</mfDefaultSorter>
           </th>
-          <th *ngIf="shippingPage === DEACTIVATED || shippingPage === OVERVIEW && !kitType.externalShipper">
+          <th *ngIf="shippingPage === DEACTIVATED || shippingPage === OVERVIEW && !kitTypeName.externalShipper">
             <mfDefaultSorter by="reason">Deactivation Reason</mfDefaultSorter>
           </th>
-          <th *ngIf="shippingPage === DEACTIVATED || shippingPage === OVERVIEW && !kitType.externalShipper">
+          <th *ngIf="shippingPage === DEACTIVATED || shippingPage === OVERVIEW && !kitTypeName.externalShipper">
             <mfDefaultSorter by="deactivatedDate">Deactivated</mfDefaultSorter>
           </th>
           <th *ngIf="shippingPage === SENT">
             <mfDefaultSorter by="trackingNumberTo">Tracking Number</mfDefaultSorter>
           </th>
           <th *ngIf="shippingPage === SENT">
-            <mfDefaultSorter by="trackingNumberReturn">Tracking Return</mfDefaultSorter>
+            <mfDefaultSorter by="trackingReturnId">Tracking Return</mfDefaultSorter>
           </th>
           <th *ngIf="shippingPage === SENT || shippingPage === OVERVIEW">
             <mfDefaultSorter by="scanDate">Sent</mfDefaultSorter>
@@ -116,31 +116,31 @@
           <th *ngIf="getRole().allowedToCreateExpressLabels() && shippingPage === QUEUE">
           </th>
           <th *ngIf="kitsWithNoReturn">Return to Broad</th>
-          <th *ngIf="queueToPrint() && kitType.manualSentTrack" class="Line--Break">Kit Sent
+          <th *ngIf="queueToPrint() && kitTypeName.manualSentTrack" class="Line--Break">Kit Sent
             <mat-checkbox color="primary" [checked]="allSentSelected" (change)="allSentSelected = $event.checked; allSentChecked()" disableRipple></mat-checkbox>
           </th>
         </tr>
         <tr>
-          <th *ngIf="getRole().allowedToHandleSamples() && (queueToPrint() || shippingPage === UPLOADED) && !kitType.externalShipper" class="Line--Break">
+          <th *ngIf="getRole().allowedToHandleSamples() && (queueToPrint() || shippingPage === UPLOADED) && !kitTypeName.externalShipper" class="Line--Break">
           </th>
           <th>
             <input class="form-control" [(ngModel)]="shortId"/>
           </th>
           <th *ngIf="(shippingPage === UPLOADED || shippingPage === QUEUE || shippingPage === ERROR) && showPreferredLanguage()">
           </th>
-          <th *ngIf="shippingPage !== DEACTIVATED && !kitType.externalShipper">
+          <th *ngIf="shippingPage !== DEACTIVATED && !kitTypeName.externalShipper">
             <input class="form-control" [(ngModel)]="shippingId"/>
           </th>
-          <th *ngIf="shippingPage !== DEACTIVATED && kitType.externalShipper">
+          <th *ngIf="shippingPage !== DEACTIVATED && kitTypeName.externalShipper">
           </th>
-          <th *ngIf="shippingPage !== DEACTIVATED && kitType.externalShipper">
+          <th *ngIf="shippingPage !== DEACTIVATED && kitTypeName.externalShipper">
           </th>
           <th *ngIf="shippingPage === ERROR">
           </th>
-          <th *ngIf="shippingPage === DEACTIVATED || shippingPage === OVERVIEW && !kitType.externalShipper">
+          <th *ngIf="shippingPage === DEACTIVATED || shippingPage === OVERVIEW && !kitTypeName.externalShipper">
             <input class="form-control" [(ngModel)]="reason"/>
           </th>
-          <th *ngIf="shippingPage === DEACTIVATED && !kitType.externalShipper">
+          <th *ngIf="shippingPage === DEACTIVATED && !kitTypeName.externalShipper">
           </th>
           <th *ngIf="shippingPage === SENT">
             <input class="form-control" [(ngModel)]="trackingTo"/>
@@ -167,12 +167,12 @@
           <th *ngIf="kitsWithNoReturn">
             <input class="form-control" [(ngModel)]="noReturn"/>noReturn
           </th>
-          <th *ngIf="getRole().allowedToHandleSamples() && queueToPrint() && kitType.manualSentTrack" class="Line--Break"></th>
+          <th *ngIf="getRole().allowedToHandleSamples() && queueToPrint() && kitTypeName.manualSentTrack" class="Line--Break"></th>
         </tr>
         </thead>
         <tbody>
         <tr *ngFor="let kitRequest of mf.data; let i = index">
-          <td *ngIf="getRole().allowedToHandleSamples() && (queueToPrint() || shippingPage === UPLOADED) && !kitType.externalShipper">
+          <td *ngIf="getRole().allowedToHandleSamples() && (queueToPrint() || shippingPage === UPLOADED) && !kitTypeName.externalShipper">
             <ng-container *ngIf="(shippingPage === UPLOADED && kitRequest.labelTriggeredDate == 0) || queueToPrint()">
               <mat-checkbox color="primary" disableRipple
                            [checked]="kitRequest.isSelected" (click)="shiftClick(i, $event)"
@@ -192,12 +192,12 @@
           <td *ngIf="(shippingPage === UPLOADED || shippingPage === QUEUE || shippingPage === ERROR) && showPreferredLanguage()">
             <ng-container *ngIf="kitRequest.preferredLanguage != null && kitRequest.preferredLanguage !== ''">{{getLanguage().getLanguageName(kitRequest.preferredLanguage)}}</ng-container>
           </td>
-          <td *ngIf="shippingPage !== DEACTIVATED && !kitType.externalShipper" class="Line--Break">{{kitRequest.shippingId}}</td>
-          <td *ngIf="shippingPage !== DEACTIVATED && kitType.externalShipper" class="Line--Break">{{kitRequest.externalOrderNumber}}</td>
-          <td *ngIf="shippingPage !== DEACTIVATED && kitType.externalShipper" class="Line--Break">{{kitRequest.externalOrderStatus}}</td>
+          <td *ngIf="shippingPage !== DEACTIVATED && !kitTypeName.externalShipper" class="Line--Break">{{kitRequest.shippingId}}</td>
+          <td *ngIf="shippingPage !== DEACTIVATED && kitTypeName.externalShipper" class="Line--Break">{{kitRequest.externalOrderNumber}}</td>
+          <td *ngIf="shippingPage !== DEACTIVATED && kitTypeName.externalShipper" class="Line--Break">{{kitRequest.externalOrderStatus}}</td>
           <td *ngIf="shippingPage === ERROR" class="Line--Break">{{kitRequest.getError()}}</td>
-          <td *ngIf="shippingPage === DEACTIVATED || shippingPage === OVERVIEW && !kitType.externalShipper">{{kitRequest.deactivationReason}}</td>
-          <td *ngIf="shippingPage === DEACTIVATED || shippingPage === OVERVIEW && !kitType.externalShipper">
+          <td *ngIf="shippingPage === DEACTIVATED || shippingPage === OVERVIEW && !kitTypeName.externalShipper">{{kitRequest.deactivationReason}}</td>
+          <td *ngIf="shippingPage === DEACTIVATED || shippingPage === OVERVIEW && !kitTypeName.externalShipper">
             <ng-container *ngIf="kitRequest.deactivatedDate === 0"> -</ng-container>
             <ng-container *ngIf="kitRequest.deactivatedDate !== 0">{{kitRequest.deactivatedDate | date:'medium'}}</ng-container>
           </td>
@@ -207,9 +207,9 @@
             <ng-container *ngIf="kitRequest.trackingUrlTo == null">{{kitRequest.trackingNumberTo}}</ng-container>
           </td>
           <td *ngIf="shippingPage === SENT">
-            <ng-container *ngIf="kitRequest.trackingUrlReturn != null">{{kitRequest.trackingNumberReturn}}
+            <ng-container *ngIf="kitRequest.trackingUrlReturn != null">{{kitRequest.trackingReturnId}}
             </ng-container>
-            <ng-container *ngIf="kitRequest.trackingUrlReturn == null">{{kitRequest.trackingNumberReturn}}</ng-container>
+            <ng-container *ngIf="kitRequest.trackingUrlReturn == null">{{kitRequest.trackingReturnId}}</ng-container>
           </td>
           <td *ngIf="shippingPage === SENT || shippingPage === OVERVIEW">
             <ng-container *ngIf="kitRequest.scanDate === 0"> -</ng-container>
@@ -223,13 +223,13 @@
             {{kitRequest.kitLabel}}
           </td>
           <td>{{kitRequest.realm}}</td>
-          <td>{{kitRequest.kitType}}</td>
+          <td>{{kitRequest.kitTypeName}}</td>
           <td
             *ngIf="getRole().allowedToDeactivateKits() && (shippingPage === DEACTIVATED || (shippingPage !== DEACTIVATED && (queueToPrint() || shippingPage === UPLOADED)))">
-            <button *ngIf="shippingPage !== DEACTIVATED && (queueToPrint() || shippingPage === UPLOADED) && !kitType.externalShipper" type="button"
+            <button *ngIf="shippingPage !== DEACTIVATED && (queueToPrint() || shippingPage === UPLOADED) && !kitTypeName.externalShipper" type="button"
                     (click)="setKitRequest(kitRequest, DEACTIVATED); modal.show()" class="btn btn-xs Button--Background--Color">Deactivate
             </button>
-            <button *ngIf="shippingPage === DEACTIVATED && !kitType.externalShipper" type="button" (click)="activateKitRequest(kitRequest, false)"
+            <button *ngIf="shippingPage === DEACTIVATED && !kitTypeName.externalShipper" type="button" (click)="activateKitRequest(kitRequest, false)"
                     class="btn btn-xs Button--Background--Color">Reactivate
             </button>
           </td>
@@ -240,7 +240,7 @@
           </td>
           <td *ngIf="kitsWithNoReturn">{{getUtil().getYesNo(!kitRequest.noReturn)}}
           </td>
-          <td *ngIf="getRole().allowedToHandleSamples() && queueToPrint() && kitType.manualSentTrack">
+          <td *ngIf="getRole().allowedToHandleSamples() && queueToPrint() && kitTypeName.manualSentTrack">
             <mat-checkbox color="primary" [checked]="kitRequest.setSent" (change)="kitRequest.setSent = $event.checked; sentCheckboxChecked()"
                          disableRipple></mat-checkbox>
           </td>
@@ -274,12 +274,12 @@
         </button>
 
         <button mat-raised-button color="primary"
-                *ngIf="kitType.manualSentTrack"
+                *ngIf="kitTypeName.manualSentTrack"
                 (click)="setKitSent()" [disabled]="isSentButtonDisabled">Set Kit Sent
         </button>
       </div>
 
-      <div *ngIf="getRole().allowedToHandleSamples() && shippingPage === UPLOADED && kitType != null && !kitType.externalShipper">
+      <div *ngIf="getRole().allowedToHandleSamples() && shippingPage === UPLOADED && kitTypeName != null && !kitTypeName.externalShipper">
         <button mat-raised-button (click)="triggerLabelCreation()" color="primary" [disabled]="isPrintButtonDisabled">Create Labels</button>
       </div>
       <div *ngIf="getRole().allowedToHandleSamples() && (shippingPage === UPLOADED || queueToPrint())">

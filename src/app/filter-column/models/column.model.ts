@@ -21,6 +21,7 @@ export class ParticipantColumn {
   public static DIAGNOSIS_MONTH = new ParticipantColumn( "Diagnosis Month", "diagnosisMonth", "data", "dsm" );
   public static DIAGNOSIS_YEAR = new ParticipantColumn( "Diagnosis Year", "diagnosisYear", "data", "dsm" );
 
+  // oncHistory columns
   public static ONC_HISTORY_CREATED = new ParticipantColumn("Onc History Created", "createdOncHistory", "o");
   public static ONC_HISTORY_REVIEWED = new ParticipantColumn("Onc History Reviewed", "reviewedOncHistory", "o");
   public static PAPER_CR_SENT = new ParticipantColumn("Paper C/R Sent", "crSent", "r");
@@ -114,7 +115,7 @@ export class ParticipantColumn {
 
   //kit
   public static COLLABORATOR_SAMPLE = new ParticipantColumn("Collaborator Sample ID", "bspCollaboratorSampleId", "k");
-  public static SAMPLE_TYPE = new ParticipantColumn("Sample Type", "kitTypeName", "k");
+  public static SAMPLE_TYPE = new ParticipantColumn("Sample Type", "kitType", "k");
   public static SAMPLE_SENT = new ParticipantColumn("Sample Sent", "scanDate", "k");
   public static SAMPLE_RECEIVED = new ParticipantColumn("Sample Received", "receiveDate", "k");
   public static SAMPLE_DEACTIVATION = new ParticipantColumn("Sample Deactivation", "deactivatedDate", "k");  
@@ -127,7 +128,8 @@ export class ParticipantColumn {
   public static EXTERNAL_ORDER_DATE = new ParticipantColumn("External Order Date", "externalOrderDate", "k");
   public static CARE_EVOLVE = new ParticipantColumn("Ordered at CareEvolve", "careEvolve", "k");
   public static UPLOAD_REASON = new ParticipantColumn("Upload Reason", "uploadReason", "k");
-  public static RESULT_TEST = new ParticipantColumn("Test Result", "testResult", "k", "testResult");
+  public static RESULT_TEST = new ParticipantColumn("Test Result", "result", "k", "testResult");
+
   public static SAMPLE_QUEUE = new ParticipantColumn("Status", "sampleQueue", "k");
   public static CORRECTED_TEST = new ParticipantColumn("Test Corrected", "isCorrected", "k", "testResult");
   public static TIME_TEST = new ParticipantColumn("Test Time Completed", "timeCompleted", "k", "testResult");
