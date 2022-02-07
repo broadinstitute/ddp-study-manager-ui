@@ -131,7 +131,7 @@ export class DSMService {
     );
   }
 
-  public filterData( realm: string, json: string, parent: string, defaultFilter: boolean, from: number = 0, to: number = this.role.getUserSetting().getRowsPerPage() ): Observable<any> {
+  public filterData( realm: string, json: string, parent: string, defaultFilter: boolean, from: number = 0, to: number = this.role.getUserSetting().getRowsPerPage(), sortBy? : Filter ): Observable<any> {
     let url = this.baseUrl + DSMService.UI + "filterList";
     let map: { name: string, value: any }[] = [];
     map.push( {name: DSMService.REALM, value: realm} );
