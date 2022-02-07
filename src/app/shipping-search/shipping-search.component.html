@@ -111,7 +111,7 @@
         <td>
           {{kitRequest.kitLabel}}
         </td>
-        <td *ngIf="showColumn('kitType')">{{kitRequest.kitType}}</td>
+        <td *ngIf="showColumn('kitTypeName')">{{kitRequest.kitTypeName}}</td>
         <td *ngIf="showColumn('message')">{{kitRequest.getError()}}</td>
         <td *ngIf="showColumn('trackingUrlTo')">
           <ng-container *ngIf="kitRequest.trackingUrlTo != null"><a href="{{kitRequest.trackingUrlTo}}" target="_blank">{{kitRequest.trackingNumberTo}}</a></ng-container>

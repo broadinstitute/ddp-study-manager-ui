@@ -8,7 +8,7 @@ export class KitRequest {
   public setSent: boolean = false;
 
   constructor( public participantId: string, public collaboratorParticipantId: string, public bspCollaboratorSampleId: string, public realm: string,
-               public kitType: string, public dsmKitRequestId: string, public dsmKitId: string,
+               public kitTypeName: string, public dsmKitRequestId: string, public dsmKitId: string,
                public shippingId: string, public labelUrlTo: string, public labelUrlReturn: string,
                public trackingNumberTo: string, public trackingReturnId: string, public trackingUrlTo: string,
                public trackingUrlReturn: string, public scanDate: number, public error: boolean, public message: string,
@@ -20,7 +20,7 @@ export class KitRequest {
     this.collaboratorParticipantId = collaboratorParticipantId;
     this.bspCollaboratorSampleId = bspCollaboratorSampleId;
     this.realm = realm;
-    this.kitType = kitType;
+    this.kitTypeName = kitTypeName;
     this.dsmKitRequestId = dsmKitRequestId;
     this.dsmKitId = dsmKitId;
     this.shippingId = shippingId;
@@ -99,7 +99,7 @@ export class KitRequest {
   }
 
   static parse( json ): KitRequest {
-    return new KitRequest( json.participantId, json.collaboratorParticipantId, json.bspCollaboratorSampleId, json.realm, json.kitType, json.dsmKitRequestId, json.dsmKitId,
+    return new KitRequest( json.participantId, json.collaboratorParticipantId, json.bspCollaboratorSampleId, json.realm, json.kitTypeName, json.dsmKitRequestId, json.dsmKitId,
       json.shippingId, json.labelUrlTo, json.labelUrlReturn,
       json.trackingNumberTo, json.trackingReturnId, json.trackingUrlTo,
       json.trackingUrlReturn, json.scanDate, json.error, json.message,
