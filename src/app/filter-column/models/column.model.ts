@@ -22,8 +22,8 @@ export class ParticipantColumn {
   public static DIAGNOSIS_YEAR = new ParticipantColumn( "Diagnosis Year", "diagnosisYear", "data", "dsm" );
 
   // oncHistory columns
-  public static ONC_HISTORY_CREATED = new ParticipantColumn("Onc History Created", "createdOncHistory", "o");
-  public static ONC_HISTORY_REVIEWED = new ParticipantColumn("Onc History Reviewed", "reviewedOncHistory", "o");
+  public static ONC_HISTORY_CREATED = new ParticipantColumn("Onc History Created", "created", "o");
+  public static ONC_HISTORY_REVIEWED = new ParticipantColumn("Onc History Reviewed", "reviewed", "o");
   public static PAPER_CR_SENT = new ParticipantColumn("Paper C/R Sent", "crSent", "r");
   public static PAPER_CR_RECEIVED = new ParticipantColumn("Paper C/R Received", "crReceived", "r");
   public static PARTICIPANT_NOTES = new ParticipantColumn("Participant Notes", "notes", "r");

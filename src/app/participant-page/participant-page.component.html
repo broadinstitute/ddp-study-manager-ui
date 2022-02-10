@@ -403,17 +403,17 @@ participant.data.dsm['diagnosisYear'] != null">
             <td>Onc History Created</td>
             <td>
               <div class="Float--left">
-                <app-field-datepicker [dateString]="participant.participant.createdOncHistory"
+                <app-field-datepicker [dateString]="participant.participant.created"
                                       [disabled]="participantExited"
-                                      [colorDuringPatch]="isPatchedCurrently('createdOncHistory')"
-                                      (dateChanged)="valueChanged($event, 'createdOncHistory', 'o')"></app-field-datepicker>
+                                      [colorDuringPatch]="isPatchedCurrently('created')"
+                                      (dateChanged)="valueChanged($event, 'created', 'o')"></app-field-datepicker>
               </div>
-              <div *ngIf="participant.participant.createdOncHistory != null" class="Float--left Router--Outlet">Onc
+              <div *ngIf="participant.participant.created != null" class="Float--left Router--Outlet">Onc
                 History Reviewed
-                <app-field-datepicker [dateString]="participant.participant.reviewedOncHistory"
+                <app-field-datepicker [dateString]="participant.participant.reviewed"
                                       [disabled]="participantExited"
-                                      [colorDuringPatch]="isPatchedCurrently('reviewedOncHistory')"
-                                      (dateChanged)="valueChanged($event, 'reviewedOncHistory', 'o')"></app-field-datepicker>
+                                      [colorDuringPatch]="isPatchedCurrently('reviewed')"
+                                      (dateChanged)="valueChanged($event, 'reviewed', 'o')"></app-field-datepicker>
               </div>
             </td>
           </tr>
