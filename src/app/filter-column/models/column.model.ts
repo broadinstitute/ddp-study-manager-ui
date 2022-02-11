@@ -21,15 +21,16 @@ export class ParticipantColumn {
   public static DIAGNOSIS_MONTH = new ParticipantColumn( "Diagnosis Month", "diagnosisMonth", "data", "dsm" );
   public static DIAGNOSIS_YEAR = new ParticipantColumn( "Diagnosis Year", "diagnosisYear", "data", "dsm" );
 
+  // oncHistory columns
   public static ONC_HISTORY_CREATED = new ParticipantColumn("Onc History Created", "createdOncHistory", "o");
   public static ONC_HISTORY_REVIEWED = new ParticipantColumn("Onc History Reviewed", "reviewedOncHistory", "o");
   public static PAPER_CR_SENT = new ParticipantColumn("Paper C/R Sent", "crSent", "r");
   public static PAPER_CR_RECEIVED = new ParticipantColumn("Paper C/R Received", "crReceived", "r");
   public static PARTICIPANT_NOTES = new ParticipantColumn("Participant Notes", "notes", "r");
-  public static MINIMAL_RECORDS = new ParticipantColumn("Incomplete/Minimal Medical Records", "minimalMR", "r");
+  public static MINIMAL_RECORDS = new ParticipantColumn("Incomplete/Minimal Medical Records", "minimalMr", "r");
   public static ABSTRACTION_READY = new ParticipantColumn("Ready for Abstraction", "abstractionReady", "r");
-  public static ASSIGNEE_MR = new ParticipantColumn("MR Assignee", "assigneeMr", "p");
-  public static ASSIGNEE_TISSUE = new ParticipantColumn("Tissue Assignee", "assigneeTissue", "p");
+  public static ASSIGNEE_MR = new ParticipantColumn("MR Assignee", "assigneeIdMr", "p");
+  public static ASSIGNEE_TISSUE = new ParticipantColumn("Tissue Assignee", "assigneeIdTissue", "p");
   public static EXIT_DATE = new ParticipantColumn("Date Withdrawn", "exitDate", "ex");
 
   //mr columns
@@ -57,25 +58,25 @@ export class ParticipantColumn {
   public static MR_FOLLOW_REQUIRED = new ParticipantColumn("Follow-Up required", "followupRequired", "m");
   public static MR_FOLLOW_REQUIRED_TEXT = new ParticipantColumn("Follow-Up required Text", "followupRequiredText", "m");
 
-  //oncHistory columns
+  //oncHistoryDetail columns
   public static ACCESSION_NUMBER = new ParticipantColumn("Accession Number", "accessionNumber", "oD");
   public static DATE_PX = new ParticipantColumn("Date of PX", "datePx", "oD");
   public static TYPE_PX = new ParticipantColumn("Type of PX", "typePx", "oD");
   public static FACILITY = new ParticipantColumn("Facility", "facility", "oD");
-  public static FACILITY_PHONE = new ParticipantColumn("Facility Phone", "fPhone", "oD");
-  public static FACILITY_FAX = new ParticipantColumn("Facility Fax", "fFax", "oD");
+  public static FACILITY_PHONE = new ParticipantColumn("Facility Phone", "phone", "oD");
+  public static FACILITY_FAX = new ParticipantColumn("Facility Fax", "fax", "oD");
   public static HISTOLOGY = new ParticipantColumn("Histology", "histology", "oD");
   public static LOCATION_PX = new ParticipantColumn("Location of PX", "locationPx", "oD");
-  public static ONC_HISTORY_NOTES = new ParticipantColumn("OncHistory Notes", "oncHisNotes", "oD");
+  public static ONC_HISTORY_NOTES = new ParticipantColumn("OncHistory Notes", "notes", "oD");
   public static ONC_HISTORY_REQUEST = new ParticipantColumn("Request Status", "request", "oD");
-  public static TISSUE_FAX = new ParticipantColumn("Tissue Request Date", "tFaxSent", "oD");
-  public static TISSUE_FAX_2 = new ParticipantColumn("Tissue Request Date 2", "tFaxSent2", "oD");
-  public static TISSUE_FAX_3 = new ParticipantColumn("Tissue Request Date 3", "tFaxSent3", "oD");
+  public static TISSUE_FAX = new ParticipantColumn("Tissue Request Date", "faxSent", "oD");
+  public static TISSUE_FAX_2 = new ParticipantColumn("Tissue Request Date 2", "faxSent2", "oD");
+  public static TISSUE_FAX_3 = new ParticipantColumn("Tissue Request Date 3", "faxSent3", "oD");
   public static TISSUE_RECEIVED = new ParticipantColumn("Tissue Received", "tissueReceived", "oD");
   public static GENDER = new ParticipantColumn("Gender", "gender", "oD");
   public static DESTRUCTION_POLICY = new ParticipantColumn("Destruction Policy (years)", "destructionPolicy", "oD");
   public static TISSUE_PROBLEM_OPTION = new ParticipantColumn("Problem with Tissue", "tissueProblemOption", "oD");
-  public static UNABLE_OBTAIN_TISSUE = new ParticipantColumn("Unable To Obtain", "unableToObtain", "oD");
+  public static UNABLE_OBTAIN_TISSUE = new ParticipantColumn("Unable To Obtain", "unableObtainTissue", "oD");
 
   //tissue column
   public static COUNT_RECEIVED = new ParticipantColumn("Count Received", "countReceived", "t");
@@ -117,10 +118,9 @@ export class ParticipantColumn {
   public static SAMPLE_TYPE = new ParticipantColumn("Sample Type", "kitType", "k");
   public static SAMPLE_SENT = new ParticipantColumn("Sample Sent", "scanDate", "k");
   public static SAMPLE_RECEIVED = new ParticipantColumn("Sample Received", "receiveDate", "k");
-  public static SAMPLE_DEACTIVATION = new ParticipantColumn("Sample Deactivation", "deactivatedDate", "k");
-  public static SAMPLE_QUEUE = new ParticipantColumn("Status", "sampleQueue", "k");
+  public static SAMPLE_DEACTIVATION = new ParticipantColumn("Sample Deactivation", "deactivatedDate", "k");  
   public static TRACKING_TO_PARTICIPANT = new ParticipantColumn("Tracking-out", "trackingNumberTo", "k");
-  public static TRACKING_RETURN = new ParticipantColumn("Tracking-in", "trackingNumberReturn", "k");
+  public static TRACKING_RETURN = new ParticipantColumn("Tracking-in", "trackingReturnId", "k");
   public static MF_BARCODE = new ParticipantColumn("MF code", "kitLabel", "k");
   public static STATUS_OUT = new ParticipantColumn("Status-out", "upsTrackingStatus", "k");
   public static STATUS_IN = new ParticipantColumn("Status-in", "upsReturnStatus", "k");
@@ -129,6 +129,8 @@ export class ParticipantColumn {
   public static CARE_EVOLVE = new ParticipantColumn("Ordered at CareEvolve", "careEvolve", "k");
   public static UPLOAD_REASON = new ParticipantColumn("Upload Reason", "uploadReason", "k");
   public static RESULT_TEST = new ParticipantColumn("Test Result", "result", "k", "testResult");
+
+  public static SAMPLE_QUEUE = new ParticipantColumn("Status", "sampleQueue", "k");
   public static CORRECTED_TEST = new ParticipantColumn("Test Corrected", "isCorrected", "k", "testResult");
   public static TIME_TEST = new ParticipantColumn("Test Time Completed", "timeCompleted", "k", "testResult");
 

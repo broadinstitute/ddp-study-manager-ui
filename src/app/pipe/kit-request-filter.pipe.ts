@@ -21,7 +21,7 @@ export class KitRequestFilterPipe implements PipeTransform {
       return array.filter( row => row.trackingNumberTo != null && row.trackingNumberTo.indexOf(filterTrackingTo) > -1);
     }
     if (filterTrackingReturn != "") {
-      return array.filter( row => (row.trackingNumberReturn != null && row.trackingNumberReturn.indexOf(filterTrackingReturn) > -1));
+      return array.filter( row => (row.trackingReturnId != null && row.trackingReturnId.indexOf(filterTrackingReturn) > -1));
     }
     if (filterMfCode != "") {
       return array.filter( row => row.kitLabel != null && row.kitLabel.indexOf(filterMfCode) > -1);

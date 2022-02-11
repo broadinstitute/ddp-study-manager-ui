@@ -47,6 +47,7 @@ export class DSMService {
       url += "finalScan";
     }
     let map: { name: string, value: any }[] = [];
+    map.push( {name: DSMService.REALM, value: localStorage.getItem(ComponentService.MENU_SELECTED_REALM)} );
     map.push( {name: "userId", value: this.role.userID()} );
     return this.http.post(url, json, this.buildQueryHeader(map)).pipe(
       catchError(this.handleError.bind(this))
@@ -57,6 +58,7 @@ export class DSMService {
     let url = this.baseUrl + DSMService.UI + "receivedKits";
     let map: { name: string, value: any }[] = [];
     map.push( {name: "userId", value: this.role.userID()} );
+    map.push( {name: DSMService.REALM, value: localStorage.getItem(ComponentService.MENU_SELECTED_REALM)} );
     return this.http.post(url, json, this.buildQueryHeader(map)).pipe(
       catchError(this.handleError.bind(this))
     );
@@ -79,6 +81,7 @@ export class DSMService {
   public setKitSentRequest( json: string ) {
     let url = this.baseUrl + DSMService.UI + "sentKits";
     let map: { name: string, value: any }[] = [];
+    map.push( {name: DSMService.REALM, value: localStorage.getItem(ComponentService.MENU_SELECTED_REALM)} );
     map.push( {name: "userId", value: this.role.userID()} );
     return this.http.post(url, json, this.buildQueryHeader(map)).pipe(
       catchError(this.handleError.bind(this))
@@ -548,12 +551,13 @@ export class DSMService {
     map.push( {name: "userId", value: this.role.userID()} );
     return this.http.post(url, null, this.buildQueryHeader(map)).pipe(
       catchError(this.handleError)
-    );
-  }
-
-  public singleKitLabel( kitJson: string ): Observable<any> {
+      );
+    }
+    
+    public singleKitLabel(realm: string, kitJson: string ): Observable<any> {
     let url = this.baseUrl + DSMService.UI + "kitLabel";
     let map: { name: string, value: any }[] = [];
+    map.push( {name: DSMService.REALM, value: realm} );
     map.push( {name: "userId", value: this.role.userID()} );
     return this.http.post(url, kitJson, this.buildQueryHeader(map)).pipe(
       catchError(this.handleError)

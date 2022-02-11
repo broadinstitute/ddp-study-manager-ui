@@ -38,11 +38,11 @@
         </tr>
         <tr *ngIf="participant.participant != null">
           <td>Assignee</td>
-          <td>{{participant.participant.assigneeTissue}}</td>
+          <td>{{participant.participant.assigneeIdTissue}}</td>
         </tr>
         <tr>
           <td>Request Status</td>
-          <td>{{oncHistoryDetail.request === 'unableToObtain' ? 'Unable To Obtain' : oncHistoryDetail.request | titlecase}}</td>
+          <td>{{oncHistoryDetail.request === 'unableObtainTissue' ? 'Unable To Obtain' : oncHistoryDetail.request | titlecase}}</td>
         </tr>
         <tr>
           <td>Short ID</td>
@@ -97,12 +97,12 @@
         </tr>
         <tr>
           <td>Phone</td>
-          <td>{{oncHistoryDetail.fPhone}}</td>
+          <td>{{oncHistoryDetail.phone}}</td>
         </tr>
         <tr>
           <td>Fax</td>
           <td>
-            {{oncHistoryDetail.fFax}}
+            {{oncHistoryDetail.fax}}
           </td>
         </tr>
         </tbody>
@@ -168,8 +168,8 @@
         <td>
           <mat-checkbox [(ngModel)]="oncHistoryDetail.unableObtainTissue" (change)="valueChanged($event, 'unableObtainTissue')"
                        [disabled]="participantExited"
-                       [color]="isCheckboxPatchedCurrently('unableToObtain')" (blur)="currentField(null)"
-                       (focus)="currentField('unableToObtain')"></mat-checkbox>
+                       [color]="isCheckboxPatchedCurrently('unableObtainTissue')" (blur)="currentField(null)"
+                       (focus)="currentField('unableObtainTissue')"></mat-checkbox>
           Unable to Obtain
         </td>
       </tr>

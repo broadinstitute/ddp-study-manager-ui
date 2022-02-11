@@ -164,13 +164,13 @@
           </td>
         </ng-container>
         <td>
-          <button mat-mini-fab [color]="getNoteButtonColorStyle(oncHis.oncHisNotes)" placement="left"
-                  tooltip='{{oncHis.oncHisNotes}}' [disabled]="participantExited"
+          <button mat-mini-fab [color]="getNoteButtonColorStyle(oncHis.notes)" placement="left"
+                  tooltip='{{oncHis.notes}}' [disabled]="participantExited"
                   (click)="openNoteModal(i); oncHisNoteModal.show()">
             <i class="fas fa-comment-alt fa-lg" data-fa-transform="down-2"></i>
           </button>
         </td>
-        <td *ngIf="oncHis.request !== 'unableToObtain'">
+        <td *ngIf="oncHis.request !== 'unableObtainTissue'">
           <mat-select [(ngModel)]="oncHis.request" (selectionChange)="onRequestChange(i)" [disabled]="!editable || participantExited"
                      [ngClass]="{'Color--Field--Patched': isPatchedCurrently('request', i)}">
             <mat-option value="review">Needs Review</mat-option>
@@ -180,10 +180,10 @@
             <mat-option value="sent" disabled>Sent</mat-option>
             <mat-option value="received" disabled>Received</mat-option>
             <mat-option value="returned" disabled>Returned</mat-option>
-            <mat-option value="unableToObtain" disabled>Unable To Obtain</mat-option>
+            <mat-option value="unableObtainTissue" disabled>Unable To Obtain</mat-option>
           </mat-select>
         </td>
-        <td *ngIf="oncHis.request === 'unableToObtain'">
+        <td *ngIf="oncHis.request === 'unableObtainTissue'">
           Unable To Obtain
         </td>
         <td>

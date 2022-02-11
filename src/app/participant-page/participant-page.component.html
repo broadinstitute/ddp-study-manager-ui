@@ -606,12 +606,12 @@ participant.data.dsm['diagnosisYear'] != null">
                       <tr *ngIf="sample.upsTrackingStatus != null">
                         <td class="TD--Padding-Left Width--50">{{sample.upsTrackingStatus}}</td>
                       </tr>
-                      <hr *ngIf="sample.trackingNumberReturn != null"style="border-color: lightgray">
-                      <tr *ngIf="sample.trackingNumberReturn != null">
+                      <hr *ngIf="sample.trackingReturnId != null"style="border-color: lightgray">
+                      <tr *ngIf="sample.trackingReturnId != null">
                         <td class="TD--Padding Width--50 Data-Display-Question">Tracking-in:</td>
                       </tr>
-                      <tr *ngIf="sample.trackingNumberReturn != null">
-                        <td class="TD--Padding-Left Width--50">{{sample.trackingNumberReturn}}</td>
+                      <tr *ngIf="sample.trackingReturnId != null">
+                        <td class="TD--Padding-Left Width--50">{{sample.trackingReturnId}}</td>
                       </tr>
                       <hr *ngIf="sample.upsReturnStatus != null"style="border-color: lightgray">
                       <tr *ngIf="sample.upsReturnStatus != null">

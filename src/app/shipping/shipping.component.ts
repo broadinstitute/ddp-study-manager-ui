@@ -702,7 +702,7 @@ export class ShippingComponent implements OnInit {
   triggerLabelCreation() {
     this.loading = true;
     let cleanedKits: Array<KitRequest> = KitRequest.removeUnselectedKitRequests( this.kitRequests );
-    this.dsmService.singleKitLabel( JSON.stringify( cleanedKits ) ).subscribe(
+    this.dsmService.singleKitLabel(this.realm(), JSON.stringify( cleanedKits ) ).subscribe(
       data => {
         let result = Result.parse( data );
         if (result.code === 200) {
