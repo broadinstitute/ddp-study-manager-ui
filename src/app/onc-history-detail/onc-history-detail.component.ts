@@ -299,7 +299,7 @@ export class OncHistoryDetailComponent implements OnInit {
 
   saveNote() {
     this.oncHistory[ this.indexForNote ].notes = this.note;
-    this.valueChanged( this.note, "notes", this.indexForNote );
+    this.valueChanged( this.note, 'notes', this.indexForNote );
   }
 
   setFacility( contact: any, index: number ) {
