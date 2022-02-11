@@ -38,11 +38,11 @@
         </tr>
         <tr *ngIf="participant.participant != null">
           <td>Assignee</td>
-          <td>{{participant.participant.assigneeTissue}}</td>
+          <td>{{participant.participant.assigneeIdTissue}}</td>
         </tr>
         <tr>
           <td>Request Status</td>
-          <td>{{oncHistoryDetail.request === 'unableToObtain' ? 'Unable To Obtain' : oncHistoryDetail.request | titlecase}}</td>
+          <td>{{oncHistoryDetail.request === 'unableObtainTissue' ? 'Unable To Obtain' : oncHistoryDetail.request | titlecase}}</td>
         </tr>
         <tr>
           <td>Short ID</td>
@@ -72,11 +72,11 @@
         </tr>
         <tr>
           <td>Date of PX</td>
-          <td>{{getUtil().getDateFormatted(oncHistoryDetail.datePX)}}</td>
+          <td>{{getUtil().getDateFormatted(oncHistoryDetail.datePx)}}</td>
         </tr>
         <tr>
           <td>Type of PX</td>
-          <td>{{oncHistoryDetail.typePX}}</td>
+          <td>{{oncHistoryDetail.typePx}}</td>
         </tr>
         <tr>
           <td>Histology</td>
@@ -88,8 +88,8 @@
         </tr>
         <tr *ngFor="let fs of this.settings['oD']">
           <td> {{fs.columnDisplay}}</td>
-          <td *ngIf="oncHistoryDetail.additionalValues !== null && oncHistoryDetail.additionalValues !== undefined">{{oncHistoryDetail.additionalValues[fs.columnName]}}</td>
-          <td *ngIf="oncHistoryDetail.additionalValues == null || oncHistoryDetail.additionalValues == undefined"></td>
+          <td *ngIf="oncHistoryDetail.additionalValuesJson !== null && oncHistoryDetail.additionalValuesJson !== undefined">{{oncHistoryDetail.additionalValuesJson[fs.columnName]}}</td>
+          <td *ngIf="oncHistoryDetail.additionalValuesJson == null || oncHistoryDetail.additionalValuesJson == undefined"></td>
         </tr>
         <tr>
           <td>Facility</td>
@@ -97,12 +97,12 @@
         </tr>
         <tr>
           <td>Phone</td>
-          <td>{{oncHistoryDetail.fPhone}}</td>
+          <td>{{oncHistoryDetail.phone}}</td>
         </tr>
         <tr>
           <td>Fax</td>
           <td>
-            {{oncHistoryDetail.fFax}}
+            {{oncHistoryDetail.fax}}
           </td>
         </tr>
         </tbody>
@@ -116,29 +116,29 @@
       <tr>
         <td class="Width--20">Fax Sent</td>
         <td colspan="2">
-          <app-field-datepicker [colorDuringPatch]="isPatchedCurrently('tFaxSent')" [disabled]=" participantExited"
-                                [dateString]="oncHistoryDetail.tFaxSent" (dateChanged)="valueChanged($event, 'tFaxSent')"></app-field-datepicker>
+          <app-field-datepicker [colorDuringPatch]="isPatchedCurrently('faxSent')" [disabled]=" participantExited"
+                                [dateString]="oncHistoryDetail.faxSent" (dateChanged)="valueChanged($event, 'faxSent')"></app-field-datepicker>
           <app-field-datepicker
-            *ngIf="((oncHistoryDetail.tFaxSent != null && oncHistoryDetail.tFaxSent !== '') && (oncHistoryDetail.tissueReceived == null || oncHistoryDetail.tissueReceived === '')) || (oncHistoryDetail.tFaxSent2 != null && oncHistoryDetail.tFaxSent2 !== '')"
-            [disabled]=" participantExited" [dateString]="oncHistoryDetail.tFaxSent2"
-            (dateChanged)="valueChanged($event, 'tFaxSent2')"
-            [colorDuringPatch]="isPatchedCurrently('tFaxSent2')"></app-field-datepicker>
+            *ngIf="((oncHistoryDetail.faxSent != null && oncHistoryDetail.faxSent !== '') && (oncHistoryDetail.tissueReceived == null || oncHistoryDetail.tissueReceived === '')) || (oncHistoryDetail.faxSent2 != null && oncHistoryDetail.faxSent2 !== '')"
+            [disabled]=" participantExited" [dateString]="oncHistoryDetail.faxSent2"
+            (dateChanged)="valueChanged($event, 'faxSent2')"
+            [colorDuringPatch]="isPatchedCurrently('faxSent2')"></app-field-datepicker>
           <app-field-datepicker
-            *ngIf="((oncHistoryDetail.tFaxSent2 != null && oncHistoryDetail.tFaxSent2 !== '') && (oncHistoryDetail.tissueReceived == null || oncHistoryDetail.tissueReceived === '')) || (oncHistoryDetail.tFaxSent3 != null && oncHistoryDetail.tFaxSent3 !== '')"
-            [disabled]="participantExited" [dateString]="oncHistoryDetail.tFaxSent3"
-            (dateChanged)="valueChanged($event, 'tFaxSent3')"
-            [colorDuringPatch]="isPatchedCurrently('tFaxSent3')"></app-field-datepicker>
+            *ngIf="((oncHistoryDetail.faxSent2 != null && oncHistoryDetail.faxSent2 !== '') && (oncHistoryDetail.tissueReceived == null || oncHistoryDetail.tissueReceived === '')) || (oncHistoryDetail.faxSent3 != null && oncHistoryDetail.faxSent3 !== '')"
+            [disabled]="participantExited" [dateString]="oncHistoryDetail.faxSent3"
+            (dateChanged)="valueChanged($event, 'faxSent3')"
+            [colorDuringPatch]="isPatchedCurrently('faxSent3')"></app-field-datepicker>
         </td>
       </tr>
       <tr [hidden]="true">
         <td>Fax Confirmed</td>
         <td colspan="2">
-          <app-field-datepicker [dateString]="oncHistoryDetail.tFaxConfirmed"
-                                (dateChanged)="valueChanged($event, 'tFaxConfirmed')" [disabled]="participantExited"
-                                [colorDuringPatch]="isPatchedCurrently('tFaxConfirmed')"></app-field-datepicker>
+          <app-field-datepicker [dateString]="oncHistoryDetail.faxConfirmed"
+                                (dateChanged)="valueChanged($event, 'faxConfirmed')" [disabled]="participantExited"
+                                [colorDuringPatch]="isPatchedCurrently('faxConfirmed')"></app-field-datepicker>
         </td>
       </tr>
-      <tr *ngIf="oncHistoryDetail.tFaxSent != null">
+      <tr *ngIf="oncHistoryDetail.faxSent != null">
         <td>Tissue Received</td>
         <td colspan="2">
           <app-field-datepicker [dateString]="oncHistoryDetail.tissueReceived"
@@ -152,7 +152,7 @@
           <mat-select [ngClass]="{ 'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently('tissueProblemOption')}"
                      placeholder="Tissue problems" [(ngModel)]="oncHistoryDetail.tissueProblemOption"
                      [disabled]="!editable || participantExited"
-                     (change)="valueChanged($event, 'tissueProblemOption')"
+                     (selectionChange)="valueChanged($event, 'tissueProblemOption')"
                      (blur)="currentField(null)" (focus)="currentField('tissueProblemOption')">
             <mat-option value="insufficientPath">Insufficient material per path</mat-option>
             <mat-option value="insufficientSHL">Insufficient material per SHL</mat-option>
@@ -166,21 +166,21 @@
 
         </td>
         <td>
-          <mat-checkbox [(ngModel)]="oncHistoryDetail.unableToObtain" (change)="valueChanged($event, 'unableToObtain')"
+          <mat-checkbox [(ngModel)]="oncHistoryDetail.unableObtainTissue" (change)="valueChanged($event, 'unableObtainTissue')"
                        [disabled]="participantExited"
-                       [color]="isCheckboxPatchedCurrently('unableToObtain')" (blur)="currentField(null)"
-                       (focus)="currentField('unableToObtain')"></mat-checkbox>
+                       [color]="isCheckboxPatchedCurrently('unableObtainTissue')" (blur)="currentField(null)"
+                       (focus)="currentField('unableObtainTissue')"></mat-checkbox>
           Unable to Obtain
         </td>
       </tr>
       <tr>
         <td>Notes</td>
         <td colspan="2">
-          <textarea [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('oncHisNotes')}"
+          <textarea [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('notes')}"
                     maxlength="1000"
-                    [(ngModel)]="oncHistoryDetail.oncHisNotes" (change)="valueChanged($event, 'oncHisNotes')"
+                    [(ngModel)]="oncHistoryDetail.notes" (change)="valueChanged($event, 'notes')"
                     [disabled]="!editable || participantExited"
-                    (blur)="currentField(null)" (focus)="currentField('oncHisNotes')"></textarea>
+                    (blur)="currentField(null)" (focus)="currentField('notes')"></textarea>
         </td>
       </tr>
       <tr>
@@ -219,7 +219,7 @@
           <mat-select placeholder="Gender"
                      [ngClass]="{'Input--Min-WIDTH': true, 'Color--Field--Patched': isPatchedCurrently('gender')}"
                      [(ngModel)]="oncHistoryDetail.gender" [disabled]="!editable || participantExited"
-                     (change)="valueChanged($event, 'gender')"
+                     (selectionChange)="valueChanged($event, 'gender')"
                      (blur)="currentField(null)" (focus)="currentField('gender')">
             <mat-option value="male">Male</mat-option>
             <mat-option value="female">Female</mat-option>

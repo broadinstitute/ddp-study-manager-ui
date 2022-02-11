@@ -63,25 +63,25 @@
           </button>
         </td>
         <td class="DatePicker--Table--Col">
-          <app-field-datepicker [dateString]="oncHis.datePX" [showTodayButton]="false" [allowUnknownDay]="true"
+          <app-field-datepicker [dateString]="oncHis.datePx" [showTodayButton]="false" [allowUnknownDay]="true"
                                 [disabled]="!editable || participantExited"
-                                (dateChanged)="valueChanged($event, 'datePX', i)"
-                                [colorDuringPatch]="isPatchedCurrently('datePX', i)"></app-field-datepicker>
+                                (dateChanged)="valueChanged($event, 'datePx', i)"
+                                [colorDuringPatch]="isPatchedCurrently('datePx', i)"></app-field-datepicker>
         </td>
         <td>
-          <app-lookup [lookupValue]="oncHis.typePX" [lookupType]="'tType'" [multiLineInput]="true"
-                      (lookupResponse)="setTypePx($event, i)" [disabled]="!editable || participantExited" [fieldName]="'typePX'"
-                      [colorDuringPatch]="isPatchedCurrently('typePX', i)"></app-lookup>
+          <app-lookup [lookupValue]="oncHis.typePx" [lookupType]="'type'" [multiLineInput]="true"
+                      (lookupResponse)="setTypePx($event, i)" [disabled]="!editable || participantExited" [fieldName]="'typePx'"
+                      [colorDuringPatch]="isPatchedCurrently('typePx', i)"></app-lookup>
         </td>
         <td>
-          <mat-form-field [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently('locationPX', i)}">
+          <mat-form-field [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently('locationPx', i)}">
             <input matInput class="Width--100 Input--Min-WIDTH" maxlength="200" [disabled]="!editable || participantExited"
-                   [(ngModel)]="oncHis.locationPX" (change)="valueChanged($event, 'locationPX', i)"
-                   (blur)="currentField(null, null)" (focus)="currentField('locationPX', i)">
+                   [(ngModel)]="oncHis.locationPx" (change)="valueChanged($event, 'locationPx', i)"
+                   (blur)="currentField(null, null)" (focus)="currentField('locationPx', i)">
           </mat-form-field>
         </td>
         <td>
-          <app-lookup [lookupValue]="oncHis.histology" [lookupType]="'tHistology'" [multiLineInput]="true"
+          <app-lookup [lookupValue]="oncHis.histology" [lookupType]="'histology'" [multiLineInput]="true"
                       (lookupResponse)="setHistology($event, i)" [disabled]="!editable || participantExited" [fieldName]="'histology'"
                       [colorDuringPatch]="isPatchedCurrently('histology', i)"></app-lookup>
         </td>
@@ -94,27 +94,27 @@
           </mat-form-field>
         </td>
         <td>
-          <app-lookup [lookupValue]="oncHis.facility" [lookupType]="'tFacility'" [fieldName]="'facility'"
+          <app-lookup [lookupValue]="oncHis.facility" [lookupType]="'facility'" [fieldName]="'facility'"
                       (lookupResponse)="setFacility($event, i)" [disabled]="!editable || participantExited"
                       [colorDuringPatch]="isPatchedCurrently('facility', i)"></app-lookup>
         </td>
         <td>
           <mat-form-field
-            [ngClass]="{'Input': true, 'Input--Phone-Number': true, 'Color--Field--Patched': isPatchedCurrently('fPhone', i)}">
+            [ngClass]="{'Input': true, 'Input--Phone-Number': true, 'Color--Field--Patched': isPatchedCurrently('phone', i)}">
             <input matInput maxlength="14" [disabled]="!editable || participantExited"
-                   [(ngModel)]="oncHis.fPhone" (change)="valueChanged($event, 'fPhone', i)"
+                   [(ngModel)]="oncHis.phone" (change)="valueChanged($event, 'phone', i)"
                    [errorStateMatcher]="getUtil().phoneNumberValidator()"
-                   (blur)="currentField(null, null)" (focus)="currentField('fPhone', i)">
+                   (blur)="currentField(null, null)" (focus)="currentField('phone', i)">
             <mat-error>xxx-xxx-xxxx</mat-error>
           </mat-form-field>
         </td>
         <td>
           <mat-form-field
-            [ngClass]="{'Input': true, 'Input--Phone-Number': true, 'Color--Field--Patched': isPatchedCurrently('fFax', i)}">
+            [ngClass]="{'Input': true, 'Input--Phone-Number': true, 'Color--Field--Patched': isPatchedCurrently('fax', i)}">
             <input matInput maxlength="14" [disabled]="!editable || participantExited"
-                   [(ngModel)]="oncHis.fFax" (change)="valueChanged($event, 'fFax', i)"
+                   [(ngModel)]="oncHis.fax" (change)="valueChanged($event, 'fax', i)"
                    [errorStateMatcher]="getUtil().phoneNumberValidator()"
-                   (blur)="currentField(null, null)" (focus)="currentField('fFax', i)">
+                   (blur)="currentField(null, null)" (focus)="currentField('fax', i)">
             <mat-error>xxx-xxx-xxxx</mat-error>
           </mat-form-field>
         </td>
@@ -150,7 +150,7 @@
                       value="{{getAdditionalValue(i, col.columnName)}}" (change)="onAdditionalColChange($event, i, col.columnName)"></textarea>
             <mat-select *ngIf="col.displayType === 'OPTIONS'"
                        [ngModel]="getAdditionalValue(i, col.columnName)"
-                       (change)="onAdditionalColChange($event, i, col.columnName)" [disabled]="!editable || participantExited"
+                       (selectionChange)="onAdditionalColChange($event, i, col.columnName)" [disabled]="!editable || participantExited"
                        [ngClass]="{'Color--Field--Patched': isPatchedCurrently(col.columnName, i)}">
               <mat-option *ngFor="let op of col.possibleValues" [value]="op.value">{{op.value}}</mat-option>
             </mat-select>
@@ -164,14 +164,14 @@
           </td>
         </ng-container>
         <td>
-          <button mat-mini-fab [color]="getNoteButtonColorStyle(oncHis.oncHisNotes)" placement="left"
-                  tooltip='{{oncHis.oncHisNotes}}' [disabled]="participantExited"
+          <button mat-mini-fab [color]="getNoteButtonColorStyle(oncHis.notes)" placement="left"
+                  tooltip='{{oncHis.notes}}' [disabled]="participantExited"
                   (click)="openNoteModal(i); oncHisNoteModal.show()">
             <i class="fas fa-comment-alt fa-lg" data-fa-transform="down-2"></i>
           </button>
         </td>
-        <td *ngIf="oncHis.request !== 'unableToObtain'">
-          <mat-select [(ngModel)]="oncHis.request" (change)="onRequestChange(i)" [disabled]="!editable || participantExited"
+        <td *ngIf="oncHis.request !== 'unableObtainTissue'">
+          <mat-select [(ngModel)]="oncHis.request" (selectionChange)="onRequestChange(i)" [disabled]="!editable || participantExited"
                      [ngClass]="{'Color--Field--Patched': isPatchedCurrently('request', i)}">
             <mat-option value="review">Needs Review</mat-option>
             <mat-option value="no">Don't Request</mat-option>
@@ -180,10 +180,10 @@
             <mat-option value="sent" disabled>Sent</mat-option>
             <mat-option value="received" disabled>Received</mat-option>
             <mat-option value="returned" disabled>Returned</mat-option>
-            <mat-option value="unableToObtain" disabled>Unable To Obtain</mat-option>
+            <mat-option value="unableObtainTissue" disabled>Unable To Obtain</mat-option>
           </mat-select>
         </td>
-        <td *ngIf="oncHis.request === 'unableToObtain'">
+        <td *ngIf="oncHis.request === 'unableObtainTissue'">
           Unable To Obtain
         </td>
         <td>

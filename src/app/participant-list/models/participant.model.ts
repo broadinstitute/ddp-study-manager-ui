@@ -1,37 +1,37 @@
 export class ParticipantDSMInformation {
 
   constructor( public participantId: string, public ddpParticipantId: string, public realm: string,
-               public assigneeMr: string, public assigneeTissue: string, public createdOncHistory: string, public reviewedOncHistory: string,
-               public paperCRSent: string, public paperCRReceived: string, public ptNotes: string, public minimalMR: boolean, public abstractionReady: boolean,
-               public mrNeedsAttention: boolean, public tissueNeedsAttention: boolean, public exitDate: number, public additionalValues: {} ) {
+               public assigneeIdMr: string, public assigneeIdTissue: string, public createdOncHistory: string, public reviewedOncHistory: string,
+               public crSent: string, public crReceived: string, public notes: string, public minimalMr: boolean, public abstractionReady: boolean,
+               public mrNeedsAttention: boolean, public tissueNeedsAttention: boolean, public exitDate: number, public additionalValuesJson: {} ) {
     this.participantId = participantId;
     this.ddpParticipantId = ddpParticipantId;
     this.realm = realm;
-    this.assigneeMr = assigneeMr;
-    this.assigneeTissue = assigneeTissue;
+    this.assigneeIdMr = assigneeIdMr;
+    this.assigneeIdTissue = assigneeIdTissue;
     this.createdOncHistory = createdOncHistory;
     this.reviewedOncHistory = reviewedOncHistory;
-    this.paperCRSent = paperCRSent;
-    this.paperCRReceived = paperCRReceived;
-    this.ptNotes = ptNotes;
-    this.minimalMR = minimalMR;
+    this.crSent = crSent;
+    this.crReceived = crReceived;
+    this.notes = notes;
+    this.minimalMr = minimalMr;
     this.abstractionReady = abstractionReady;
     this.mrNeedsAttention = mrNeedsAttention;
     this.tissueNeedsAttention = tissueNeedsAttention;
     this.exitDate = exitDate;
-    this.additionalValues = additionalValues;
+    this.additionalValuesJson = additionalValuesJson;
   }
 
   static parse( json ): ParticipantDSMInformation {
-    let data = json.additionalValues;
-    let additionalValues = {};
+    let data = json.dynamicFields;
+    let additionalValuesJson = {};
     if (data != null) {
       data = "{" + data.substring(1, data.length - 1) + "}";
-      additionalValues = JSON.parse(data);
+      additionalValuesJson = JSON.parse(data);
     }
-    return new ParticipantDSMInformation( json.participantId, json.ddpParticipantId, json.realm, json.assigneeMr, json.assigneeTissue,
-      json.createdOncHistory, json.reviewedOncHistory, json.paperCRSent, json.paperCRReceived,
-      json.ptNotes, json.minimalMR, json.abstractionReady, json.mrNeedsAttention, json.tissueNeedsAttention, json.exitDate, additionalValues );
+    return new ParticipantDSMInformation( json.participantId, json.ddpParticipantId, json.realm, json.assigneeIdMr, json.assigneeIdTissue,
+      json.createdOncHistory, json.reviewedOncHistory, json.crSent, json.crReceived,
+      json.notes, json.minimalMr, json.abstractionReady, json.mrNeedsAttention, json.tissueNeedsAttention, json.exitDate, additionalValuesJson );
   }
 
 

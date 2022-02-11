@@ -13,9 +13,9 @@
       <td class="TD--Padding" style="width: 20%">Notes</td>
       <td colspan="3">
         <textarea maxlength="1000"
-                  [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('tNotes')}"
-                  (blur)="currentField(null)" (focus)="currentField('tNotes')" [disabled]="!editable"
-                  [(ngModel)]="tissue.tNotes" (change)="valueChanged($event, 'tNotes')"></textarea>
+                  [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('notes')}"
+                  (blur)="currentField(null)" (focus)="currentField('notes')" [disabled]="!editable"
+                  [(ngModel)]="tissue.notes" (change)="valueChanged($event, 'notes')"></textarea>
       </td>
     </tr>
     <tr *ngIf="getCompService().getRealm().toUpperCase()==='MBC' || tissue.countReceived > 0">
@@ -44,7 +44,7 @@
         <mat-select placeholder="Tissue Type"
                    [ngClass]="{'Input--Min-WIDTH': true, 'Color--Field--Patched': isPatchedCurrently('tissueType')}"
                    [(ngModel)]="tissue.tissueType" [disabled]="!editable"
-                   (change)="valueChanged($event, 'tissueType')"
+                   (selectionChange)="valueChanged($event, 'tissueType')"
                    (blur)="currentField(null)" (focus)="currentField('tissueType')">
           <mat-option value="slide">Slide</mat-option>
           <mat-option value="block">Block</mat-option>
@@ -90,7 +90,6 @@
       <td class="TD--Padding">Expected Return Date</td>
       <td colspan="3">
         <app-field-datepicker [dateString]="tissue.expectedReturn"
-                              [showNAButton]="true"
                               [allowFutureDate]="true"
                               (dateChanged)="valueChanged($event, 'expectedReturn')" [disabled]="!editable"
                               [colorDuringPatch]="isPatchedCurrently('expectedReturn')"></app-field-datepicker>
@@ -99,13 +98,13 @@
     <tr *ngIf="tissue.tissueType!= null && tissue.tissueType ==='block' ">
       <td class="TD--Padding">Return Date</td>
       <td colspan="3">
-        <app-field-datepicker [dateString]="tissue.tissueReturnDate"
+        <app-field-datepicker [dateString]="tissue.returnDate"
                               [allowFutureDate]="true"
-                              (dateChanged)="valueChanged($event, 'tissueReturnDate')" [disabled]="false"
-                              [colorDuringPatch]="isPatchedCurrently('tissueReturnDate')"></app-field-datepicker>
+                              (dateChanged)="valueChanged($event, 'returnDate')" [disabled]="false"
+                              [colorDuringPatch]="isPatchedCurrently('returnDate')"></app-field-datepicker>
       </td>
     </tr>
-    <tr *ngIf="tissue.tissueType != null && tissue.tissueType ==='block' && tissue.tissueReturnDate != null">
+    <tr *ngIf="tissue.tissueType != null && tissue.tissueType ==='block' && tissue.returnDate != null">
       <td class="TD--Padding">Tracking Number</td>
       <td colspan="3">
         <mat-form-field
@@ -125,7 +124,7 @@
         <mat-select placeholder="H&E"
                    [ngClass]="{'Input--Min-WIDTH': true, 'Color--Field--Patched': isPatchedCurrently('hE')}"
                    [(ngModel)]="tissue.hE" [disabled]="!editable"
-                   (change)="valueChanged($event, 'hE')"
+                   (selectionChange)="valueChanged($event, 'hE')"
                    (blur)="currentField(null)" (focus)="currentField('hE')">
           <mat-option value="yes">Yes</mat-option>
           <mat-option value="no">No</mat-option>
@@ -138,7 +137,7 @@
         <mat-select placeholder="Pathology Report"
                    [ngClass]="{'Input--Min-WIDTH': true, 'Color--Field--Patched': isPatchedCurrently('pathologyReport')}"
                    [(ngModel)]="tissue.pathologyReport" [disabled]="!editable"
-                   (change)="valueChanged($event, 'pathologyReport')"
+                   (selectionChange)="valueChanged($event, 'pathologyReport')"
                    (blur)="currentField(null)" (focus)="currentField('pathologyReport')">
           <mat-option value="yes">Yes</mat-option>
           <mat-option value="no">No</mat-option>
@@ -149,7 +148,7 @@
         <mat-select placeholder="Tumor Type"
                    [ngClass]="{'Input--Min-WIDTH': true, 'Color--Field--Patched': isPatchedCurrently('tumorType')}"
                    [(ngModel)]="tissue.tumorType" [disabled]="!editable"
-                   (change)="valueChanged($event, 'tumorType')"
+                   (selectionChange)="valueChanged($event, 'tumorType')"
                    (blur)="currentField(null)" (focus)="currentField('tumorType')">
           <mat-option value="primary">Primary</mat-option>
           <mat-option value="met">Met</mat-option>
@@ -295,7 +294,7 @@
                   (change)="onAdditionalColChange($event, col.columnName)"></textarea>
         <mat-select *ngIf="col.displayType === 'OPTIONS'" placeholder="{{col.columnDisplay}}"
                    [ngModel]="getAdditionalValue(col.columnName)"
-                   (change)="onAdditionalColChange($event, col.columnName)" [disabled]="!editable"
+                   (selectionChange)="onAdditionalColChange($event, col.columnName)" [disabled]="!editable"
                    [ngClass]="{'Color--Field--Patched': isPatchedCurrently(col.columnName)}">
           <mat-option *ngFor="let op of col.possibleValues" [value]="op.value">{{op.value}}</mat-option>
         </mat-select>
@@ -323,9 +322,9 @@
         Sequencing Results
       </td>
       <td colspan="3">
-        <mat-select [disabled]="!editable" [(ngModel)]="tissue.sequenceResults"
-                   (change)="valueChanged($event, 'sequenceResults')"
-                   [ngClass]="{'Color--Field--Patched': isPatchedCurrently('sequenceResults')}"
+        <mat-select [disabled]="!editable" [(ngModel)]="tissue.tissueSequence"
+                   (selectionChange)="valueChanged($event, 'tissueSequence')"
+                   [ngClass]="{'Color--Field--Patched': isPatchedCurrently('tissueSequence', i)}"
                    placeholder="Sequence Results">
           <mat-option value="failureSHL">Failure at SHL</mat-option>
           <mat-option value="abandonedGP">Abandoned at GP</mat-option>

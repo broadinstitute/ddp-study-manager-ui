@@ -296,7 +296,7 @@ export class ParticipantListComponent implements OnInit {
                   } );
                 }
               }
-              let filter = new Filter( new ParticipantColumn( fieldSetting.columnDisplay, fieldSetting.columnName, key ), Filter.ADDITIONAL_VALUE_TYPE, options, new NameValue( fieldSetting.columnName, null ),
+              let filter = new Filter( new ParticipantColumn( fieldSetting.columnDisplay, Utils.convertUnderScoresToCamelCase(fieldSetting.columnName), key ), Filter.ADDITIONAL_VALUE_TYPE, options, new NameValue( fieldSetting.columnName, null ),
                 false, true, null, null, null, null, false, false, false, false, fieldSetting.displayType );
               if (this.settings[ key ] == null || this.settings[ key ] == undefined) {
                 this.settings[ key ] = [];
@@ -1315,10 +1315,7 @@ export class ParticipantListComponent implements OnInit {
       {name: "shared", value: value}, null, this.parent, null, null, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null );
     let patch = patch1.getPatch();
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe( data => {
-      let result = Result.parse( data );
-      if (result.code == 200) {
-        this.savedFilters[ i ].shared = ( value === "1" );
-      }
+      this.savedFilters[ i ].shared = ( value === "1" );
     }, err => {
       this.additionalMessage = "Error - Sharing Filter, Please contact your DSM developer";
     } );
@@ -1329,10 +1326,7 @@ export class ParticipantListComponent implements OnInit {
       {name: "fDeleted", value: "1"}, null, this.parent, null, null, null, localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null );
     let patch = patch1.getPatch();
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe( data => {
-      let result = Result.parse( data );
-      if (result.code == 200) {
-        this.getFilters();
-      }
+      this.getFilters();
     }, err => {
       this.additionalMessage = "Error - Deleting Filter, Please contact your DSM developer";
     } );
@@ -1418,13 +1412,13 @@ export class ParticipantListComponent implements OnInit {
       this.participantList.sort( ( a, b ) => ( a.data == null || b.data == null ) ? 1 : this.sort( a.data, b.data, order, this.sortField, colType ) );
     } else if (this.sortParent === "p") {
       this.participantList.sort( ( a, b ) => {
-        if (a.participant == null || (a.participant[ this.sortField ] == null && a.participant['additionalValues'] == null)) {
+        if (a.participant == null || (a.participant[ this.sortField ] == null && a.participant['additionalValuesJson'] == null)) {
           return 1;
-        } else if (b.participant == null || (b.participant[ this.sortField ] == null && b.participant['additionalValues'] == null)) {
+        } else if (b.participant == null || (b.participant[ this.sortField ] == null && b.participant['additionalValuesJson'] == null)) {
           return -1;
         } else {
-          if (a.participant['additionalValues'][this.sortField] != null || b.participant['additionalValues'][this.sortField] != null) {
-            return this.sort( a.participant['additionalValues'][ this.sortField ], b.participant['additionalValues'][ this.sortField ], order, undefined, colType )
+          if (a.participant['additionalValuesJson'][this.sortField] != null || b.participant['additionalValuesJson'][this.sortField] != null) {
+            return this.sort( a.participant['additionalValuesJson'][ this.sortField ], b.participant['additionalValuesJson'][ this.sortField ], order, undefined, colType )
           } else {
             return this.sort( a.participant[ this.sortField ], b.participant[ this.sortField ], order, undefined, colType );
           }
@@ -1681,16 +1675,16 @@ export class ParticipantListComponent implements OnInit {
         if (pt.isSelected) {
           if (this.assignMR) {
             if (this.assignee.assigneeId === "-1") {
-              pt.participant.assigneeMr = null;
+              pt.participant.assigneeIdMr = null;
             } else {
-              pt.participant.assigneeMr = this.assignee.name;
+              pt.participant.assigneeIdMr = this.assignee.name;
             }
           }
           if (this.assignTissue) {
             if (this.assignee.assigneeId === "-1") {
-              pt.participant.assigneeMr = null;
+              pt.participant.assigneeIdMr = null;
             } else {
-              pt.participant.assigneeTissue = this.assignee.name;
+              pt.participant.assigneeIdTissue = this.assignee.name;
             }
           }
           assignParticipants.push( new AssigneeParticipant( pt.participant.participantId, this.assignee.assigneeId,

@@ -5,7 +5,7 @@
       <mat-select placeholder="{{v.value}}" *ngIf="v.type2 === options"
                  [ngClass]="{'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(v.value)}"
                  [(ngModel)]="_multiType[v.value]" [disabled]="disabled"
-                 (change)="multiTypeValueChanged($event, _multiType, v.value, v)">
+                 (selectionChange)="multiTypeValueChanged($event, _multiType, v.value, v)">
         <mat-option *ngFor="let drug of drugs" [value]="drug">
           {{drug}}
         </mat-option>
@@ -14,7 +14,7 @@
       <mat-select placeholder="{{v.value}}" *ngIf="v.type2 === multiOptions"
                  [ngClass]="{'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(v.value)}"
                  [(ngModel)]="_multiType[v.value]" [disabled]="disabled"
-                 (change)="multiTypeValueChanged($event, _multiType, v.value, v)" multiple>
+                 (selectionChange)="multiTypeValueChanged($event, _multiType, v.value, v)" multiple>
         <mat-option *ngFor="let drug of drugs" [value]="drug" [disabled]="!patchFinished">
           {{drug}}
         </mat-option>
@@ -29,7 +29,7 @@
       <mat-select placeholder="{{v.value}}" *ngIf="v.type2 === options"
                  [ngClass]="{'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(v.value)}"
                  [(ngModel)]="_multiType[v.value]" [disabled]="disabled"
-                 (change)="multiTypeValueChanged($event, _multiType, v.value, v)">
+                 (selectionChange)="multiTypeValueChanged($event, _multiType, v.value, v)">
         <mat-option *ngFor="let cancer of cancers" [value]="cancer">
           {{cancer}}
         </mat-option>
@@ -38,7 +38,7 @@
       <mat-select placeholder="{{v.value}}" *ngIf="v.type2 === multiOptions"
                  [ngClass]="{'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(v.value)}"
                  [(ngModel)]="_multiType[v.value]" [disabled]="disabled"
-                 (change)="multiTypeValueChanged($event, _multiType, v.value, v)" multiple>
+                 (selectionChange)="multiTypeValueChanged($event, _multiType, v.value, v)" multiple>
         <mat-option *ngFor="let cancer of cancers" [value]="cancer" [disabled]="!patchFinished">
           {{cancer}}
         </mat-option>
@@ -90,7 +90,7 @@
     <mat-select placeholder="{{v.value}}" *ngIf="v.type === options"
                [ngClass]="{'TD--Padding-Top': true, 'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(v.value)}"
                [(ngModel)]="_multiType[v.value]" [disabled]="disabled"
-               (change)="multiTypeValueChanged($event, _multiType, v.value, v)">
+               (selectionChange)="multiTypeValueChanged($event, _multiType, v.value, v)">
       <mat-option *ngFor="let noName of v.values" [value]="noName.value">
         {{noName.value}}
       </mat-option>
@@ -101,7 +101,7 @@
                [ngClass]="{'TD--Padding-Top': true, 'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(v.value)}"
                placeholder="{{v.value}}"
                [(ngModel)]="_multiType[v.value]" [disabled]="disabled"
-               (change)="multiTypeValueChanged($event, _multiType, v.value, v)" multiple>
+               (selectionChange)="multiTypeValueChanged($event, _multiType, v.value, v)" multiple>
       <mat-option *ngFor="let noName of v.values" [value]="noName.value" [disabled]="!patchFinished">
         {{noName.value}}
       </mat-option>

@@ -49,7 +49,7 @@
         </tr>
         <tr *ngIf="participant.participant != null">
           <td>Assignee</td>
-          <td>{{participant.participant.assigneeMr}}</td>
+          <td>{{participant.participant.assigneeIdMr}}</td>
         </tr>
         <tr>
           <td>Current Status</td>
@@ -265,11 +265,11 @@
             <tr *ngIf="medicalRecord.unableObtain">
               <td colspan="2">
                 <textarea
-                  [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('mrUnableToObtainText')}"
+                  [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('unableObtainText')}"
                   maxlength="1000" [disabled]="participantExited"
-                  [(ngModel)]="medicalRecord.mrUnableToObtainText"
-                  (change)="valueChanged($event, 'mrUnableToObtainText')"
-                  (blur)="currentField(null)" (focus)="currentField('mrUnableToObtainText')"></textarea>
+                  [(ngModel)]="medicalRecord.unableObtainText"
+                  (change)="valueChanged($event, 'unableObtainText')"
+                  (blur)="currentField(null)" (focus)="currentField('unableObtainText')"></textarea>
               </td>
             </tr>
             <tr>
@@ -299,21 +299,21 @@
             </tr>
             <tr>
               <td>
-                <mat-checkbox [(ngModel)]="medicalRecord.followUpRequired"
-                             (change)="valueChanged($event, 'followUpRequired')"
-                             [color]="isCheckboxPatchedCurrently('followUpRequired')" (blur)="currentField(null)"
-                             (focus)="currentField('followUpRequired')" [disabled]="participantExited"></mat-checkbox>
+                <mat-checkbox [(ngModel)]="medicalRecord.followupRequired"
+                             (change)="valueChanged($event, 'followupRequired')"
+                             [color]="isCheckboxPatchedCurrently('followupRequired')" (blur)="currentField(null)"
+                             (focus)="currentField('followupRequired')" [disabled]="participantExited"></mat-checkbox>
               </td>
               <td>Follow-Up required</td>
             </tr>
-            <tr *ngIf="medicalRecord.followUpRequired">
+            <tr *ngIf="medicalRecord.followupRequired">
               <td colspan="2">
                 <textarea
-                  [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('followUpRequiredText')}"
+                  [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('followupRequiredText')}"
                   maxlength="1000" [disabled]="participantExited"
-                  [(ngModel)]="medicalRecord.followUpRequiredText"
-                  (change)="valueChanged($event, 'followUpRequiredText')"
-                  (blur)="currentField(null)" (focus)="currentField('followUpRequiredText')"></textarea>
+                  [(ngModel)]="medicalRecord.followupRequiredText"
+                  (change)="valueChanged($event, 'followupRequiredText')"
+                  (blur)="currentField(null)" (focus)="currentField('followupRequiredText')"></textarea>
               </td>
             </tr>
           </table>
@@ -427,7 +427,7 @@
           <br/>
           <mat-select placeholder="MR Document" [ngClass]="{'Color--Field--Patched': isPatchedCurrently('mrDocument')}"
                      [(ngModel)]="medicalRecord.mrDocument" [disabled]="participantExited"
-                     (change)="valueChanged($event, 'mrDocument')"
+                     (selectionChange)="valueChanged($event, 'mrDocument')"
                      (blur)="currentField(null)" (focus)="currentField('mrDocument')">
             <mat-option value="Full">Full</mat-option>
             <mat-option value="Partial">Partial</mat-option>
@@ -449,7 +449,7 @@
           <mat-select placeholder="Pathology present"
                      [ngClass]="{'Color--Field--Patched': isPatchedCurrently('pathologyPresent')}"
                      [(ngModel)]="medicalRecord.pathologyPresent" [disabled]="participantExited"
-                     (change)="valueChanged($event, 'pathologyPresent')" (blur)="currentField(null)"
+                     (selectionChange)="valueChanged($event, 'pathologyPresent')" (blur)="currentField(null)"
                      (focus)="currentField('pathologyPresent')">
             <mat-option value="yes">Yes</mat-option>
             <mat-option value="no">No</mat-option>
@@ -461,9 +461,9 @@
         <td>Notes</td>
         <td colspan="3">
           <textarea maxlength="1000" [disabled]="participantExited"
-                    [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('mrNotes')}"
-                    [(ngModel)]="medicalRecord.mrNotes" (change)="valueChanged($event, 'mrNotes')"
-                    (blur)="currentField(null)" (focus)="currentField('mrNotes')"></textarea>
+                    [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('notes')}"
+                    [(ngModel)]="medicalRecord.notes" (change)="valueChanged($event, 'notes')"
+                    (blur)="currentField(null)" (focus)="currentField('notes')"></textarea>
         </td>
       </tr>
       <tr *ngFor="let fieldSetting of settings['m']">
@@ -490,7 +490,7 @@
                     value="{{getAdditionalValue(fieldSetting.columnName)}}" (change)="onAdditionalValueChange($event, fieldSetting.columnName)"></textarea>
           <mat-select *ngIf="fieldSetting.displayType === 'OPTIONS'" placeholder="{{fieldSetting.columnDisplay}}"
                      [ngModel]="getAdditionalValue(fieldSetting.columnName)"
-                     (change)="onAdditionalValueChange($event, fieldSetting.columnName)" [disabled]="participantExited"
+                     (selectionChange)="onAdditionalValueChange($event, fieldSetting.columnName)" [disabled]="participantExited"
                      [ngClass]="{'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}">
             <mat-option *ngFor="let op of fieldSetting.possibleValues" [value]="op.value">{{op.value}}</mat-option>
           </mat-select>

@@ -498,16 +498,16 @@ date.dateFields.month != null && date.dateFields.month !== ''">{{date.dateFields
                       *ngIf="pt.participant[col.participantColumn.name] != null && col.type !== 'ADDITIONALVALUE' && col.type !== 'DATE' && col.type !== 'CHECKBOX'">
                       {{pt.participant[col.participantColumn.name]}}
                     </ng-container>
-                    <ng-container *ngIf="col.type === 'ADDITIONALVALUE' && pt.participant['additionalValues'] != null
-                          && pt.participant['additionalValues'][col.participantColumn.name] != null">
+                    <ng-container *ngIf="col.type === 'ADDITIONALVALUE' && pt.participant['additionalValuesJson'] != null
+                          && pt.participant['additionalValuesJson'][col.participantColumn.name] != null">
                       <ng-container *ngIf="col.additionalType === 'DATE'">
-                        {{pt.participant['additionalValues'][col.participantColumn.name] | date:'shortDate'}}
+                        {{pt.participant['additionalValuesJson'][col.participantColumn.name] | date:'shortDate'}}
                       </ng-container>
                       <ng-container *ngIf="col.additionalType === 'CHECKBOX'">
-                        {{getUtil().getYesNo(pt.participant['additionalValues'][col.participantColumn.name])}}
+                        {{getUtil().getYesNo(pt.participant['additionalValuesJson'][col.participantColumn.name])}}
                       </ng-container>
                       <ng-container *ngIf="col.additionalType !== 'DATE' && col.additionalType !== 'CHECKBOX'">
-                        {{pt.participant['additionalValues'][col.participantColumn.name]}}
+                        {{pt.participant['additionalValuesJson'][col.participantColumn.name]}}
                       </ng-container>
                     </ng-container>
                     <ng-container *ngIf="pt.participant[col.participantColumn.name] != null && col.type === 'CHECKBOX'">
@@ -526,16 +526,16 @@ date.dateFields.month != null && date.dateFields.month !== ''">{{date.dateFields
                             *ngIf="col.type !== 'ADDITIONALVALUE' && col.type !== 'BOOLEAN' && col.type !== 'OPTIONS' && col.type !== 'CHECKBOX' && col.type !== 'DATE'">
                             {{mr[col.participantColumn.name]}}
                           </ng-container>
-                          <ng-container *ngIf="col.type === 'ADDITIONALVALUE' && mr['additionalValues'] != null
-                          && mr['additionalValues'][col.participantColumn.name] != null">
+                          <ng-container *ngIf="col.type === 'ADDITIONALVALUE' && mr['additionalValuesJson'] != null
+                          && mr['additionalValuesJson'][col.participantColumn.name] != null">
                             <ng-container *ngIf="col.additionalType === 'DATE'">
-                              {{mr['additionalValues'][col.participantColumn.name] | date:'shortDate'}}
+                              {{mr['additionalValuesJson'][col.participantColumn.name] | date:'shortDate'}}
                             </ng-container>
                             <ng-container *ngIf="col.additionalType === 'CHECKBOX'">
-                              {{getUtil().getYesNo(mr['additionalValues'][col.participantColumn.name])}}
+                              {{getUtil().getYesNo(mr['additionalValuesJson'][col.participantColumn.name])}}
                             </ng-container>
                             <ng-container *ngIf="col.additionalType !== 'DATE' && col.additionalType !== 'CHECKBOX'">
-                              {{mr['additionalValues'][col.participantColumn.name]}}
+                              {{mr['additionalValuesJson'][col.participantColumn.name]}}
                             </ng-container>
                           </ng-container>
                           <ng-container
@@ -560,16 +560,16 @@ date.dateFields.month != null && date.dateFields.month !== ''">{{date.dateFields
                             *ngIf="col.type !== 'ADDITIONALVALUE' && col.type !== 'DATE' && col.type !== 'OPTIONS' && col.type !== 'CHECKBOX' && col.type !== 'BOOLEAN'">
                             {{onc[col.participantColumn.name]}}
                           </ng-container>
-                          <ng-container *ngIf="col.type === 'ADDITIONALVALUE' && onc['additionalValues'] != null
-                          && onc['additionalValues'][col.participantColumn.name] != null">
+                          <ng-container *ngIf="col.type === 'ADDITIONALVALUE' && onc['additionalValuesJson'] != null
+                          && onc['additionalValuesJson'][col.participantColumn.name] != null">
                             <ng-container *ngIf="col.additionalType === 'DATE'">
-                              {{onc['additionalValues'][col.participantColumn.name] | date:'shortDate'}}
+                              {{onc['additionalValuesJson'][col.participantColumn.name] | date:'shortDate'}}
                             </ng-container>
                             <ng-container *ngIf="col.additionalType === 'CHECKBOX'">
-                              {{getUtil().getYesNo(onc['additionalValues'][col.participantColumn.name])}}
+                              {{getUtil().getYesNo(onc['additionalValuesJson'][col.participantColumn.name])}}
                             </ng-container>
                             <ng-container *ngIf="col.additionalType !== 'DATE' && col.additionalType !== 'CHECKBOX'">
-                              {{onc['additionalValues'][col.participantColumn.name]}}
+                              {{onc['additionalValuesJson'][col.participantColumn.name]}}
                             </ng-container>
                           </ng-container>
                           <ng-container
@@ -596,17 +596,17 @@ date.dateFields.month != null && date.dateFields.month !== ''">{{date.dateFields
                                 *ngIf="col.type !== 'ADDITIONALVALUE' && col.type !== 'DATE' && col.type !== 'OPTIONS' && col.type !== 'CHECKBOX' && col.type !== 'BOOLEAN'">
                                 {{tissue[col.participantColumn.name]}}
                               </ng-container>
-                              <ng-container *ngIf="col.type === 'ADDITIONALVALUE' && tissue['additionalValues'] != null
-                              && tissue['additionalValues'][col.participantColumn.name] != null">
+                              <ng-container *ngIf="col.type === 'ADDITIONALVALUE' && tissue['additionalValuesJson'] != null
+                              && tissue['additionalValuesJson'][col.participantColumn.name] != null">
                                 <ng-container *ngIf="col.additionalType === 'DATE'">
-                                  {{tissue['additionalValues'][col.participantColumn.name] | date:'shortDate'}}
+                                  {{tissue['additionalValuesJson'][col.participantColumn.name] | date:'shortDate'}}
                                 </ng-container>
                                 <ng-container *ngIf="col.additionalType === 'CHECKBOX'">
-                                  {{getUtil().getYesNo(tissue['additionalValues'][col.participantColumn.name])}}
+                                  {{getUtil().getYesNo(tissue['additionalValuesJson'][col.participantColumn.name])}}
                                 </ng-container>
                                 <ng-container
                                   *ngIf="col.additionalType !== 'DATE' && col.additionalType !== 'CHECKBOX'">
-                                  {{tissue['additionalValues'][col.participantColumn.name]}}
+                                  {{tissue['additionalValuesJson'][col.participantColumn.name]}}
                                 </ng-container>
                               </ng-container>
                               <ng-container

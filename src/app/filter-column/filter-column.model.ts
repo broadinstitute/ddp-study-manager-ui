@@ -546,7 +546,7 @@ export class Filter {
             filter.filter2.value = filter.value2;
           }
           else {
-            filter.filter2 = new NameValue( filter.participantColumn.name, null );
+            filter.filter2 = new NameValue( filter.participantColumn.name, filter.value2 );
             //            filter.filter2.name = filter.participantColumn.name;
           }
         }
@@ -587,13 +587,20 @@ export class Filter {
       }
     }
     else if (filter.type === Filter.ADDITIONAL_VALUE_TYPE) {
-      if (( filter.value1 !== null && filter.value1 !== "" && filter.value1 !== undefined ) || ( filter.empty || filter.notEmpty )) {
+      if (( filter.value1 ) || ( filter.empty || filter.notEmpty )) {
         filterText = this.getFilterJson( parent,
-          new NameValue( "additionalValues", filter.value1 ),
+          new NameValue( "additionalValuesJson", filter.value1 ),
           filter.filter2, null,
-          filter.exactMatch, filter.type, filter.range, filter.empty, filter.notEmpty, filter.participantColumn );
-      }
-      else {
+          filter.exactMatch, filter.type, filter.range, filter.empty, filter.notEmpty, filter.participantColumn, filter.additionalType );
+      } else if (filter.selectedOptions.length > 0) {
+        let selectedOptions = <Array<boolean>> filter.selectedOptions
+        let trueIndex = selectedOptions.indexOf(true);
+        let chosenValue = filter.options[trueIndex].value;
+        filterText = this.getFilterJson( parent,
+          new NameValue( "additionalValuesJson", chosenValue ),
+          filter.filter2, null,
+          filter.exactMatch, filter.type, filter.range, filter.empty, filter.notEmpty, filter.participantColumn, filter.additionalType );
+      } else {
         return null;
       }
     }
@@ -645,7 +652,7 @@ export class Filter {
     return filter;
   }
 
-  public static getFilterJson( parent, filter1, filter2, selectedOptions, exact, type, range, empty, notEmpty, participantColumn ) {
+  public static getFilterJson( parent, filter1, filter2, selectedOptions, exact, type, range, empty, notEmpty, participantColumn, additionalType? ) {
     let filterText = {
       "parentName": parent,
       "filter1": filter1,
@@ -656,7 +663,8 @@ export class Filter {
       "range": range,
       "empty": empty,
       "notEmpty": notEmpty,
-      "participantColumn": participantColumn
+      "participantColumn": participantColumn,
+      "additionalType": additionalType
     };
     return filterText;
   }

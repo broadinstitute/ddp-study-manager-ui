@@ -373,10 +373,10 @@ participant.data.dsm['diagnosisYear'] != null">
             <td class="Width--20">Participant Notes</td>
             <td class="Width--80">
             <textarea maxlength="1000" [disabled]="participantExited"
-                      [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('ptNotes')}"
-                      (blur)="currentField(null)" (focus)="currentField('ptNotes')"
-                      [(ngModel)]="participant.participant.ptNotes"
-                      (change)="valueChanged($event, 'ptNotes', 'r')"></textarea>
+                      [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('notes')}"
+                      (blur)="currentField(null)" (focus)="currentField('notes')"
+                      [(ngModel)]="participant.participant.notes"
+                      (change)="valueChanged($event, 'notes', 'r')"></textarea>
             </td>
           </tr>
           <ng-container *ngIf="showParticipantRecord">
@@ -384,17 +384,17 @@ participant.data.dsm['diagnosisYear'] != null">
               <td>Paper C/R Sent</td>
               <td>
                 <div class="Float--left">
-                  <app-field-datepicker [dateString]="participant.participant.paperCRSent"
+                  <app-field-datepicker [dateString]="participant.participant.crSent"
                                         [disabled]="participantExited"
-                                        [colorDuringPatch]="isPatchedCurrently('paperCRSent')"
-                                        (dateChanged)="valueChanged($event, 'paperCRSent', 'r')"></app-field-datepicker>
+                                        [colorDuringPatch]="isPatchedCurrently('crSent')"
+                                        (dateChanged)="valueChanged($event, 'crSent', 'r')"></app-field-datepicker>
                 </div>
-                <div *ngIf="participant.participant.paperCRSent != null" class="Float--left Router--Outlet">Paper C/R
+                <div *ngIf="participant.participant.crSent != null" class="Float--left Router--Outlet">Paper C/R
                   Received
-                  <app-field-datepicker [dateString]="participant.participant.paperCRReceived"
+                  <app-field-datepicker [dateString]="participant.participant.crReceived"
                                         [disabled]="participantExited"
-                                        [colorDuringPatch]="isPatchedCurrently('paperCRReceived')"
-                                        (dateChanged)="valueChanged($event, 'paperCRReceived', 'r')"></app-field-datepicker>
+                                        [colorDuringPatch]="isPatchedCurrently('crReceived')"
+                                        (dateChanged)="valueChanged($event, 'crReceived', 'r')"></app-field-datepicker>
                 </div>
               </td>
             </tr>
@@ -423,9 +423,9 @@ participant.data.dsm['diagnosisYear'] != null">
             </td>
             <td>
               <mat-checkbox color="primary" [disabled]="participantExited"
-                           [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('minimalMR')}"
-                           [(ngModel)]="participant.participant.minimalMR"
-                           (change)="valueChanged($event, 'minimalMR', 'r')"
+                           [ngClass]="{'Width--100': true, 'Color--Field--Patched': isPatchedCurrently('minimalMr')}"
+                           [(ngModel)]="participant.participant.minimalMr"
+                           (change)="valueChanged($event, 'minimalMr', 'r')"
                            disableRipple>
               </mat-checkbox>
             </td>
@@ -475,7 +475,7 @@ participant.data.dsm['diagnosisYear'] != null">
                           (change)="onAdditionalValueChange($event, fieldSetting.columnName)"></textarea>
                 <mat-select *ngIf="fieldSetting.displayType === 'OPTIONS'" placeholder="{{fieldSetting.columnDisplay}}"
                            [ngModel]="getAdditionalValue(fieldSetting.columnName)"
-                           (change)="onAdditionalValueChange($event, fieldSetting.columnName)"
+                           (selectionChange)="onAdditionalValueChange($event, fieldSetting.columnName)"
                            [disabled]="participantExited"
                            [ngClass]="{'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}">
                   <mat-option *ngFor="let op of fieldSetting.possibleValues" [value]="op.value">{{op.value}}</mat-option>
@@ -606,12 +606,12 @@ participant.data.dsm['diagnosisYear'] != null">
                       <tr *ngIf="sample.upsTrackingStatus != null">
                         <td class="TD--Padding-Left Width--50">{{sample.upsTrackingStatus}}</td>
                       </tr>
-                      <hr *ngIf="sample.trackingNumberReturn != null"style="border-color: lightgray">
-                      <tr *ngIf="sample.trackingNumberReturn != null">
+                      <hr *ngIf="sample.trackingReturnId != null"style="border-color: lightgray">
+                      <tr *ngIf="sample.trackingReturnId != null">
                         <td class="TD--Padding Width--50 Data-Display-Question">Tracking-in:</td>
                       </tr>
-                      <tr *ngIf="sample.trackingNumberReturn != null">
-                        <td class="TD--Padding-Left Width--50">{{sample.trackingNumberReturn}}</td>
+                      <tr *ngIf="sample.trackingReturnId != null">
+                        <td class="TD--Padding-Left Width--50">{{sample.trackingReturnId}}</td>
                       </tr>
                       <hr *ngIf="sample.upsReturnStatus != null"style="border-color: lightgray">
                       <tr *ngIf="sample.upsReturnStatus != null">
@@ -751,8 +751,8 @@ participant.data.dsm['diagnosisYear'] != null">
                     <td (click)="openMedicalRecord(mr)">{{getUtil().getYesNo(mr.crRequired)}}</td>
                     <td (click)="openMedicalRecord(mr)">{{getUtil().getYesNo(mr.followUpRequired)}}</td>
                     <td>
-                      <button mat-mini-fab [color]="getButtonColorStyle(mr.mrNotes)" placement="left"
-                              tooltip='{{mr.mrNotes}}'
+                      <button mat-mini-fab [color]="getButtonColorStyle(mr.notes)" placement="left"
+                              tooltip='{{mr.notes}}'
                               (click)="openNoteModal(mr); universalModal.show()">
                         <i class="fas fa-comment-alt fa-lg" data-fa-transform="down-2"></i>
                       </button>
@@ -1097,7 +1097,7 @@ participant.data.dsm['diagnosisYear'] != null">
     <div class="app-modal-body">
       <ng-container *ngIf="source === 'normal'">
       <textarea class="Width--100" maxlength="1000" [disabled]="participantExited"
-                *ngIf="noteMedicalRecord != null" [(ngModel)]="noteMedicalRecord.mrNotes"></textarea>
+                *ngIf="noteMedicalRecord != null" [(ngModel)]="noteMedicalRecord.notes"></textarea>
       </ng-container>
       <ng-container *ngIf="source === 'warning'">
         {{warning}}

@@ -23,7 +23,7 @@
         <mat-select [ngClass]="{'Input--Abstraction': true, 'Color--Field--Patched': isPatchedCurrently(fieldSetting.columnName)}" placeholder="{{fieldSetting.columnDisplay}}"
                   [ngModel]="getActivityAnswer()"
                   [disabled]="fieldSetting.readonly"
-                  (change)="valueChanged($event)">
+                  (selectionChange)="valueChanged($event)">
           <mat-option *ngFor="let value of fieldSetting.possibleValues" [value]="value.value">
             <ng-container *ngIf="value.name !== undefined">
               {{value.name}}

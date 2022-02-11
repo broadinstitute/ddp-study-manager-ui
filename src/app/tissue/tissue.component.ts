@@ -75,23 +75,23 @@ export class TissueComponent implements OnInit {
       }
     }
     if ( v !== null ) {
-      if ( this.tissue.additionalValues != null ) {
-        this.tissue.additionalValues[colName] = v;
+      if ( this.tissue.additionalValuesJson != null ) {
+        this.tissue.additionalValuesJson[colName] = v;
       }
       else {
         let addArray = {};
         addArray[colName] = v;
-        this.tissue.additionalValues = addArray;
+        this.tissue.additionalValuesJson = addArray;
       }
-      this.valueChanged(this.tissue.additionalValues, "additionalValues");
+      this.valueChanged(this.tissue.additionalValuesJson, "additionalValuesJson");
     }
   }
 
   //display additional value
   getAdditionalValue (colName: string): string {
-    if ( this.tissue.additionalValues != null ) {
-      if ( this.tissue.additionalValues[colName] != undefined && this.tissue.additionalValues[colName] != null ) {
-        return this.tissue.additionalValues[colName];
+    if ( this.tissue.additionalValuesJson != null ) {
+      if ( this.tissue.additionalValuesJson[colName] != undefined && this.tissue.additionalValuesJson[colName] != null ) {
+        return this.tissue.additionalValuesJson[colName];
       }
     }
     return null;
@@ -99,7 +99,7 @@ export class TissueComponent implements OnInit {
 
   valueChanged (value: any, parameterName: string) {
     let v;
-    if ( parameterName === "additionalValues" ) {
+    if ( parameterName === "additionalValuesJson" ) {
       v = JSON.stringify(value);
     }
     else if ( typeof value === "string" ) {
@@ -117,7 +117,7 @@ export class TissueComponent implements OnInit {
       }
     }
     if ( v !== null ) {
-      if ( parameterName !== "additionalValues" ) {
+      if ( parameterName !== "additionalValuesJson" ) {
         for ( let oncTissue of this.oncHistoryDetail.tissues ) {
           if ( oncTissue.tissueId == this.tissue.tissueId ) {
             oncTissue[parameterName] = v;
@@ -134,36 +134,27 @@ export class TissueComponent implements OnInit {
       this.currentPatchField = parameterName;
       this.dsmService.patchParticipantRecord(JSON.stringify(patch)).subscribe(// need to subscribe, otherwise it will not send!
         data => {
-          let result = Result.parse(data);
-          if ( result.code == 200 && result.body != null && result.body !== "" && this.tissue.tissueId == null ) {
-            let jsonData: any | any[] = JSON.parse(result.body);
-            this.tissue.tissueId = jsonData.tissueId;
+          if ( data && this.tissue.tissueId == null ) {
+            this.tissue.tissueId = data['tissueId'];
             this.patchFinished = true;
             this.currentPatchField = null;
             this.dup = false;
-            if ( jsonData instanceof Array ) {
-              jsonData.forEach((val) => {
+            if ( data instanceof Array ) {
+              data.forEach((val) => {
                 let nameValue = NameValue.parse(val);
                 this.oncHistoryDetail[nameValue.name] = nameValue.value;
               });
             }
-
           }
-          else if ( result.code === 500 && result.body != null ) {
-            this.dup = true;
-          }
-          else if ( result.code === 200 ) {
-            if ( result.body != null && result.body !== "" ) {
-              let jsonData: any | any[] = JSON.parse(result.body);
-              if ( jsonData instanceof Array ) {
-                jsonData.forEach((val) => {
-                  let nameValue = NameValue.parse(val);
-                  if (nameValue.name && nameValue.name.indexOf( '.' ) != -1) {
-                    nameValue.name = nameValue.name.substr( nameValue.name.indexOf( "." ) + 1);
-                  }
-                  this.oncHistoryDetail[ nameValue.name ] = nameValue.value;
-                });
-              }
+          else if ( data ) {
+            if ( data instanceof Array ) {
+              data.forEach((val) => {
+                let nameValue = NameValue.parse(val);
+                if (nameValue.name && nameValue.name.indexOf( '.' ) != -1) {
+                  nameValue.name = nameValue.name.substr( nameValue.name.indexOf( "." ) + 1);
+                }
+                this.oncHistoryDetail[nameValue.name] = nameValue.value;
+              });
             }
             this.patchFinished = true;
             this.currentPatchField = null;
@@ -171,6 +162,7 @@ export class TissueComponent implements OnInit {
           }
         },
         err => {
+          this.dup = true;
           if ( err._body === Auth.AUTHENTICATION_ERROR ) {
             this.router.navigate([ Statics.HOME_URL ]);
           }

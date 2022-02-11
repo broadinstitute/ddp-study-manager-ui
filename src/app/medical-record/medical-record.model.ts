@@ -25,10 +25,10 @@ export class MedicalRecord {
               public mrReceived?: string, public mrDocument?: string, public mrDocumentFileNames?: string,
               public mrProblem?: boolean, public mrProblemText?: string, public unableObtain?: boolean, public duplicate?: boolean,
               public international?: boolean, public crRequired?: boolean, public pathologyPresent?: string,
-              public mrNotes?: string, public reviewMedicalRecord?: boolean, public type?: string, public nameDDP?: string,
+              public notes?: string, public reviewMedicalRecord?: boolean, public type?: string, public nameDDP?: string,
               public institutionDDP?: string, public streetAddressDDP?: string, public cityDDP?: string, public stateDDP?: string,
-              public isDeleted?: boolean, public oncHistoryDetail?: Array<OncHistoryDetail>, public followUps?: FollowUp[], public followUpRequired?: boolean,
-              public followUpRequiredText?: string, public additionalValues?: {}, public mrUnableToObtainText?: string) {
+              public isDeleted?: boolean, public oncHistoryDetail?: Array<OncHistoryDetail>, public followUps?: FollowUp[], public followupRequired?: boolean,
+              public followupRequiredText?: string, public additionalValuesJson?: {}, public unableObtainText?: string) {
     this.medicalRecordId = medicalRecordId;
     this.participantId = participantId;
     this.institutionId = institutionId;
@@ -56,7 +56,7 @@ export class MedicalRecord {
     this.international = international;
     this.crRequired = crRequired;
     this.pathologyPresent = pathologyPresent;
-    this.mrNotes = mrNotes;
+    this.notes = notes;
     this.reviewMedicalRecord = reviewMedicalRecord;
     this.type = type;
 
@@ -72,11 +72,11 @@ export class MedicalRecord {
 
     this.followUps = followUps == undefined ? [] : followUps;
 
-    this.followUpRequired = followUpRequired;
-    this.followUpRequiredText = followUpRequiredText;
-    this.additionalValues = additionalValues;
+    this.followupRequired = followupRequired;
+    this.followupRequiredText = followupRequiredText;
+    this.additionalValuesJson = additionalValuesJson;
 
-    this.mrUnableToObtainText = mrUnableToObtainText;
+    this.unableObtainText = unableObtainText;
   }
 
   get mrStatus(): string {
@@ -203,11 +203,11 @@ export class MedicalRecord {
           json.fReceived == undefined ? null : json.fReceived ) );
       } );
     }
-    let data = json.additionalValues;
-    let additionalValues = {};
+    let data = json.dynamicFields;
+    let additionalValuesJson = {};
     if (data != null) {
       data = "{" + data.substring(1, data.length - 1) + "}";
-      additionalValues = JSON.parse(data);
+      additionalValuesJson = JSON.parse(data);
     }
     return new MedicalRecord( json.medicalRecordId, json.participantId, json.institutionId, json.ddpInstitutionId, json.name,
       json.contact, json.phone, json.fax,
@@ -217,10 +217,10 @@ export class MedicalRecord {
       json.mrReceived, json.mrDocument, json.mrDocumentFileNames,
       json.mrProblem, json.mrProblemText, json.unableObtain, json.duplicate, json.international, json.crRequired,
       json.pathologyPresent,
-      json.mrNotes, json.reviewMedicalRecord, json.type, json.nameDDP,
+      json.notes, json.reviewMedicalRecord, json.type, json.nameDDP,
       json.institutionDDP, json.streetAddressDDP, json.cityDDP, json.stateDDP,
       json.isDeleted, json.oncHistoryDetails, result,
-      json.followUpRequired, json.followUpRequiredText, additionalValues );
+      json.followupRequired, json.followupRequiredText, additionalValuesJson, json.unableObtainText );
   }
 
 

@@ -19,6 +19,7 @@ client/src/assets/js/ddp_config.js
 .classpath
 *.launch
 .settings/
+.vscode
 
 # misc
 /.sass-cache

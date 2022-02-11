@@ -25,7 +25,7 @@
 
     <div *ngIf="possibleSurveys.length > 0">
     <mat-select placeholder="Survey" class="Input--Bigger-WIDTH"
-               [(ngModel)]="survey" (change)="getListOfSurveyStatus()">
+               [(ngModel)]="survey" (selectionChange)="getListOfSurveyStatus()">
       <mat-option *ngFor="let surveys of possibleSurveys"
                  [value]="surveys">
         {{surveys.name}}  ({{surveys.type}})

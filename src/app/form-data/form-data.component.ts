@@ -28,16 +28,16 @@ export class FormDataComponent implements OnInit {
       //get data from dsm db if it is not type activity
       if (this.fieldSetting.displayType !== 'ACTIVITY_STAFF') {
         //return savedAnswer if it is not type activity_staff
-        return this.participantData;
+        return this.participantData ? this.participantData.toString() : this.participantData;
       }
       else {
         //if it is type activity_staff only return if it is not empty, otherwise return answer from the activity
         if (this.participantData != null && this.participantData !== '') {
-          return this.participantData;
+          return this.participantData ? this.participantData.toString() : this.participantData;
         }
       }
     }
-    return this.activityData;
+    return this.activityData ? this.activityData.toString() : this.activityData;
   }
 
   getOptions() {

@@ -306,25 +306,21 @@ export class AbstractionFieldComponent implements OnInit {
       if (patch != null) {
         this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
           data => {
-            let result = Result.parse( data );
-            if (result.code === 200) {
               if (putOtherBack) {
                 this.setOtherOptionText();
               }
-              if (result.body != null && result.body !== "") {
-                let jsonData: any | any[] = JSON.parse( result.body );
-                if (jsonData.primaryKeyId !== undefined && jsonData.primaryKeyId !== "") {
-                  field.fieldValue.primaryKeyId = jsonData.primaryKeyId;
+              if (data) {
+                if (data['primaryKeyId']) {
+                  field.fieldValue.primaryKeyId = data['primaryKeyId'];
                 }
-                if (jsonData instanceof Array) {
-                  jsonData.forEach( ( val ) => {
+                if (data instanceof Array) {
+                  data.forEach( ( val ) => {
                     let nameValue = NameValue.parse( val );
                     if (fieldName === "question") {
                       this.field.fieldValue.question = nameValue.value;
                     }
                   } );
                 }
-              }
             }
             this.patchFinished = true;
             if (fieldName !== "note" && fieldName !== "question") {
@@ -361,15 +357,11 @@ export class AbstractionFieldComponent implements OnInit {
     };
     this.dsmService.patchParticipantRecord( JSON.stringify( patch ) ).subscribe(// need to subscribe, otherwise it will not send!
       data => {
-        let result = Result.parse( data );
-        if (result.code === 200) {
-          if (result.body != null && result.body !== "") {
-            let jsonData: any | any[] = JSON.parse( result.body );
-            if (jsonData.primaryKeyId !== undefined && jsonData.primaryKeyId !== "") {
-              field.fieldValue.primaryKeyId = jsonData.primaryKeyId;
+          if (data) {
+            if (data['primaryKeyId']) {
+              field.fieldValue.primaryKeyId = data['primaryKeyId'];
             }
           }
-        }
       },
       err => {
         if (err._body === Auth.AUTHENTICATION_ERROR) {

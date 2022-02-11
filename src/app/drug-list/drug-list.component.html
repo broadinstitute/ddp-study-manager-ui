@@ -209,7 +209,7 @@
           </td>
           <td>
             <mat-select class="Input--Min-WIDTH" [(ngModel)]="drug.chemoType"
-                       (change)="valueChanged($event, 'chemoType', i)" [disabled]="!hasRole().allowedToEditDrugList()">
+                       (selectionChange)="valueChanged($event, 'chemoType', i)" [disabled]="!hasRole().allowedToEditDrugList()">
               <mat-option value="A"> A</mat-option>
               <mat-option value="H"> H</mat-option>
               <mat-option value="O"> O</mat-option>
@@ -224,7 +224,7 @@
           </td>
           <td>
             <mat-select [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently('treatmentType', i)}"
-                       [(ngModel)]="drug.treatmentType" (change)="valueChanged($event, 'treatmentType', i)" [disabled]="!hasRole().allowedToEditDrugList()">
+                       [(ngModel)]="drug.treatmentType" (selectionChange)="valueChanged($event, 'treatmentType', i)" [disabled]="!hasRole().allowedToEditDrugList()">
               <mat-option value="H"> H</mat-option>
               <mat-option value="B"> B</mat-option>
               <mat-option value="O"> O</mat-option>
@@ -235,7 +235,7 @@
           </td>
           <td>
             <mat-select [ngClass]="{'Input': true, 'Color--Field--Patched': isPatchedCurrently('chemotherapy', i)}"
-                       [(ngModel)]="drug.chemotherapy" (change)="valueChanged($event, 'chemotherapy', i)" [disabled]="!hasRole().allowedToEditDrugList()">
+                       [(ngModel)]="drug.chemotherapy" (selectionChange)="valueChanged($event, 'chemotherapy', i)" [disabled]="!hasRole().allowedToEditDrugList()">
               <mat-option value="Y"> Yes</mat-option>
               <mat-option value="N"> No</mat-option>
             </mat-select>
