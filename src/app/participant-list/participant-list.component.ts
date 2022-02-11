@@ -908,7 +908,6 @@ export class ParticipantListComponent implements OnInit {
           }
         } );
         this.savedFilters.sort( ( f1, f2 ) => f1.filterName.localeCompare( f2.filterName ) );
-        // console.log(this.savedFilters);
       },
       err => {
         this.showSavedFilters = false;
@@ -1016,7 +1015,6 @@ export class ParticipantListComponent implements OnInit {
       }
     } );
     this.resetPagination();
-    // console.log( this.savedFilters );
   }
 
   private resetPagination() {
@@ -1585,6 +1583,10 @@ export class ParticipantListComponent implements OnInit {
     return this.util;
   }
 
+  getUtilStatic(){
+    return Utils;
+  }
+
   getLanguageName(languageCode: string): string {
       let language = this.preferredLanguages.find( obj => {
         return obj.languageCode === languageCode;
@@ -1640,9 +1642,7 @@ export class ParticipantListComponent implements OnInit {
         paths.push([source, source]);
       }
     }
-
-    Utils.downloadCurrentData( this.participantList, paths, columns, "Participants-"  + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION, false );
-
+    Utils.downloadCurrentData( this.participantList, paths, columns, "Participants-"  + Utils.getDateFormatted( date, Utils.DATE_STRING_CVS ) + Statics.CSV_FILE_EXTENSION, false, this.activityDefinitionList );
   }
 
   getOptionDisplay( options: NameValue[], key: string ) {
@@ -1771,6 +1771,7 @@ export class ParticipantListComponent implements OnInit {
       if (data != null) {
         let jsonData: {};
         jsonData = data;
+
         jsonData['participants'].forEach( ( val ) => {
           let participant = Participant.parse( val );
           this.participantList.push( participant );
@@ -1823,7 +1824,8 @@ export class ParticipantListComponent implements OnInit {
   }
 
   getQuestionAnswerByName( questionsAnswers: Array<QuestionAnswer>, name: string ) {
-    return questionsAnswers.find( x => x.stableId === name );
+    let a = questionsAnswers.find( x => x.stableId === name );
+    return  a;
   }
 
   updateParticipant( participant: Participant ) {
@@ -2196,5 +2198,9 @@ export class ParticipantListComponent implements OnInit {
       this.allFieldNames.add( tmp + "." + filter.participantColumn.name );
      });
      this.orderColumns();
+  }
+
+  isMultipleOrSingleSelectMode( qDef: QuestionDefinition ) {
+    return (qDef.selectMode === 'MULTIPLE' || qDef.selectMode === 'SINGLE');
   }
 }
