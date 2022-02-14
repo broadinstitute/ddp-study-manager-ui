@@ -6,6 +6,7 @@ import {throwError as observableThrowError, Observable} from "rxjs";
 import {catchError} from "rxjs/operators";
 
 import {Filter} from "../filter-column/filter-column.model";
+import {Sort} from "../sort/sort.model";
 import {ViewFilter} from "../filter-column/models/view-filter.model";
 import {Abstraction} from "../medical-record-abstraction/medical-record-abstraction.model";
 import {OncHistoryDetail} from "../onc-history-detail/onc-history-detail.model";
@@ -131,7 +132,7 @@ export class DSMService {
     );
   }
 
-  public filterData( realm: string, json: string, parent: string, defaultFilter: boolean, from: number = 0, to: number = this.role.getUserSetting().getRowsPerPage(), sortBy? : Filter ): Observable<any> {
+  public filterData( realm: string, json: string, parent: string, defaultFilter: boolean, from: number = 0, to: number = this.role.getUserSetting().getRowsPerPage(), sortBy? : Sort ): Observable<any> {
     let url = this.baseUrl + DSMService.UI + "filterList";
     let map: { name: string, value: any }[] = [];
     map.push( {name: DSMService.REALM, value: realm} );

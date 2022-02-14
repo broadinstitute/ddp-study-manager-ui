@@ -97,8 +97,8 @@ export class ParticipantListComponent implements OnInit {
   cancers: string[] = [];
   mrCoverPdfSettings: Value[] = [];
 
-  sortField: Filter = null;
-  sortDir: string = null;
+  sortBy: Sort;
+  sortOrder: string = null;
   sortParent: string = null;
   currentView: string = null;
   showHelp: boolean = false;
@@ -114,7 +114,7 @@ export class ParticipantListComponent implements OnInit {
   participantsSize: number = 0;
   jsonPatch: any;
   viewFilter: any;
-  sortBy: Sort;
+  // sortBy: Sort;
 
 
   constructor( private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
@@ -157,7 +157,7 @@ export class ParticipantListComponent implements OnInit {
        this.applyFilter(this.viewFilter, from, to);
     } else {
       if (this.jsonPatch) {
-        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.jsonPatch, this.parent, null, from, to, this.sortField ).subscribe(
+        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), this.jsonPatch, this.parent, null, from, to, this.sortBy ).subscribe(
         data => {
           this.setFilterDataOnSuccess(data);
         }, err => {
@@ -169,7 +169,7 @@ export class ParticipantListComponent implements OnInit {
         } );
 
       } else {
-        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null, this.parent, true, from, to, this.sortField ).subscribe(
+        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null, this.parent, true, from, to, this.sortBy ).subscribe(
           data => {
             this.setFilterDataOnSuccess(data);
           },
@@ -1389,18 +1389,17 @@ export class ParticipantListComponent implements OnInit {
   }
 
   public isSortField( name: string ) {
-    if (this.sortField) {
-      return name === this.sortField.participantColumn.name;
+    if (this.sortBy) {
+      return name === this.sortBy.innerProperty;
     } else {
       return false;
     }
   }
 
   sortByColumnName( col: Filter, sortParent: string ) {
-    this.sortDir = this.sortField !== null ? this.sortField.participantColumn.name === col.participantColumn.name ? ( this.sortDir === "asc" ? "desc" : "asc" ) : "asc" : "asc";
-    this.sortField = col;
+    this.sortOrder = this.sortBy !== null ? this.sortBy.innerProperty === col.participantColumn.name ? ( this.sortOrder === "asc" ? "desc" : "asc" ) : "asc" : "asc";
     this.sortParent = sortParent;
-    this.sortBy = Sort.parse()
+    this.sortBy = Sort.parse(col, this.sortOrder)
     this.pageChanged(this.activePage, this.rowsPerPage);
     // this.doSort( col.participantColumn.object, col );
   }
