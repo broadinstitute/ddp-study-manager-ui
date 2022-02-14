@@ -131,7 +131,7 @@ export class MedicalRecordComponent implements OnInit {
 
   valueChanged( value: any, parameterName: string ) {
     let v;
-    if (parameterName === "additionalValuesJson") {
+    if (parameterName === 'additionalValuesJson') {
       v = JSON.stringify( value );
     }
     else if (typeof value === "string") {

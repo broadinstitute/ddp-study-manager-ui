@@ -22,4 +22,12 @@ export class ActivityDataComponent implements OnInit {
   getUtil(): Utils {
     return this.util;
   }
+
+  getUtilStatic(){
+    return Utils;
+  }
+
+  getActivityName( activityDefinition: ActivityDefinition ) {
+    return activityDefinition.activityName;
+  }
 }

@@ -74,7 +74,7 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                       <ul *ngFor="let o of qDef.options">
                         <li *ngIf="getUtil().isOptionSelected(questionAnswer.answer, o.optionStableId)"><b>{{o.optionText}}</b>
                           <ng-container *ngIf="questionAnswer.optionDetails != null">
-                            <ng-container *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, o.optionStableId) as oDetail">
+                            <ng-container *ngIf="getUtilStatic().getOptionDetails(questionAnswer.optionDetails, o.optionStableId) as oDetail">
                               <div>{{oDetail.details}}
                               </div>
                             </ng-container>
@@ -94,7 +94,7 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                           <ng-container *ngIf="questionAnswer.groupedOptions[group.groupStableId] !== null">
                             <ul *ngFor="let gAnswer of questionAnswer.groupedOptions[group.groupStableId]">
                               <li *ngIf="getUtil().getAnswerText(gAnswer, group.options) as option"><b>{{option.optionText}}</b>
-                                <ng-container *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, gAnswer) as oDetail">
+                                <ng-container *ngIf="getUtilStatic().getOptionDetails(questionAnswer.optionDetails, gAnswer) as oDetail">
                                   <div>{{oDetail.details}}
                                   </div>
                                 </ng-container>
@@ -106,13 +106,13 @@ questionAnswer.dateFields.month != null && questionAnswer.dateFields.month !== '
                     </ng-container>
                   </ng-container>
                   <ng-container *ngIf="qDef.selectMode === 'SINGLE'">
-                    <ng-container *ngIf="questionAnswer.answer as answers">
+                    <ng-container *ngIf="getUtil().getCorrectTextAsAnswer(questionAnswer) as answers">
                       <ul class="NO-PADDING-START" >
                         <li class="LIST-SEPARATOR" *ngFor="let answer of answers" >
                           <p class="BIT-OF-MARGIN">
-                            {{getUtil().getAnswerGroupOrOptionText( answer, qDef)}}
+                            {{getUtilStatic().getAnswerGroupOrOptionText( answer, qDef)}}
                           </p>
-                          <p class="BIT-OF-MARGIN" *ngIf="getUtil().getOptionDetails(questionAnswer.optionDetails, answer) as oDetail">
+                          <p class="BIT-OF-MARGIN" *ngIf="getUtilStatic().getOptionDetails(questionAnswer.optionDetails, answer) as oDetail">
                             {{oDetail.details}}
                           </p>
                         </li>
