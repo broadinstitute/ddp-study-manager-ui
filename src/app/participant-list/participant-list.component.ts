@@ -29,6 +29,7 @@ import {Sample} from "./models/sample.model";
 import {Participant} from "./participant-list.model";
 import {FieldSettings} from "../field-settings/field-settings.model";
 import { ParticipantData } from "./models/participant-data.model";
+import { Sort } from "../sort/sort.model";
 
 @Component( {
   selector: "app-participant-list",
@@ -113,6 +114,7 @@ export class ParticipantListComponent implements OnInit {
   participantsSize: number = 0;
   jsonPatch: any;
   viewFilter: any;
+  sortBy: Sort;
 
 
   constructor( private role: RoleService, private dsmService: DSMService, private compService: ComponentService,
@@ -1398,6 +1400,7 @@ export class ParticipantListComponent implements OnInit {
     this.sortDir = this.sortField !== null ? this.sortField.participantColumn.name === col.participantColumn.name ? ( this.sortDir === "asc" ? "desc" : "asc" ) : "asc" : "asc";
     this.sortField = col;
     this.sortParent = sortParent;
+    this.sortBy = Sort.parse()
     this.pageChanged(this.activePage, this.rowsPerPage);
     // this.doSort( col.participantColumn.object, col );
   }
