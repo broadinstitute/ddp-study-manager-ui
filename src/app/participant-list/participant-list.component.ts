@@ -97,7 +97,7 @@ export class ParticipantListComponent implements OnInit {
   cancers: string[] = [];
   mrCoverPdfSettings: Value[] = [];
 
-  sortBy: Sort;
+  sortBy: Sort = null;
   sortOrder: string = null;
   sortParent: string = null;
   currentView: string = null;
