@@ -1398,7 +1398,7 @@ export class ParticipantListComponent implements OnInit {
     this.sortOrder = this.sortBy !== null ? this.sortBy.innerProperty === col.participantColumn.name ? ( this.sortOrder === "asc" ? "desc" : "asc" ) : "asc" : "asc";
     this.sortParent = sortParent;
     let sort = Sort.parse(col, this.sortOrder);
-    sort.activityVersion = this.getLatestActivityVersion(col);
+    sort.activityVersions = this.getLatestActivityVersion(col);
     this.sortBy = sort;
     this.pageChanged(this.activePage, this.rowsPerPage);
     // this.doSort( col.participantColumn.object, col );
@@ -1407,8 +1407,8 @@ export class ParticipantListComponent implements OnInit {
   getLatestActivityVersion(column: Filter) {
     if (column.participantColumn === null) return null;
     let activityCode = column.participantColumn.tableAlias;
-    let filteredActivities = this.activityDefinitionList.filter(activity => activityCode === activity.activityCode);
-    if (filteredActivities.length > 0) return filteredActivities.pop().activityVersion;
+    let activityVersions = this.activityDefinitionList.filter(activity => activityCode === activity.activityCode).map(activity => activity.activityVersion);
+    if (activityVersions.length > 0) return activityVersions;
     else return null;
   }
 
