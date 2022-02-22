@@ -232,10 +232,10 @@
                 [ngClass]="{'Table--Sticky': true, 'Color--blue': isSortField(col.participantColumn.name)}">
               {{col.participantColumn.display}}
               <span *ngIf="isSortField(col.participantColumn.name)">
-               <span *ngIf="sortDir === 'asc'">
+               <span *ngIf="sortOrder === 'asc'">
                  <i class="fas fa-sort-alpha-down"></i>
                </span>
-               <span *ngIf="sortDir === 'desc'">
+               <span *ngIf="sortOrder === 'desc'">
                  <i class="fas fa-sort-alpha-up"></i>
                </span>
              </span>

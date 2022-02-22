@@ -382,7 +382,7 @@ export class ParticipantListComponent implements OnInit {
                   });
                   if (filterInPossibleColumns == null) {
                     let displayName = this.getQuestionOrStableId( question );
-                    let filter = new Filter( new ParticipantColumn( displayName, question.stableId, activityDefinition.activityCode, null, true ), type, options );
+                    let filter = new Filter( new ParticipantColumn( displayName, question.stableId, activityDefinition.activityCode, "questionsAnswers", true ), type, options );
                     possibleColumns.push( filter );
                   }
                 }
@@ -1397,9 +1397,19 @@ export class ParticipantListComponent implements OnInit {
   sortByColumnName( col: Filter, sortParent: string ) {
     this.sortOrder = this.sortBy !== null ? this.sortBy.innerProperty === col.participantColumn.name ? ( this.sortOrder === "asc" ? "desc" : "asc" ) : "asc" : "asc";
     this.sortParent = sortParent;
-    this.sortBy = Sort.parse(col, this.sortOrder)
+    let sort = Sort.parse(col, this.sortOrder);
+    sort.activityVersion = this.getLatestActivityVersion(col);
+    this.sortBy = sort;
     this.pageChanged(this.activePage, this.rowsPerPage);
     // this.doSort( col.participantColumn.object, col );
+  }
+
+  getLatestActivityVersion(column: Filter) {
+    if (column.participantColumn === null) return null;
+    let activityCode = column.participantColumn.tableAlias;
+    let filteredActivities = this.activityDefinitionList.filter(activity => activityCode === activity.activityCode);
+    if (filteredActivities.length > 0) return filteredActivities.pop().activityVersion;
+    else return null;
   }
 
   // private doSort( object: string, col: Filter ) {
