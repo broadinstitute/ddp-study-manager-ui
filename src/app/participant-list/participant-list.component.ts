@@ -707,7 +707,7 @@ export class ParticipantListComponent implements OnInit {
       } else if (this.role.getUserSetting().defaultParticipantFilter !== "" && this.role.getUserSetting().defaultParticipantFilter !== null && this.role.getUserSetting().defaultParticipantFilter !== undefined) {
         this.additionalMessage = "The default filter seems to be deleted, however it is still the default filter as long as not changed in the user settings.";
         this.loadingParticipants = localStorage.getItem( ComponentService.MENU_SELECTED_REALM );
-        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null, this.parent, true ).subscribe(
+        this.dsmService.filterData( localStorage.getItem( ComponentService.MENU_SELECTED_REALM ), null, this.parent, true).subscribe(
           data => {
             if (data != null) {
               this.additionalMessage = "";

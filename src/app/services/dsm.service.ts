@@ -141,7 +141,7 @@ export class DSMService {
     map.push( {name: "to", value: to} );
     map.push( {name: "userId", value: this.role.userID()} );
     map.push( {name: "userMail", value: this.role.userMail()} );
-    map.push( {name: "sortBy", value: JSON.stringify(sortBy)} );
+    if (sortBy) map.push( {name: "sortBy", value: JSON.stringify(sortBy)} );
     map.push( {name: "defaultFilter", value: defaultFilter == true ? "1" : defaultFilter != null ? "0" : ""} );
     return this.http.patch(url, json, this.buildQueryHeader(map)).pipe(
       catchError(this.handleError.bind(this))
